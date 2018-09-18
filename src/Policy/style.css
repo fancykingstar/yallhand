@@ -1,0 +1,101 @@
+
+.BackToChan {
+
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.PolicyFrame {
+    color: rgba(0, 0, 0, 0.87);
+    font-weight: 800;
+}
+
+.Form {
+    margin: 15px 0 5px 0;
+    width: 750px;
+}
+
+.Disabled {
+    color: lightgray;
+}
+
+.Accordion {
+    margin: 5px 0 15px 0;
+}
+
+.CreateCondition {
+    min-width: 500px;
+    margin: 0px 0px 15px 20px;
+}
+
+.Condition {
+    margin-top: 5px;
+    margin-left: 20px;
+    display: inline-block;
+    min-width: 400px;
+
+}
+
+.ConditionLabel {
+    float: left;
+    font-weight: 400;
+}
+
+
+.ConditionCtrls {
+    margin-left: 10px;
+    float: right;
+}
+
+.Answer {
+    width: 80%;
+}
+
+.AnswerField {
+    background-color: #FFFFFF;
+    padding: 5px;
+    font-weight: 400;
+    font-size: 1.3em;
+    border: solid;
+    width: 100%;
+    border-color: #E0E1E2;
+    border-width: 1px;
+    height: 250px;
+    -webkit-border-radius: 5px 5px 5px 5px; 
+    -moz-border-radius: 5px 5px 5px 5px; 
+    border-radius: 5px 5px 5px 5px; 
+    /* overflow-y: auto; */
+}
+
+.EmojiLicense {
+    font-size: .6em;
+    margin-top: 55px;
+    text-align: center;
+    color: rgb(179, 179, 179);
+}
+
+a {
+    color: rgb(179, 179, 179); 
+}
+
+
+.ResourceLinks {
+    margin-top: 15px;
+}
+
+.BuildLink {
+    margin-top: 15px;
+}
+
+.AMenu {
+    width: 80%;
+   
+}
+
+.AMenuChoices {
+    width: 80%;
+    min-height: 200px;
+
+
+
+}

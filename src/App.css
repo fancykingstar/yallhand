@@ -1,0 +1,36 @@
+body {
+  color: #D7D7D7; 
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif; 
+}
+
+h1 h2 h3 h4 h5 span {
+  font-family: 'Nunito', sans-serif; 
+  font-weight: 700;
+}
+.App {
+  display: inline;
+}
+
+
+.SideAndAction {
+  /* margin-top: 75px; */
+  padding: 0px;
+  background-color: orange;
+  width: 100vw;
+  height: 100vh;
+}
+
+.ActionFrame {
+  width: auto;
+  padding-top: 75px;
+  padding-left: 15px;
+  margin-bottom: 0px;
+  min-height: 700px;
+  height: 100%;
+  background-color: #F9F9F9; 
+  overflow-y: auto;
+  z-index: 0;
+  overflow-x: hidden;
+}
+

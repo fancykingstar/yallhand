@@ -1,0 +1,15 @@
+.Header {
+    width: 100vw;
+    height: 75px;
+    background-color: #FFFFFF;
+    border-color: #979797;
+    border-style: solid;
+    border-width: 0px 0px 1px;
+    position: absolute;
+    top: 0;
+    z-index: 2;
+}
+
+.MobileMenu {
+    margin-top: 5px;
+}
