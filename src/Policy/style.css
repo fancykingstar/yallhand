@@ -69,18 +69,22 @@
 
 .EmojiLicense {
     font-size: .6em;
-    margin-top: 55px;
+    margin-top: 5px;
     text-align: center;
     color: rgb(179, 179, 179);
 }
 
-a {
-    color: rgb(179, 179, 179); 
-}
 
 
 .ResourceLinks {
     margin-top: 15px;
+
+}
+
+
+.TopSpace {
+    margin-top: 15px;
+
 }
 
 .BuildLink {
@@ -89,13 +93,41 @@ a {
 
 .AMenu {
     width: 80%;
-   
-}
-
-.AMenuChoices {
-    width: 80%;
-    min-height: 200px;
-
-
+    margin-top: 25px;
 
 }
+
+.AMenuResult {
+    width: 100%;
+    min-height: 300px;
+
+}
+
+/* This is required for the table to collapse properly */
+td {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.AttachedList {
+    font-weight: 200px;
+    margin-top: 40px;
+    max-width: 500px;
+}
+
+  
+  #PubControls{
+    position: fixed;
+    bottom: 40%;
+    right: 10px;
+    z-index: 6;
+  }
+
+  .AutomationsSelect {
+      margin-top: 5px;
+      min-width: 275px;
+      max-width: 700px;
+
+  }

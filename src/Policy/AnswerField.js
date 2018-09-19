@@ -104,7 +104,7 @@ export class AnswerField extends Component {
         <div style={{ float: "right", paddingTop: 5}}>
           <EmojiSelect />
         </div>
-        <div className="EmojiLicense">Emoji by <a href="https://joypixels.com">JoyPixels</a>  </div>
+        <div className="EmojiLicense">Emoji by <a style={{color: 'rgb(179, 179, 179)' }} href="https://joypixels.com" target="_blank">JoyPixels</a>  </div>
       </div>
     );
   }

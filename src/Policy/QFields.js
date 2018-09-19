@@ -42,7 +42,7 @@ export class QFields extends React.Component {
           </div> */}
         </div>
         
-        <div className="Form">
+        <div className="Form" style={{maxWidth: 350}}>
        <Conditionals/>
          
         </div>

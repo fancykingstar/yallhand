@@ -2,6 +2,7 @@ import React from "react";
 import "./style.css";
 import { Input, Icon, Accordion, Dropdown, Checkbox } from "semantic-ui-react";
 import { teamOptions } from "./TempObjects";
+import { ConditionList } from "./ConditionList";
 
 export class Conditionals extends React.Component {
   constructor(props) {
@@ -13,7 +14,9 @@ export class Conditionals extends React.Component {
   }
   handleEnable = (e, data) => {
     this.setState({ enabled: data.checked });
-    if (data.checked === false) {this.setState({ accOpen: false })}
+    if (data.checked === false) {
+      this.setState({ accOpen: false });
+    }
   };
   handleAccClick = e => {
     if (this.state.enabled) {
@@ -39,53 +42,14 @@ export class Conditionals extends React.Component {
               <span className={textClass}>Manage Conditions</span>
             </Accordion.Title>
             <Accordion.Content active={this.state.accOpen}>
-
-
-              <div className="CreateCondition">
-              <div>Create condition</div>
-              <Input placeholder="Enter condition..." style={{width: 400}}/></div>
-              
-              <div className="Condition">
-                <div className="ConditionLabel">Condition 1</div>
-                <div className="ConditionCtrls">
-                <Icon name="window close" />
-                <Icon name="edit" /></div>
-              </div>
-
-                  <div className="Condition">
-                <div className="ConditionLabel">Condition 2</div>
-                <div className="ConditionCtrls">
-                <Icon name="window close" />
-                <Icon name="edit" /></div>
-              </div>
-
-                  <div className="Condition">
-                <div className="ConditionLabel">Condition 3</div>
-                <div className="ConditionCtrls">
-                <Icon name="window close" />
-                <Icon name="edit" /></div>
-              </div>
-
-                  <div className="Condition">
-                <div className="ConditionLabel">Condition 1</div>
-                <div className="ConditionCtrls">
-                <Icon name="window close" />
-                <Icon name="edit" /></div>
-              </div>
-
-                  <div className="Condition">
-                <div className="ConditionLabel">Condition 1</div>
-                <div className="ConditionCtrls">
-                <Icon name="window close" />
-                <Icon name="edit" /></div>
-              </div>
-
-
+              <ConditionList />
             </Accordion.Content>
           </Accordion>
           <div className="Form">
             <div>
-              <span className={textClass}>Select condition to toggle answer</span>
+              <span className={textClass}>
+                Select condition to toggle answer
+              </span>
             </div>
             <Dropdown
               disabled={!this.state.enabled}

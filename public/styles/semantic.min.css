@@ -18053,13 +18053,13 @@ ol.ui.horizontal.list li:before {
 }
 .ui.inverted.menu .item.disabled,
 .ui.inverted.menu .item.disabled:hover {
-  color: rgba(225, 225, 225, 0.3);
+  color: rgba(255, 255, 255, 0.08);
 }
 .ui.inverted.menu .dropdown.item:hover,
 .ui.inverted.menu .link.item:hover,
 .ui.inverted.menu a.item:hover,
 .ui.link.inverted.menu .item:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #1D7E9D; /* MJZ here is where the hover is */
   color: #fff;
 }
 .ui.vertical.inverted.menu .item .menu .link.item:hover,
@@ -18073,7 +18073,7 @@ ol.ui.horizontal.list li:before {
   color: #fff;
 }
 .ui.inverted.menu .active.item {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08); /* MJZ here is the active */
   color: #fff !important;
 }
 .ui.inverted.vertical.menu .item .menu .active.item {
