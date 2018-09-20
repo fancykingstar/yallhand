@@ -1,139 +1,141 @@
 @media (max-width: 40em) {
-    .SideBar {
+  .SideBar {
     display: none;
-    }
-    }
+  }
+}
 
 .SideBar {
-    width: 230px;
-    height: 1800px;
-    background-color: #2f2c2c;
-    border-color: #979797;
-    border-style: solid;
-    border-width: 0px 1px;
-    /* margin-top: -75px; */
-    float: left;
-    height: 100vh;
-    z-index: 5;
-    position: relative;
-
+  width: 230px;
+  height: 1800px;
+  background-color: #2f2c2c;
+  border-color: #979797;
+  border-style: solid;
+  border-width: 0px 1px;
+  /* margin-top: -75px; */
+  float: left;
+  height: 100vh;
+  z-index: 5;
+  position: relative;
 }
 
 .Logo {
-    width: 230px;
-    height: 75px;
-    background-color: #979797;
+  width: 230px;
+  height: 75px;
+  background-color: #979797;
 }
 
 .UserProfile {
-    width: 200px;
-    height: 35px;
-    background-color: #2FC7F8;
-    color: #FFFFFF;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px 0px 100px;
-    -webkit-box-shadow: 3px 3px 5px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    -moz-box-shadow:    3px 3px 5px 6px #ccc;  /* Firefox 3.5 - 3.6 */
-    box-shadow:         0px 3px 1px 0px #15596f;
+  width: 200px;
+  height: 35px;
+  background-color: #2fc7f8;
+  color: #ffffff;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px 0px 100px;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc; /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow: 3px 3px 5px 6px #ccc; /* Firefox 3.5 - 3.6 */
+  box-shadow: 0px 3px 1px 0px #15596f;
 }
 
 .UserName {
-    color: #104455;
-    height: 35px;
-    padding-top:7px;
-    padding-left: 15px;
-    width: 175px;
-    
+  color: #104455;
+  height: 35px;
+  padding-top: 7px;
+  padding-left: 15px;
+  width: 175px;
 }
 
 .Container {
-    padding: 0px;
-    margin-top: 20px;
-    margin-bottom: 30px;
+  padding: 0px;
+  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .NavItemFrame {
-    height: 30px;
-    width: 100%;
-    transition: 0.3s;
-    padding-top: 0px;
-    display: inline-flex;
+  height: 30px;
+  width: 100%;
+  transition: 0.3s;
+  padding-top: 0px;
+  display: inline-flex;
 }
 
+
 .NavItemText {
-    margin-left: 5px;
-    margin-top: 5px;
+  margin-left: 5px;
+  margin-top: 5px;
 }
 
 .NavItemIcon {
-    color: #2FC7F8; 
-    margin-left: 15px;
-    line-height: 30px;
+  color: #2fc7f8;
+  margin-left: 15px;
+  line-height: 30px;
 }
 
-.NavItemFrame:hover {background-color:#104455;}
+.NavItemFrame:hover {
+  background-color: #104455;
+}
 
 .ChannelHeader {
-    color: #2FC7F8;
-    height: 30px;
-    padding-left: 15px;
-    width : 230; 
-    padding-bottom: 15px;
-    display : 'inline';
+  color: #2fc7f8;
+  height: 30px;
+  padding-left: 15px;
+  width: 230;
+  padding-bottom: 15px;
+  display: "inline";
 }
 
 .ChannelAdd {
-    -webkit-filter: opacity(.3);
-    filter: opacity(.3);
+  -webkit-filter: opacity(0.3);
+  filter: opacity(0.3);
 }
 
 .ChannelAdd:hover {
-    -webkit-filter: opacity(1);
-    filter: opacity(1);
+  -webkit-filter: opacity(1);
+  filter: opacity(1);
 }
 
 .ChannelFrame {
-    height: 30px;
-    transition: 0.3s;
-    padding: 0px;
+  height: 30px;
+  transition: 0.3s;
+  padding: 0px;
 }
 
 .ChannelSearch {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding-left: 5px;
-    padding-top: 2px;
-    margin-left: 12px;
-    border: solid;
-    border-width: 2px;
-    border-color: #2FC7F8;
-    -webkit-border-radius: 5px 5px 5px 5px;
-    -moz-border-radius: 5px 5px 5px 5px;
-    border-radius: 5px 5px 5px 5px;
-    width: 200px;
-    height: 35px;
-    line-height: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 5px;
+  padding-top: 2px;
+  margin-left: 12px;
+  border: solid;
+  border-width: 2px;
+  border-color: #2fc7f8;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+  width: 200px;
+  height: 35px;
+  line-height: 30px;
 }
 
-.ChannelFrame:hover {background-color:#104455;}
+.ChannelFrame:hover {
+  background-color: #104455;
+}
 
 .ChannelText {
-    font-family: 'Nunito';
-    font-weight: 400;
-    margin-left: 15px;
-    margin-right: 15px;
-    height: 100%;
-    position: static;
-    font-size: 1.1em;
-    line-height: 30px; /*centers text */
-    overflow: hidden;
- }
+  font-family: "Nunito";
+  font-weight: 400;
+  margin-left: 15px;
+  margin-right: 15px;
+  height: 100%;
+  position: static;
+  font-size: 1.1em;
+  line-height: 30px; /*centers text */
+  overflow: hidden;
+}
 
- .SideBarActive {
-     background-color: #1D7E9D;
-     border-style: solid;
-     border-color: #2FC7F8;
-     border-width: 0px 4px 0px 0px;
-
- }
+.SideBarActive {
+  background-color: #1d7e9d;
+  border-style: solid;
+  border-color: #2fc7f8;
+  border-width: 0px 4px 0px 0px;
+}

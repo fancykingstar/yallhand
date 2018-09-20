@@ -1,0 +1,119 @@
+import React from "react";
+import "./style.css";
+import {
+
+  Icon,
+  Table,
+  Segment,
+  Header,
+
+  Input,
+  Select
+} from "semantic-ui-react";
+
+export class InviteAdmin extends React.Component {
+  render() {
+    return (
+      <div className="Segment">
+        <Header
+          as="h2"
+          content="Invite Admin Collaborators"
+          subheader="Send invite(s) to admin to generate and manage information"
+        />
+
+        <Segment>
+          <Header as="h3" content="Create Invite" />
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell rowSpan="2">Email</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Teams(s)</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Channel Access</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Class</Table.HeaderCell>
+                <Table.HeaderCell colSpan="5" textAlign="center">
+                  Create/Manage
+                </Table.HeaderCell>
+              </Table.Row>
+              <Table.Row>
+                <Table.HeaderCell collapsing style={{ fontSize: ".7em" }}>
+                  Everything
+                </Table.HeaderCell>
+                <Table.HeaderCell collapsing style={{ fontSize: ".7em" }}>
+                  New Channels
+                </Table.HeaderCell>
+                <Table.HeaderCell collapsing style={{ fontSize: ".7em" }}>
+                  New Policices
+                </Table.HeaderCell>
+                <Table.HeaderCell collapsing style={{ fontSize: ".7em" }}>
+                  Invite(s)
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>
+                  <Input fluid placeholder="jane@placethatwework.co" />
+                </Table.Cell>
+                <Table.Cell>
+                  <Select fluid label="Team" placeholder="Gender" />
+                </Table.Cell>
+                <Table.Cell textAlign="right">
+                  <Select fluid label="Team" placeholder="Gender" />
+                </Table.Cell>
+                <Table.Cell textAlign="right">
+                  <Select fluid label="Team" placeholder="Gender" />
+                </Table.Cell>
+                <Table.Cell textAlign="center">
+                  <Icon color="green" name="checkmark" size="large" />
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+              </Table.Row>
+            </Table.Body>
+          </Table>
+
+          <Header as="h3" content="Queue" />
+
+          <Table style={{ maxWidth: 850 }} basic="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell rowSpan="2">Email</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Teams(s)</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Channel Access</Table.HeaderCell>
+                <Table.HeaderCell rowSpan="2">Class</Table.HeaderCell>
+                <Table.HeaderCell collapsing>Everything</Table.HeaderCell>
+                <Table.HeaderCell collapsing>New Channels</Table.HeaderCell>
+                <Table.HeaderCell collapsing>New Policices</Table.HeaderCell>
+                <Table.HeaderCell collapsing>Invite(s)</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>jrboomer@battlestar.com</Table.Cell>
+                <Table.Cell>Approved</Table.Cell>
+                <Table.Cell>HR, Benefits, Payroll, Operations</Table.Cell>
+                <Table.Cell>Manager</Table.Cell>
+                <Table.Cell style={{ textAlign: "center" }}>
+                  {" "}
+                  <Icon color="green" name="checkmark" size="large" />
+                </Table.Cell>
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+                <Table.Cell />
+
+                <Table.HeaderCell>
+                  <Icon name="minus circle" />
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+        </Segment>
+        <br />
+      </div>
+    );
+  }
+}

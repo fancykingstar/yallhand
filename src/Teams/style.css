@@ -1,0 +1,16 @@
+.TeamMenu {
+    position: sticky;
+    margin-top:20px;
+}
+
+.TeamActionFrame {
+    margin-top: 30px;
+    min-height: 500px;
+    height: 20px;
+    width: 100%;
+}
+
+.Segment {
+    width: 90%;
+    margin-top: 25px;
+}

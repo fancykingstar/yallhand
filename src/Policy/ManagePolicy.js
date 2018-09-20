@@ -9,7 +9,7 @@ export class ManagePolicy extends React.Component {
   render() {
     return (
       <div className="ManagePolicy">
-        <Link to='/CardFrame' component={CardFrame}>
+        <Link to='/' component={CardFrame}>
           <BackToChan />
         </Link>
         <ManagePolicyHead />

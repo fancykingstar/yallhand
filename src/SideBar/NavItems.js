@@ -20,6 +20,11 @@ export class NavItems extends React.Component {
                     <div className="NavItemIcon"><Icon name='sync alternate' /></div>
                     <div className="NavItemText"><h4>Automations</h4></div>
                 </div>
+                <br />
+                <div className="NavItemFrame">
+                    <div className="NavItemIcon"><Icon name='bullhorn' /></div>
+                    <div className="NavItemText"><h4>Annoucements</h4></div>
+                </div>
             </div>
         )
     }

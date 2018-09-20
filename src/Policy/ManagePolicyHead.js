@@ -2,6 +2,7 @@ import React from "react";
 import "./style.css";
 import { Input, Label, Button, Icon } from "semantic-ui-react";
 import { SelectVariation } from "./SelectVariation";
+import { NavLink } from "react-router-dom";
 
 export class ManagePolicyHead extends React.Component {
   constructor(props) {
@@ -54,9 +55,10 @@ export class ManagePolicyHead extends React.Component {
             <Button style={{ display: "inline-block", marginLeft: 5 }}>
               Edit
             </Button>
+            <NavLink to="/policy-variation">
             <Button color="blue" style={{ display: "inline-block" }}>
               Create New
-            </Button>
+            </Button></NavLink>
           </div>
         </div>
         <div className="Form">

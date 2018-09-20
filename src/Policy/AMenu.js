@@ -1,7 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Menu, Input, Segment } from "semantic-ui-react";
-import { teamOptions } from "./TempObjects";
+import { Menu, Segment } from "semantic-ui-react";
 import { ResourceLinks } from "./Links";
 import { Attachments } from "./Attachments";
 import { Automations } from "./Automations";
@@ -18,15 +17,14 @@ export class AMenu extends React.Component {
     const { activeItem } = this.state;
     const currentSegment = activeItem => {
       switch (activeItem) {
+        default:
+            return <ResourceLinks />;
         case "links":
           return <ResourceLinks />;
-          break;
         case "attachments":
           return <Attachments />;
-          break;
         case "automations":
           return <Automations />;
-          break;
       }
     };
     return (
