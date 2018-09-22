@@ -1,11 +1,11 @@
 import React from "react";
 import "./style.css";
-import { Input, Menu } from 'semantic-ui-react'
+import { Input, Menu, Divider } from 'semantic-ui-react'
 
 export class TeamMenu extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {activeItem: 'home'}
+        this.state = {activeItem: 'invite'}
     }
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
     render() {
@@ -16,7 +16,7 @@ export class TeamMenu extends React.Component {
             <Menu secondary>
             <Menu.Item
               name='invite'
-              active={activeItem === 'invite users'}
+              active={activeItem === 'invite'}
               onClick={this.handleItemClick}
             />
             <Menu.Item
@@ -36,6 +36,7 @@ export class TeamMenu extends React.Component {
             />
 
           </Menu>
+          <Divider/>
           </div>
         )
     }

@@ -17595,6 +17595,7 @@ ol.ui.horizontal.list li:before {
   border: none;
   -webkit-box-shadow: none;
   box-shadow: none;
+
 }
 .ui.secondary.menu .item {
   -ms-flex-item-align: center;
@@ -17608,6 +17609,8 @@ ol.ui.horizontal.list li:before {
   -webkit-transition: color 0.1s ease;
   transition: color 0.1s ease;
   border-radius: 0.28571429rem;
+  font-weight: 600; /* MJZ */
+  font-size: 1.3em;/* MJZ */
 }
 .ui.secondary.menu .item:before {
   display: none !important;
@@ -17623,21 +17626,21 @@ ol.ui.horizontal.list li:before {
 .ui.secondary.menu .dropdown.item:hover,
 .ui.secondary.menu .link.item:hover,
 .ui.secondary.menu a.item:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(44, 190, 239, 0.578); /* MJZ  secondary menu background */
   color: rgba(0, 0, 0, 0.95);
 }
 .ui.secondary.menu .active.item {
   -webkit-box-shadow: none;
   box-shadow: none;
-  background: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.95);
+  background: #1D7E9D; /* MJZ  secondary menu background */
+  color: rgba(234, 234, 234, 0.95); /* MJZ */
   border-radius: 0.28571429rem;
 }
 .ui.secondary.menu .active.item:hover {
   -webkit-box-shadow: none;
   box-shadow: none;
-  background: rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.95);
+  background: #1D7E9D; /* MJZ  secondary menu background */
+  color: rgba(234, 234, 234, 0.95); /* MJZ */
 }
 .ui.secondary.inverted.menu .link.item,
 .ui.secondary.inverted.menu a.item {

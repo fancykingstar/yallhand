@@ -14,3 +14,12 @@
     width: 90%;
     margin-top: 25px;
 }
+
+.Visable {
+   
+}
+
+.Hidden {
+    display: none;
+    background-color: tomato;
+}

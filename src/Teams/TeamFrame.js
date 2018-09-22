@@ -1,20 +1,40 @@
-import React from 'react'
+import React from "react";
 import "./style.css";
-import { TeamMenu } from './TeamMenu';
-import { InviteUser } from './InviteUser';
-import { InviteAdmin } from './InviteAdmin';
-import { TeamControls } from './TeamControls';
+import { Invite } from "./Invite";
+import { Users } from "./Users";
+import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
+import { TeamConfig } from "./TeamConfig"
+import { Classes } from "./Classes"
 
-export const TeamFrame = () => {
-    return(
-        <div>
-        <TeamMenu/>
+export class TeamFrame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { activeItem: "classes" };
+  }
+
+  handleItemClick = (e, { name }) => {
+    this.setState({ activeItem: name });
+  };
+  isVisable = (name) => {return (name === this.state.activeItem ? "Visable" : "Hidden")}
+  render() {
+    const { activeItem } = this.state;
+    const menuItems = ["invite", "users", "configure teams", "classes"];
+
+    return (
+      <div>
+        <SecondaryMenu
+          menuItems={menuItems}
+          activeItem={activeItem}
+          handleClick={this.handleItemClick}
+        />
         <div className="TeamActionFrame">
-        <TeamControls/>
-
-        <InviteUser/>
-        <InviteAdmin/>
+        <div className={this.isVisable("invite")}>   <Invite /></div>
+        <div className={this.isVisable("users")}>   <Users /></div>
+        <div className={this.isVisable("configure teams")}>   <TeamConfig /></div>
+        <div className={this.isVisable("classes")}>   <Classes /></div>
+      
         </div>
-        </div>
-    )
+      </div>
+    );
+  }
 }
