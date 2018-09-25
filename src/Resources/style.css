@@ -1,0 +1,17 @@
+.LinkTable {
+    margin-left: 15px;
+    max-width: 800px;
+}
+
+td > a {
+    color: #1D7E9D;
+}
+
+
+td > div {
+    display: inline-block;
+    max-width: 400px;
+    overflow: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }

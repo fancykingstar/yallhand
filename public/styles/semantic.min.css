@@ -18974,6 +18974,7 @@ ol.ui.horizontal.list li:before {
 .ui.table th {
   -webkit-transition: background 0.1s ease, color 0.1s ease;
   transition: background 0.1s ease, color 0.1s ease;
+  
 }
 .ui.table thead {
   -webkit-box-shadow: none;
@@ -19044,7 +19045,9 @@ ol.ui.horizontal.list li:before {
 .ui.table td {
   padding: 0.78571429em 0.78571429em;
   text-align: inherit;
+  
 }
+
 .ui.table > .icon {
   vertical-align: baseline;
 }
@@ -19297,6 +19300,8 @@ ol.ui.horizontal.list li:before {
 .ui.table th.collapsing {
   width: 1px;
   white-space: nowrap;
+  
+  
 }
 .ui.fixed.table {
   table-layout: fixed;
@@ -19737,6 +19742,7 @@ ol.ui.horizontal.list li:before {
 }
 .ui.basic.table td {
   background: 0 0;
+  
 }
 .ui.basic.striped.table tbody tr:nth-child(2n) {
   background-color: rgba(0, 0, 0, 0.05) !important;

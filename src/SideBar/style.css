@@ -4,6 +4,10 @@
   }
 }
 
+a {
+  color: #d7d7d7;
+}
+
 .SideBar {
   width: 230px;
   height: 1800px;
@@ -18,14 +22,42 @@
   position: relative;
 }
 
-.Logo {
-  width: 230px;
+.Workspace {
+  width: 228px;
   height: 75px;
-  background-color: #979797;
+  background-color: #2f2c2c;
 }
 
+.WorkspaceName {
+  color: #2fc7f8;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 600;
+  width: 150px;
+  height: 75px;
+  line-height: 75px;
+}
+
+.WorkspaceLogo {
+  margin-top: 10px;
+  margin-left: 165px;
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  border: solid;
+  border-width: 2px;
+  border-color: #2fc7f8;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
+  background-image: url("../Assets/Graphics/temp.png");
+  background-size: 50px 50px;
+}
+
+
+
 .UserProfile {
-  width: 200px;
+  width: 220px;
   height: 35px;
   background-color: #2fc7f8;
   color: #ffffff;
@@ -38,17 +70,33 @@
 }
 
 .UserName {
+
   color: #104455;
   height: 35px;
   padding-top: 7px;
   padding-left: 15px;
   width: 175px;
+  float: left;
+}
+
+.UserSettingsDropdown {
+  color: #104455;
+  width: 18px;
+  margin-right: 15px;
+  padding-top: 7px;
+  float: right;
+  margin-top: 0px;
 }
 
 .Container {
   padding: 0px;
   margin-top: 20px;
   margin-bottom: 30px;
+}
+
+.ChannelList {
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .NavItemFrame {
@@ -58,7 +106,6 @@
   padding-top: 0px;
   display: inline-flex;
 }
-
 
 .NavItemText {
   margin-left: 5px;
@@ -73,6 +120,7 @@
 
 .NavItemFrame:hover {
   background-color: #104455;
+  color: #d7d7d7;
 }
 
 .ChannelHeader {

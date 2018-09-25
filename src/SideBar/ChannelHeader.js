@@ -2,8 +2,8 @@ import React from 'react';
 import { PlusButton } from '../Assets/Graphics/PlusButton'
 import './style.css';
 
-export class ChannelHeader extends React.Component {
-    render() {
+export const ChannelHeader = () => {
+
         return(
 
                 <div className="ChannelHeader">
@@ -14,5 +14,5 @@ export class ChannelHeader extends React.Component {
                
 
         )
-    }
+
 }
