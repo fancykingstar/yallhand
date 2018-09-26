@@ -1,7 +1,11 @@
 body {
-  color: #D7D7D7; 
+  color: rgb(51, 51, 51); 
   overflow: hidden;
   font-family: 'Nunito', sans-serif; 
+}
+
+.lightText {
+  colot: #D7D7D7;
 }
 
 h1 h2 h3 h4 h5 span {

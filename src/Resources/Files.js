@@ -1,10 +1,12 @@
 import React from "react";
 import "./style.css";
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
+import { AddButton } from "../SharedUI/AddButton"
 import { Icon, Pagination, Table } from "semantic-ui-react";
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 import { UserEdit } from "../Teams/UserEdit";
 import { set } from "mobx";
+
 
 const MockFiles = [
   {
@@ -87,6 +89,7 @@ export class Files extends React.Component {
 
     return (
       <div className="LinkTable">
+      <AddButton/>
         <Table selectable basic="very">
           <Table.Header>
             <Table.Row>

@@ -8,7 +8,7 @@ import { Files } from "./Files"
 export class ResourcesFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeItem: "files" };
+    this.state = { activeItem: "links" };
   }
 
   handleItemClick = (e, { name }) => {
@@ -25,6 +25,7 @@ export class ResourcesFrame extends React.Component {
           menuItems={menuItems}
           activeItem={activeItem}
           handleClick={this.handleItemClick}
+          useSearch={true}
         />
         <div className="TeamActionFrame">
         <div className={this.isVisable("links")}>   <Links/></div>

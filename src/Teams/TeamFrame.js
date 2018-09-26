@@ -9,7 +9,7 @@ import { Classes } from "./Classes"
 export class TeamFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeItem: "classes" };
+    this.state = { activeItem: "invite" };
   }
 
   handleItemClick = (e, { name }) => {
@@ -19,6 +19,7 @@ export class TeamFrame extends React.Component {
   render() {
     const { activeItem } = this.state;
     const menuItems = ["invite", "users", "configure teams", "classes"];
+    const useSearch = (this.state.activeItem === 'users') ? true : false;
 
     return (
       <div>
@@ -26,6 +27,7 @@ export class TeamFrame extends React.Component {
           menuItems={menuItems}
           activeItem={activeItem}
           handleClick={this.handleItemClick}
+          useSearch={useSearch}
         />
         <div className="TeamActionFrame">
         <div className={this.isVisable("invite")}>   <Invite /></div>

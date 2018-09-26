@@ -1,33 +1,22 @@
 import React from "react";
-import "./style.css";
 import { Header, Pagination, Table } from "semantic-ui-react";
 import { AddButton } from "../SharedUI/AddButton"
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 import { UserEdit } from "../Teams/UserEdit";
 import { set } from "mobx";
 
-const MockLinks = [
-  {
-    label: "company handbook",
-    url: "https://www.example.com/companyhandbookasdfasdfasdfasd",
-    last_updated: "05/23/2017",
-    active: ["Where is the handbook?"]
-  },
-  {
-    label: "company handbook",
-    url: "https://www.example.com/companyhandbookasfdsadfsadfds",
-    last_updated: "05/23/2017",
-    active: ["Where is the handbook?"]
-  },
-  {
-    label: "company handbook",
-    url: "https://www.example.com/companyhandbookasdfsadfsdfsdfaasdf",
-    last_updated: "05/23/2017",
-    active: ["Where is the handbook?"]
-  }
-];
 
-export class Links extends React.Component {
+const MockAutos = [{
+    "label": "do something",
+    "info_acquired": "name, email",
+    "action_type": "email",
+    "destination": "home@company.com",
+    "last_updated": "5.23.17",
+    "updated_by": "Mark Z"
+}]
+
+
+export class SharedAutos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +38,7 @@ export class Links extends React.Component {
     // const userProfile = this.props.profileData
     // const modalPassed = this.props.open
 
-    const userData = MockLinks;
+    const userData = MockAutos;
 
     const paginationData = UserPagination(userData.length);
     const displayPagination = paginationData.usePagination ? (
@@ -65,13 +54,15 @@ export class Links extends React.Component {
     const newIndicies = PageIndicies(this.state.active, userData.length);
     const currentPage = userData.slice(newIndicies.start, newIndicies.end);
 
-    const resurls = currentPage.map(resurl => (
-      <Table.Row onClick={() => this.openEditor(resurl)}>
+    const globalAutos = currentPage.map(globalAuto => (
+      <Table.Row onClick={() => this.openEditor(globalAuto)}>
     
-        <Table.Cell > {resurl.label}</Table.Cell>
-        <Table.Cell ><a href={resurl.url} target="_blank" >{resurl.url}</a></Table.Cell>
-        <Table.Cell >{resurl.last_updated}</Table.Cell>
-        <Table.Cell>{resurl.active}</Table.Cell>
+        <Table.Cell > {globalAuto.label}</Table.Cell>
+        <Table.Cell >{globalAuto.info_acquired}</Table.Cell>
+        <Table.Cell >{globalAuto.action_type}</Table.Cell>
+        <Table.Cell >{globalAuto.destination}</Table.Cell>
+        <Table.Cell >{globalAuto.last_updated}</Table.Cell>
+        <Table.Cell>{globalAuto.updated_by}</Table.Cell>
       </Table.Row>
     ));
 
@@ -82,20 +73,18 @@ export class Links extends React.Component {
           <Table.Header>
             <Table.Row>
             <Table.HeaderCell>Label</Table.HeaderCell>
-              <Table.HeaderCell>URL</Table.HeaderCell>
-              <Table.HeaderCell >Last Updated</Table.HeaderCell>
-              <Table.HeaderCell>Currently Used In</Table.HeaderCell>
+              <Table.HeaderCell>Info Aquired</Table.HeaderCell>
+              <Table.HeaderCell >Action</Table.HeaderCell>
+              <Table.HeaderCell>Destination</Table.HeaderCell>
+              <Table.HeaderCell>Last Updated</Table.HeaderCell>
+              <Table.HeaderCell>Updated by</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
-          <Table.Body>{resurls}</Table.Body>
+          <Table.Body>{globalAutos}</Table.Body>
         </Table>
         {displayPagination}
-        {/* <UserEdit
-          profileData={this.state.selectedUser}
-          open={this.state.modal}
-          close={this.handleClose}
-        /> */}
+
       </div>
     );
   }

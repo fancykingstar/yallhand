@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css";
 import { Form, Icon, Table, Segment, Header, Button } from "semantic-ui-react";
+import { PillButton } from "../SharedUI/PillButton";
 
 export class InviteUser extends React.Component {
   render() {
@@ -72,12 +73,7 @@ export class InviteUser extends React.Component {
             </Table.Body>
           </Table>
 
-          <div style={{ paddingTop: 15 }}>
-            <Button icon labelPosition="left" circular size="small">
-              <Icon name="send" />
-              Send
-            </Button>
-          </div>
+          <PillButton iconName="send" label="Send"/>
         </Segment>
         {/* <Table.Body style={{ fontWeight: 200 }}>{displayLinks}</Table.Body> */}
       </div>

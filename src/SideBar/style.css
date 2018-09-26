@@ -29,11 +29,14 @@ a {
 }
 
 .WorkspaceName {
+
+  padding: 0px;
+  margin-left: 0px;
   color: #2fc7f8;
-  text-align: center;
-  font-size: 1.5em;
+  text-align: left;
+  font-size: 1.3em;
   font-weight: 600;
-  width: 150px;
+  width: 160px;
   height: 75px;
   line-height: 75px;
 }
@@ -95,6 +98,7 @@ a {
 }
 
 .ChannelList {
+
   max-height: 350px;
   overflow-y: auto;
 }
@@ -143,6 +147,7 @@ a {
 }
 
 .ChannelFrame {
+  color: #D7D7D7;
   height: 30px;
   transition: 0.3s;
   padding: 0px;

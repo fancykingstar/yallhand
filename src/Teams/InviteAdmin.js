@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import {PillButton} from "../SharedUI/PillButton"
 import {
   Button,
   Icon,
@@ -93,12 +94,7 @@ export class InviteAdmin extends React.Component {
             </Table.Body>
           </Table>
 
-          <div style={{ paddingTop: 15 }}>
-            <Button icon labelPosition="left" circular size="small">
-              <Icon name="send" />
-              Send
-            </Button>
-          </div>
+          <PillButton iconName="send" label="Send"/>
         </Segment>
       </div>
     );

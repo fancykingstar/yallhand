@@ -1,6 +1,6 @@
 .Header {
     width: 100vw;
-    height: 75px;
+    height: 40px;
     background-color: #FFFFFF;
     border-color: #979797;
     border-style: solid;
@@ -10,6 +10,15 @@
     z-index: 2;
 }
 
+
+
 .MobileMenu {
     margin-top: 5px;
+}
+
+.AdminHeaderControls {
+    height: 100%;
+    width: 200px;
+    float: right;
+    line-height: 40px;
 }
