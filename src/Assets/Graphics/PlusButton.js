@@ -10,8 +10,8 @@ export class PlusButton extends React.Component {
                     xmlns="http://www.w3.org/2000/svg" 
                     xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs></defs>
-                <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="Left-Panel/4" transform="translate(-340.000000, -303.000000)" fill="#2FC7F8" fill-rule="nonzero">
+                <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                    <g id="Left-Panel/4" transform="translate(-340.000000, -303.000000)" fill="#2FC7F8" fillRule="nonzero">
                         <g id="Group-11" transform="translate(30.000000, 300.000000)">
                             <g id="np_add_929469_000000" transform="translate(310.000000, 3.000000)">
                                 <path d="M4.53535714,4.53535714 C-1.25,10.3207143 -1.25,19.7139286 4.53535714,25.4992857 C10.3207143,31.2846429 19.7139286,31.2846429 25.4992857,25.4992857 C31.2846429,19.7139286 31.2846429,10.3207143 25.4992857,4.53535714 C19.7139286,-1.25 10.2857143,-1.25 4.53535714,4.53535714 Z M23.75,23.75 C18.9285714,28.5714286 11.0714286,28.5714286 6.25,23.75 C1.42857143,18.9285714 1.42857143,11.0714286 6.25,6.25 C11.0714286,1.42857143 18.9285714,1.42857143 23.75,6.25 C28.5714286,11.0714286 28.5714286,18.9285714 23.75,23.75 Z" id="Shape"></path>

@@ -1,52 +1,62 @@
-import {observable, action} from 'mobx'
+import { observable, action } from "mobx";
 
 class Store {
-    @observable active = 'All'
-    @observable channelTitles = ['Sales', 'Marketing', 'Benefits', 'Payroll'];
-    @observable displayTitles = ['Sales', 'Marketing', 'Benefits', 'Payroll'];
-    @observable addChannelMod = false;
-    @observable newTitle = '';
-   
-    @action
-    makeActive(e) {
-        e.preventDefault()
-        this.active = e.currentTarget.id
-      
-    }
-    checkActive = (chan) => {return (chan === this.active) ? true : false }
-    
-    closeMod(e) {
-        e.preventDefault()
-        this.addChannelMod = false;
-    }
+  @observable
+  active = "All";
+  @observable
+  channelTitles = [];
+  @observable
+  displayTitles = [];
+  @observable
+  addChannelMod = false;
+  @observable
+  newTitle = "";
 
-   openMod(e) {
-       e.preventDefault()
-        this.addChannelMod = true;
-    }
+  @action
+  makeActive(e) {
+    this.active = e.currentTarget.id;
+  }
+  checkActive = chan => {
+    return chan === this.active ? true : false;
+  };
 
-    addChannel(e) {
-        e.preventDefault()
-        this.channelTitles.push(this.newTitle)
-        this.displayTitles = this.channelTitles
-        this.closeMod(e)
-       
-    }
-    delChannel(oldItem) {
-        const newList = this.channelTitles.filter(e => e != oldItem)
-        this.channelTitles = newList
-    }
-    addTitle(val) {
-        this.newTitle = val
-    }
-    handleSearch = (term) => { 
-        if (term) {
-            this.displayTitles = this.channelTitles.filter(channel => channel.toLowerCase().includes(term.toLowerCase()))
-        }
-        else {this.displayTitles = this.channelTitles}
-     }
-    
-} 
+  closeMod(e) {
+    e.preventDefault();
+    this.addChannelMod = false;
+  }
 
-const store = new Store();
-export default store;
+  openMod(e) {
+    e.preventDefault();
+    this.addChannelMod = true;
+  }
+
+  addChannel(e) {
+    e.preventDefault();
+    this.channelTitles.push(this.newTitle);
+    this.displayTitles = this.channelTitles;
+    this.closeMod(e);
+  }
+  loadChannels = chanObj => {
+    const channels = require("../MockData/Channels.json");
+    this.channelTitles = channels.map(channel => channel.label);
+    this.displayTitles = this.channelTitles;
+  };
+  delChannel(oldItem) {
+    const newList = this.channelTitles.filter(e => e !== oldItem);
+    this.channelTitles = newList;
+  }
+  addTitle(val) {
+    this.newTitle = val;
+  }
+  handleSearch = term => {
+    if (term) {
+      this.displayTitles = this.channelTitles.filter(channel =>
+        channel.toLowerCase().includes(term.toLowerCase())
+      );
+    } else {
+      this.displayTitles = this.channelTitles;
+    }
+  };
+}
+
+export const SideBarStore = new Store();

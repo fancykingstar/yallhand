@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Input, Icon, Accordion, Dropdown, Checkbox } from "semantic-ui-react";
+import { Icon, Accordion, Dropdown, Checkbox } from "semantic-ui-react";
 import { teamOptions } from "./TempObjects";
 import { ConditionList } from "./ConditionList";
 

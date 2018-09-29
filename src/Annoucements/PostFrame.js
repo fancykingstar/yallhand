@@ -7,7 +7,7 @@ export const PostFrame = () => {
   return (
     <div>
     <PostControls/>
-    <PostContent/>
+    {/* <PostContent/> */}
     <PillButton iconName="bullhorn" label="post"/>
     </div>
   )

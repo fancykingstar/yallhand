@@ -1,10 +1,7 @@
 import React from "react";
-import { Header, Pagination, Table } from "semantic-ui-react";
+import { Pagination, Table } from "semantic-ui-react";
 import { AddButton } from "../SharedUI/AddButton"
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
-import { UserEdit } from "../Teams/UserEdit";
-import { set } from "mobx";
-
 
 const MockAutos = [{
     "label": "do something else",

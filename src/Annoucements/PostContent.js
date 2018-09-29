@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Editor, { createEditorStateWithText } from "draft-js-plugins-editor";
+import Editor from "draft-js-plugins-editor";
 import createEmojiPlugin from "draft-js-emoji-plugin";
 import "draft-js-emoji-plugin/lib/plugin.css";
 import { EditorState, RichUtils } from "draft-js";
@@ -14,7 +14,7 @@ const counterPlugin = createCounterPlugin();
 const { WordCounter } = counterPlugin;
 const emojiPlugin = createEmojiPlugin();
 const linkifyPlugin = createLinkifyPlugin();
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+const EmojiSelect = emojiPlugin;
 const plugins = [emojiPlugin, linkifyPlugin, counterPlugin];
 
 
@@ -104,7 +104,7 @@ export class PostContent extends Component {
         <div style={{ float: "right", paddingTop: 5}}>
           <EmojiSelect />
         </div>
-        <div className="EmojiLicense">Emoji by <a style={{color: 'rgb(179, 179, 179)' }} href="https://joypixels.com" target="_blank">JoyPixels</a>  </div>
+        <div className="EmojiLicense">Emoji by <a style={{color: 'rgb(179, 179, 179)' }} href="https://joypixels.com" rel="noopener noreferrer" target="_blank">JoyPixels</a>  </div>
       </div>
     );
   }

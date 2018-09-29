@@ -34,17 +34,20 @@ export class AMenu extends React.Component {
             name="links"
             active={activeItem === "links"}
             onClick={this.handleItemClick}
+            key="links"
           />
           <Menu.Item
             name="attachments"
             active={activeItem === "attachments"}
             onClick={this.handleItemClick}
+            key="attachments"
           />
           <Menu.Item
             name="automations"
             icon="sync alternate"
             active={activeItem === "automations"}
             onClick={this.handleItemClick}
+            key="automations"
           />
         </Menu>
         <Segment attached="bottom">

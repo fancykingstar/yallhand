@@ -1,9 +1,7 @@
 import React from "react";
-import { SecondaryMenu, Image } from "../SharedUI/SecondaryMenu";
+import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
 import {Feed} from "./Feed"
 import {PostFrame} from "./PostFrame"
-
-
 
 export class AnnoucementsFrame extends React.Component {
   constructor(props) {

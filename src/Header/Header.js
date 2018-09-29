@@ -2,7 +2,7 @@ import React from "react";
 import { Icon, Label, Dropdown } from "semantic-ui-react";
 import "./style.css";
 
-const tempOptions = [{label: "team1right how"},{label: "team2"}]
+const tempOptions = [{label: "team1right how", key: "1", value:"1"},{label: "team2", key:"2", value:"2"}]
 
 export class Header extends React.Component {
   render() {
@@ -19,7 +19,7 @@ export class Header extends React.Component {
             <Icon color="grey" name="bell" size="large" />
 
           
-              <Dropdown style={{marginLeft: 10}} text="Employee Portal" options={tempOptions}/>
+              <Dropdown style={{marginLeft: 10}} text="Employee Portal" options={tempOptions} />
         
           </div>
         </div>

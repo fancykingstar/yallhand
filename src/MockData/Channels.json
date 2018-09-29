@@ -1,0 +1,14 @@
+[
+    {
+        "chanID": "C1",
+        "label": "Test Chan 1",
+        "view": ["userID"],
+        "edit": ["userID"]
+    },
+    {
+        "chanID": "C2",
+        "label": "Test Chan 2",
+        "view": ["userID"],
+        "edit": ["userID"]
+    }
+]

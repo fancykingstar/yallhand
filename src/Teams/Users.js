@@ -2,8 +2,7 @@ import React from "react";
 import MockUsers from "./MOCK_DATA";
 import { Header, Pagination, Table } from "semantic-ui-react";
 import { UserPagination, PageIndicies } from "./UserPagination";
-import { UserEdit } from './UserEdit'
-import { set } from "mobx";
+import { UserEdit } from "./UserEdit";
 
 export class Users extends React.Component {
   constructor(props) {
@@ -18,23 +17,22 @@ export class Users extends React.Component {
   handlePageChange = (e, { activePage }) => {
     this.setState({ active: activePage });
   };
-  openEditor = (info) => {this.setState({selectedUser: info, modal: true})}
-  handleClose = () => this.setState({ modal: false })
+  openEditor = info => {
+    this.setState({ selectedUser: info, modal: true });
+  };
+  handleClose = () => this.setState({ modal: false });
 
   render() {
-    const userProfile = this.props.profileData
-    const modalPassed = this.props.open
-
     const userData = MockUsers;
-
     const paginationData = UserPagination(userData.length);
     const displayPagination = paginationData.usePagination ? (
-      <div style={{textAlign: 'center'}}>
-      <Pagination
-        defaultActivePage={1}
-        totalPages={paginationData.totalPages}
-        onPageChange={this.handlePageChange}
-      /></div>
+      <div style={{ textAlign: "center" }}>
+        <Pagination
+          defaultActivePage={1}
+          totalPages={paginationData.totalPages}
+          onPageChange={this.handlePageChange}
+        />
+      </div>
     ) : null;
 
     const newIndicies = PageIndicies(this.state.active, userData.length);
@@ -57,7 +55,7 @@ export class Users extends React.Component {
     ));
 
     return (
-      <div style={{maxWidth: 700}}>
+      <div style={{ maxWidth: 700 }}>
         <Table basic="very" selectable celled collapsing columns={4}>
           <Table.Header>
             <Table.Row>
@@ -71,7 +69,11 @@ export class Users extends React.Component {
           <Table.Body>{users}</Table.Body>
         </Table>
         {displayPagination}
-        <UserEdit profileData={this.state.selectedUser} open={this.state.modal} close={this.handleClose}/>
+        <UserEdit
+          profileData={this.state.selectedUser}
+          open={this.state.modal}
+          close={this.handleClose}
+        />
       </div>
     );
   }

@@ -127,6 +127,7 @@ a {
   color: #d7d7d7;
 }
 
+
 .ChannelHeader {
   color: #2fc7f8;
   height: 30px;
@@ -187,6 +188,13 @@ a {
 }
 
 .SideBarActive {
+  background-color: #1d7e9d;
+  border-style: solid;
+  border-color: #2fc7f8;
+  border-width: 0px 4px 0px 0px;
+}
+
+.SideBarActive:hover {
   background-color: #1d7e9d;
   border-style: solid;
   border-color: #2fc7f8;

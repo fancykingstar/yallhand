@@ -1,15 +1,7 @@
 import React from "react";
 import "./style.css";
-import {PillButton} from "../SharedUI/PillButton"
-import {
-  Button,
-  Icon,
-  Table,
-  Segment,
-  Header,
-  Form,
-  Popup
-} from "semantic-ui-react";
+import { PillButton } from "../SharedUI/PillButton";
+import { Icon, Table, Segment, Header, Form, Popup } from "semantic-ui-react";
 
 export class InviteAdmin extends React.Component {
   constructor(props) {
@@ -94,7 +86,7 @@ export class InviteAdmin extends React.Component {
             </Table.Body>
           </Table>
 
-          <PillButton iconName="send" label="Send"/>
+          <PillButton iconName="send" label="Send" />
         </Segment>
       </div>
     );

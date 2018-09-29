@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { AnswerField } from './AnswerField';
+// import { AnswerField } from './AnswerField';
 
 import { AMenu } from "./AMenu";
 
@@ -10,7 +10,7 @@ export class AFields extends React.Component {
     return (
    
         <div>
-          <AnswerField/>
+          {/* <AnswerField/> */}
           <AMenu/>
         
         </div>

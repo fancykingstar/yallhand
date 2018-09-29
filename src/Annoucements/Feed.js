@@ -1,5 +1,5 @@
 import React from 'react'
-import { Item, Image, Button, Icon} from "semantic-ui-react";
+import { Item, Image, Button} from "semantic-ui-react";
 
 export const Feed = (props) => { 
     return(

@@ -1,44 +1,59 @@
-import React from 'react';
-import { Icon } from 'semantic-ui-react'
-import { Link } from "react-router-dom";
+import React from "react";
+import { inject, observer } from "mobx-react";
+import { NavItem } from "./NavItem";
+import "./style.css";
 
-
-import './style.css';
-
+@inject("SideBarStore")
+@observer
 export class NavItems extends React.Component {
-    makeActive = (navItem) => {this.props.whenClicked(navItem)}
-    
-    render() {
-        const {Store} = this.props
-        return(
-            <div className = "Container">
-             
-                <Link to="/teams">
-                <div className="NavItemFrame" active={true} onClick={() => this.makeActive('teams')}>
-                    <div className="NavItemIcon"><Icon name='group' /></div>
-                    <div className="NavItemText"><h4>Teams</h4></div>
-                </div></Link>
-                <br />
-                <Link to="/resources">
-                <div className="NavItemFrame" onClick={() => this.makeActive('resources')}>
-                    <div className="NavItemIcon"><Icon name='cubes' /></div>
-                    <div className="NavItemText"><h4>Resources</h4></div>
-                </div></Link>
-                <br />
-                <Link to="/automations">
-                <div className="NavItemFrame" onClick={() => this.makeActive('automations')}>
-                    <div className="NavItemIcon"><Icon name='sync alternate' /></div>
-                    <div className="NavItemText"><h4>Automations</h4></div>
-                </div></Link>
-                <br />
-                <Link to="/annoucements" onClick={() => this.makeActive('annoucements')}>
-                <div className="NavItemFrame">
-                    <div className="NavItemIcon"><Icon name='bullhorn' /></div>
-                    <div className="NavItemText"><h4>Annoucements</h4></div>
-                </div></Link>
-             
-              
-            </div>
-        )
-    }
+  // makeActive = (navItem) => {this.props.whenClicked(navItem)}
+  render() {
+    const { SideBarStore } = this.props;
+    return (
+      <div className="Container">
+        <NavItem
+          id="teams"
+          icon="group"
+          label="Teams"
+          active={SideBarStore.checkActive("teams")}
+        />
+
+        <br />
+
+        <NavItem
+          id="resources"
+          icon="cubes"
+          label="Resources"
+          active={SideBarStore.checkActive("resources")}
+        />
+
+        <br />
+
+        <NavItem
+          id="automations"
+          icon="sync alternate"
+          label="Automations"
+          active={SideBarStore.checkActive("automations")}
+        />
+
+        <br />
+
+        <NavItem
+          id="annoucements"
+          icon="bullhorn"
+          label="Annoucements"
+          active={SideBarStore.checkActive("annoucements")}
+        />
+
+        <br />
+
+        {/* <NavItem
+          id="staffdirectory"
+          icon="list alternate"
+          label="Staff Directory"
+          active={SideBarStore.checkActive("staffdirectory")}
+        /> */}
+      </div>
+    );
+  }
 }

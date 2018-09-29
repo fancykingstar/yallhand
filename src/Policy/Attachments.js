@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Input, Form, Icon, Label, Button } from "semantic-ui-react";
+import { Icon, Button } from "semantic-ui-react";
 import { AttachedList } from "./AttachedList";
 
 export class Attachments extends React.Component {

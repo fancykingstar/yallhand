@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 export const UserPagination = (userCount) => {
         const usePagination = (userCount > 10) ? true : false;

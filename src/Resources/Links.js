@@ -1,10 +1,8 @@
 import React from "react";
 import "./style.css";
-import { Header, Pagination, Table } from "semantic-ui-react";
-import { AddButton } from "../SharedUI/AddButton"
+import { Pagination, Table } from "semantic-ui-react";
+import { AddButton } from "../SharedUI/AddButton";
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
-import { UserEdit } from "../Teams/UserEdit";
-import { set } from "mobx";
 
 const MockLinks = [
   {
@@ -46,9 +44,6 @@ export class Links extends React.Component {
   handleClose = () => this.setState({ modal: false });
 
   render() {
-    // const userProfile = this.props.profileData
-    // const modalPassed = this.props.open
-
     const userData = MockLinks;
 
     const paginationData = UserPagination(userData.length);
@@ -66,24 +61,27 @@ export class Links extends React.Component {
     const currentPage = userData.slice(newIndicies.start, newIndicies.end);
 
     const resurls = currentPage.map(resurl => (
-      <Table.Row onClick={() => this.openEditor(resurl)}>
-    
-        <Table.Cell > {resurl.label}</Table.Cell>
-        <Table.Cell ><a href={resurl.url} target="_blank" >{resurl.url}</a></Table.Cell>
-        <Table.Cell >{resurl.last_updated}</Table.Cell>
+      <Table.Row onClick={() => this.openEditor(resurl)} key={resurl.label}>
+        <Table.Cell> {resurl.label}</Table.Cell>
+        <Table.Cell>
+          <a href={resurl.url} target="_blank">
+            {resurl.url}
+          </a>
+        </Table.Cell>
+        <Table.Cell>{resurl.last_updated}</Table.Cell>
         <Table.Cell>{resurl.active}</Table.Cell>
       </Table.Row>
     ));
 
     return (
       <div className="LinkTable">
-      <AddButton/>
+        <AddButton />
         <Table selectable basic="very">
           <Table.Header>
             <Table.Row>
-            <Table.HeaderCell>Label</Table.HeaderCell>
+              <Table.HeaderCell>Label</Table.HeaderCell>
               <Table.HeaderCell>URL</Table.HeaderCell>
-              <Table.HeaderCell >Last Updated</Table.HeaderCell>
+              <Table.HeaderCell>Last Updated</Table.HeaderCell>
               <Table.HeaderCell>Currently Used In</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -91,11 +89,6 @@ export class Links extends React.Component {
           <Table.Body>{resurls}</Table.Body>
         </Table>
         {displayPagination}
-        {/* <UserEdit
-          profileData={this.state.selectedUser}
-          open={this.state.modal}
-          close={this.handleClose}
-        /> */}
       </div>
     );
   }

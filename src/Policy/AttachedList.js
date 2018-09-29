@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { List, Button, Icon } from "semantic-ui-react";
+import { List, Icon } from "semantic-ui-react";
 import { attached } from "./TempObjects";
 
 export class AttachedList extends React.Component {

@@ -1,0 +1,39 @@
+[
+    {
+        "AccountID": "A1",
+        "policyID": "P1",
+        "teamID": "T1",
+        "chanID": "C1",
+        "label": "How do I get a reembursement?",
+        "keywords": ["refund", "recoup", "paid back"],
+        "variations": {"global":{
+                "variationID": "V1",
+                "userID": "userID",
+                "userDisplayName": "Display Name",
+                "updated": "1538147254"
+            },
+            "local": {
+                "variationID": "V2",
+                "userID": "userID",
+                "userDisplayName": "Display Name",
+                "updated": "1538147254"
+            }
+        }
+    },
+    {
+        "AccountID": "A1",
+        "policyID": "P2",
+        "teamID": "T1",
+        "chanID": "C1",
+        "label": "Where can I lockup my bike?",
+        "keywords": ["bicycle"],
+        "variations": {"global":{
+            "variationID": "V3",
+            "userID": "userID",
+            "userDisplayName": "Display Name",
+            "updated": "1538147254"
+        }
+    }
+    }
+
+]

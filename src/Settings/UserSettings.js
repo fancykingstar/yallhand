@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Segment, Form, Button, Icon, Select } from "semantic-ui-react";
+import { Header, Segment, Form, Button} from "semantic-ui-react";
 
 export const UserSettings = () => {
   return (

@@ -4,8 +4,7 @@ import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
 import { Icon, Pagination, Table } from "semantic-ui-react";
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
-import { UserEdit } from "../Teams/UserEdit";
-import { set } from "mobx";
+
 
 
 const MockFiles = [

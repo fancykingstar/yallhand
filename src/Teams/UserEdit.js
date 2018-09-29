@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Button, Header, Icon, Modal, Form } from "semantic-ui-react";
+import React from "react";
+import { Button, Header, Modal, Form } from "semantic-ui-react";
 
 export class UserEdit extends React.Component {
   constructor(props) {

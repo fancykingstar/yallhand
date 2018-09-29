@@ -1,0 +1,16 @@
+import {observable, action} from 'mobx'
+
+class Store {
+    @observable channels = []
+    @observable channelTitles = ['Sales', 'Marketing', 'Benefits', 'Payroll'];
+    @observable displayTitles = this.channels.map(chan => chan.label);
+    @observable newTitle = '';
+
+    @action
+    loadChannel = (chanObj) => {
+        this.channels = chanObj
+        console.log("fire!")
+    }
+}
+
+export const ChannelStore = new Store();

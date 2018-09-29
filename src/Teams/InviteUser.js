@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Form, Icon, Table, Segment, Header, Button } from "semantic-ui-react";
+import { Form, Icon, Table, Segment, Header} from "semantic-ui-react";
 import { PillButton } from "../SharedUI/PillButton";
 
 export class InviteUser extends React.Component {

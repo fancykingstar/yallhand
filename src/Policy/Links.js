@@ -1,13 +1,13 @@
 import React from "react";
 import "./style.css";
-import { Form, Icon, Table, Button, Label } from "semantic-ui-react";
+import { Form, Icon, Table, Button } from "semantic-ui-react";
 import { resourceLinks } from "./TempObjects";
 
 
 export class ResourceLinks extends React.Component {
   render() {
     const displayLinks = resourceLinks.map(link => (
-      <Table.Row>
+      <Table.Row key={link.label}>
         <Table.Cell>
           <a href={link.url} target="_blank">
             {link.url}

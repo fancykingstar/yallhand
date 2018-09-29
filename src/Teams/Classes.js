@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Form, Icon, Table, Segment, Header, List } from "semantic-ui-react";
+import { Form, Segment, Header, List } from "semantic-ui-react";
 
 export class Classes extends React.Component {
     

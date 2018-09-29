@@ -5,11 +5,11 @@ import {inject, observer} from 'mobx-react'
 import "./style.css";
 
 
-@inject('Store')
+@inject('SideBarStore')
 @observer
 export class ChannelHeader extends React.Component {
   render() {
-    const {Store} = this.props
+    const {SideBarStore} = this.props
     return (
       <div className="ChannelHeader">
         <div style={{ float: "left" }}>
@@ -18,16 +18,16 @@ export class ChannelHeader extends React.Component {
         <div
           className="ChannelAdd"
           style={{ float: "right", marginRight: 50 }}
-          onClick={(e) => Store.openMod(e)}
+          onClick={(e) => SideBarStore.openMod(e)}
         >
           <PlusButton />
         </div>
 
-        <Modal open={Store.addChannelMod} onClose={(e) => Store.closeMod(e)} closeIcon size="mini">
+        <Modal open={SideBarStore.addChannelMod} onClose={(e) => SideBarStore.closeMod(e)} closeIcon size="mini">
           <Modal.Header>Add Channel</Modal.Header>
           <Modal.Content>
             <h4>Channel Name</h4>
-            <Input list="suggested" fluid onChange={(e, val) => Store.addTitle(val.value)} />
+            <Input list="suggested" fluid onChange={(e, val) => SideBarStore.addTitle(val.value)} />
             <datalist id="suggested">
               <option value="HR" />
               <option value="Payroll" />
@@ -40,7 +40,7 @@ export class ChannelHeader extends React.Component {
               icon="checkmark"
               labelPosition="right"
               content="Submit"
-              onClick={(e) => Store.addChannel(e)} />
+              onClick={(e) => SideBarStore.addChannel(e)} />
           </Modal.Actions>
         </Modal>
       </div>
