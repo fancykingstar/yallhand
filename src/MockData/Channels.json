@@ -1,13 +1,25 @@
 [
     {
         "chanID": "C1",
-        "label": "Test Chan 1",
+        "label": "Benefits",
         "view": ["userID"],
         "edit": ["userID"]
     },
     {
         "chanID": "C2",
-        "label": "Test Chan 2",
+        "label": "Payroll",
+        "view": ["userID"],
+        "edit": ["userID"]
+    },
+    {
+        "chanID": "C3",
+        "label": "IT",
+        "view": ["userID"],
+        "edit": ["userID"]
+    },
+    {
+        "chanID": "C4",
+        "label": "Sales",
         "view": ["userID"],
         "edit": ["userID"]
     }

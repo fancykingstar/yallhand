@@ -2,7 +2,7 @@ import { observable, action } from "mobx";
 
 class Store {
   @observable
-  active = "All";
+  active = 'All';
   @observable
   channelTitles = [];
   @observable
@@ -11,6 +11,8 @@ class Store {
   addChannelMod = false;
   @observable
   newTitle = "";
+  @observable
+  channelKeys = {'All': null}
 
   @action
   makeActive(e) {
@@ -34,12 +36,15 @@ class Store {
     e.preventDefault();
     this.channelTitles.push(this.newTitle);
     this.displayTitles = this.channelTitles;
+    this.channelKeys[this.newTitle] = Math.random().toString(16).slice(2, 8).toUpperCase()
+    console.log(this.channelKeys[this.newTitle])
     this.closeMod(e);
   }
   loadChannels = chanObj => {
     const channels = require("../MockData/Channels.json");
-    this.channelTitles = channels.map(channel => channel.label);
+    this.channelTitles = channels.map(channel => channel.label)
     this.displayTitles = this.channelTitles;
+    for (let i in channels) {this.channelKeys[channels[i]['label']] = channels[i]['chanID']}
   };
   delChannel(oldItem) {
     const newList = this.channelTitles.filter(e => e !== oldItem);

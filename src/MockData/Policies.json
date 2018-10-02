@@ -1,39 +1,74 @@
-[
+[ 
     {
-        "AccountID": "A1",
+        "accountID": "A1",
         "policyID": "P1",
         "teamID": "T1",
         "chanID": "C1",
+        "admins": [{"adminID": "adminID", "displayName": "Mark Z."}, {"adminID": "adminID", "displayName": "Mark A."}, {"adminID": "adminID", "displayName": "Mark J."}, {"adminID": "adminID", "displayName": "Mark X."}],
         "label": "How do I get a reembursement?",
         "keywords": ["refund", "recoup", "paid back"],
-        "variations": {"global":{
+        "condition": "ok",
+        "variations": [
+            {
+                "type": "global",
                 "variationID": "V1",
                 "userID": "userID",
                 "userDisplayName": "Display Name",
-                "updated": "1538147254"
+                "updated": "1538147260",
+                "automation": false
             },
-            "local": {
+            {
+                "type": "local",
                 "variationID": "V2",
                 "userID": "userID",
                 "userDisplayName": "Display Name",
-                "updated": "1538147254"
-            }
-        }
+                "updated": "1538147250",
+                "automation": true
+            }]
+        
     },
     {
-        "AccountID": "A1",
+        "accountID": "A1",
         "policyID": "P2",
         "teamID": "T1",
         "chanID": "C1",
         "label": "Where can I lockup my bike?",
+        "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["bicycle"],
-        "variations": {"global":{
-            "variationID": "V3",
-            "userID": "userID",
-            "userDisplayName": "Display Name",
-            "updated": "1538147254"
-        }
+        "condition": "notOk",
+        "variations": [
+            {
+                "type": "global",
+                "variationID": "V1",
+                "userID": "userID",
+                "userDisplayName": "Display Name",
+                "updated": "1538147254",
+                "automation": false
+            }
+        ]
+    
+    },
+    {
+        "accountID": "A1",
+        "policyID": "P5",
+        "teamID": "T1",
+        "chanID": "C1",
+        "label": "How do I take time off?",
+        "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
+        "keywords": ["PTO"],
+        "condition": "draft",
+        "variations": [
+            {
+                "type": "global",
+                "variationID": "V1",
+                "userID": "userID",
+                "userDisplayName": "Display Name",
+                "updated": "1538147255",
+                "automation": false
+            }
+        ]
+    
     }
-    }
+
 
 ]

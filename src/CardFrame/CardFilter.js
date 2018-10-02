@@ -1,35 +1,24 @@
 import React from 'react'
-
+import {inject, observer} from 'mobx-react'
 import './style.css'
 
+@inject("PoliciesStore")
+@observer
 export class CardFilter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            cardFilterActive: true,
-            cardFilterNotActive: false,
-            cardFilterArchived: false
-        }
-    }
-    handleClick = (e) => {
-        e.preventDefault()
-        const newState = {};
-        newState[e.currentTarget.id] = !(this.state[e.currentTarget.id]);
-        this.setState (newState);
-    }
     filterClass = (val)=> {return val ? "CardFilterContainer" : "CardFilterContainer Disabled"};
     render() {
+        const { PoliciesStore } = this.props    
         return(
             <div className="CardFiltersGroup">
-                <div id="cardFilterActive" className={this.filterClass(this.state.cardFilterActive)} onClick={e => this.handleClick(e)}>
-                    <div className="CardFilter">Active</div>
+                <div id="cardFilterPublished" className={this.filterClass(PoliciesStore.cardFilters.cardFilterPublished)} onClick={e => PoliciesStore.updateCardFilter(e)}>
+                    <div className="CardFilter">Published</div>
                     <div className="CardFilterBadge">12</div>
                 </div>
-                <div id="cardFilterNotActive" className={this.filterClass(this.state.cardFilterNotActive)} onClick={e => this.handleClick(e)}>
-                    <div className="CardFilter">Not Active</div>
+                <div id="cardFilterDrafts" className={this.filterClass(PoliciesStore.cardFilters.cardFilterDrafts)} onClick={e => PoliciesStore.updateCardFilter(e)}>
+                    <div className="CardFilter">Drafts</div>
                     <div className="CardFilterBadge">11</div>
                 </div>
-                <div id="cardFilterArchived" className={this.filterClass(this.state.cardFilterArchived)} onClick={e => this.handleClick(e)}>
+                <div id="cardFilterArchived" className={this.filterClass(PoliciesStore.cardFilters.cardFilterArchived)} onClick={e => PoliciesStore.updateCardFilter(e)}>
                     <div className="CardFilter">Archived</div>
                     <div className="CardFilterBadge">3</div>
                 </div>

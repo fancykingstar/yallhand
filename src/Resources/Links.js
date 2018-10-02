@@ -6,19 +6,19 @@ import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 
 const MockLinks = [
   {
-    label: "company handbook",
+    label: "company handbook1",
     url: "https://www.example.com/companyhandbookasdfasdfasdfasd",
     last_updated: "05/23/2017",
     active: ["Where is the handbook?"]
   },
   {
-    label: "company handbook",
+    label: "company handbook2",
     url: "https://www.example.com/companyhandbookasfdsadfsadfds",
     last_updated: "05/23/2017",
     active: ["Where is the handbook?"]
   },
   {
-    label: "company handbook",
+    label: "company handbook3",
     url: "https://www.example.com/companyhandbookasdfsadfsdfsdfaasdf",
     last_updated: "05/23/2017",
     active: ["Where is the handbook?"]

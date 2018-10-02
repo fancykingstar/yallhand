@@ -7,6 +7,7 @@ export const SecondaryMenu = props => {
       name={menuItem}
       active={props.activeItem === menuItem}
       onClick={props.handleClick}
+      key={menuItem}
     />
   ));
   const searchField = props.useSearch ? (

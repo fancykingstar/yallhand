@@ -7,13 +7,25 @@ import { inject, observer } from "mobx-react";
 
 import "./style.css";
 
-@inject("SideBarStore")
+@inject("SideBarStore", "PoliciesStore")
 @observer
 export class ChannelContainer extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     const { SideBarStore } = this.props;
     SideBarStore.loadChannels();
   }
+
+  componentWillUpdate() {
+    const { SideBarStore } = this.props;
+    const { PoliciesStore } = this.props;
+    if (SideBarStore.active !== PoliciesStore.channelFilter['label']) {
+        console.log(SideBarStore.channelKeys[SideBarStore.active])
+        PoliciesStore.chanFilter(SideBarStore.active, SideBarStore.channelKeys[SideBarStore.active])
+    }
+    PoliciesStore.displayPolicies()
+
+  }
+
   render() {
     const { SideBarStore } = this.props;
     const channelTitles = SideBarStore.displayTitles;

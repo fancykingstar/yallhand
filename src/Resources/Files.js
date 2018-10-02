@@ -73,7 +73,7 @@ export class Files extends React.Component {
     const currentPage = userData.slice(newIndicies.start, newIndicies.end);
 
     const resfiles = currentPage.map(resfile => (
-      <Table.Row onClick={() => this.openEditor(resfile)}>
+      <Table.Row onClick={() => this.openEditor(resfile)} key={resfile.label}>
     
     <Table.Cell collapsing>
           <Icon name={this.getIcon(resfile.type)} />
