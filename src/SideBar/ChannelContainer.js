@@ -19,7 +19,6 @@ export class ChannelContainer extends React.Component {
     const { SideBarStore } = this.props;
     const { PoliciesStore } = this.props;
     if (SideBarStore.active !== PoliciesStore.channelFilter['label']) {
-        console.log(SideBarStore.channelKeys[SideBarStore.active])
         PoliciesStore.chanFilter(SideBarStore.active, SideBarStore.channelKeys[SideBarStore.active])
     }
     PoliciesStore.displayPolicies()
@@ -40,7 +39,7 @@ export class ChannelContainer extends React.Component {
         <ChannelHeader />
         <ChannelSearch />
         <div className="ChannelList" />
-        <NavLink to="/" exact>
+        <NavLink to="/panel">
           <div id="All" onClick={e => SideBarStore.makeActive(e)}>
             <Channel text="All" active={SideBarStore.checkActive("All")} />
           </div>

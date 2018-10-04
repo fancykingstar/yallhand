@@ -7,9 +7,10 @@ import { BrowserRouter } from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker';
 import {SideBarStore} from "./Stores/SideBarStore";
 import {PoliciesStore} from "./Stores/PoliciesStore";
+import {UserStore} from "./Stores/UserStore"
 
 const Root = (
-  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore}>
+  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore} UserStore={UserStore}>
     <BrowserRouter>
     <App />
     </BrowserRouter>

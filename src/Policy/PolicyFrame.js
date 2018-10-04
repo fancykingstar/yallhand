@@ -1,17 +1,17 @@
-import React from 'react';
-import './style.css'
-import { ManagePolicy } from './ManagePolicy'
+import React from "react";
+import { BackToChan } from "./BackToChan";
+import { ManagePolicy } from "./ManagePolicy";
+import "./style.css";
 
+export const PolicyFrame = ({match}) => ( 
 
-
-export class PolicyFrame extends React.Component {
-    render() {
-        return(
-            <div className="PolicyFrame">
-                <ManagePolicy/>
-                
+      <div className="PolicyFrame">
+        <div className="ManagePolicy">
       
-            </div>
-        )
-    }
-}
+            <BackToChan />
+       
+         <ManagePolicy policyID={match.params.id}/>
+        </div>
+      </div>
+    );
+ 

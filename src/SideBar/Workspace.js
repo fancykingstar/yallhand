@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom'
-import {HyprLogo} from '../Assets/Graphics/HyprLogo'
+import {QLogo} from '../Assets/Graphics/QLogo'
 import './style.css';
 
 export class Workspace extends React.Component {
@@ -13,8 +13,8 @@ export class Workspace extends React.Component {
                
                <div className="WorkspaceName">
                 
-                <div style={{float: 'left', paddingLeft: 5, width: 30}}><HyprLogo/></div>
-                <div style={{paddingLeft: 38}}>HYPRSPACE</div>
+                <div style={{float: 'left', paddingLeft: 2, paddingTop: 13, width: 30, position: 'absolute'}}><QLogo/></div>
+                <div style={{paddingLeft: 25}}>QUADRANCE</div>
                 
          
            

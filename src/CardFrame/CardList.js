@@ -1,6 +1,5 @@
 import React from 'react';
 import {inject, observer} from "mobx-react"
-import {Transition} from "semantic-ui-react"
 import { Card } from './Card'
 import { CreateCard } from './CreateCard'
 import './style.css'
@@ -22,8 +21,10 @@ export class CardList extends React.Component {
             )
         return(
             <div className="CardList">
+               
                 <CreateCard />
                 {cards}
+            
             </div>
         )
     }
