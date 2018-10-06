@@ -1,38 +1,38 @@
 import React from "react";
+import {inject, observer} from "mobx-react"
 import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
-import { SharedAutos } from "./Shared";
-import { PrivateAutos } from "./Private";
+import {AutomationList} from "./AutomationList"
+// import { SharedAutos } from "./Shared";
+// import { PrivateAutos } from "./Private";
 
 
 
-export class AutomationsFrame extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { activeItem: "shared" };
-  }
+export const AutomationsFrame = inject("AutomationsStore")(observer((props) => {
 
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
+  const {AutomationsStore} = props
+  const handleItemClick = (e, { name }) => {
+    AutomationsStore.toggleMenu(name)
   };
-  isVisable = (name) => {return (name === this.state.activeItem ? "Visable" : "Hidden")}
-  render() {
-    const { activeItem } = this.state;
+  const isVisable = (name) => {return (name === AutomationsStore.automationMenuSelect ? "Visable" : "Hidden")}
+
+    const activeItem = AutomationsStore.automationMenuSelect;
     const menuItems = ["shared", "private"];
 
+  
     return (
       <div>
         <SecondaryMenu
           menuItems={menuItems}
           activeItem={activeItem}
-          handleClick={this.handleItemClick}
+          handleClick={handleItemClick}
           useSearch={true}
         />
         <div className="TeamActionFrame">
-        <div className={this.isVisable("shared")}>   <SharedAutos/></div>
-        <div className={this.isVisable("private")}>  <PrivateAutos/></div>
+        <div className={isVisable("shared")}>   <AutomationList list={"public"}/></div>
+        <div className={isVisable("private")}>  <AutomationList list={"private"}/></div>
       
         </div>
       </div>
     );
   }
-}
+))

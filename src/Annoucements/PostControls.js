@@ -16,7 +16,7 @@ export class PostControls extends React.Component {
           search
           selection
           multiple
-          options={["one", "two"]}
+          options={teamOptions} 
         />
       </div>
     );

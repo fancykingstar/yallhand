@@ -1,14 +1,14 @@
 import React from "react";
 import "./App.css";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import { AdminPanel } from "./AdminPanel";
 import { Login } from "./Login/Login";
 import { TwilightZone } from "./MiscPages/404";
 
-// @inject("UserStore")
-// @observer
-class App extends React.Component {
+@inject("UserStore")
+
+class AppRoute extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -28,9 +28,12 @@ class App extends React.Component {
         {/* <Route path="/login" component={Login} />
         <Route path="*" component={TwilightZone} /> */}
         </Switch>
+        <Redirect push to="/panel" />
       </div>
     );
   }
 }
 
-export default App;
+// export default App;
+const App = withRouter(observer(AppRoute));
+export default App

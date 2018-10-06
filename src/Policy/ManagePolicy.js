@@ -4,13 +4,23 @@ import {inject, observer} from "mobx-react"
 import { Input, Label, Button, Icon, Header } from "semantic-ui-react";
 import { SelectVariation } from "./SelectVariation";
 import { NavLink } from "react-router-dom";
-import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import { ManageVariationData } from "./ManageVariationData";
 
-export const ManagePolicy = inject("PoliciesStore")(observer((props) => {
+
+export const ManagePolicy = inject("PoliciesStore", "ResourcesStore")(observer((props) => {
   const {PoliciesStore} = props
+  const {ResourcesStore} = props
   const policy = PoliciesStore.allPolicies.filter(current => current.policyID === props.policyID)[0]
+  PoliciesStore.resetVariation()
+  const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'text':variation.variationID, 'type': variation.type}))
+  const grabGlobal = variations.filter(variation => variation.type === 'global')
+  grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
+  
   const keywords = policy.keywords.map(keyword => <Label key={keyword}>{keyword}<Icon name="delete" /></Label>)
-  const tags = policy.TagID ? policy.tagID.map(tag => tag.label) : "None"
+ 
+  
+
+ 
 
     return(
       <div>
@@ -36,7 +46,7 @@ export const ManagePolicy = inject("PoliciesStore")(observer((props) => {
         </div>
         <div className="Form">
           <div>
-            <SelectVariation />
+            <SelectVariation variations={variations}/>
             <Button style={{ display: "inline-block", marginLeft: 5 }}>
               Edit
             </Button>
@@ -46,27 +56,7 @@ export const ManagePolicy = inject("PoliciesStore")(observer((props) => {
             </Button></NavLink>
           </div>
         </div>
-        <div className="Form">
-          <span>Required Tags: {tags}</span>
-        </div>
-        <div className="Form">
-          <span>Last Updated: {UTCtoFriendly(policy.updated)}</span>
-        </div>
-        <div className="Form">
-          <span>Resource URLs: none</span>
-        </div>
-        <div className="Form">
-          <span>Attached Files: none</span>
-        </div>
-        <div className="Form">
-          <span>Active Automations: none</span>
-        </div>
-        <div className="Form">
-          <span>Owner(s): </span>
-          <Label color="blue" horizontal>
-            Mark Z.
-          </Label>
-        </div>
+       <ManageVariationData currentVariation={"V1"} policy={policy}/>
       </div>
     )
 }))

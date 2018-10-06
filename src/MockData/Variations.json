@@ -6,7 +6,7 @@
         "stage": "published",
         "updated": "1538147254",
         "admin": {"userID":"userID", "userDisplayName": "Display Name"},
-        "label": "I want a reembursement",
+        "label": "How do I take time off",
         "data": [
             {
                 "condition": "condition 1",

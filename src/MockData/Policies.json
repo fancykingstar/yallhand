@@ -1,61 +1,10 @@
-[ 
-    {
-        "accountID": "A1",
-        "policyID": "P1",
-        "teamID": "T1",
-        "chanID": "C1",
-        "tagID": [],
-        "admins": [{"adminID": "adminID", "displayName": "Mark Z."}, {"adminID": "adminID", "displayName": "Mark A."}, {"adminID": "adminID", "displayName": "Mark J."}, {"adminID": "adminID", "displayName": "Mark X."}],
-        "label": "How do I get a reembursement?",
-        "keywords": ["refund", "recoup", "paid back"],
-        "condition": "ok",
-        "variations": [
-            {
-                "type": "global",
-                "variationID": "V1",
-                "userID": "userID",
-                "userDisplayName": "Display Name",
-                "updated": "1538147260",
-                "automation": false
-            },
-            {
-                "type": "local",
-                "variationID": "V2",
-                "userID": "userID",
-                "userDisplayName": "Display Name",
-                "updated": "1538147250",
-                "automation": true
-            }]
-        
-    },
-    {
-        "accountID": "A1",
-        "policyID": "P2",
-        "teamID": "T1",
-        "chanID": "C1",
-        "tagID": [],
-        "label": "Where can I lockup my bike?",
-        "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
-        "keywords": ["bicycle"],
-        "condition": "notOk",
-        "variations": [
-            {
-                "type": "global",
-                "variationID": "V1",
-                "userID": "userID",
-                "userDisplayName": "Display Name",
-                "updated": "1538147254",
-                "automation": false
-            }
-        ]
-    
-    },
+
+[
     {
         "accountID": "A1",
         "policyID": "P5",
         "teamID": "T1",
         "chanID": "C1",
-        "tagID": [],
         "label": "How do I take time off?",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["PTO"],
@@ -64,10 +13,21 @@
             {
                 "type": "global",
                 "variationID": "V1",
-                "userID": "userID",
-                "userDisplayName": "Display Name",
+                "tags": [{"label": "employee" , "tagID": "tag01"}, {"label": "consultant" , "tagID": "tag02"} ],
+                "admin": {"adminID": "adminID", "displayName": "Mark Z."},
+       
                 "updated": "1538147255",
-                "automation": false
+                "automation": [{"label": "Contact HR" , "autoID": "AUTO1"}]
+                
+            },
+            {
+                "type": "local",
+                "variationID": "V11",
+                "tags": [{"label": "manager" , "tagID": "tag03"}],
+                "admin": {"adminID": "adminID", "displayName": "Randall Z."},
+          
+                "updated": "1538147255",
+                "automation": [{"label": "Contact Someone" , "autoID": "AUTO2"}]
             }
         ]
     

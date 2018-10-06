@@ -13,7 +13,7 @@ export class NavItem extends React.Component {
         : "NavItemFrame";
     const { SideBarStore } = this.props;
     return (
-      <Link to={"/" + this.props.id}>
+      <Link to={"/panel/" + this.props.id}>
         <div
           className={active}
           id={this.props.id}

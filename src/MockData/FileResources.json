@@ -1,0 +1,26 @@
+[
+    {
+    "accountID": "A1",
+    "resourceID": "A739CB",
+    "variationID": ["V1"],
+    "label": "Time off policy",
+    "url": "https://www.google.com",
+    "type": "pdf",
+    "size": "1.5 MB" ,  
+    "updated": "1538147254",
+    "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    },
+    {
+        "accountID": "A1",
+        "resourceID": "A739CD",
+        "variationID": ["V1"],
+        "label": "another policy",
+        "url": "https://www.google.com",
+        "type": "doc",
+        "size": "1.5 MB" ,  
+        "updated": "1538147254",
+        "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+        }
+] 
+
+

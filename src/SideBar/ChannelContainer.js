@@ -11,8 +11,8 @@ import "./style.css";
 @observer
 export class ChannelContainer extends React.Component {
   componentDidMount() {
-    const { SideBarStore } = this.props;
-    SideBarStore.loadChannels();
+    // const { SideBarStore } = this.props;
+    // SideBarStore.loadChannels();
   }
 
   componentWillUpdate() {

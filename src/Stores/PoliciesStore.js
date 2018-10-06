@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 class Store {
   @observable
@@ -6,6 +6,9 @@ class Store {
 
   @observable
   filteredPolicies = [];
+
+  @observable
+  toggledVariation = ''
 
   @observable
   channelFilter = {'label': 'All', 'chanID': null};
@@ -81,7 +84,36 @@ chanFilter(label, id) {
     this.channelFilter = {'label':label, 'chanID': id}
 }
 
+toggleVariation(variationID) {
+    this.toggledVariation = variationID
+}
   
+resetVariation() {
+    this.toggledVariation = ''
+}
+
+sourcePolicyFriendly(id) {
+    let policyFriendly = ''
+    while (policyFriendly === '') {
+    this.allPolicies.forEach(function(policy) {
+        policy.variations.forEach(function(variation) {
+            console.log(id)
+            if (variation.variationID === id) {
+             
+                policyFriendly = policy.label
+            } 
+        })
+    })
+    break;
+    }
+    return policyFriendly
+}
+
+variationsToPolicies(variations) {
+    const allPolicies = variations.map(variationID => this.sourcePolicyFriendly(variationID))
+    return allPolicies.join(' ')
+}
+
 }
 
 export const PoliciesStore = new Store();

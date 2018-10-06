@@ -8,9 +8,12 @@ import registerServiceWorker from './registerServiceWorker';
 import {SideBarStore} from "./Stores/SideBarStore";
 import {PoliciesStore} from "./Stores/PoliciesStore";
 import {UserStore} from "./Stores/UserStore"
+import {ResourcesStore} from "./Stores/ResourcesStore"
+import {AutomationsStore} from "./Stores/AutomationsStore"
+import {TeamStore} from "./Stores/TeamStore"
 
 const Root = (
-  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore} UserStore={UserStore}>
+  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore} UserStore={UserStore} ResourcesStore={ResourcesStore} AutomationsStore={AutomationsStore} TeamStore={TeamStore}>
     <BrowserRouter>
     <App />
     </BrowserRouter>

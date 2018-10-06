@@ -1,9 +1,14 @@
 import React from "react";
+import {inject, observer} from "mobx-react"
 import { Pagination, Table } from "semantic-ui-react";
 import { AddButton } from "../SharedUI/AddButton"
 import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 
-const MockAutos = [{
+
+
+export const SharedAutos = inject("AutomationsStore")(observer((props) => {
+
+  const MockAutos = [{
     "label": "do something",
     "info_acquired": "name, email",
     "action_type": "email",
@@ -12,28 +17,18 @@ const MockAutos = [{
     "updated_by": "Mark Z"
 }]
 
+  const {AutomationsStore} = props
+  const handlePageChange = (e, { activePage }) => {
+    AutomationsStore.makeActive(activePage)
 
-export class SharedAutos extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: 1,
-      selectedUser: {},
-      modal: false
-    };
-  }
-
-  handlePageChange = (e, { activePage }) => {
-    this.setState({ active: activePage });
   };
-  openEditor = info => {
-    this.setState({ selectedUser: info, modal: true });
+  const openEditor = info => {
+   
+    AutomationsStore.selectAutomation(info)
+    AutomationsStore.setModal(true)
   };
-  handleClose = () => this.setState({ modal: false });
+  const handleClose = () => AutomationsStore.setModal(false);
 
-  render() {
-    // const userProfile = this.props.profileData
-    // const modalPassed = this.props.open
 
     const userData = MockAutos;
 
@@ -43,16 +38,16 @@ export class SharedAutos extends React.Component {
         <Pagination
           defaultActivePage={1}
           totalPages={paginationData.totalPages}
-          onPageChange={this.handlePageChange}
+          onPageChange={handlePageChange}
         />
       </div>
     ) : null;
 
-    const newIndicies = PageIndicies(this.state.active, userData.length);
+    const newIndicies = PageIndicies(AutomationsStore.active, userData.length);
     const currentPage = userData.slice(newIndicies.start, newIndicies.end);
 
     const globalAutos = currentPage.map(globalAuto => (
-      <Table.Row onClick={() => this.openEditor(globalAuto)}>
+      <Table.Row onClick={() => openEditor(globalAuto)}>
     
         <Table.Cell > {globalAuto.label}</Table.Cell>
         <Table.Cell >{globalAuto.info_acquired}</Table.Cell>
@@ -85,4 +80,5 @@ export class SharedAutos extends React.Component {
       </div>
     );
   }
-}
+));
+

@@ -1,0 +1,23 @@
+[
+    {
+        "accountID": "A1",
+    "resourceID": "B739CB",
+    "variationID": ["V1", "V11"],
+    "label": "a URL",
+    "url": "https://www.google.com",
+    "updated": "1538147254",
+    "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    },
+    {
+        "accountID": "A1",
+        "resourceID": "B739CD",
+        "variationID": ["V1"],
+        "label": "another URL",
+        "url": "https://www.google.com",
+        "updated": "1538147254",
+        "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+        }
+]
+
+
+

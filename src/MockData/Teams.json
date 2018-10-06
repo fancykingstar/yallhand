@@ -1,0 +1,37 @@
+[
+    {
+        "accountID": "A1",
+        "teamID": "team01",
+        "label": "USA",
+        "parent": "self",
+        "depth": 0
+    },
+    {
+        "accountID": "A1",
+        "teamID": "team02",
+        "label": "California",
+        "parent": "team01",
+        "depth": 1
+    },
+    {
+        "accountID": "A1",
+        "teamID": "team03",
+        "label": "San Diego",
+        "parent": "team02",
+        "depth": 2
+    },
+    {
+        "accountID": "A1",
+        "teamID": "team04",
+        "label": "Santa Monica",
+        "parent": "team02",
+        "depth": 2
+    },
+    {
+        "accountID": "A1",
+        "teamID": "team04",
+        "label": "San Francisco",
+        "parent": "team02",
+        "depth": 2
+    }
+]

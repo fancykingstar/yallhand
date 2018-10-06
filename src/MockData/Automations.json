@@ -1,0 +1,26 @@
+[
+    {
+        "accountID": "A1",
+        "automationID": "auto1",
+        "label": "Contact HR",
+        "action": "email",
+        "endpoint": ["mark@aubry.ai"],
+        "capture": {"template": ["email", "username", "channel", "query", "team"]}, "custom": ["good time to contact?"],
+        "policyID": ["P5"],
+        "updated": "1538147254",
+        "public": true,
+        "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    },
+    {
+        "accountID": "A1",
+        "automationID": "auto2",
+        "label": "Contact Someoneelse",
+        "action": "email",
+        "endpoint": ["mark@aubry.ai"],
+        "capture": {"anonymous": ["describe the situation"]},
+        "policyID": ["P5"],
+        "updated": "1538147254",
+        "public": false,
+        "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    }
+]

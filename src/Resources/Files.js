@@ -1,88 +1,67 @@
 import React from "react";
 import "./style.css";
+import {inject, observer} from "mobx-react"
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
 import { Icon, Pagination, Table } from "semantic-ui-react";
-import { UserPagination, PageIndicies } from "../Teams/UserPagination";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+// import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 
 
 
-const MockFiles = [
-  {
-    label: "Social Media Policy",
-    size: "1.5 MB",
-    type: "doc",
-    last_updated: "05/23/2017",
-    updated_by: "Elaine B.",
-    active: ["Where is the handbook?","Where is the handbook?","Where is the handbook?","Where is the handbook?"]
-  },
-  {
-    label: "Severance Form",
-    size: "2.5 MB",
-    type: "pdf",
-    last_updated: "05/23/2017",
-    updated_by: "Kramer K.",
-    active: ["Where is the handbook?"]
-  },
-  {
-    label: "company handbook",
-    size: "7.5 MB",
-    type: "pdf",
-    last_updated: "05/23/2017",
-    updated_by: "George C.",
-    active: ["Where is the handbook?"]
-  }
-];
 
-export class Files extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: 1,
-      selectedUser: {},
-      modal: false
-    };
-  }
+export const Files = inject("ResourcesStore", "PoliciesStore")(observer((props) => {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     active: 1,
+  //     selectedUser: {},
+  //     modal: false
+  //   };
+  // }
 
-  handlePageChange = (e, { activePage }) => {
-    this.setState({ active: activePage });
-  };
-  openEditor = info => {
-    this.setState({ selectedUser: info, modal: true });
-  };
-  handleClose = () => this.setState({ modal: false });
-  getIcon = (filetype) => {return FileTypeIcons[filetype] }
-  render() {
+  const {PoliciesStore} = props
+  const {ResourcesStore} = props
+
+  // handlePageChange = (e, { activePage }) => {
+  //   this.setState({ active: activePage });
+  // };
+  // openEditor = info => {
+  //   this.setState({ selectedUser: info, modal: true });
+  // };
+  // handleClose = () => this.setState({ modal: false });
+  const getIcon = (filetype) => {return FileTypeIcons[filetype] }
+
     // const userProfile = this.props.profileData
     // const modalPassed = this.props.open
 
-    const userData = MockFiles;
+    const userData = ResourcesStore.fileResources;
 
-    const paginationData = UserPagination(userData.length);
-    const displayPagination = paginationData.usePagination ? (
-      <div style={{ textAlign: "center" }}>
-        <Pagination
-          defaultActivePage={1}
-          totalPages={paginationData.totalPages}
-          onPageChange={this.handlePageChange}
-        />
-      </div>
-    ) : null;
+    // const paginationData = UserPagination(userData.length);
+    // const displayPagination = paginationData.usePagination ? (
+    //   <div style={{ textAlign: "center" }}>
+    //     <Pagination
+    //       defaultActivePage={1}
+    //       totalPages={paginationData.totalPages}
+    //       onPageChange={this.handlePageChange}
+    //     />
+    //   </div>
+    // ) : null;
 
-    const newIndicies = PageIndicies(this.state.active, userData.length);
-    const currentPage = userData.slice(newIndicies.start, newIndicies.end);
+    // const newIndicies = PageIndicies(this.state.active, userData.length);
+    // const currentPage = userData.slice(newIndicies.start, newIndicies.end);
 
-    const resfiles = currentPage.map(resfile => (
+    const resfiles = userData.map(resfile => (
       <Table.Row onClick={() => this.openEditor(resfile)} key={resfile.label}>
     
     <Table.Cell collapsing>
-          <Icon name={this.getIcon(resfile.type)} />
+          <Icon name={getIcon(resfile.type)} />
           {resfile.label}
         </Table.Cell>
         <Table.Cell >{resfile.size}</Table.Cell>
-        <Table.Cell >{resfile.last_updated}</Table.Cell>
-        <Table.Cell >{resfile.updated_by}</Table.Cell>
-        <Table.Cell>{resfile.active}</Table.Cell>
+        <Table.Cell >{UTCtoFriendly(resfile.updated)}</Table.Cell>
+        <Table.Cell >{resfile.admin.displayName}</Table.Cell>
+        <Table.Cell>{PoliciesStore.variationsToPolicies(resfile.variationID)}</Table.Cell>
       </Table.Row>
     ));
 
@@ -102,7 +81,7 @@ export class Files extends React.Component {
 
           <Table.Body>{resfiles}</Table.Body>
         </Table>
-        {displayPagination}
+        {/* {displayPagination} */}
         {/* <UserEdit
           profileData={this.state.selectedUser}
           open={this.state.modal}
@@ -111,4 +90,4 @@ export class Files extends React.Component {
       </div>
     );
   }
-}
+))

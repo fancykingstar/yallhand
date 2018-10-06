@@ -9,8 +9,8 @@ import './style.css'
 export class CardList extends React.Component {
     componentDidMount() {
         
-        const { PoliciesStore } = this.props;
-        PoliciesStore.loadPolicies()
+        // const { PoliciesStore } = this.props;
+        // PoliciesStore.loadPolicies()
     }
 
     render() {
