@@ -23,7 +23,7 @@ class Store {
       const tree = []
       //for/if each level 1 create {parent: []}
       //for/if each level 2, find parent, push child {parent: [{child: ''}]}
-      //for/if each level 3, find parent, push child {parent: [{child: [child]}]}
+      //for/if each level 3, find parent, push child {parent: [{child: [child]}]} 
   }
 
   loadClasses() {

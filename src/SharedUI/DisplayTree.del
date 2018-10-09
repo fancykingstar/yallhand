@@ -1,0 +1,103 @@
+import React from "react"
+import {List} from "semantic-ui-react"
+
+const testData = [
+  {
+    accountID: "A1",
+    teamID: "team01",
+    label: "USA",
+    parent: "self",
+    depth: 0
+  },
+  {
+    accountID: "A1",
+    teamID: "team02",
+    label: "California",
+    parent: "team01",
+    depth: 1
+  },
+  {
+    accountID: "A1",
+    teamID: "team03",
+    label: "San Diego",
+    parent: "team02",
+    depth: 2
+  },
+  {
+    accountID: "A1",
+    teamID: "team04",
+    label: "Santa Monica",
+    parent: "team02",
+    depth: 2
+  },
+  {
+    accountID: "A1",
+    teamID: "team05",
+    label: "San Francisco",
+    parent: "team02",
+    depth: 2
+  }
+];
+
+const loadTree = (data) => {
+  const list = data;
+  let collection = {};
+  const allZeroDepth = list.filter(item => item.depth === 0);
+  for (let eachZeroDepth of allZeroDepth) {
+    collection[eachZeroDepth.teamID] = {};
+    const allOneDepth = list.filter(
+      item => item.parent === eachZeroDepth.teamID
+    );
+    if (allOneDepth.length > 0) {
+      allOneDepth.forEach(
+        team => (collection[eachZeroDepth.teamID][team.teamID] = [])
+      );
+      for (let i in allOneDepth) {
+        const allTwoDepth = list.filter(
+          item => item.parent === allOneDepth[i].teamID
+        );
+        if (allTwoDepth.length > 0) {
+          for (i in allTwoDepth) {
+            collection[eachZeroDepth.teamID][allTwoDepth[i].parent].push(
+              allTwoDepth[i].teamID
+            );
+          }
+        }
+      }
+    }
+  }
+  return collection
+};
+
+const buildTree = (data) => {
+    let collection = []
+    for (let zero in data) {
+        collection.push(
+            <List.Item>
+             <List.Icon color="blue" name='circle' />
+             <List.Content>
+              <List.Header>{zero}</List.Header>
+            </List.Content>
+            </List.Item>
+        )
+    }
+    return collection
+}
+
+
+
+export const ListTree = (props) => {
+    const data = loadTree(testData)
+   
+    // const displayTree = data.length !== 0 ? <List>{buildTree(data)}</List> : <div><h2>No info entered</h2></div>
+    return(
+        <div>
+          
+            <List>
+          
+            </List>
+        </div>
+    )
+}
+
+

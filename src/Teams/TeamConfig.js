@@ -1,10 +1,18 @@
 import React from "react";
+import {inject, observer} from "mobx-react"
 import "./style.css";
 import { Form, Segment, Header, List } from "semantic-ui-react";
+import {ListTree} from "../SharedUI/BuildTree"
 
+@inject("TeamStore")
+@observer
 export class TeamConfig extends React.Component {
-    
+    constructor(props) {
+      super(props)
+    }
     render() {
+    const {TeamStore} = this.props
+    
     return (
       <div className="Segment">
         <Header
@@ -28,50 +36,9 @@ export class TeamConfig extends React.Component {
             </Form.Group>
             <Form.Group />
           </Form>
-          <List>
-              
-    <List.Item>
-      <List.Icon color="blue" name='circle' />
-      <List.Content>
-        <List.Header>USA</List.Header>
-       
-        <List.List>
-          <List.Item>
-            <List.Icon color="blue" name='triangle right' />
-            <List.Content>
-              <List.Header>California</List.Header>
-             
-    
-             
-              <List.List>
-                <List.Item>
-                  <List.Icon color="blue" name='triangle right' />
-                  <List.Content>
-                    <List.Header>San Diego</List.Header>
-                   
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Icon color="blue" name='triangle right' />
-                  <List.Content>
-                    <List.Header>Santa Monica</List.Header>
-
-                     </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Icon color="blue" name='triangle right' />
-                  <List.Content>
-                    <List.Header>San Francisco</List.Header>
-                    
-                  </List.Content>
-                </List.Item>
-              </List.List>
-            </List.Content>
-          </List.Item>
-        </List.List>
-      </List.Content>
-    </List.Item>
-  </List>
+        
+      <ListTree data={TeamStore.structure} id="teamID"/>
+         
          
         </Segment>
        

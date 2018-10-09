@@ -1,10 +1,18 @@
 import React from "react";
 import "./style.css";
+import {inject, observer} from "mobx-react"
 import { Form, Segment, Header, List } from "semantic-ui-react";
+import {ListTree} from "../SharedUI/BuildTree"
 
+@inject("TeamStore")
+@observer
 export class Classes extends React.Component {
-    
+    constructor(props) {
+      super(props)
+    }
     render() {
+    const {TeamStore} = this.props
+    console.log(TeamStore.classes)
     return (
       <div className="Segment">
         <Header
@@ -28,24 +36,9 @@ export class Classes extends React.Component {
             </Form.Group>
             <Form.Group />
           </Form>
-          <List>
-              
-    <List.Item>
-      <List.Icon color="blue" name='circle' />
-      <List.Content>
-        <List.Header>Employee</List.Header>
-     </List.Content>
-     </List.Item>
-     <List.Item>
-      <List.Icon color="blue" name='circle' />
-      <List.Content>
-        <List.Header>Management</List.Header>
-     </List.Content>
-     </List.Item>
-       
-   
-  </List>
-         
+      
+        <ListTree data={TeamStore.classes} id="classID"/>
+
         </Segment>
        
       </div>

@@ -7,13 +7,15 @@ import { NavLink } from "react-router-dom";
 import { ManageVariationData } from "./ManageVariationData";
 
 
-export const ManagePolicy = inject("PoliciesStore", "ResourcesStore")(observer((props) => {
+export const ManagePolicy = inject("PoliciesStore", "ResourcesStore", "TeamStore")(observer((props) => {
   const {PoliciesStore} = props
-  const {ResourcesStore} = props
+  const {TeamStore} = props
   const policy = PoliciesStore.allPolicies.filter(current => current.policyID === props.policyID)[0]
   PoliciesStore.resetVariation()
+  //Load team for line 19
   const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'text':variation.variationID, 'type': variation.type}))
   const grabGlobal = variations.filter(variation => variation.type === 'global')
+
   grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
   
   const keywords = policy.keywords.map(keyword => <Label key={keyword}>{keyword}<Icon name="delete" /></Label>)

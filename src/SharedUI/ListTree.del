@@ -1,0 +1,21 @@
+import React from "react";
+import { List } from "semantic-ui-react";
+
+export const ListTree = (props) => {
+    const list = props
+    const constloadTree = (list) => {
+        const bases = list.filter(item => item.depth === 0);
+        for (let base in bases) {
+            console.log(base)
+        }
+
+
+    }
+
+    const listtree = list.length !== 0 ? <List>{loadTree()}</List> : <div><h2>No info entered</h2></div>
+
+
+    return(
+       {listtree}
+    )
+}

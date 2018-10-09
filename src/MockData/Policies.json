@@ -13,9 +13,9 @@
             {
                 "type": "global",
                 "variationID": "V1",
+                "teamID": "",
                 "tags": [{"label": "employee" , "tagID": "tag01"}, {"label": "consultant" , "tagID": "tag02"} ],
                 "admin": {"adminID": "adminID", "displayName": "Mark Z."},
-       
                 "updated": "1538147255",
                 "automation": [{"label": "Contact HR" , "autoID": "AUTO1"}]
                 
@@ -23,6 +23,7 @@
             {
                 "type": "local",
                 "variationID": "V11",
+                "teamID": "Team1",
                 "tags": [{"label": "manager" , "tagID": "tag03"}],
                 "admin": {"adminID": "adminID", "displayName": "Randall Z."},
           

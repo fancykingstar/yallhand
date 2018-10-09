@@ -8,6 +8,9 @@ class Store {
   filteredPolicies = [];
 
   @observable
+  policyTitle= "";
+
+  @observable
   toggledVariation = ''
 
   @observable
@@ -18,6 +21,7 @@ class Store {
             cardFilterDrafts: true,
             cardFilterArchived: false}
 
+@observable
   cardFilterToStage = {
     "ok" : "cardFilterPublished",
       "partial" : "cardFilterPublished",
@@ -27,9 +31,44 @@ class Store {
   }
 
   @observable
+  addPolicyMod = false;
+
+  @observable
   cardSort = "Newest"
   
   @action
+
+  closeMod(e) {
+    e.preventDefault();
+    this.addPolicyMod = false;
+  }
+
+  openMod(e) {
+    e.preventDefault();
+    this.addPolicyMod = true;
+  }
+
+  addPolicy(e, accountInfo, chan) {
+    e.preventDefault();
+    const newPolicy = {
+        "accountID": accountInfo.accountID,
+        "policyID": Math.random().toString(16).slice(2, 8).toUpperCase(),
+        "teamID": '',
+        "chanID": chan,
+        "label": this.policyTitle,
+        "admins": [{"adminID": accountInfo.adminID, "displayName": accountInfo.displayName}],
+        "keywords": [],
+        "condition": "draft",
+        "variations": []
+    }
+    
+    this.allPolicies.push(newPolicy)
+    this.displayPolicies()
+   
+
+    this.closeMod(e);
+  }
+
   displayPolicies() {
     this.filteredPolicies = this.allPolicies.filter(policy => this.cardFilters[this.cardFilterToStage[policy.condition]])
     if (this.channelFilter.chanID !== null) {
@@ -92,12 +131,16 @@ resetVariation() {
     this.toggledVariation = ''
 }
 
+addTitle(val) {
+    this.policyTitle = val;
+  }
+
 sourcePolicyFriendly(id) {
     let policyFriendly = ''
     while (policyFriendly === '') {
     this.allPolicies.forEach(function(policy) {
         policy.variations.forEach(function(variation) {
-            console.log(id)
+        
             if (variation.variationID === id) {
              
                 policyFriendly = policy.label

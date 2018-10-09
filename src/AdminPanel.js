@@ -13,7 +13,7 @@ import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import {Header} from "./Header/Header"
 
-@inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore")
+@inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore", "TeamStore", "UserStore")
 @observer
 export class AdminPanel extends React.Component {
   componentDidMount() {
@@ -31,6 +31,8 @@ export class AdminPanel extends React.Component {
     const { TeamStore } = this.props;
     TeamStore.loadStructure()
     TeamStore.loadClasses()
+    const {UserStore} = this.props;
+    UserStore.loadAccount()
 
   }
   render() {
