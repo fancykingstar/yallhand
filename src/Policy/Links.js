@@ -1,12 +1,19 @@
 import React from "react";
 import "./style.css";
 import { Form, Icon, Table, Button } from "semantic-ui-react";
-import { resourceLinks } from "./TempObjects";
+import {inject, observer} from "mobx-react"
 
-
+@inject("ResourcesStore", "PoliciesStore")
+@observer
 export class ResourceLinks extends React.Component {
+  constructor(props) {
+    super(props)
+  }
   render() {
-    const displayLinks = resourceLinks.map(link => (
+    const {ResourcesStore} = this.props
+    const {PoliciesStore} = this.props
+    const currentLinks = ResourcesStore.urlResources.filter(resource => resource.variationID.includes(PoliciesStore.toggledVariation))
+    const displayLinks = currentLinks.map(link => (
       <Table.Row key={link.label}>
         <Table.Cell>
           <a href={link.url} target="_blank">

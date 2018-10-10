@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 class Store {
   @observable
@@ -10,20 +10,28 @@ class Store {
   @observable
   classes = []
 
+  @observable
+  teamKey = {}
+
+
+
 
   
   @action
+  loadTeamKey() {
+    this.structure.forEach(team => this.teamKey[team.teamID] = team.label)
+  
+  }
+
     loadStructure() {
     const structure = require("../MockData/Teams.json");
     this.structure  = structure
+    this.loadTeamKey()
   };
 
   loadStructureDisplay() {
       if (this.structure.length === 0) {this.loadStructure()}
       const tree = []
-      //for/if each level 1 create {parent: []}
-      //for/if each level 2, find parent, push child {parent: [{child: ''}]}
-      //for/if each level 3, find parent, push child {parent: [{child: [child]}]} 
   }
 
   loadClasses() {

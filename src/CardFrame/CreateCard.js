@@ -6,7 +6,7 @@ import { inject, observer } from "mobx-react";
 import {FormCharMax} from '../SharedValidations/FormCharMax'
 
 @inject("PoliciesStore", "SideBarStore", "UserStore")
-@observer
+@observer 
 export class CreateCard extends React.Component {
   constructor(props) {
     super(props);

@@ -11,12 +11,20 @@ export const ManagePolicy = inject("PoliciesStore", "ResourcesStore", "TeamStore
   const {PoliciesStore} = props
   const {TeamStore} = props
   const policy = PoliciesStore.allPolicies.filter(current => current.policyID === props.policyID)[0]
+  PoliciesStore.togglePolicy(props.policyID)
   PoliciesStore.resetVariation()
-  //Load team for line 19
-  const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'text':variation.variationID, 'type': variation.type}))
-  const grabGlobal = variations.filter(variation => variation.type === 'global')
 
-  grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
+  
+  const getTags = (variations) => {
+    const tagsList = variations.map(variation => variation.label) 
+    const displayTags = tagsList.length > 1 ? tagsList.join(', '): tagsList
+    return displayTags
+  }
+ 
+  const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'description': getTags(variation.tags),'text': TeamStore.teamKey[variation.teamID], 'type': variation.type}))
+  const grabGlobal = variations.filter(variation => variation.type === 'global')
+  
+  grabGlobal.length === 0 ? PoliciesStore.toggleVariation('') : grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
   
   const keywords = policy.keywords.map(keyword => <Label key={keyword}>{keyword}<Icon name="delete" /></Label>)
  
@@ -49,16 +57,18 @@ export const ManagePolicy = inject("PoliciesStore", "ResourcesStore", "TeamStore
         <div className="Form">
           <div>
             <SelectVariation variations={variations}/>
+            <NavLink to={"/panel/policy-variation/" + PoliciesStore.toggledVariation} >
             <Button style={{ display: "inline-block", marginLeft: 5 }}>
               Edit
             </Button>
-            <NavLink to="/policy-variation">
+            </NavLink>
+
             <Button color="blue" style={{ display: "inline-block" }}>
               Create New
-            </Button></NavLink>
+            </Button>
           </div>
         </div>
-       <ManageVariationData currentVariation={"V1"} policy={policy}/>
+       <ManageVariationData currentVariation={""} policy={policy}/>
       </div>
     )
 }))

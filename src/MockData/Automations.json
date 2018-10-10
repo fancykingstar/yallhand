@@ -6,7 +6,7 @@
         "action": "email",
         "endpoint": ["mark@aubry.ai"],
         "capture": {"template": ["email", "username", "channel", "query", "team"]}, "custom": ["good time to contact?"],
-        "policyID": ["P5"],
+        "variationID": ["V1"],
         "updated": "1538147254",
         "public": true,
         "admin": {"adminID": "adminID", "displayName": "Mark Z."}
@@ -18,7 +18,7 @@
         "action": "email",
         "endpoint": ["mark@aubry.ai"],
         "capture": {"anonymous": ["describe the situation"]},
-        "policyID": ["P5"],
+        "variationID": ["V1", "V11"],
         "updated": "1538147254",
         "public": false,
         "admin": {"adminID": "adminID", "displayName": "Mark Z."}

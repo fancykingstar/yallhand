@@ -1,10 +1,13 @@
 import React from "react";
 import "./style.css";
+import {inject, observer} from "mobx-react"
 import { BackToChan } from "./BackToChan";
 import { Input, Icon } from "semantic-ui-react";
 import { Conditionals } from "./Conditionals";
 import { NavLink } from "react-router-dom";
 
+@inject("PoliciesStore")
+@observer
 export class QFields extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +17,10 @@ export class QFields extends React.Component {
     this.setState({ qFieldDisabled: !this.state.qFieldDisabled });
   };
   render() {
+    const {PoliciesStore} = this.props
+    const policy = PoliciesStore.allPolicies.filter(policy => policy.policyID === PoliciesStore.toggledPolicy)[0]
+    const variation = policy.variations.filter(variation => variation.variationID === PoliciesStore.toggledVariation)[0]
+    const variationLabel = variation.label !== "" ? variation.label : policy.label
     return (
       <div className="ManagePolicy">
         <NavLink to="/manage-policy">
@@ -33,7 +40,7 @@ export class QFields extends React.Component {
               <Input
                 disabled={this.state.qFieldDisabled}
                 transparent
-                value="How do I do that thing?"
+                value={variationLabel}
                 placeholder="Enter a template question..."
                 size="huge"
               />

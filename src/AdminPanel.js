@@ -49,7 +49,7 @@ export class AdminPanel extends React.Component {
               <Route path="/panel/automations" component={AutomationsFrame} />
               <Route path="/panel/annoucements" component={AnnoucementsFrame} />
               <Route path="/panel/manage-policy/:id" component={PolicyFrame} exact/>
-              <Route path="/panel/policy-variation" component={NewEditPolicy} />
+              <Route path="/panel/policy-variation/:id" component={NewEditPolicy} />
               <Route path="/panel/base-settings" component={BaseSettings} />
               <Route path="/panel/user-settings" component={UserSettings} />
        

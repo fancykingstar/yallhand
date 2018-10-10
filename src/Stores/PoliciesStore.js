@@ -11,7 +11,12 @@ class Store {
   policyTitle= "";
 
   @observable
+  toggledPolicy = ''
+
+  @observable
   toggledVariation = ''
+
+ 
 
   @observable
   channelFilter = {'label': 'All', 'chanID': null};
@@ -125,6 +130,10 @@ chanFilter(label, id) {
 
 toggleVariation(variationID) {
     this.toggledVariation = variationID
+}
+
+togglePolicy(policyID) {
+    this.toggledPolicy = policyID
 }
   
 resetVariation() {

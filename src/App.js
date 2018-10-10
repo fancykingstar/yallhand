@@ -6,6 +6,7 @@ import { AdminPanel } from "./AdminPanel";
 import { Login } from "./Login/Login";
 import { TwilightZone } from "./MiscPages/404";
 
+
 @inject("UserStore")
 
 class AppRoute extends React.Component {
@@ -25,8 +26,11 @@ class AppRoute extends React.Component {
         {/* <Switch>{RouteTraffic}</Switch> */}
         <Switch>
         <Route path="/panel" component={AdminPanel}/>
+    
+
         {/* <Route path="/login" component={Login} />
         <Route path="*" component={TwilightZone} /> */}
+
         </Switch>
         <Redirect push to="/panel" />
       </div>

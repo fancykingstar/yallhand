@@ -9,11 +9,12 @@
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["PTO"],
         "condition": "draft",
-        "variations": [
+        "variations": [ 
             {
                 "type": "global",
+                "label": "",
                 "variationID": "V1",
-                "teamID": "",
+                "teamID": "team01",
                 "tags": [{"label": "employee" , "tagID": "tag01"}, {"label": "consultant" , "tagID": "tag02"} ],
                 "admin": {"adminID": "adminID", "displayName": "Mark Z."},
                 "updated": "1538147255",
@@ -22,8 +23,9 @@
             },
             {
                 "type": "local",
+                "label": "",
                 "variationID": "V11",
-                "teamID": "Team1",
+                "teamID": "team02",
                 "tags": [{"label": "manager" , "tagID": "tag03"}],
                 "admin": {"adminID": "adminID", "displayName": "Randall Z."},
           

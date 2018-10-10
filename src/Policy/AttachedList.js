@@ -1,11 +1,20 @@
 import React from "react";
 import "./style.css";
 import { List, Icon } from "semantic-ui-react";
-import { attached } from "./TempObjects";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import {inject, observer} from "mobx-react"
 
+@inject("ResourcesStore", "PoliciesStore")
+@observer
 export class AttachedList extends React.Component {
+  constructor(props) {
+    super(props)
+  }
   render() {
-    const attachedList = attached.map(attach => (
+    const {ResourcesStore} = this.props
+    const {PoliciesStore} = this.props
+    const currentFiles = ResourcesStore.fileResources.filter(resource => resource.variationID.includes(PoliciesStore.toggledVariation))
+    const attachedList = currentFiles.map(attach => (
       <List.Item>
         <List.Icon name="file" size="large"/>
         <List.Content floated="right" verticalAlign='middle'>
@@ -15,7 +24,7 @@ export class AttachedList extends React.Component {
         </List.Content>
         <List.Content>
           <List.Header as="a">{attach.label}</List.Header>
-          <List.Description as="a">{attach.date}</List.Description>
+          <List.Description as="a">{UTCtoFriendly(attach.updated)}</List.Description>
         </List.Content>
       </List.Item>
     ));
