@@ -25,7 +25,7 @@ export class AnnoucementsFrame extends React.Component {
           handleClick={this.handleItemClick}
           useSearch={false}
         />
-        <div className="TeamActionFrame">
+        <div>
         <div className={this.isVisable("feed")}><Feed/></div>
         <div className={this.isVisable("post")}>   <PostFrame/></div>
       

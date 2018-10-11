@@ -1,0 +1,25 @@
+.displayAdjust {
+    position: absolute;
+    z-index: 2;
+}
+
+
+.Question {
+    text-align: center;
+    width: 280px;
+    height: 100px;
+    margin-top: 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+    
+}
+
+.CreateNewHeader {
+    height: 60px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+

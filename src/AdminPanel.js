@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"; 
 import { inject, observer } from "mobx-react"
 import { Switch, Route } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
@@ -13,11 +13,13 @@ import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import {Header} from "./Header/Header"
 
-@inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore", "TeamStore", "UserStore")
+
+@inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore", "TeamStore", "UserStore", "AnnoucementsStore")
 @observer
 export class AdminPanel extends React.Component {
   componentDidMount() {
-    //load all the things for admin
+
+    //load all the things for admin/
 
     const { SideBarStore } = this.props;
     SideBarStore.loadChannels();
@@ -33,6 +35,8 @@ export class AdminPanel extends React.Component {
     TeamStore.loadClasses()
     const {UserStore} = this.props;
     UserStore.loadAccount()
+    const {AnnoucementsStore} = this.props;
+    AnnoucementsStore.loadAnnoucements()
 
   }
   render() {

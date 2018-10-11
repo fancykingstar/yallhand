@@ -1,3 +1,8 @@
+.displayAdjust {
+    position: absolute;
+    z-index: 2;
+}
+
 .Q {
     margin-top: 20px;
     margin-left: 20px;
@@ -42,13 +47,13 @@
 
 .CurrentStatus {
     margin-top: -21px;
-    margin-left: 280px;
+    margin-left: 287px;
     position: absolute;
     z-index: 2;
 }
 .Corner {  
-    margin-top: 5px;
-    margin-left: 128px;
+    margin-top: 6px;
+    margin-left: 196px;
     width: 30%;
     padding-bottom:85%;
     border-radius: 17px;

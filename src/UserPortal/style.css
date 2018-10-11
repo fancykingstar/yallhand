@@ -1,0 +1,79 @@
+
+.SearchFrame {
+    position: sticky;
+    bottom: 0;
+    min-height: 100px;
+    background-color: #2fc7f8;
+    width: 100%;
+    text-align: center;
+}
+
+.SearchControls {
+    padding-top: 30px;
+    line-height: 100px;
+    min-height: 30px;
+    min-width: 500px;
+    display: inline-block;
+}
+ 
+.SideBarFrame {
+    width: 230px;
+    height: 1800px;
+   
+    float: left;
+    height: 100vh;
+    position: relative;
+    
+}
+
+.SideBarMenu {
+    margin-top: 100px;
+    margin-left: 30px;
+}
+
+.Annoucements {
+    max-width: 900px;
+    height: 100%;
+    margin-left: 30px;
+}
+
+.AnnouncementContainer {
+    display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  margin:0px 0 35px;
+}
+
+.imgBox {
+    border-radius: 5px;
+  padding: 20px;
+   grid-column: 1 / 1;
+   grid-row: 1;
+
+}
+
+.contentBox {
+  border-radius: 5px;
+  padding-top: 15px;
+ grid-column: 2 / span 2;;
+        grid-row: 1;
+ 
+
+}
+
+.fullcontentBox {
+    max-width: 900px;
+    border-radius: 5px;
+    padding-top: 15px;
+    grid-row: 1;
+}
+
+.divider {
+   
+   grid-column: 1 / span 3;;
+          grid-row: 2;
+   
+  
+  }
+
+

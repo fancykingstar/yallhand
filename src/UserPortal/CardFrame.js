@@ -1,12 +1,11 @@
 import React from 'react';
 import {inject, observer} from "mobx-react"
-import { Card } from './Card'
-import { CreateCard } from './CreateCard'
+import { UserCard } from './UserCard'
 import './style.css'
 
 @inject("PoliciesStore")
 @observer
-export class CardList extends React.Component {
+export class CardFrame extends React.Component {
     componentDidMount() {
         
         // const { PoliciesStore } = this.props;
@@ -16,13 +15,10 @@ export class CardList extends React.Component {
     render() {
         const { PoliciesStore } = this.props;
         const cardData = PoliciesStore.filteredPolicies
-      
-        const cards = cardData.map(card => <Card data={card} key={card.label} img={card.img}/>
+        const cards = cardData.map(card => <UserCard data={card} key={card.label} img={card.img}/>
             )
         return(
             <div className="CardList">
-               
-                <CreateCard />
                 {cards}
             
             </div>

@@ -1,0 +1,85 @@
+import React from "react"
+import {Menu} from "semantic-ui-react"
+import {inject, observer} from "mobx-react"
+import {Link} from "react-router-dom"
+
+@inject("SideBarStore")
+@observer
+export class SideBarMenu extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        const {SideBarStore} = this.props
+        SideBarStore.loadChannels()
+        const channelList = SideBarStore.displayTitles.map(channel => (
+            <Menu.Item
+              name={channel}
+            //   active={activeItem === 'rails'}
+            //   onClick={this.handleItemClick}
+            />
+        ))
+        return(
+
+            <Menu vertical>
+        <Menu.Item>
+          <Menu.Header>Feed</Menu.Header>
+
+          <Menu.Menu>
+            <Link to="/portal/annoucements">
+            <Menu.Item
+              name='Annoucements'
+            /></Link>
+           
+          </Menu.Menu>
+        </Menu.Item>
+
+        <Menu.Item>
+          <Link to="/portal/learn">
+          <Menu.Header>Learn</Menu.Header></Link>
+          <Menu.Menu>
+            {channelList}
+            </Menu.Menu>
+        </Menu.Item>
+
+        <Menu.Item>
+          <Menu.Header>Resources</Menu.Header>
+
+          <Menu.Menu>
+            <Menu.Item
+              name='common'
+            //   active={activeItem === 'shared'}
+            //   onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name='recently used'
+            //   active={activeItem === 'dedicated'}
+            //   onClick={this.handleItemClick}
+            />
+          </Menu.Menu>
+        </Menu.Item>
+
+        <Menu.Item>
+          <Menu.Header>Support</Menu.Header>
+
+          <Menu.Menu>
+            <Menu.Item name='email' >
+              Directory
+            </Menu.Item>
+            <Menu.Item name='email' >
+              Get Assistance
+            </Menu.Item>
+
+            
+          </Menu.Menu>
+        </Menu.Item>
+      </Menu>
+
+        )
+    }
+}
+
+
+
+

@@ -19,8 +19,9 @@ h1 h2 h3 h4 h5 span {
 
 .SideAndAction {
   /* margin-top: 75px; */
+  z-index: 0;
+  background-color: #F9F9F9; 
   padding: 0px;
-  background-color: orange;
   width: 100vw;
   height: 100vh;
 }

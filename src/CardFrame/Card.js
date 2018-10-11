@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon, Label } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
+import Style from 'style-it';
 import './card-style.css'
 
 export const Card = (props) => {
@@ -27,13 +28,24 @@ export const Card = (props) => {
             "archived": {iconName: "ellipsis horizontal", color: 'grey'},
             "notOk": {iconName: "warning circle", color: 'red'},
         }
-         
-        
+      
+        const bgimg = props.data.img
+      
+
         return(
+            <div>
+            <Style>
+                {`
+                    .Card:before {
+                        background-image: url('${bgimg}'); 
+                    }
+                `}
+            </Style>
            
             <div className="Card">
-             
+            
              <Link to={"/panel/manage-policy/" + props.data.policyID} style={{color: "rgb(45, 45, 45)"}}>
+                <div className="displayAdjust">
                 <div className="Q">Q:</div>
                 <div className="Question"><h4>{props.data.label}</h4></div>
                 <div className="Owners">{adminLabels}</div>
@@ -43,9 +55,10 @@ export const Card = (props) => {
                 </div>
                 <div className="CurrentStatus"><Icon name={conditions[props.data.condition]['iconName']} color={conditions[props.data.condition]['color']} size='large' /></div>
                 <div className="Corner"></div>
+                </div>
                 </Link>
             </div>
-        
+            </div>
         )
     
 }

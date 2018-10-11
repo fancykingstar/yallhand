@@ -11,9 +11,10 @@ import {UserStore} from "./Stores/UserStore"
 import {ResourcesStore} from "./Stores/ResourcesStore"
 import {AutomationsStore} from "./Stores/AutomationsStore"
 import {TeamStore} from "./Stores/TeamStore"
+import {AnnoucementsStore} from "./Stores/AnnoucementsStore"
 
 const Root = (
-  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore} UserStore={UserStore} ResourcesStore={ResourcesStore} AutomationsStore={AutomationsStore} TeamStore={TeamStore}>
+  <Provider SideBarStore={SideBarStore} PoliciesStore={PoliciesStore} UserStore={UserStore} ResourcesStore={ResourcesStore} AutomationsStore={AutomationsStore} TeamStore={TeamStore} AnnoucementsStore={AnnoucementsStore}>
     <BrowserRouter>
     <App />
     </BrowserRouter>

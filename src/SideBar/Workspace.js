@@ -7,7 +7,7 @@ export class Workspace extends React.Component {
     render() {
         return(
             <div className = "Workspace">
-                <NavLink to="/base-settings"> <div className="WorkspaceLogo"/>
+                <NavLink to="/panel/base-settings"> <div className="WorkspaceLogo"/>
                </NavLink>
                
                

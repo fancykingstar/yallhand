@@ -12,7 +12,7 @@ export class UserProfile extends React.Component {
          <Dropdown icon="chevron down">
     <Dropdown.Menu>
         
-      <Dropdown.Item text='Settings...' as={NavLink} to='/user-settings'/>
+      <Dropdown.Item text='Settings...' as={NavLink} to='/panel/user-settings'/>
       <Dropdown.Item text='Support...'/>
       <Dropdown.Item text='Log Out'/>
     </Dropdown.Menu>

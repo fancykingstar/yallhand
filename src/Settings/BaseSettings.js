@@ -36,7 +36,7 @@ export const BaseSettings = () => {
       <Segment>
           <Form>
               <Form.Field>
-                  <label>Delete Your HyperBase Account</label>
+                  <label>Delete Your Quadrance Account</label>
                   <Form.Button size="mini" negative>Delete</Form.Button>
               </Form.Field>
           </Form>
