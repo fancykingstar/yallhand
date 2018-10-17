@@ -1,7 +1,7 @@
 import React from "react"
 import {Menu} from "semantic-ui-react"
 import {inject, observer} from "mobx-react"
-import {Link} from "react-router-dom"
+import {NavLink} from "react-router-dom"
 
 @inject("SideBarStore")
 @observer
@@ -9,35 +9,40 @@ export class SideBarMenu extends React.Component {
     constructor(props) {
         super(props)
     }
+    componentDidMount() {
+      const {SideBarStore} = this.props
+        SideBarStore.loadChannels()
+
+    }
 
     render() {
         const {SideBarStore} = this.props
-        SideBarStore.loadChannels()
         const channelList = SideBarStore.displayTitles.map(channel => (
             <Menu.Item
               name={channel}
-            //   active={activeItem === 'rails'}
-            //   onClick={this.handleItemClick}
+              id={channel}
+              onClick={e => SideBarStore.makeActive(e)}
             />
         ))
         return(
-
+ 
             <Menu vertical>
         <Menu.Item>
           <Menu.Header>Feed</Menu.Header>
 
           <Menu.Menu>
-            <Link to="/portal/annoucements">
+            <NavLink to="/portal" style={{color: "rgb(45, 45, 45)"}}>
             <Menu.Item
               name='Annoucements'
-            /></Link>
+            /></NavLink>
            
           </Menu.Menu>
         </Menu.Item>
 
         <Menu.Item>
-          <Link to="/portal/learn">
-          <Menu.Header>Learn</Menu.Header></Link>
+          {/* <NavLink to="/portal/learn" style={{color: "rgb(45, 45, 45)"}}> */}
+          <Menu.Header>Learn</Menu.Header>
+          {/* </NavLink> */}
           <Menu.Menu>
             {channelList}
             </Menu.Menu>

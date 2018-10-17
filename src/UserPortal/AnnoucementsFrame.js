@@ -10,6 +10,7 @@ export class AnnoucementsFrame extends React.Component {
     constructor(props) {
         super(props)
     }
+    
     render() {
         const {AnnoucementsStore} = this.props
         const displayFeed = AnnoucementsStore.allAnnoucements.map(news => (

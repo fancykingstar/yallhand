@@ -18,6 +18,8 @@ class Store {
   makeActive(e) {
     this.active = e.currentTarget.id;
   }
+
+  
   checkActive = chan => {
     return chan === this.active ? true : false;
   };

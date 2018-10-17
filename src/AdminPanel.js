@@ -11,13 +11,13 @@ import { AutomationsFrame } from "./Automations/AutomationsFrame";
 import { AnnoucementsFrame } from "./Annoucements/AnnoucementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
-import {Header} from "./Header/Header"
+import Header from "./Header/Header"
 
 
 @inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore", "TeamStore", "UserStore", "AnnoucementsStore")
 @observer
 export class AdminPanel extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
 
     //load all the things for admin/
 

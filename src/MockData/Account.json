@@ -4,6 +4,8 @@
         "adminID": "adminID",
         "first_name": "mark",
         "last_name": "zuppe",
-        "displayName": "Mark Z."
+        "displayName": "Mark Z.",
+        "teamID_Native": "",
+        "tagID_Native": ""
     }
 ]

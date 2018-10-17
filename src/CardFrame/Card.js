@@ -1,7 +1,7 @@
 import React from 'react'
 import { Icon, Label } from 'semantic-ui-react';
 import { Link } from "react-router-dom";
-import Style from 'style-it';
+// import Style from 'style-it';
 import './card-style.css'
 
 export const Card = (props) => {
@@ -29,21 +29,16 @@ export const Card = (props) => {
             "notOk": {iconName: "warning circle", color: 'red'},
         }
       
-        const bgimg = props.data.img
-      
-
+        const bgimg = props.img
         return(
-            <div>
-            <Style>
-                {`
-                    .Card:before {
-                        background-image: url('${bgimg}'); 
-                    }
-                `}
-            </Style>
-           
+            
+            <div className="CardContainerbg" style={{backgroundImage: `url(${bgimg})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
+            <div className="CardContaineralpha"></div>
             <div className="Card">
             
+
+           
+
              <Link to={"/panel/manage-policy/" + props.data.policyID} style={{color: "rgb(45, 45, 45)"}}>
                 <div className="displayAdjust">
                 <div className="Q">Q:</div>
@@ -59,6 +54,7 @@ export const Card = (props) => {
                 </Link>
             </div>
             </div>
+          
         )
     
 }

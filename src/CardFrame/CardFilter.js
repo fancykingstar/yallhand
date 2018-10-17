@@ -5,22 +5,30 @@ import './style.css'
 @inject("PoliciesStore")
 @observer
 export class CardFilter extends React.Component {
-    filterClass = (val)=> {return val ? "CardFilterContainer" : "CardFilterContainer Disabled"};
+    constructor(props) {
+        super(props)
+    }
+    componentDidMount() {
+        const {PoliciesStore} = this.props
+        PoliciesStore.cardFilterCount()
+    }
+    
     render() {
-        const { PoliciesStore } = this.props    
+        const {PoliciesStore} = this.props
+        const filterClass = (val)=> {return val ? "CardFilterContainer" : "CardFilterContainer Disabled"}; 
         return(
             <div className="CardFiltersGroup">
-                <div id="cardFilterPublished" className={this.filterClass(PoliciesStore.cardFilters.cardFilterPublished)} onClick={e => PoliciesStore.updateCardFilter(e)}>
+                <div id="cardFilterPublished" className={filterClass(PoliciesStore.cardFilters.cardFilterPublished)} onClick={e => PoliciesStore.updateCardFilter(e)}>
                     <div className="CardFilter">Published</div>
-                    <div className="CardFilterBadge">12</div>
+                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['published']}</div>
                 </div>
-                <div id="cardFilterDrafts" className={this.filterClass(PoliciesStore.cardFilters.cardFilterDrafts)} onClick={e => PoliciesStore.updateCardFilter(e)}>
+                <div id="cardFilterDrafts" className={filterClass(PoliciesStore.cardFilters.cardFilterDrafts)} onClick={e => PoliciesStore.updateCardFilter(e)}>
                     <div className="CardFilter">Drafts</div>
-                    <div className="CardFilterBadge">11</div>
+                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['drafts']}</div>
                 </div>
-                <div id="cardFilterArchived" className={this.filterClass(PoliciesStore.cardFilters.cardFilterArchived)} onClick={e => PoliciesStore.updateCardFilter(e)}>
+                <div id="cardFilterArchived" className={filterClass(PoliciesStore.cardFilters.cardFilterArchived)} onClick={e => PoliciesStore.updateCardFilter(e)}>
                     <div className="CardFilter">Archived</div>
-                    <div className="CardFilterBadge">3</div>
+                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['archived']}</div>
                 </div>
             </div>
         )

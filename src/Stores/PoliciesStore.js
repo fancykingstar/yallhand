@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action } from "mobx";
 
 class Store {
   @observable
@@ -16,7 +16,11 @@ class Store {
   @observable
   toggledVariation = ''
 
- 
+  @observable
+  userAvailablePolicies = []
+
+  @observable
+  userAvailableFilteredPolicies = []
 
   @observable
   channelFilter = {'label': 'All', 'chanID': null};
@@ -40,9 +44,13 @@ class Store {
 
   @observable
   cardSort = "Newest"
+
+  @observable
+  cardFilterCounts = {}
+
+  
   
   @action
-
   closeMod(e) {
     e.preventDefault();
     this.addPolicyMod = false;
@@ -165,6 +173,47 @@ variationsToPolicies(variations) {
     const allPolicies = variations.map(variationID => this.sourcePolicyFriendly(variationID))
     return allPolicies.join(' ')
 }
+
+loadUserPortalPolicies(team, tag) {
+    // need to get eligable teams and tags vs. direct
+    const filteredItems = this.allPolicies
+        .filter(item => item.teamID === team)
+        .filter(item => item.classID === tag)
+        .filter(item => this.cardFiltertoStage[item.condition] === 'cardFilterPublished')
+    this.userAvailablePolicies = filteredItems
+    console.log(filteredItems)
+}
+
+// getUserAvailablePolicies(teamID) {
+//     //return purged object that only has policies with valid variations
+//     const policies = this.allPolicies
+//     const scanVariations = (variList) => {
+//         const filteredVaris = variList.filter(vari => vari.teamID === teamID)
+//         return filteredVaris
+//     }
+//     policies.forEach(policy => policy.variations = scanVariations(policy.variations))
+//     this.userAvailablePolicies = policies.filter(policy => policy.variations.length !==0 )
+//     }
+
+// filterUserAvailablePolicies(chanID) {
+//     const policies = this.userAvailablePolicies.filter(policy => policy.chanID === chanID)
+//     this.userAvailableFilteredPolicies = policies
+// }
+    
+cardFilterCount() {
+        if (this.allPolicies.length === 0) {this.loadPolicies()}
+        let cardFilterCountsLocal = {'published': 0, 'drafts': 0, 'archived': 0}
+        this.allPolicies.forEach(policy => {
+            let val = this.cardFilterToStage[policy.condition].toLowerCase()
+            let current = val.split('cardfilter')[1]
+            cardFilterCountsLocal[current] ++
+            
+        })
+        this.cardFilterCounts = cardFilterCountsLocal
+          
+      }
+    
+    
 
 }
 

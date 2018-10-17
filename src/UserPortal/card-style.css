@@ -1,17 +1,41 @@
-.displayAdjust {
+.CardContainerbg {
+    width: 319px;
+    height: 196px;
+    padding: 0px;
+    
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: relative;   
+    background-repeat: no-repeat;
+}
+
+.CardContaineralpha {
+    width: 319px;
+    height: 196px;
+       background-color:#EEEEEE;
+       opacity: 0.85;
+       
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: absolute;   
+}
+
+
+
+.PortaldisplayAdjust {
     position: absolute;
     z-index: 2;
 }
 
 
-.Question {
-    text-align: center;
-    width: 280px;
-    height: 100px;
+.PortalQuestion {
+    /* height: 60px; */
+    min-height: 80px;
     margin-top: 15px;
     margin-left: 20px;
     margin-right: 20px;
-    
 }
 
 .CreateNewHeader {

@@ -1,3 +1,28 @@
+.CardContainerbg {
+    width: 319px;
+    height: 196px;
+    padding: 0px;
+    
+    /* -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px; */
+    position: relative;   
+    background-repeat: no-repeat;
+}
+
+.CardContaineralpha {
+    width: 319px;
+    height: 196px;
+       background-color:#EEEEEE;
+       opacity: 0.9;
+       
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: absolute;   
+}
+
+
 .displayAdjust {
     position: absolute;
     z-index: 2;
@@ -11,7 +36,9 @@
 }
 
 .Question {
-    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+    min-width: 282px;
     margin-top: 5px;
     margin-left: 20px;
     margin-right: 20px;
@@ -52,11 +79,12 @@
     z-index: 2;
 }
 .Corner {  
-    margin-top: 6px;
-    margin-left: 196px;
+    margin-top: 5px;
+    /* margin-left: 196px; */
+    margin-left: 126px;
     width: 30%;
     padding-bottom:85%;
-    border-radius: 17px;
+    border-radius: 17px 0 0 0;
     overflow: hidden;
     transform-origin:100% 0;
     transform: rotate(180deg);
@@ -73,3 +101,5 @@
     background:#FFFFFF;
     z-index: 0;
   }
+
+  

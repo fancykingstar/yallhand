@@ -2,7 +2,7 @@
     {
         "AccountID": "A1",
         "variationID": "V1",
-        "teamID": "T1",
+        "teamID": "T1", 
         "stage": "published",
         "updated": "1538147254",
         "admin": {"userID":"userID", "userDisplayName": "Display Name"},
@@ -74,30 +74,6 @@
             }
         ]
 
-    },
-    {
-        "AccountID": "A1",
-        "variationID": "V3",
-        "teamID": "T1",
-        "stage": "published",
-        "updated": "1538147254",
-        "admin": {"userID":"userID", "userDisplayName": "Display Name"},
-        "label": "Where can I lockup my bike?",
-        "data": [
-            {
-                "condition": "condition 1",
-                "content": "To get a reembursement, ask for help",
-                "urls": [{"url": "www.google.com", "label": "goog"},
-                        {"url": "www.microsoft", "label": "redmond"}],
-                "attachments" : [
-                    {"fileID": "F1",
-                    "fileURL": "www.google.com",
-                    "label": "Not a real file",
-                    "updated": "1538147254"}
-                ],
-                "automations": {"atmID": "ATM1", "label": "Cool automation"}
-            }
-        ]
-
     }
+    
 ]

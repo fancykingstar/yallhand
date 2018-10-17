@@ -26,15 +26,16 @@ class AppRoute extends React.Component {
       <div className="App">
         {/* <Switch>{RouteTraffic}</Switch> */}
         <Switch>
-       <Route path ="/" component={UserPortal}/>
-        {/* <Route path="/panel" component={AdminPanel}/> */}
+   
+        <Route path="/panel" component={AdminPanel}/>
+        <Route path ="/portal" component={UserPortal}/>
     
 
         {/* <Route path="/login" component={Login} />
         <Route path="*" component={TwilightZone} /> */}
 
         </Switch>
-        // <Redirect push to="/panel" />
+         {/* <Redirect push to="/panel" /> */}
       </div>
     );
   }
