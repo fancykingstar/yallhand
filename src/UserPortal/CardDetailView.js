@@ -28,7 +28,7 @@ export class CardDetailView extends React.Component {
                     content={policyData.label}
                     subheader={UTCtoFriendly(policyData.updated)}
                   />
-                  <p>{policyData.variations[0].content}</p>
+                  <p>{policyData.variations.content}</p>
                   </Container>
             
                 </div>

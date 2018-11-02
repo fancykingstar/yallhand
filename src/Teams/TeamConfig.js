@@ -12,7 +12,6 @@ export class TeamConfig extends React.Component {
     }
     render() {
     const {TeamStore} = this.props
-    
     return (
       <div className="Segment">
         <Header

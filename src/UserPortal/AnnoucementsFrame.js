@@ -4,16 +4,35 @@ import { inject, observer } from "mobx-react";
 import { Item, Header, Container, Divider } from 'semantic-ui-react'
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 
-@inject("AnnoucementsStore")
+@inject("AnnoucementsStore", "UserStore")
 @observer
 export class AnnoucementsFrame extends React.Component {
     constructor(props) {
         super(props)
     }
     
+    
+
     render() {
+
+        const checkPath = (val, path) => {
+            console.log(val)
+            let retrievedValue = false;
+            let index = 2;
+            while (retrievedValue === false && index > -1) {
+              if (path[index] === val || val === null) {
+                retrievedValue = true;
+              }
+              index--;
+            }
+            return retrievedValue
+          };
+
+
         const {AnnoucementsStore} = this.props
-        const displayFeed = AnnoucementsStore.allAnnoucements.map(news => (
+        const {UserStore} = this.props
+        const validFeed = AnnoucementsStore.allAnnoucements.filter(annc => checkPath(annc.teamID, UserStore.previewTeamPath))
+        const displayFeed = validFeed.map(news => (
             <div className="AnnouncementContainer">
             
                 {news.img.length !== 0 ?  <div className="imgBox"> <Item.Image size="medium" src={news.img}/> </div> : null}

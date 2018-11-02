@@ -1,17 +1,17 @@
 import React from "react";
 import { Icon, Label, Dropdown } from "semantic-ui-react";
 import {inject, observer} from "mobx-react"
-import {withRouter} from "react-router-dom"
+import {withRouter, Link} from "react-router-dom"
 import "./style.css";
 
 
 
 
-@inject("TeamStore", "UserStore", "PoliciesStore")
+@inject("TeamStore", "UserStore")
 @observer
 class Header extends React.Component {
   constructor(props) {
-    super(props)
+    super(props) 
   }
   componentDidMount() {
     const {TeamStore} = this.props
@@ -25,10 +25,11 @@ class Header extends React.Component {
 
       UserStore.setPreviewTeam(val.team)
       UserStore.setPreviewTag(val.tag)
-      // const {PoliciesStore} = this.props
-      // PoliciesStore.loadPolicies()
+      UserStore.setPreviewTeamPath(TeamStore.previewValidPath(val.team, 'team'))
+      UserStore.setPreviewTagPath(TeamStore.previewValidPath(val.tag, 'tag'))
       this.props.history.push('/portal')
     }
+    
     
 
 
@@ -74,7 +75,9 @@ class Header extends React.Component {
           </div>
         </div>
         <div className="MobileMenu">
+          <Link to="/panel">
           <Icon name="bars" size="large" color="black" />
+          </Link>
         </div>
       </div>
     );

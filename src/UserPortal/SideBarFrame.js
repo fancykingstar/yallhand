@@ -1,5 +1,5 @@
 import React from "react";
-import {SideBarMenu} from "./SideBarMenu"
+import SideBarMenu from "./SideBarMenu"
 import "./style.css";
 
 export const SideBarFrame = () => {

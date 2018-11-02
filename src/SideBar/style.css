@@ -8,6 +8,10 @@ a {
   color: #d7d7d7;
 } 
 
+.darklink a {
+  color: #000000;
+} 
+
 .SideBar {
   width: 230px;
   height: 1800px;
@@ -54,7 +58,7 @@ a {
   -moz-border-radius: 10%;
   border-radius: 10%;
   background-image: url("../Assets/Graphics/temp.png");
-  background-size: 50px 50px;
+  background-size: 45px 45px;
 }
 
 

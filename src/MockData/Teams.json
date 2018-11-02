@@ -8,6 +8,13 @@
     },
     {
         "accountID": "A1",
+        "teamID": "team06",
+        "label": "Canada",
+        "parent": "self",
+        "depth": 0
+    },
+    {
+        "accountID": "A1",
         "teamID": "team02",
         "label": "California",
         "parent": "team01",
@@ -15,9 +22,23 @@
     },
     {
         "accountID": "A1",
+        "teamID": "team07",
+        "label": "Massachusetts",
+        "parent": "team01",
+        "depth": 1
+    },
+    {
+        "accountID": "A1",
         "teamID": "team03",
-        "label": "San Diego",
-        "parent": "team02",
+        "label": "Boston",
+        "parent": "team07",
+        "depth": 2
+    },
+    {
+        "accountID": "A1",
+        "teamID": "team10",
+        "label": "Cambridge",
+        "parent": "team07",
         "depth": 2
     },
     {
@@ -29,7 +50,7 @@
     },
     {
         "accountID": "A1",
-        "teamID": "team04",
+        "teamID": "team05",
         "label": "San Francisco",
         "parent": "team02",
         "depth": 2

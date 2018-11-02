@@ -7,7 +7,6 @@ import {SideBarFrame} from "./UserPortal/SideBarFrame"
 import {AnnoucementsFrame} from "./UserPortal/AnnoucementsFrame"
 import {CardFrame} from "./UserPortal/CardFrame"
 import {CardDetailFrame} from "./UserPortal/CardDetailFrame"
-// import UserPortalFilter from "./SharedCalculations/UserPortalFilter"
 import "./App.css"
 
 
@@ -22,7 +21,7 @@ export class UserPortal extends React.Component {
          UserStore.loadAccount()
          const {PoliciesStore} = this.props
          PoliciesStore.loadUserPortalPolicies(UserStore.previewTeam, UserStore.previewTag)
-     
+        
 
     }
      

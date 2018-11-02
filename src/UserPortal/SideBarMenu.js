@@ -1,11 +1,11 @@
 import React from "react"
 import {Menu} from "semantic-ui-react"
 import {inject, observer} from "mobx-react"
-import {NavLink} from "react-router-dom"
+import {NavLink, withRouter} from "react-router-dom"
 
 @inject("SideBarStore")
 @observer
-export class SideBarMenu extends React.Component {
+class SideBarMenu extends React.Component {
     constructor(props) {
         super(props)
     }
@@ -16,12 +16,17 @@ export class SideBarMenu extends React.Component {
     }
 
     render() {
+        const handleClick = (e) => {
+          SideBarStore.makeActive(e)
+          this.props.history.push('/portal/learn')
+
+        }
         const {SideBarStore} = this.props
         const channelList = SideBarStore.displayTitles.map(channel => (
             <Menu.Item
               name={channel}
               id={channel}
-              onClick={e => SideBarStore.makeActive(e)}
+              onClick={e => handleClick(e)}
             />
         ))
         return(
@@ -35,7 +40,8 @@ export class SideBarMenu extends React.Component {
             <Menu.Item
               name='Annoucements'
             /></NavLink>
-           
+           <Menu.Item disabled>Polls</Menu.Item>
+           <Menu.Item disabled>Surveys</Menu.Item>
           </Menu.Menu>
         </Menu.Item>
 
@@ -69,10 +75,10 @@ export class SideBarMenu extends React.Component {
           <Menu.Header>Support</Menu.Header>
 
           <Menu.Menu>
-            <Menu.Item name='email' >
+            <Menu.Item  disabled name='email' >
               Directory
             </Menu.Item>
-            <Menu.Item name='email' >
+            <Menu.Item  disabled name='email' >
               Get Assistance
             </Menu.Item>
 
@@ -84,7 +90,7 @@ export class SideBarMenu extends React.Component {
         )
     }
 }
-
+export default withRouter(SideBarMenu)
 
 
 

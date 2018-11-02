@@ -7,11 +7,7 @@ import './style.css'
 @inject("PoliciesStore")
 @observer
 export class CardList extends React.Component {
-    componentDidMount() {
-        
-        // const { PoliciesStore } = this.props;
-        // PoliciesStore.loadPolicies()
-    }
+ 
 
     render() {
         const { PoliciesStore } = this.props;

@@ -4,8 +4,8 @@ body {
   font-family: 'Nunito', sans-serif; 
 }
 
-.lightText {
-  colot: #D7D7D7;
+.lightText a {
+  color: darkslategray;
 }
 
 h1 h2 h3 h4 h5 span {

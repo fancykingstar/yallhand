@@ -5,6 +5,7 @@
  import {JoinLinksCommas} from "../SharedCalculations/JoinLinksCommas"
 
 
+
 export const ManageVariationData = inject("PoliciesStore", "ResourcesStore")(observer((props) => {
         const {PoliciesStore} = props
         const {ResourcesStore} = props
@@ -30,10 +31,10 @@ export const ManageVariationData = inject("PoliciesStore", "ResourcesStore")(obs
             <span>Last Updated: </span> <span style={valStyle}>{UTCtoFriendly(policy.updated)}</span>
           </div>
           <div className="Form">
-            <span>Resource URLs: </span> <span style={valStyle}>{urlsDisplay}</span>
+            <span>Resource URLs: </span> <span style={valStyle} className="lightText">{urlsDisplay}</span>
           </div>
           <div className="Form">
-            <span>Attached Files: </span> <span style={valStyle}>{filesDisplay}</span>
+            <span>Attached Files: </span> <span style={valStyle} className="lightText">{filesDisplay}</span>
           </div>
           <div className="Form">
             <span>Active Automations: </span> <span style={valStyle}>none</span>

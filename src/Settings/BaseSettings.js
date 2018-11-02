@@ -33,6 +33,19 @@ export const BaseSettings = () => {
         </div>
       </Segment>
       <br/>
+   
+  
+  <Segment>
+      <Form>
+          <Form.Field>
+              <label>Alerts</label>
+              <Form.Checkbox fluid label="Aging asset alert (12 months)" checked='true'/>
+              <Form.Checkbox fluid label="Authorized users inactive (90 days)" checked='true'/>
+              <Form.Checkbox fluid label="Broken URLs" checked='true'/>
+          </Form.Field>
+      </Form>
+  </Segment>
+  <br/>
       <Segment>
           <Form>
               <Form.Field>

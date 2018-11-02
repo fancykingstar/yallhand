@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 class Store {
     @observable
@@ -11,7 +11,13 @@ class Store {
     previewTeam = 'team01'
 
     @observable
+    previewTeamPath = ''
+
+    @observable
     previewTag = ''
+
+    @observable
+    previewTagPath = ''
 
     @action
     loadAccount() {
@@ -20,12 +26,22 @@ class Store {
 
     @action
     setPreviewTeam(val) {
-        this.previewTag = val
+        this.previewTeam = val
     }
 
     setPreviewTag(val) {
         this.previewTag = val
     }
+
+    setPreviewTeamPath(val) {
+        this.previewTeamPath = val
+    }
+
+    setPreviewTagPath(val) {
+        this.previewTagPath = val
+    }
+
+   
 }
 
 export const UserStore = new Store()

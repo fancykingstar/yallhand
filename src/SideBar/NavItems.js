@@ -44,6 +44,24 @@ export class NavItems extends React.Component {
           label="Annoucements"
           active={SideBarStore.checkActive("annoucements")}
         />
+         {/* <NavItem
+          id="annoucements"
+          icon="check square"
+          label="Surveys and Polls"
+          active={SideBarStore.checkActive("annoucements")}
+        />*/}
+         <NavItem
+          id="surveys"
+          icon="check square"
+          label="Surveys and Polls"
+          active={SideBarStore.checkActive("surveys")}
+        /> 
+         <NavItem
+          id="email"
+          icon="mail"
+          label="Email Campaign"
+          active={SideBarStore.checkActive("email")}
+        />
 
         <br />
 

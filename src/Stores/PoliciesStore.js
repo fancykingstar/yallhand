@@ -1,4 +1,5 @@
 import { observable, action } from "mobx";
+import {validDisplayPolicies} from '../SharedCalculations/ValidTeams'
 
 class Store {
   @observable
@@ -174,31 +175,9 @@ variationsToPolicies(variations) {
     return allPolicies.join(' ')
 }
 
-loadUserPortalPolicies(team, tag) {
-    // need to get eligable teams and tags vs. direct
-    const filteredItems = this.allPolicies
-        .filter(item => item.teamID === team)
-        .filter(item => item.classID === tag)
-        .filter(item => this.cardFiltertoStage[item.condition] === 'cardFilterPublished')
-    this.userAvailablePolicies = filteredItems
-    console.log(filteredItems)
+loadUserPortalPolicies(val) {
+    this.userAvailablePolicies = val
 }
-
-// getUserAvailablePolicies(teamID) {
-//     //return purged object that only has policies with valid variations
-//     const policies = this.allPolicies
-//     const scanVariations = (variList) => {
-//         const filteredVaris = variList.filter(vari => vari.teamID === teamID)
-//         return filteredVaris
-//     }
-//     policies.forEach(policy => policy.variations = scanVariations(policy.variations))
-//     this.userAvailablePolicies = policies.filter(policy => policy.variations.length !==0 )
-//     }
-
-// filterUserAvailablePolicies(chanID) {
-//     const policies = this.userAvailablePolicies.filter(policy => policy.chanID === chanID)
-//     this.userAvailableFilteredPolicies = policies
-// }
     
 cardFilterCount() {
         if (this.allPolicies.length === 0) {this.loadPolicies()}

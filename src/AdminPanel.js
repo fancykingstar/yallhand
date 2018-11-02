@@ -11,13 +11,14 @@ import { AutomationsFrame } from "./Automations/AutomationsFrame";
 import { AnnoucementsFrame } from "./Annoucements/AnnoucementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
+import { Email } from "./Email/email"
 import Header from "./Header/Header"
 
 
 @inject("SideBarStore", "PoliciesStore", "ResourcesStore", "AutomationsStore", "TeamStore", "UserStore", "AnnoucementsStore")
 @observer
 export class AdminPanel extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
 
     //load all the things for admin/
 
@@ -40,6 +41,7 @@ export class AdminPanel extends React.Component {
 
   }
   render() {
+
     return (
 
         <div className="SideAndAction">
@@ -56,6 +58,7 @@ export class AdminPanel extends React.Component {
               <Route path="/panel/policy-variation/:id" component={NewEditPolicy} />
               <Route path="/panel/base-settings" component={BaseSettings} />
               <Route path="/panel/user-settings" component={UserSettings} />
+              <Route path="/panel/email" component={Email} />
        
             </Switch>
           </div>

@@ -7,7 +7,7 @@ export const UserSettings = () => {
       <Header
         as="h2"
         content="Your Profile Settings"
-        subheader="Settings for your personal HyperBase account"
+        subheader="Settings for your personal Quadrance account"
       />
       <Segment>
         <div style={{ maxWidth: 400 }}>
@@ -25,6 +25,7 @@ export const UserSettings = () => {
           </Form>
         </div>
       </Segment>
+  
       <br/>
       <Segment>
           <Form>
