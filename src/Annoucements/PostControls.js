@@ -9,7 +9,7 @@ export class PostControls extends React.Component {
     const {TeamStore} = this.props
     const teamList = TeamStore.structure.map(team => ({'key': team.teamID, 'value': team.teamID, 'text': team.label}) )
     teamList.unshift({'key': 'global', 'value': '', 'text': 'Global (all teams)'})
-    const classList = TeamStore.classes.map(clas => ({'key': clas.classID, 'value': clas.classID, 'text': clas.label}) )
+    const classList = TeamStore.classes.map(clas => ({'key': clas.tagID, 'value': clas.tagID, 'text': clas.label}) )
     return (
       <div className="Form">
       <div style={{paddingBottom: 5}}>

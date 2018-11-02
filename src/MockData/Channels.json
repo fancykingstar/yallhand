@@ -2,8 +2,8 @@
     {
         "chanID": "C1",
         "label": "Benefits",
-        "view": ["userID"],
-        "edit": ["userID"]
+        "view": ["adminID"],
+        "edit": ["adminID"]
     },
     {
         "chanID": "C2",

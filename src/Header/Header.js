@@ -34,7 +34,7 @@ class Header extends React.Component {
 
 
     const previewPortalMenuTag = (team) => TeamStore.classes.map(tag => 
-      <Dropdown.Item text={tag.label} value={tag.tagID} key={tag.tagID} onClick={e => teamChange(e, {'team': team, 'tag': tag.classID})} />
+      <Dropdown.Item text={tag.label} value={tag.tagID} key={tag.tagID} onClick={e => teamChange(e, {'team': team, 'tag': tag.tagID})} />
       )
 
     const previewPortalMenu = allTeams.map(team =>

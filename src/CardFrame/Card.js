@@ -48,7 +48,7 @@ export const Card = (props) => {
                 <div className="UsageStatus">
                    {counts.global} Global / {counts.local} Teams
                 </div>
-                <div className="CurrentStatus"><Icon name={conditions[props.data.condition]['iconName']} color={conditions[props.data.condition]['color']} size='large' /></div>
+                <div className="CurrentStatus"><Icon name={conditions[props.data.state]['iconName']} color={conditions[props.data.state]['color']} size='large' /></div>
                 <div className="Corner"></div>
                 </div>
                 </Link>

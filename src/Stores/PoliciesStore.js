@@ -72,7 +72,7 @@ class Store {
         "label": this.policyTitle,
         "admins": [{"adminID": accountInfo.adminID, "displayName": accountInfo.displayName}],
         "keywords": [],
-        "condition": "draft",
+        "state": "draft",
         "variations": []
     }
     
@@ -84,7 +84,7 @@ class Store {
   }
 
   displayPolicies() {
-    this.filteredPolicies = this.allPolicies.filter(policy => this.cardFilters[this.cardFilterToStage[policy.condition]])
+    this.filteredPolicies = this.allPolicies.filter(policy => this.cardFilters[this.cardFilterToStage[policy.state]])
     if (this.channelFilter.chanID !== null) {
         const channelpolicies = this.filteredPolicies.filter(policy => policy.chanID === this.channelFilter.chanID)
         this.filteredPolicies = channelpolicies
@@ -183,7 +183,7 @@ cardFilterCount() {
         if (this.allPolicies.length === 0) {this.loadPolicies()}
         let cardFilterCountsLocal = {'published': 0, 'drafts': 0, 'archived': 0}
         this.allPolicies.forEach(policy => {
-            let val = this.cardFilterToStage[policy.condition].toLowerCase()
+            let val = this.cardFilterToStage[policy.state].toLowerCase()
             let current = val.split('cardfilter')[1]
             cardFilterCountsLocal[current] ++
             

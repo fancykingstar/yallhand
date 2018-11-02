@@ -8,7 +8,7 @@
         "img": "https://images.unsplash.com/photo-1533557603879-ebdd7a92e4e8?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6d08c991169da5df017efdbedb195909&auto=format&fit=crop&w=1650&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["PTO"],
-        "condition": "draft",
+        "state": "draft",
         "variations": [ 
             {
                 "type": "global",
@@ -45,7 +45,7 @@
         "img": "https://images.unsplash.com/photo-1524678714210-9917a6c619c2?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=0f077eae6a256063c3d662eec3f54eb4&auto=format&fit=crop&w=1649&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["Time Off", "PTO"],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -67,7 +67,7 @@
         "img": "https://images.unsplash.com/photo-1516126491303-6f54240c8491?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=dfcb0e3a128b4184c105916df4fa2d26&auto=format&fit=crop&w=1560&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["sick leave"],
-        "condition": "ok",
+        "state": "ok",
         "variations": [
             {
             "type": "local",
@@ -103,7 +103,7 @@
         "img": "https://images.unsplash.com/photo-1523958399470-c15bf82fcea9?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=24bc33ab52ef2dc36a177c25c24da122&auto=format&fit=crop&w=1613&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["holidays"],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -125,7 +125,7 @@
         "img": "https://images.unsplash.com/photo-1523357585206-175e971f2ad9?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=4d4e050da1c691f01f0643abe9cd5f94&auto=format&fit=crop&w=1653&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": ["bicycle"],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -147,7 +147,7 @@
         "img": "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=5123b60869dee1acceac3720eee527b4&auto=format&fit=crop&w=1654&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": [""],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -169,7 +169,7 @@
         "img": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=352d3cdaa50b65c4adf76c1d4dd4ca7e&auto=format&fit=crop&w=1650&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": [""],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -191,7 +191,7 @@
         "img": "https://images.unsplash.com/photo-1519377345644-937ef9754740?ixlib=rb-0.3.5&s=f65e048b79a9aa7eb27ec7ca33603ca0&auto=format&fit=crop&w=2029&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": [""],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",
@@ -213,7 +213,7 @@
         "img": "https://images.unsplash.com/photo-1484583066749-c2129489f52f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=d2b1f5a547d900c61e0593502a1e164f&auto=format&fit=crop&w=2090&q=80",
         "admins": [{"adminID": "adminID", "displayName": "Mark Z."}],
         "keywords": [""],
-        "condition": "ok",
+        "state": "ok",
         "variations": [{
             "type": "global",
             "label": "",

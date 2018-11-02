@@ -1,21 +1,21 @@
 [
     {
         "accountID": "A1",
-        "classID": "tag01",
+        "tagID": "tag01",
         "label": "employee",
         "parent": "self",
         "depth": 0
     },
     {
         "accountID": "A1",
-        "classID": "tag02",
+        "tagID": "tag02",
         "label": "manager",
         "parent": "tag01",
         "depth": 1
     },
     {
         "accountID": "A1",
-        "classID": "tag03",
+        "tagID": "tag03",
         "label": "contractor",
         "parent": "self",
         "depth": 0

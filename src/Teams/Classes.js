@@ -37,7 +37,7 @@ export class Classes extends React.Component {
             <Form.Group />
           </Form>
       
-        <ListTree data={TeamStore.classes} id="classID"/>
+        <ListTree data={TeamStore.classes} id="tagID"/>
 
         </Segment>
        

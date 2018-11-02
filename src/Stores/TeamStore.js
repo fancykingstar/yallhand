@@ -36,7 +36,7 @@ class Store {
   // }
 
   loadClasses() {
-    const classes = require("../MockData/Classes.json");
+    const classes = require("../MockData/Tags.json");
     this.classes  = classes
   };
 
@@ -45,7 +45,7 @@ class Store {
     //returns object to transverse valid sub items in tags and teams when displaying to user
     //outputs {0: team, 1: sub-team/tag, 2:sub-team/tag of sub-team/tag}
     let teamPath = {0: '', 1: '', 2: ''}
-    let currentDepth = type === 'team' ? this.structure.filter(team => team.teamID === id)[0].depth : this.classes.filter(tag => tag.classID === id)[0].depth
+    let currentDepth = type === 'team' ? this.structure.filter(team => team.teamID === id)[0].depth : this.classes.filter(tag => tag.tagID === id)[0].depth
     if (currentDepth === 0) {
       teamPath[currentDepth] = id
       return teamPath
@@ -55,7 +55,7 @@ class Store {
       while (currentDepth !== -1) {
         
         teamPath[currentDepth] = currentLevel
-        currentLevel = type === 'team' ? this.structure.filter(team => team.teamID === currentLevel)[0].parent : this.classes.filter(tag => tag.classID === currentLevel)[0].parent
+        currentLevel = type === 'team' ? this.structure.filter(team => team.teamID === currentLevel)[0].parent : this.classes.filter(tag => tag.tagID === currentLevel)[0].parent
         currentDepth--
       }
       return teamPath

@@ -24,7 +24,7 @@ export class QFields extends React.Component {
     const variationLabel = variation.label !== "" ? variation.label : policy.label
     const teamList = TeamStore.structure.map(team => ({'key': team.teamID, 'value': team.teamID, 'text': team.label}) )
     teamList.unshift({'key': 'global', 'value': '', 'text': 'Global (all teams)'})
-    const classList = TeamStore.classes.map(clas => ({'key': clas.classID, 'value': clas.classID, 'text': clas.label}) )
+    const classList = TeamStore.classes.map(clas => ({'key': clas.tagID, 'value': clas.tagID, 'text': clas.label}) )
     return (
       <div className="ManagePolicy">
         <NavLink to="/manage-policy">
