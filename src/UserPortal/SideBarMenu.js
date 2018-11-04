@@ -6,9 +6,6 @@ import {NavLink, withRouter} from "react-router-dom"
 @inject("SideBarStore")
 @observer
 class SideBarMenu extends React.Component {
-    constructor(props) {
-        super(props)
-    }
     componentDidMount() {
       const {SideBarStore} = this.props
         SideBarStore.loadChannels()

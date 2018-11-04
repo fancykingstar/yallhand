@@ -10,9 +10,6 @@ import "./style.css";
 @inject("TeamStore", "UserStore")
 @observer
 class Header extends React.Component {
-  constructor(props) {
-    super(props) 
-  }
   componentDidMount() {
     const {TeamStore} = this.props
     TeamStore.loadStructure()
@@ -39,7 +36,7 @@ class Header extends React.Component {
 
     const previewPortalMenu = allTeams.map(team =>
       
-        <Dropdown.Item>
+        <Dropdown.Item key={TeamStore.teamKey[team]}>
           <Dropdown text={TeamStore.teamKey[team]}>
             <Dropdown.Menu>
               {previewPortalMenuTag(team)}

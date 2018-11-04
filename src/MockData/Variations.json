@@ -1,79 +1,30 @@
 [
-    {
-        "AccountID": "A1",
-        "variationID": "V1",
-        "teamID": "T1", 
-        "stage": "published",
-        "updated": "1538147254",
-        "admin": {"userID":"userID", "userDisplayName": "Display Name"},
-        "label": "How do I take time off",
-        "data": [
-            {
-                "condition": "condition 1",
-                "content": "To get a reembursement, ask for help",
-                "urls": [{"url": "www.google.com", "label": "goog"},
-                        {"url": "www.microsoft", "label": "redmond"}],
-                "attachments" : [
-                    {"fileID": "F1",
-                    "fileURL": "www.google.com",
-                    "label": "Not a real file",
-                    "updated": "1538147254"}
-                ],
-                "automations": {"atmID": "ATM1", "label": "Cool automation"}
-            },
-            {
-                "condition": "condition 2",
-                "content": "To get a reembursement, really ask for help",
-                "urls": [{"url": "www.google.com", "label": "goog"},
-                        {"url": "www.microsoft", "label": "redmond"}],
-                "attachments" : [
-                    {"fileID": "F1",
-                    "fileURL": "www.google.com",
-                    "label": "Not a real file",
-                    "updated": "1538147254"}
-                ],
-                "automations": {"atmID": "ATM1", "label": "Cool automation"}
-            }
-        ]
-
-    },
-    {
-        "AccountID": "A1",
-        "variationID": "V2",
-        "teamID": "T2",
-        "stage": "published",
-        "updated": "1538147254",
-        "admin": {"userID":"userID", "userDisplayName": "Display Name"},
-        "label": "I want a reembursement",
-        "data": [
-            {
-                "condition": "condition 1",
-                "content": "To get a reembursement, ask for help",
-                "urls": [{"url": "www.google.com", "label": "goog"},
-                        {"url": "www.microsoft", "label": "redmond"}],
-                "attachments" : [
-                    {"fileID": "F1",
-                    "fileURL": "www.google.com",
-                    "label": "Not a real file",
-                    "updated": "1538147254"}
-                ],
-                "automations": {"atmID": "ATM1", "label": "Cool automation"}
-            },
-            {
-                "condition": "condition 2",
-                "content": "To get a reembursement, really ask for help",
-                "urls": [{"url": "www.google.com", "label": "goog"},
-                        {"url": "www.microsoft", "label": "redmond"}],
-                "attachments" : [
-                    {"fileID": "F1",
-                    "fileURL": "www.google.com",
-                    "label": "Not a real file",
-                    "updated": "1538147254"}
-                ],
-                "automations": {"atmID": "ATM1", "label": "Cool automation"}
-            }
-        ]
-
+  {
+    "AccountID": "A1",
+    "variationID": "V1",
+    "teamID": "team01",
+    "tags": [],
+    "stage": "published",
+    "updated": "1538147254",
+    "admin": { "userID": "userID", "userDisplayName": "Display Name" },
+    "label": "How do I take time off",
+    "data": {
+      "content": "To get a reembursement, ask for help",
+      "automations": { "atmID": "ATM1", "label": "Cool automation" }
     }
-    
+  },
+  {
+    "AccountID": "A1",
+    "variationID": "V2",
+    "teamID": "team05",
+    "tags": [{ "label": "manager", "tagID": "tag02" }],
+    "stage": "published",
+    "updated": "1538147254",
+    "admin": { "userID": "userID", "userDisplayName": "Display Name" },
+    "label": "I want a reembursement",
+    "data": {
+        "content": "To get a reembursement, ask for help",
+        "automations": { "atmID": "ATM1", "label": "Cool automation" }
+      }
+  }
 ]

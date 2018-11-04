@@ -7,7 +7,7 @@ export const BaseSettings = () => {
       <Header
         as="h2"
         content="Account Settings"
-        subheader="Settings for your Hypersbase account"
+        subheader="Settings for your Quadrance account"
       />
       <Segment>
         <div style={{ width: 400 }}>

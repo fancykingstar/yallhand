@@ -1,10 +1,10 @@
 import React from "react";
 import "./style.css";
-import { Pagination, Table } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import { AddButton } from "../SharedUI/AddButton";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
-import { ConfigPagination, PageIndicies } from "../SharedCalculations/Pagination";
+// import { ConfigPagination, PageIndicies } from "../SharedCalculations/Pagination";
 
 export const Links = inject("ResourcesStore", "PoliciesStore")(observer((props) => {
 

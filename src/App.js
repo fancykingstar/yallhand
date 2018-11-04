@@ -1,22 +1,17 @@
 import React from "react";
 import "./App.css";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { inject, observer } from "mobx-react";
+import { Switch, Route, withRouter } from "react-router-dom";
+import { observer } from "mobx-react";
 import { AdminPanel } from "./AdminPanel";
 import { UserPortal } from "./UserPortal"
-import { Login } from "./Login/Login";
-import { TwilightZone } from "./MiscPages/404";
+// import { Login } from "./Login/Login";
+// import { TwilightZone } from "./MiscPages/404";
 
-
-@inject("UserStore")
 
 class AppRoute extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
   componentDidMount() {}
   render() {
-    const { UserStore } = this.props;
     // const RouteTraffic = UserStore.isAuthenticated ? (
     //   <Redirect push to="/panel" />
     // ) : (

@@ -1,15 +1,12 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import "./style.css";
-import { Form, Segment, Header, List } from "semantic-ui-react";
+import { Form, Segment, Header } from "semantic-ui-react";
 import {ListTree} from "../SharedUI/BuildTree"
 
 @inject("TeamStore")
 @observer
 export class TeamConfig extends React.Component {
-    constructor(props) {
-      super(props)
-    }
     render() {
     const {TeamStore} = this.props
     return (

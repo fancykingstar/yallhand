@@ -2,11 +2,12 @@ import React from "react";
 import "./style.css";
 import {inject, observer} from "mobx-react"
 import { BackToChan } from "./BackToChan";
-import { Input, Icon, Form } from "semantic-ui-react";
-import { Conditionals } from "./Conditionals";
+import { Input, Icon} from "semantic-ui-react";
+// import { Conditionals } from "./Conditionals";
 import { NavLink } from "react-router-dom";
+import { TeamTagSelect } from "../SharedUI/TeamTagSelect"
 
-@inject("PoliciesStore", "TeamStore")
+@inject("PoliciesStore")
 @observer
 export class QFields extends React.Component {
   constructor(props) {
@@ -18,13 +19,12 @@ export class QFields extends React.Component {
   };
   render() {
     const {PoliciesStore} = this.props
-    const {TeamStore} = this.props
     const policy = PoliciesStore.allPolicies.filter(policy => policy.policyID === PoliciesStore.toggledPolicy)[0]
     const variation = policy.variations.filter(variation => variation.variationID === PoliciesStore.toggledVariation)[0]
+    const invalidteams = policy.variations.map(vari => vari.teamID).filter(team => team !== variation.teamID)
+    const invalidtags = policy.variations.map(vari => vari.tagID).filter(tag => tag !== variation.tagID)//makes duplicates, doesn't effect process
     const variationLabel = variation.label !== "" ? variation.label : policy.label
-    const teamList = TeamStore.structure.map(team => ({'key': team.teamID, 'value': team.teamID, 'text': team.label}) )
-    teamList.unshift({'key': 'global', 'value': '', 'text': 'Global (all teams)'})
-    const classList = TeamStore.classes.map(clas => ({'key': clas.tagID, 'value': clas.tagID, 'text': clas.label}) )
+    const defaultTag = variation.tags.length === 0 ? '' : variation.tags[0].tagID
     return (
       <div className="ManagePolicy">
         <NavLink to="/manage-policy">
@@ -49,48 +49,12 @@ export class QFields extends React.Component {
         
         
           <div className="Form">
-           
-            
+          <TeamTagSelect invalidTeams={invalidteams} invalidTags={invalidtags} defaultTeam={variation.teamID} defaultTag={defaultTag} />
           </div>
-
-      <div className="Form">
-            <div style={{paddingBottom: 5}}>
-              <h4>Configure Audience</h4>
-            </div>
-            <Form>
-              <Form.Group>
-              <Form.Dropdown
-            label="Teams"
-              placeholder="Teams"
-              fluid
-              search
-              selection
-              options={teamList}
-              defaultValue={''}
-            
-              style={{ width: 350 }}
-            />
-            <Form.Dropdown
-            label="Classes (optional)"
-              placeholder="classes"
-              fluid
-              search
-              selection
-              options={classList}
-              style={{ width: 350 }}
-            />
-
-              </Form.Group>
-            </Form>
-            
-          </div>
-
-     
-
         <div className="Form" style={{ maxWidth: 350 }}>
-          <Conditionals />
+          {/* <Conditionals /> */}
         </div>
       </div>
     );
-  }
+  } 
 }

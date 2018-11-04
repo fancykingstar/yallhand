@@ -3,7 +3,7 @@ import "./style.css";
 import {inject, observer} from "mobx-react"
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
-import { Icon, Pagination, Table } from "semantic-ui-react";
+import { Icon, Table } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 // import { UserPagination, PageIndicies } from "../Teams/UserPagination";
 

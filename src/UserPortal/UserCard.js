@@ -1,11 +1,10 @@
 import React from "react";
-import { Icon, Label } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import "./card-style.css";
 import "./style.css";
 
 export const UserCard = props => {
-  const bgimg = props.data.img;
+  // const bgimg = props.data.img;
   return (
     <div>
 

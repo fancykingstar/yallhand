@@ -7,9 +7,6 @@ import {inject, observer} from "mobx-react"
 @inject("ResourcesStore", "PoliciesStore")
 @observer
 export class AttachedList extends React.Component {
-  constructor(props) {
-    super(props)
-  }
   render() {
     const {ResourcesStore} = this.props
     const {PoliciesStore} = this.props

@@ -1,6 +1,6 @@
 import React from 'react'
-import {inject, observer, PropTypes} from 'mobx-react'
-import { Item, Image, Button} from "semantic-ui-react";
+import {inject, observer} from 'mobx-react'
+import { Item, Button} from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 export const Feed = inject("AnnoucementsStore")(observer((props) => { 

@@ -9,10 +9,6 @@ import { DraftFormField } from "../SharedUI/DraftFormField";
 @inject("PoliciesStore")
 @observer
 export class AFields extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     const {PoliciesStore} = this.props
     const currentPolicy = PoliciesStore.allPolicies.filter(policy => policy.policyID === PoliciesStore.toggledPolicy)

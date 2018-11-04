@@ -8,7 +8,6 @@ import { inject, observer } from "mobx-react"
 // }))
 
 class Loader extends React.Component {
-    console.log("I ran")
 //  const { SideBarStore } = props;
  SideBarStore.loadChannels();
 //  const { PoliciesStore } = props;

@@ -11,9 +11,6 @@ import { ManageVariationData } from "./ManageVariationData";
 @inject("PoliciesStore", "ResourcesStore", "TeamStore")
 @observer
 export class ManagePolicy extends React.Component {
-  constructor(props) {
-    super(props)
-  }
   componentWillMount() {
     const {PoliciesStore} = this.props
     const {TeamStore} = this.props
@@ -45,8 +42,7 @@ export class ManagePolicy extends React.Component {
 
   
   const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'description': getTags(variation.tags),'text': TeamStore.teamKey[variation.teamID], 'type': variation.type}))
-  const grabGlobal = variations.filter(variation => variation.type === 'global')
-
+  
   
   const keywords = policy.keywords.map(keyword => <Label key={keyword}>{keyword}<Icon name="delete" /></Label>)
  
@@ -78,8 +74,6 @@ export class ManagePolicy extends React.Component {
         </div>
         <div className="Form">
         <Button
-
-color='#D7D7D7'
 content='Upload Image'
 icon='image'
 />

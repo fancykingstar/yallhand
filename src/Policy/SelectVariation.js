@@ -1,7 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import "./style.css";
-import { teamOptions } from "./TempObjects";
 import { Dropdown, Form } from "semantic-ui-react";
 
 export const SelectVariation = inject("PoliciesStore")(observer((props) => {

@@ -1,16 +1,12 @@
 import React from "react";
 import { Button, Modal, Input, Message } from "semantic-ui-react";
 import "./card-style.css";
-import { NavLink } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import {FormCharMax} from '../SharedValidations/FormCharMax'
 
 @inject("PoliciesStore", "SideBarStore", "UserStore")
 @observer 
 export class CreateCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const { PoliciesStore } = this.props;
     const { SideBarStore } = this.props;

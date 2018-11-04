@@ -6,7 +6,6 @@ export const validDisplayPolicies = (allItems, teamPath, tagPath) => {
       tagStatus = true;
     } else {
       let tagIDs = alltags.map(tag => tag.tagID);
-      console.log(tagIDs)
       let index = 2;
       while (tagStatus === false && index > -1) {
         if (tagIDs.includes(tagPath[index])) {

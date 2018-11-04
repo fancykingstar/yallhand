@@ -5,9 +5,6 @@ import {inject, observer} from "mobx-react"
 @inject("PoliciesStore")
 @observer
 export class PubControls extends React.Component {
-  constructor(props) {
-    super(props)
-  }
   componentDidMount() {
     const {PoliciesStore} = this.props
     PoliciesStore.toggleVariation(this.props.variationID)

@@ -1,15 +1,12 @@
 import React from "react"
 import "./style.css"
 import { inject, observer } from "mobx-react";
-import { Item, Header, Container, Divider, Image } from 'semantic-ui-react'
+import {  Header, Container, Image } from 'semantic-ui-react'
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 
 @inject("PoliciesStore")
 @observer
 export class CardDetailView extends React.Component {
-    constructor(props) {
-        super(props)
-    }
     render() {
         const {PoliciesStore} = this.props
         const toggledPolicy = this.props.policyID

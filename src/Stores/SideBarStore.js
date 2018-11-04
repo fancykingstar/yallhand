@@ -39,7 +39,6 @@ class Store {
     this.channelTitles.push(this.newTitle);
     this.displayTitles = this.channelTitles;
     this.channelKeys[this.newTitle] = Math.random().toString(16).slice(2, 8).toUpperCase()
-    console.log(this.channelKeys[this.newTitle])
     this.closeMod(e);
   }
   loadChannels = chanObj => {

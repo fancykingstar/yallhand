@@ -21,7 +21,7 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
     AutomationsStore.selectAutomation(info)
     AutomationsStore.setModal(true)
   };
-  const handleClose = () => AutomationsStore.setModal(false);
+
 
   const addCommas = (fullList) => {
          const types = ['template', 'custom', 'anonymous']

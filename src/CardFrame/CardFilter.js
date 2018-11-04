@@ -5,9 +5,6 @@ import './style.css'
 @inject("PoliciesStore")
 @observer
 export class CardFilter extends React.Component {
-    constructor(props) {
-        super(props)
-    }
     componentDidMount() {
         const {PoliciesStore} = this.props
         PoliciesStore.cardFilterCount()

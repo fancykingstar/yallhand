@@ -1,9 +1,0 @@
-$font-stack:  Helvetica, sans-serif;
-$aubry-grey:  #F9F9F9;
-$aubry-dark-gray: #979797; 
-$primary-color: rgb(37, 190, 73);
-
-body {
-  font: $font-stack;
-  color: $primary-color;
-}

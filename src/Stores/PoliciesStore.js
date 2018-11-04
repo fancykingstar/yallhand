@@ -1,5 +1,4 @@
 import { observable, action } from "mobx";
-import {validDisplayPolicies} from '../SharedCalculations/ValidTeams'
 
 class Store {
   @observable
@@ -21,7 +20,10 @@ class Store {
   userAvailablePolicies = []
 
   @observable
-  userAvailableFilteredPolicies = []
+  policyContent = []
+
+//   @observable
+//   userAvailableFilteredPolicies = []
 
   @observable
   channelFilter = {'label': 'All', 'chanID': null};

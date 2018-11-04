@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import { Input, Icon, Button, Form } from "semantic-ui-react";
+import { Input, Icon} from "semantic-ui-react";
 export const SearchFrame = () => {
   return (
     <div className="SearchFrame">

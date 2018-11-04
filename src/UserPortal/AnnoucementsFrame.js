@@ -7,16 +7,9 @@ import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 @inject("AnnoucementsStore", "UserStore")
 @observer
 export class AnnoucementsFrame extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    
-    
-
     render() {
 
         const checkPath = (val, path) => {
-            console.log(val)
             let retrievedValue = false;
             let index = 2;
             while (retrievedValue === false && index > -1) {

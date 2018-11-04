@@ -18,7 +18,6 @@ export class CardFrame extends React.Component {
     render() {
         const { PoliciesStore } = this.props;
         const { SideBarStore } = this.props;
-        const { UserStore } = this.props;
         const validData = PoliciesStore.userAvailablePolicies
         const cardData = validData.filter(policy => policy.chanID === SideBarStore.channelKeys[SideBarStore.active])
         // cardData.forEach(policy => {
