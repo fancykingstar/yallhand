@@ -2,7 +2,7 @@ import React from "react";
 import "./style.css";
 import {inject, observer} from "mobx-react"
 import { BackToChan } from "./BackToChan";
-import { Input, Icon} from "semantic-ui-react";
+import { Input, Icon, Form} from "semantic-ui-react";
 // import { Conditionals } from "./Conditionals";
 import { NavLink } from "react-router-dom";
 import { TeamTagSelect } from "../SharedUI/TeamTagSelect"
@@ -49,7 +49,21 @@ export class QFields extends React.Component {
         
         
           <div className="Form">
-          <TeamTagSelect invalidTeams={invalidteams} invalidTags={invalidtags} defaultTeam={variation.teamID} defaultTag={defaultTag} />
+          <div style={{ paddingBottom: 5 }}>
+        <h4>Configure Audience</h4>
+      </div>
+      <Form>
+        <Form.Group>
+          <TeamTagSelect
+            invalidTeams={[]}
+            invalidTags={[]}
+            defaultTeam={""}
+            defaultTag={""}
+            fluid={true}
+            multi={false}
+          />
+        </Form.Group>
+      </Form>
           </div>
         <div className="Form" style={{ maxWidth: 350 }}>
           {/* <Conditionals /> */}

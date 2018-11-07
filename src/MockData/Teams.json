@@ -1,11 +1,5 @@
 [
-    {
-        "accountID": "A1",
-        "teamID": "global",
-        "label": "Global (All Teams)",
-        "parent": "self",
-        "depth": 0
-    },
+   
     {
         "accountID": "A1",
         "teamID": "team01",

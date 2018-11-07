@@ -2,7 +2,12 @@ import React from "react";
 import "./style.css";
 import { PillButton } from "../SharedUI/PillButton";
 import { Icon, Table, Segment, Header, Form, Popup } from "semantic-ui-react";
+import { TeamTagSelect } from "../SharedUI/TeamTagSelect";
+import { inject, observer } from "mobx-react";
+import { SideBarStore } from "../Stores/SideBarStore";
 
+@inject("SideBarStore")
+@observer
 export class InviteAdmin extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +17,7 @@ export class InviteAdmin extends React.Component {
   render() {
     const { active } = this.state;
     return (
-      <div className="Segment">
+      <div className="Segment" style={{ position: "relative" }}>
         <Header
           as="h2"
           content="Invite Admin Collaborators"
@@ -21,26 +26,30 @@ export class InviteAdmin extends React.Component {
 
         <Segment>
           <Header as="h3" content="Create Invite" />
-
           <Form>
-            <Form.Group inline widths="equal" style={{ paddingRight: 10 }}>
+            <Form.Group style={{ paddingRight: 10 }}>
               <Form.Input
+                style={{ minWidth: 275 }}
                 fluid
                 label="Email"
                 placeholder="jane@placethatwework.co"
               />
-
-              <Form.Select
-                fluid
-                label="Team(s) Access"
-                placeholder="dropdown"
+              <TeamTagSelect
+                invalidTeams={[]}
+                invalidTags={[]}
+                defaultTeam={""}
+                defaultTag={""}
+                multi={true}
+                isFluid={true}
               />
               <Form.Select
+                multiple
                 fluid
                 label="Channel(s) Access"
-                placeholder="dropdown"
+                placeholder="Channels"
+                options={SideBarStore.channelSelectOptions}
               />
-              <Form.Select fluid label="Class" placeholder="dropdown" />
+
               <Form.Button style={{ marginTop: 24 }} icon="plus" />
             </Form.Group>
             <Form.Group widths="equal">
@@ -57,7 +66,6 @@ export class InviteAdmin extends React.Component {
               />
             </Form.Group>
           </Form>
-
           <Header as="h3" content="Queue" />
 
           <Table style={{ maxWidth: 850 }} basic="very">

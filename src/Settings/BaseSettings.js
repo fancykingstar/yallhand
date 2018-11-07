@@ -2,6 +2,7 @@ import React from "react";
 import { Header, Segment, Form, Button, Icon } from "semantic-ui-react";
 
 export const BaseSettings = () => {
+  const timezones = require('../TemplateData/timezones.json')
   return (
     <div style={{ padding: 15, maxWidth: 900 }}>
       <Header
@@ -44,6 +45,14 @@ export const BaseSettings = () => {
               <Form.Checkbox fluid label="Broken URLs" checked='true'/>
           </Form.Field>
       </Form>
+  </Segment>
+  <br/>
+  <Segment>
+    <Form>
+      <Form.Field>
+        <Form.Select label="Timezone" options={timezones}/>
+      </Form.Field>
+    </Form>
   </Segment>
   <br/>
       <Segment>

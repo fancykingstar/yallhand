@@ -9,6 +9,8 @@ import 'draft-js-linkify-plugin/lib/plugin.css';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import 'draft-js-counter-plugin/lib/plugin.css';
 import createCounterPlugin from 'draft-js-counter-plugin';
+import {inject, observer} from "mobx-react"
+import { DataEntryStore } from "../Stores/DataEntryStore";
 
 
 const counterPlugin = createCounterPlugin();
@@ -19,6 +21,8 @@ const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
 const plugins = [emojiPlugin, linkifyPlugin, counterPlugin];
 
 
+@inject("DataEntryStore")
+@observer
 export class DraftFormField extends Component {
   constructor(props) {
     super(props);
@@ -42,8 +46,10 @@ export class DraftFormField extends Component {
    };
 
    passContent = () => {
+
     const contentState = this.state.editorState.getCurrentContent();
-    this.props.updateContent(convertToRaw(contentState))
+    DataEntryStore.toggleDraftContent(convertToRaw(contentState))
+    // this.props.updateContent(convertToRaw(contentState))
     
     
    }

@@ -13,6 +13,8 @@ class Store {
   newTitle = "";
   @observable
   channelKeys = {'All': null}
+  @observable
+  channelSelectOptions = []
 
   @action
   makeActive(e) {
@@ -45,6 +47,7 @@ class Store {
     const channels = require("../MockData/Channels.json");
     this.channelTitles = channels.map(channel => channel.label)
     this.displayTitles = this.channelTitles;
+    this.loadChannelSelectOptions()
     for (let i in channels) {this.channelKeys[channels[i]['label']] = channels[i]['chanID']}
   };
   delChannel(oldItem) {
@@ -54,6 +57,13 @@ class Store {
   addTitle(val) {
     this.newTitle = val;
   }
+
+  loadChannelSelectOptions = () => {
+    const options = this.displayTitles.map(chan => ({'key': chan, 'text': chan, 'value': this.channelKeys[chan]}))
+    options.unshift({'key': 'all channels', 'text': 'All Channels', 'value': 'All'})
+    this.channelSelectOptions = options
+  }
+
   handleSearch = term => {
     if (term) {
       this.displayTitles = this.channelTitles.filter(channel =>

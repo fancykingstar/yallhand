@@ -69,21 +69,40 @@ class Store {
     const newPolicy = {
         "accountID": accountInfo.accountID,
         "policyID": Math.random().toString(16).slice(2, 8).toUpperCase(),
-        "teamID": '',
         "chanID": chan,
         "label": this.policyTitle,
+        "img": "",
         "admins": [{"adminID": accountInfo.adminID, "displayName": accountInfo.displayName}],
         "keywords": [],
         "state": "draft",
         "variations": []
     }
-    
+    this.togglePolicy(newPolicy.policyID)
     this.allPolicies.push(newPolicy)
     this.displayPolicies()
-   
-
     this.closeMod(e);
   }
+
+
+  addVariation(accountInfo, curpolicyID, teamID="", type="global", label="", content="", tags=[], automation=[]) {
+    const newVariation = {
+            "type": type,
+            "label": label,
+            "variationID": Math.random().toString(16).slice(2, 8).toUpperCase(),
+            "teamID": teamID,
+            "content": content,
+            "tags": tags,
+            "admin": {"adminID": accountInfo.adminID, "displayName": accountInfo.displayName},
+            "updated": Date.now(),
+            "automation": automation
+    }
+    this.toggleVariation(newVariation.variationID)
+    const matchPolicyID = (element) => {return element.policyID === curpolicyID}
+    const policyIndex = this.allPolicies.findIndex(matchPolicyID)
+    const newPolicy = this.allPolicies[policyIndex].variations.push(newVariation)
+    const allPolicies = this.allPolicies.splice(policyIndex, 1, newPolicy)
+    this.allPolicies = allPolicies
+}
 
   displayPolicies() {
     this.filteredPolicies = this.allPolicies.filter(policy => this.cardFilters[this.cardFilterToStage[policy.state]])

@@ -1,12 +1,13 @@
 import React from "react";
 import "./style.css";
-import { Form, Icon, Table, Segment, Header} from "semantic-ui-react";
+import { TeamTagSelect } from "../SharedUI/TeamTagSelect";
+import { Form, Icon, Table, Segment, Header } from "semantic-ui-react";
 import { PillButton } from "../SharedUI/PillButton";
 
 export class InviteUser extends React.Component {
   render() {
     return (
-      <div className="Segment">
+      <div className="Segment" style={{ position: "relative" }}>
         <Header
           as="h2"
           content="Invite Users"
@@ -16,19 +17,25 @@ export class InviteUser extends React.Component {
         <Segment>
           <Header as="h3" content="Create Invite" />
           <Form>
-            <Form.Group inline widths="equal" style={{ paddingRight: 10 }}>
+            <Form.Group style={{ paddingRight: 10 }}>
               <Form.Input
+                style={{ minWidth: 275 }}
                 fluid
                 label="Email"
                 placeholder="jane@placethatwework.co"
               />
-              <Form.Select fluid label="Team" placeholder="dropdown" />
-              <Form.Select fluid label="Class" placeholder="dropdown" />
+              <TeamTagSelect
+                invalidTeams={[]}
+                invalidTags={[]}
+                defaultTeam={""}
+                defaultTag={""}
+                multi={false}
+                fluid={true}
+              />
               <Form.Button style={{ marginTop: 24 }} icon="plus" />
             </Form.Group>
             <Form.Group />
           </Form>
-
           <Header as="h3" content="Queue" />
 
           <Table style={{ maxWidth: 850 }} basic="very">
@@ -73,7 +80,7 @@ export class InviteUser extends React.Component {
             </Table.Body>
           </Table>
 
-          <PillButton iconName="send" label="Send"/>
+          <PillButton iconName="send" label="Send" />
         </Segment>
         {/* <Table.Body style={{ fontWeight: 200 }}>{displayLinks}</Table.Body> */}
       </div>

@@ -3,15 +3,21 @@ import { Button, Modal, Input, Message } from "semantic-ui-react";
 import "./card-style.css";
 import { inject, observer } from "mobx-react";
 import {FormCharMax} from '../SharedValidations/FormCharMax'
+import {withRouter} from "react-router-dom"
 
 @inject("PoliciesStore", "SideBarStore", "UserStore")
 @observer 
-export class CreateCard extends React.Component {
+class CreateCard extends React.Component {
   render() {
     const { PoliciesStore } = this.props;
     const { SideBarStore } = this.props;
     const { UserStore } = this.props;
     const newPolicyStatus = FormCharMax(PoliciesStore.policyTitle, 100)
+    const handleClick = (e) => {
+      PoliciesStore.addPolicy(e, UserStore.account[0], SideBarStore.channelKeys[SideBarStore.active] )     
+      PoliciesStore.addVariation(UserStore.account[0], PoliciesStore.toggledPolicy)
+      this.props.history.push('/panel/policy-variation/' + PoliciesStore.toggledVariation)
+    }
     return (
       <div>
         <div className="CreateCard" onClick={e => PoliciesStore.openMod(e)}>
@@ -25,7 +31,7 @@ export class CreateCard extends React.Component {
         <div>
           <Modal
             open={PoliciesStore.addPolicyMod}
-            onClose={e => PoliciesStore.closeMod(e)}
+            // onClose={this.closeMod}
             closeIcon
             size="small"
           >
@@ -49,7 +55,7 @@ export class CreateCard extends React.Component {
                 icon="checkmark"
                 labelPosition="right"
                 content="Submit"
-                onClick={e => PoliciesStore.addPolicy(e, UserStore.account[0], SideBarStore.channelKeys[SideBarStore.active] )}
+                onClick={e => handleClick(e)}
               />
             </Modal.Actions>
           </Modal>
@@ -58,3 +64,5 @@ export class CreateCard extends React.Component {
     );
   }
 }
+
+export default withRouter(CreateCard)
