@@ -18,6 +18,9 @@ class Store {
 
   @action
   makeActive(e) {
+    if(e.currentTarget.id === "knowledge") {
+      this.active = "All"
+    }
     this.active = e.currentTarget.id;
   }
 

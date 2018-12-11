@@ -6,7 +6,6 @@ import "./style.css";
 @inject("SideBarStore")
 @observer
 export class NavItems extends React.Component {
-  // makeActive = (navItem) => {this.props.whenClicked(navItem)}
   render() {
     const { SideBarStore } = this.props;
     return (
@@ -51,10 +50,10 @@ export class NavItems extends React.Component {
           active={SideBarStore.checkActive("annoucements")}
         />*/}
          <NavItem
-          id="surveys"
-          icon="check square"
-          label="Surveys and Polls"
-          active={SideBarStore.checkActive("surveys")}
+          id="knowledge"
+          icon="question circle"
+          label="Knowledgebase"
+          active={SideBarStore.checkActive("All")}
         /> 
          <NavItem
           id="email"

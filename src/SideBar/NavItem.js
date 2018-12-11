@@ -12,12 +12,20 @@ export class NavItem extends React.Component {
         ? "NavItemFrame SideBarActive"
         : "NavItemFrame";
     const { SideBarStore } = this.props;
+    const checkKnowledge = this.props.id === "knowledge" ? "/panel/"  : "/panel/" + this.props.id
+    const activeall = (val) => {
+    if(val.currentTarget.id === "knowledge" ) {
+      val.currentTarget.id = "All" 
+      return val
+    }
+    else {return val}}
+
     return (
-      <Link to={"/panel/" + this.props.id}>
+      <Link to={checkKnowledge}>
         <div
           className={active}
           id={this.props.id}
-          onClick={e => SideBarStore.makeActive(e)}
+          onClick={e => SideBarStore.makeActive(activeall(e))}
         >
           <div className="NavItemIcon">
             <Icon name={this.props.icon} />
