@@ -2,7 +2,7 @@ import React from "react";
 import "./style.css";
 import {inject, observer} from "mobx-react"
 import { BackToChan } from "./BackToChan";
-import { Input, Icon, Form} from "semantic-ui-react";
+import { Input, Icon, Form, Header} from "semantic-ui-react";
 // import { Conditionals } from "./Conditionals";
 import { NavLink } from "react-router-dom";
 import { TeamTagSelect } from "../SharedUI/TeamTagSelect"
@@ -29,21 +29,27 @@ export class QFields extends React.Component {
       <div className="ManagePolicy">
         <NavLink to="/manage-policy">
           <BackToChan />
-        </NavLink>
+        </NavLink> 
+
+           <Header
+          as="h2"
+          content={variationLabel}
+          subheader="Editing Variation"
+        />
         
 
-        <div style={{marginBottom: 0, paddingBottom: 0}}><h2>Edit Variation</h2></div>
+        {/* <div style={{marginBottom: 0, paddingBottom: 0}}><h2>Edit Variation</h2></div>
         <div style={{marginTop: 0, paddingTop: 0}}> 
         <Input
                 disabled={this.state.qFieldDisabled}
                 transparent
-                value={variationLabel}
+                value=
                 placeholder="Enter a template question..."
                 size="huge"
               />
 
               <Icon name="write" size="small" onClick={e => this.handleEditQuestion(e)} /></div>
-   
+    */}
 
               
         
@@ -57,7 +63,7 @@ export class QFields extends React.Component {
           <TeamTagSelect
             invalidTeams={[]}
             invalidTags={[]}
-            defaultTeam={""}
+            defaultTeam={variation.teamID}
             defaultTag={""}
             fluid={true}
             multi={false}

@@ -58,7 +58,7 @@ class SearchFrame extends React.Component {
   return (
     <div className="SearchFrame">
       <div className="SearchControls">
-      <Form onSubmit={e => handleSubmit(e)}>
+      <Form onSubmit={e => handleSubmit(e)} autocomplete="off">
         <Form.Input fluid icon placeholder="Search..." >
         <input  type="text" name="username" ref={ref => this.input = ref}/>
           <Icon name="search" /> 
