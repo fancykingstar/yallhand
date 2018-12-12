@@ -59,12 +59,13 @@ class Store {
 
   loadStructure() {
     const structure = require("../MockData/Teams.json");
+    if(this.structure.filter(team => team.teamID === 'global').length === 0){
     structure.unshift({
       teamID: "global",
       label: "Global (All Teams)",
       parent: "self",
       depth: 0
-    });
+     });}
     this.structureSelect = this.sortStructure(structure, "team");
     this.structure = structure;
     this.loadTeamKey();

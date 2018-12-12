@@ -13,8 +13,8 @@ export class Workspace extends React.Component {
                
                <div className="WorkspaceName">
                 
-                <div style={{float: 'left', paddingLeft: 2, paddingTop: 13, width: 30, position: 'absolute'}}><QLogo/></div>
-                <div style={{paddingLeft: 25}}>QUADRANCE</div>
+                <div style={{float: 'left', paddingLeft: 2, paddingTop: 13, width: 30, position: 'absolute'}}></div>
+                <div style={{paddingLeft: 15}}>QUADRANCE</div>
                 
          
            

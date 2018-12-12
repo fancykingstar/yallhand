@@ -26,16 +26,16 @@ export class NavItems extends React.Component {
           active={SideBarStore.checkActive("resources")}
         />
 
-        <br />
+ 
 
-        <NavItem
+        {/* <NavItem
           id="automations"
           icon="sync alternate"
           label="Automations"
           active={SideBarStore.checkActive("automations")}
-        />
+        /> */}
 
-        <br />
+       
 
         <NavItem
           id="annoucements"

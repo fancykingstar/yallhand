@@ -77,7 +77,14 @@ export class DraftFormField extends Component {
        RichUtils.toggleBlockType(this.state.editorState, "ordered-list-item")
      );
    }
-
+   componentDidMount() {
+    if (this.props.loadContent !== null) {
+      const contentState = convertFromRaw(this.props.loadContent);
+      this.setState({
+        editorState: EditorState.createWithContent(contentState)
+      });
+    }
+  }
   render() {
     return (
       <div className="Answer">
@@ -99,7 +106,7 @@ export class DraftFormField extends Component {
               <Icon name="ordered list" />
             </Button>
           </Button.Group>
-          <div className="AnswerField">
+          <div className="AnswerField" style={{fontSize: "1em"}}>
             <Editor
               onBlur={this.passContent}
               editorState={this.state.editorState}

@@ -2,11 +2,12 @@ import React from "react"
 import { inject, observer } from "mobx-react";
 import {Switch, Route} from "react-router-dom"
 import Header from "./Header/Header"
-import {SearchFrame} from "./UserPortal/SearchFrame"
+import SearchFrame from "./UserPortal/SearchFrame"
 import {SideBarFrame} from "./UserPortal/SideBarFrame"
 import {AnnoucementsFrame} from "./UserPortal/AnnoucementsFrame"
 import {CardFrame} from "./UserPortal/CardFrame"
 import {CardDetailFrame} from "./UserPortal/CardDetailFrame"
+import {SearchResults} from "./UserPortal/SearchResults"
 import "./App.css"
 
 
@@ -36,6 +37,7 @@ export class UserPortal extends React.Component {
                     <Route path="/portal" component={AnnoucementsFrame} exact/>
                     <Route path="/portal/learn" component={CardFrame} exact/>
                     <Route path="/portal/learn-detail/:id" component={CardDetailFrame} exact/>
+                    <Route path="/portal/search" component={SearchResults} exact/>
                 </Switch>
             
           </div>

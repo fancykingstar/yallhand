@@ -12,7 +12,6 @@ export class CardDetailView extends React.Component {
         const toggledPolicy = this.props.policyID
         const policyData = PoliciesStore.allPolicies.filter(policy => policy.policyID === toggledPolicy)[0]
         
-
         return(
             <div className="Annoucements">
             
@@ -25,7 +24,7 @@ export class CardDetailView extends React.Component {
                     content={policyData.label}
                     subheader={UTCtoFriendly(policyData.updated)}
                   />
-                  <p>{policyData.variations.content}</p>
+                  <p>{policyData.variations.content.blocks[0].text}</p>
                   </Container>
             
                 </div>

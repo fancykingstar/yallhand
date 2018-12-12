@@ -23,8 +23,8 @@ export class AMenu extends React.Component {
           return <ResourceLinks />;
         case "attachments":
           return <Attachments />;
-        case "automations":
-          return <Automations />;
+        // case "automations":
+        //   return <Automations />;
       }
     };
     return (
@@ -42,13 +42,13 @@ export class AMenu extends React.Component {
             onClick={this.handleItemClick}
             key="attachments"
           />
-          <Menu.Item
+          {/* <Menu.Item
             name="automations"
             icon="sync alternate"
             active={activeItem === "automations"}
             onClick={this.handleItemClick}
             key="automations"
-          />
+          /> */}
         </Menu>
         <Segment attached="bottom">
           <div className="AMenuResult"> {currentSegment(activeItem)}</div>

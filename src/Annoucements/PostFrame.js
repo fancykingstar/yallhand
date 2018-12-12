@@ -1,5 +1,5 @@
-import React from 'react'
-import {PostControls} from './PostControls'
+import React from "react"
+import {PostControls} from "./PostControls"
 import {DraftFormField} from '../SharedUI/DraftFormField'
 import { PillButton } from '../SharedUI/PillButton';
 import {Button, Input} from 'semantic-ui-react'
@@ -20,11 +20,11 @@ export class PostFrame extends React.Component {
     content = val
 
   }
-
+ 
   return (
     <div>
     <PostControls/>
-    <DraftFormField updateContent={displayContent}/>
+    <DraftFormField updateContent={displayContent} loadContent={null}/>
     {/* <Button onClick={e => handleSave(e)}>Save</Button><Button>Load</Button> */}
     
     <PillButton iconName="clock" label="schedule..."/><br/>

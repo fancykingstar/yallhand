@@ -12,7 +12,7 @@ export const Feed = inject("AnnoucementsStore")(observer((props) => {
         <Item.Header as='a'>{news.label}</Item.Header>
         <Item.Meta>{news.admin.displayName}</Item.Meta>
         <Item.Description>
-          {news.content}
+          {news.content.blocks[0].text}
         </Item.Description>
         <Item.Extra>{UTCtoFriendly(news.updated)}</Item.Extra>
     

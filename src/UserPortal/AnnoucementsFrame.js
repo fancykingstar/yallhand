@@ -36,7 +36,7 @@ export class AnnoucementsFrame extends React.Component {
                     content={news.label}
                     subheader={UTCtoFriendly(news.updated)}
                   />
-                  <p>{news.content}</p>
+                  <p>{news.content.blocks[0].text}</p>
                   </Container>
                  
                 </div>

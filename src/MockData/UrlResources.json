@@ -6,17 +6,39 @@
     "label": "a URL",
     "url": "https://www.google.com",
     "updated": "1538147254",
-    "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    "admin": {"adminID": "adminID", "displayName": "Mark Z."},
+    "teamID": "team01"
     },
     {
         "accountID": "A1",
-        "resourceID": "B739CD",
+        "resourceID": "B7234",
         "variationID": ["V1"],
-        "label": "another URL",
-        "url": "https://www.google.com",
+        "label": "Massachusetts Parental Leave Information",
+        "url": "https://www.mass.gov/service-details/parental-leave-in-massachusetts",
         "updated": "1538147254",
-        "admin": {"adminID": "adminID", "displayName": "Mark Z."}
-        }
+        "admin": {"adminID": "adminID", "displayName": "Mark Z."},
+        "teamID": "team07"
+        },
+        {
+            "accountID": "A1",
+            "resourceID": "B7234CD",
+            "variationID": ["V1"],
+            "label": "California Family Leave Information",
+            "url": "https://edd.ca.gov/disability/About_PFL.htm",
+            "updated": "1538147254",
+            "admin": {"adminID": "adminID", "displayName": "Mark Z."},
+            "teamID": "team02"
+            },
+            {
+                "accountID": "A1",
+                "resourceID": "B715CD",
+                "variationID": ["V1"],
+                "label": "another URL",
+                "url": "https://www.google.com",
+                "updated": "1538147254",
+                "admin": {"adminID": "adminID", "displayName": "Mark Z."},
+                "teamID": "team01"
+                }
 ]
 
 

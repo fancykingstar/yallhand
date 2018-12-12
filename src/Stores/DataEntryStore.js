@@ -10,6 +10,12 @@ class Store {
     @observable
     draftContent = [];
 
+    @observable
+    searchField = ""
+
+    @observable
+    searchResults = []
+
   @action
     toggleTeam(val) {
       this.toggledTeam = val
@@ -23,6 +29,13 @@ class Store {
       this.draftContent = val
     }
 
+    updateSearchField(val){
+      this.searchField = val
+    }
+
+    updateSearchResults(val) {
+      this.searchResults = val
+    }
 
   
   

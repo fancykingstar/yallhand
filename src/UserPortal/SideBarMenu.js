@@ -31,14 +31,15 @@ class SideBarMenu extends React.Component {
             <Menu vertical>
         <Menu.Item>
           <Menu.Header>Feed</Menu.Header>
-
+    
           <Menu.Menu>
+          <Menu.Item disabled>Recent</Menu.Item>
             <NavLink to="/portal" style={{color: "rgb(45, 45, 45)"}}>
             <Menu.Item
               name='Annoucements'
             /></NavLink>
-           <Menu.Item disabled>Polls</Menu.Item>
-           <Menu.Item disabled>Surveys</Menu.Item>
+       
+           {/* <Menu.Item disabled>Surveys</Menu.Item> */}
           </Menu.Menu>
         </Menu.Item>
 
@@ -72,12 +73,12 @@ class SideBarMenu extends React.Component {
           <Menu.Header>Support</Menu.Header>
 
           <Menu.Menu>
-            <Menu.Item  disabled name='email' >
+            {/* <Menu.Item  disabled name='email' >
               Directory
-            </Menu.Item>
-            <Menu.Item  disabled name='email' >
+            </Menu.Item> */}
+            {/* <Menu.Item  disabled name='email' >
               Get Assistance
-            </Menu.Item>
+            </Menu.Item> */}
 
             
           </Menu.Menu>

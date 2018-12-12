@@ -27,7 +27,7 @@ export class ManagePolicy extends React.Component {
     const variations = policy.variations.map(variation => ({'key':variation.variationID, 'value':variation.variationID, 'description': getTags(variation.tags),'text': TeamStore.teamKey[variation.teamID], 'type': variation.type}))
     const grabGlobal = variations.filter(variation => variation.type === 'global')
     
-    grabGlobal.length === 0 ? PoliciesStore.toggleVariation('') : grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
+    grabGlobal.length === 0 ? PoliciesStore.toggleVariation(variations[0].value) : grabGlobal.length === 1 ? PoliciesStore.toggleVariation(grabGlobal[0].value) : PoliciesStore.toggleVariation(variations[0].value)
   }
   render() {
   const {PoliciesStore} = this.props
