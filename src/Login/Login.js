@@ -1,27 +1,34 @@
 import React from "react";
-import {QLogo} from '../Assets/Graphics/QLogo'
-import {Form, Button} from "semantic-ui-react"
-
-
+import { QLogo } from "../Assets/Graphics/QLogo";
+import { Reauth } from "./Reauth";
+import { Register } from "./Register"
+import { ProfileInfo } from "./ProfileInfo"
 import "./style.css";
 
-export const Login = () => {
-    return(
- 
-        <div className="LoginFrame">
-        <div className="Login">
-        <div className="LoginWorkspace">
-        <div style={{float: 'left', paddingLeft: 170, paddingTop: 13, width: 30, position: 'absolute'}}><QLogo/></div>
-                <div style={{paddingLeft: 210}}>QUADRANCE</div>
-        </div>
-        <Form >
-       
+export class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { view: "reauth" };
+  }
+  render() {
 
-    <Button fluid circular type='submit' primary>Login</Button>
+    const views = {
+        "reauth": <Reauth register={e => this.setState({"view": "register"})}/>,
+        "register": <Register continues={e => this.setState({"view":"profileinfo"})}/>,
+        "profileinfo": <ProfileInfo/>
+}
 
-        </Form>
+    return (
+      <div className="LoginFrame">
+        {views[this.state.view]}
+        <div className="LoginQuadrance">
+          <div style={{ float: "left", opacity: "0.5" }}>
+            {" "}
+            <QLogo fill="#FFFFFF" style="" width="48px" height="60px" />{" "}
+          </div>
+          <div style={{ float: "right", lineHeight: "48px" }}> quadrance.</div>
         </div>
-        </div>
-
-    )
+      </div>
+    );
+  }
 }

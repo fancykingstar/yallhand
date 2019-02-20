@@ -6,18 +6,54 @@ class Store {
 
   @observable
   urlResources = [];
-
+ 
   @action
-  loadFiles() {
-    const files = require("../MockData/FileResources.json");
-    this.fileResources = files
+  loadFiles(allFiles) {
+    return new Promise((resolve, reject) => {
+    this.fileResources = allFiles
+    resolve(true)
+}) 
   };
 
-  loadUrls() {
-    const urls = require("../MockData/UrlResources.json");
-    this.urlResources = urls
-  }
+  loadUrls(allUrls) {
+    return new Promise((resolve, reject) => {
+    this.urlResources = allUrls
+      resolve(true)
+  }) 
+  }; 
+  
+   matchedResources(resource_type, source_type, ID, variID) {
+    const resources = {"file": this.fileResources, "url": this.urlResources}
+    const assocLabels = {"policy": "policies", "announcement": "announcements"}
+    const idNames = {"policy": "policyID", "announcement": "announcementID"}
+    let matchedResources = []
+    resources[resource_type].forEach(resource => {
+      if(resource.associations[assocLabels[source_type]].length > 0) {
+        const parent = resource.associations[assocLabels[source_type]].filter(item => item[idNames[source_type]] === ID)
+        if(parent.length > 0) {
+          // parent.forEach(child => console.log(variID, child.variations, child.variations.filter(vari => vari === variID)))
+          parent.forEach(child => {if(child.variations.filter(vari => vari === variID).length > 0){
+            matchedResources.push(resource)}
+          })
+        }  
+      }
+      
+
+      })
+      return matchedResources
+      }
+
     
+    // const parentMatch = (list, idtype, id) => {
+    //   return list.filter(item => item[idtype] === id).length > 0 ? true : false;
+    // }
+    // const childMatch = (list, id) => {
+    //   return list.filter(item => item === id)
+    // }
+    // const parents = parentMatch(resources[resource_type], idNames[source_type], ID)
+    
+
+  
 
   
 }

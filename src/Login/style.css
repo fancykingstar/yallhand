@@ -1,36 +1,78 @@
-.LoginFrame {
-    margin-top: 0;
-    height: 100vh;
-    width: 100%;
-    background-color: #F9F9F9; 
+.inviteCode:hover {
+  color: #f8127d !important;
+}
 
+.LoginFrame {
+  margin-top: 0;
+  height: 100vh;
+  /* width: 100%; */
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(233, 47, 150, 0.8239670868347339) 0%,
+    rgba(0, 212, 255, 1) 53%
+  );
+  background-repeat: no-repeat;
 }
 
 .Login {
-    padding: 15px;
-    position: absolute;
-    margin: 30vh 0 0 30vw;
-    height: 300px;
-    width: 600px;
-    color: #2FC7F8;
-    background-color: #000000;
-    -webkit-border-radius: 17px 17px 17px 17px;
-    -moz-border-radius: 17px 17px 17px 17px;
-    border-radius: 17px 17px 17px 17px;
-    -webkit-box-shadow: 0px 0px 2px 0px #545454;
-    -moz-box-shadow:    0px 0px 2px 0px #545454;
-    box-shadow:         0px 0px 2px 0px #545454;
+  color: #2fc7f8;
+  padding: 20px;
+  background-color: #ffffff;
+  -webkit-border-radius: 17px 17px 17px 17px;
+  -moz-border-radius: 17px 17px 17px 17px;
+  border-radius: 17px 17px 17px 17px;
+  -webkit-box-shadow: 0px 0px 5px 0px #545454;
+  -moz-box-shadow: 0px 0px 5px 0px #545454;
+  box-shadow: 0px 0px 5px 0px #545454;
 }
 
-.LoginWorkspace{
-    background-color: #000000;
-    padding: 0px;
-    margin-left: 0px;
-    color: #2fc7f8;
-    text-align: left;
-    font-size: 1.8em;
-    font-weight: 600;
-    width: 160px;
-    height: 75px;
-    line-height: 75px;
+.ContainerLogin {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.LoginWorkspace {
+  padding-bottom: 0%;
+  height: 50%;
+}
+
+.WorkspaceNameLogin {
+  margin: auto;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.8em;
+}
+
+.ERM {
+  text-align: center;
+  padding-top: 20px;
+  color: #797979;
+}
+
+.WorkspaceLogoLogin {
+  margin: auto;
+  height: 100px;
+  width: 100px;
+  border: solid;
+  border-width: 2px;
+  border-color: #2fc7f8;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
+  /* background-image: url("../Assets/Graphics/temp.png"); */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.LoginQuadrance {
+    position:absolute;
+    bottom:10px;
+    right:20px;
+    font-size: 3em;
+    color: rgb(255, 255, 255, .5)
 }

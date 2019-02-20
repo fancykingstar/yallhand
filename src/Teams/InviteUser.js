@@ -1,88 +1,152 @@
 import React from "react";
+import { inject, observer } from "mobx-react";
+import { TagSelect } from "../SharedUI/TagSelect";
+import { TeamSelect } from "../SharedUI/TeamSelect";
+import { Form, Segment, Header, Dropdown } from "semantic-ui-react";
+import { DatePicker } from "../SharedUI/DatePicker";
+import { isValidEmail } from "../SharedValidations/InputValidations";
+import { createUser, createSchedule } from "../DataExchange/Up"
+import { user } from "../DataExchange/PayloadBuilder"
+import { schedule } from "../DataExchange/PayloadBuilder"
+import moment from "moment"
 import "./style.css";
-import { TeamTagSelect } from "../SharedUI/TeamTagSelect";
-import { Form, Icon, Table, Segment, Header } from "semantic-ui-react";
-import { PillButton } from "../SharedUI/PillButton";
 
+@inject("DataEntryStore", "UIStore")
+@observer
 export class InviteUser extends React.Component {
+  constructor(props) {
+    super(props);
+    const { DataEntryStore } = this.props;
+    const reset = () => {
+      DataEntryStore.reset("onOffBoarding", {
+        teamID: "global",
+        tagID: "none",
+        adminConfig: "all",
+        adminTeamID: "global",
+        adminTagID: "none"
+      });
+    }
+    this.reset = reset.bind(this)
+  }
+  
+  componentDidMount() {
+    this.reset()
+  }
   render() {
+    const { DataEntryStore } = this.props;
+    const { UIStore } = this.props;
+    const teamChange = val =>
+      DataEntryStore.set("onOffBoarding", "teamID", val);
+    const tagChange = val => DataEntryStore.set("onOffBoarding", "tagID", val);
+    const emailChange = val => {
+      DataEntryStore.set("onOffBoarding", "email", val);
+    };
+    const setOnBoardDate = day => {
+      DataEntryStore.set("onOffBoarding", "onBoardingDate", day);
+    };
+    const toggleOnboardWhen = (val) => {
+      UIStore.set("dropdown", "onBoardUser", val)
+    }
+
+    const onboardLater = () => {
+      createUser(user(), false).then(() => {
+        //need to get USERID back
+        createSchedule(schedule(moment(DataEntryStore.onOffBoarding.onBoardingDate).valueOf(), "onboard user", {"userID": "unknown"}))
+        .then(() => {
+        this.reset() 
+        UIStore.set("dropdown", "onBoardUser", "today")
+      })
+      })
+    };
+
+   
+
+    const onboardNow = () => {
+      createUser(user()).then(() => {
+        this.reset()
+        UIStore.set("dropdown", "onBoardUser", "today")
+      })
+    }
+
+    const userOnboardWhen = UIStore.dropdown.onBoardUser === "today" ? (
+      <Form.Button
+      size="small"
+      onClick={e => onboardNow()}
+      content="Onboard Now"
+      icon="street view"
+      primary
+      disabled={!isValidEmail(DataEntryStore.onOffBoarding.email)}
+    />
+     ) : (
+      <React.Fragment>
+        
+                <Form.Input label="Choose Date">
+                <DatePicker from={"tomorrow"} output={setOnBoardDate} />
+                </Form.Input>
+                <Form.Button
+                onClick={e => onboardLater()}
+                size="small"
+                content="Schedule Start Day"
+                icon="clock"
+                disabled={
+                  !isValidEmail(DataEntryStore.onOffBoarding.email) || (DataEntryStore.onOffBoarding.onBoardingDate === "" || DataEntryStore.onOffBoarding.onBoardingDate === undefined) }
+                />
+      </React.Fragment>
+     )
+
+    
+
     return (
       <div className="Segment" style={{ position: "relative" }}>
         <Header
           as="h2"
-          content="Invite Users"
-          subheader="Send invite(s) to end users across your organization"
+          content="Onboard Users"
+          subheader="Send invite for new user to join organization"
         />
-
         <Segment>
-          <Header as="h3" content="Create Invite" />
           <Form>
-            <Form.Group style={{ paddingRight: 10 }}>
+            <Form.Group widths="equal">
               <Form.Input
-                style={{ minWidth: 275 }}
                 fluid
                 label="Email"
+                value={DataEntryStore.onOffBoarding.email}
                 placeholder="jane@placethatwework.co"
+                onChange={(e, val) => emailChange(val.value)}
               />
-              <TeamTagSelect
-                invalidTeams={[]}
-                invalidTags={[]}
-                defaultTeam={""}
-                defaultTag={""}
-                multi={false}
-                fluid={true}
+              <TeamSelect
+                label="Choose Team:"
+                value={DataEntryStore.onOffBoarding.teamID}
+                outputVal={val => teamChange(val)}
               />
-              <Form.Button style={{ marginTop: 24 }} icon="plus" />
+              <TagSelect
+                label="Choose Tag (optional):"
+                value={DataEntryStore.onOffBoarding.tagID}
+                outputVal={val => tagChange(val)}
+              />
             </Form.Group>
-            <Form.Group />
+
+            <span>
+              start user{' '}
+              <Dropdown
+            inline
+            value={UIStore.dropdown.onBoardAdmin}
+                options={[
+                  { text: "today ⚡️", value: "today" },
+                  { text: "in the future ⏳", value: "future" }
+                ]
+              } 
+              onChange={(e, val) => toggleOnboardWhen(val.value)}
+              />
+            </span>
+              <div style={{paddingTop: 10}}>
+              <Form.Group inline>
+              {userOnboardWhen}
+            </Form.Group>
+              </div>
+
+
           </Form>
-          <Header as="h3" content="Queue" />
-
-          <Table style={{ maxWidth: 850 }} basic="very">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Email</Table.HeaderCell>
-                <Table.HeaderCell>Team</Table.HeaderCell>
-                <Table.HeaderCell>Class</Table.HeaderCell>
-
-                <Table.HeaderCell />
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>None</Table.Cell>
-
-                <Table.HeaderCell>
-                  <Icon name="minus circle" />
-                </Table.HeaderCell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Jamie</Table.Cell>
-                <Table.Cell>Approved</Table.Cell>
-                <Table.Cell>None</Table.Cell>
-
-                <Table.HeaderCell>
-                  <Icon name="minus circle" />
-                </Table.HeaderCell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Jill</Table.Cell>
-                <Table.Cell>Denied</Table.Cell>
-                <Table.Cell>None</Table.Cell>
-
-                <Table.HeaderCell>
-                  <Icon name="minus circle" />
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-
-          <PillButton iconName="send" label="Send" />
         </Segment>
-        {/* <Table.Body style={{ fontWeight: 200 }}>{displayLinks}</Table.Body> */}
       </div>
     );
   }

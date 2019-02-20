@@ -1,0 +1,132 @@
+import React from "react";
+import { inject, observer } from "mobx-react";
+import { Segment, Input, Form, Header, Button } from "semantic-ui-react";
+
+import "./style.css";
+
+@inject("DataEntryStore")
+@observer
+export class FeaturedImage extends React.Component {
+  render() {
+    let AWS = require("aws-sdk");
+    AWS.config.update({ region: "us-east-1" });
+    s3 = new AWS.S3({ apiVersion: "2006-03-01" });
+
+    const BucketName = "quadrance-files";
+    const bucketRegion = "us-east-1";
+    const IdentityPoolId = "us-east-1:779a4738-4733-4566-867a-a14f43b26d17";
+
+    AWS.config.update({
+      region: bucketRegion,
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IdentityPoolId
+      })
+    });
+
+    let s3 = new AWS.S3({
+      apiVersion: "2006-03-01",
+      params: { Bucket: BucketName }
+    });
+
+    const testS3Get = () => {
+        s3.getSignedUrl('getObject', {
+            Bucket: BucketName,
+            Expires: 60,
+            Key: 'season-one-logo-1.jpg',
+        }, function (err, url) {
+            console.log(err, url);
+             var element = document.createElement('a');
+  element.setAttribute('href', url);
+  element.setAttribute('download', 'season-one-logo-1.jpg');
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+            
+        });
+        
+    }
+
+    const { DataEntryStore } = this.props;
+    let imagePreview = DataEntryStore.featuredImage.url ? (
+      <img src={DataEntryStore.featuredImage.url} />
+    ) : (
+      <div />
+    );
+    
+
+    //MOVE TO ENV!!!
+    const baseUrl =
+      "https://8bqb3wqo98.execute-api.us-east-1.amazonaws.com/prod";
+
+    const handleSubmit = e => {
+      e.preventDefault();
+    
+
+      s3.upload({
+        Key: DataEntryStore.featuredImage.file.name,
+        Body: DataEntryStore.featuredImage.file,
+        ServerSideEncryption: 'AES256',
+        ACL: 'private'
+      }, function(err, data) {
+        if (err) {
+            console.log(err, err.message)
+            console.log(AWS.config.credentials)
+            return alert('There was an error uploading your photo: ', err.message);
+          
+        }
+        alert('Successfully uploaded photo.'); 
+    });
+    };
+
+    const handleImageChange = e => {
+      e.preventDefault();
+      let file = e.target.files[0];
+      let fileType = /image.*/;
+      if (!file.type.match(fileType)) {
+        DataEntryStore.setFeaturedImage("file", "");
+        DataEntryStore.setFeaturedImage("url", "");
+        alert("File type not supported");
+      } else {
+        let reader = new FileReader();
+        reader.onloadend = () => {
+          DataEntryStore.setFeaturedImage("file", file);
+          DataEntryStore.setFeaturedImage("url", reader.result);
+        };
+        reader.readAsDataURL(file);
+        console.log(file.name);
+      }
+    };
+
+    return (
+      <Segment>
+        <Header>Featured Image</Header>
+        <br />
+        <Form onSubmit={e => handleSubmit(e)}>
+          <Form.Group>
+            <Form.Input
+              size="mini"
+              id="fileDisplayArea"
+              type="file"
+              onChange={e => handleImageChange(e)}
+            />
+            <Form.Button
+              type="submit"
+              disabled={DataEntryStore.featuredImage.disabled}
+              onClick={e => handleSubmit(e)}
+            >
+              Upload Image
+            </Form.Button>
+          </Form.Group>
+        </Form>
+        <Button onClick={e => testS3Get()}> 
+              Get Image
+          </Button>
+        <div className="imgPreview">{imagePreview}</div>
+      </Segment>
+    );
+  }
+}

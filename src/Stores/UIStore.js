@@ -1,0 +1,209 @@
+import { observable, action, computed } from "mobx";
+import _ from 'lodash'
+
+class Store {
+      ///This type of referencing only works using OBJECTS, not primitives
+    keys = { 
+        "modal": this.modal,
+        "dropdown": this.dropdown,
+        "search": this.search,
+        "menuItem": this.menuItem,
+        "accordion": this.accordion,
+        "adminLoadingComplete": this.adminLoadingComplete,
+        "button": this.button,
+        "sideNav": this.sideNav,
+        "filter": this.filter,
+        "content": this.content,
+        "dateTimeSelect": this.dateTimeSelect,
+        "responsive": this.responsive
+    } 
+
+    @observable filter = {
+        cardFilterPublished: true, 
+        cardFilterDrafts: true, 
+        cardFilterArchived: false
+    }
+  
+    @observable
+    isScreenLoading = false;
+
+    @observable
+    responsive = {
+        isMobile: false,
+        mobileNav: false
+    }
+
+    
+    @observable
+    dropdown = {
+        policySort: "Newest",
+        reviewAlerts: "recur",
+        onBoardUser: "today",
+        onBoardAdmin: "today",
+        uploadConfig: "content",
+        bundles: "active"
+    }
+    @observable
+    modal = {
+        uploadFile: false,
+        uploadURL: false,
+        editTeam: false,
+        editTag: false,
+        confirmDelete: false,
+        editUser: false,
+        offboard: false,
+        uploadAssocEdit: false,
+        // createAnnouncement: false,
+        // createPolicy: false,
+        createContent: false,
+        createChannel: false,
+        modifyChannel: false
+
+        // resourceUrlAdd: false,
+        // resourceFileAdd: false
+
+    }
+
+    @observable
+    button = {
+        sendOptionConfig: false
+    }
+
+    @observable
+    search = {
+        channel: "",
+        contentResults: {},
+        contentValue: "",
+        searchUsers: "",
+        searchUsersData: [],
+        searchUrls: "",
+        searchUrlsData: [],
+        searchFiles: "",
+        searchFilesData: [],
+        contentSearchLoading: false,
+        searchPolicies: "",
+        searchPoliciesData: [],
+        searchAnnouncements: "",
+        searchAnnouncementsData: [],
+        searchBundles: "",
+        searchBundlesData: []
+        
+    }
+
+    @observable
+    accordion = {
+        editBundle: false,
+        bundleConfig: false
+    }
+
+    @observable
+    transition = {
+        urlAutoFormat: true
+    }
+
+    @observable
+    menuItem = {
+        teamFrame: "onboard",
+        resourcesFrame: "URL",
+        emailFrame: "queue"
+    }
+
+    @observable
+    radio = {
+        userAdminSettings: false
+    }
+
+    @observable
+    dateTimeSelect = {
+        date: "",
+        time: "",
+
+    }
+
+    @observable adminLoadingComplete = {
+        account: false,
+        users: false,
+        user: false,
+        policies: false,
+        channels: false,
+        files: false,
+        urls: false,
+        structure: false,
+        tags: false,
+        announcements: false,
+        bundles: false,
+        campaigns: false,
+        scheduled: false
+    }
+
+    @observable sideNav = {
+        activePrimary: "",
+        activeChannel: "All"
+    }
+
+    //previewing in display
+    @observable content = {
+        policyID: "",
+        announcementID: "",
+        variationID: ""
+    }
+
+    @action
+    set(target, key, val){
+        try {
+        this.keys[target][key] = val
+        }
+        catch (error) {
+            console.log("Is the request value set in UIStore Keys?", error);
+          }
+    }
+    
+    reset(target, overide = {}) {
+        const overideKeys =
+         !_.isEmpty(overide) ? Object.keys(overide) : []
+          Object.keys(this.keys[target]).forEach(key => {
+            if (overideKeys.length !== 0 && overideKeys.includes(key)) {
+              this.keys[target][key] = overide[key]
+            } else {
+            switch (typeof this.keys[target][key]) {
+              case "boolean":
+                this.keys[target][key] = false;
+                break;
+              case "string":
+                this.keys[target][key] = "";
+                break;
+              case "object":
+                Array.isArray(this.keys[target][key])
+                  ? (this.keys[target][key] = [])
+                  : (this.keys[target][key] = {});
+                break;
+              default:
+                this.keys[target][key] = "";
+                break;
+            }}
+          });
+        }
+      
+
+
+    toggleScreenLoading() {
+        this.isScreenLoading = !this.isScreenLoading
+    }
+
+
+    toggleTransition(key) {
+        this.transition[key] = !this.transition[key]
+    }
+
+
+    @computed
+    get _adminLoadingComplete() {
+       return !Object.values(this.adminLoadingComplete).includes(false)
+    }
+
+
+ 
+   
+}
+
+export const UIStore = new Store()

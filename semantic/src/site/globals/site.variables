@@ -1,3 +1,17 @@
 /*******************************
      User Global Variables
 *******************************/
+
+@headerFont        : 'Lato', sans-serif;
+@pageFont          : 'Open Sans', sans-serif;
+
+
+/*-------------------
+    Brand Colors
+--------------------*/
+
+@primaryColor        : @pink;
+@secondaryColor      : @black;
+
+@lightPrimaryColor   : @lightBlue;
+@lightSecondaryColor : @lightBlack;

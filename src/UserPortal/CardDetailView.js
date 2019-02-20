@@ -3,6 +3,7 @@ import "./style.css"
 import { inject, observer } from "mobx-react";
 import {  Header, Container, Image } from 'semantic-ui-react'
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
+import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 
 @inject("PoliciesStore")
 @observer
@@ -12,8 +13,9 @@ export class CardDetailView extends React.Component {
         const toggledPolicy = this.props.policyID
         const policyData = PoliciesStore.allPolicies.filter(policy => policy.policyID === toggledPolicy)[0]
         
+  
         return(
-            <div className="Annoucements">
+            <div className="Announcements">
             
              
                
@@ -24,7 +26,9 @@ export class CardDetailView extends React.Component {
                     content={policyData.label}
                     subheader={UTCtoFriendly(policyData.updated)}
                   />
-                  <p>{policyData.variations.content.blocks[0].text}</p>
+                  {/* <p>{policyData.variations.content}</p> */}
+         
+                  <DraftHTMLDisplay storedState={policyData.variations.content}/>
                   </Container>
             
                 </div>

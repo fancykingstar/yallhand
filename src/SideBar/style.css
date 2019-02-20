@@ -1,12 +1,12 @@
-@media (max-width: 40em) {
+/* @media (max-width: 40em) {
   .SideBar {
     display: none;
   }
-}
+} */
 
-a {
+.lightlink{
   color: #d7d7d7;
-} 
+}  
 
 .darklink a {
   color: #000000;
@@ -15,7 +15,7 @@ a {
 .SideBar {
   width: 230px;
   height: 1800px;
-  background-color: #2f2c2c;
+  background-color: #151515;
   border-color: #979797;
   border-style: solid;
   border-width: 0px 1px;
@@ -29,20 +29,28 @@ a {
 .Workspace {
   width: 228px;
   height: 75px;
-  background-color: #2f2c2c;
+  background-color: #151515;
 }
 
 .WorkspaceName {
-
   padding: 0px;
   margin-left: 0px;
-  color: #2fc7f8;
-  text-align: left;
-  font-size: 1.4em;
+  color: #efefef;
+  /* text-align: left; */
+  font-size: 1.0em;
+  overflow-wrap: normal;
   font-weight: 600;
   width: 160px;
   height: 75px;
-  line-height: 75px;
+  display: table;
+}
+
+.CompanyName {
+  /* padding-top: 20px; */
+  display: table-cell;
+  vertical-align: middle;
+  word-break:break-all;
+  text-align: center;
 }
 
 .WorkspaceLogo {
@@ -57,8 +65,10 @@ a {
   -webkit-border-radius: 10%;
   -moz-border-radius: 10%;
   border-radius: 10%;
-  background-image: url("../Assets/Graphics/temp.png");
-  background-size: 45px 45px;
+  /* background-image: url("../Assets/Graphics/temp.png"); */
+  background-size: cover;
+background-repeat: no-repeat;
+  background-position: center; 
 }
 
 
@@ -78,7 +88,7 @@ a {
 
 .UserName {
 
-  color: #104455;
+  color: #552f10d7;
   height: 35px;
   padding-top: 7px;
   padding-left: 15px;
@@ -93,6 +103,12 @@ a {
   padding-top: 7px;
   float: right;
   margin-top: 0px;
+}
+.UserSettingsTrigger {
+  position: fixed;
+  margin-left: -180px;
+  height: 20px;
+  width: 200px;
 }
 
 .Container {
@@ -180,8 +196,8 @@ a {
 }
 
 .ChannelText {
-  font-family: "Nunito";
-  font-weight: 400;
+  /* font-family: "Nunito"; */
+  /* font-weight: 400; */
   margin-left: 15px;
   margin-right: 15px;
   height: 100%;
@@ -195,7 +211,14 @@ a {
   background-color: #1d7e9d;
   border-style: solid;
   border-color: #2fc7f8;
+  color: #d7d7d7;
   border-width: 0px 4px 0px 0px;
+}
+
+
+.ChannelActive {
+  font-weight: 800;
+  color: #2fc7f8;
 }
 
 .SideBarActive:hover {
@@ -204,3 +227,38 @@ a {
   border-color: #2fc7f8;
   border-width: 0px 4px 0px 0px;
 }
+
+.PoweredByFrame {
+  background-color: #151515;
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.PoweredByText {
+  margin-left: 28px;
+  color: #8a8a8a;
+  border-top: 1px solid #484848;
+  text-align: center;
+  font-size: 1.6em;
+  font-weight: 600;
+  width: 160px;
+  height: 50px;
+  line-height: 50px;
+}
+
+.Avatar-Wrap {
+  height: 100px;
+  width: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.Avatar {
+   position: relative;
+   
+  top: 50%;
+  transform: translateY(-50%);
+}
+

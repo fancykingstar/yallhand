@@ -2,50 +2,60 @@ import React from "react";
 import { Channel } from "./Channel";
 import { ChannelHeader } from "./ChannelHeader";
 import { ChannelSearch } from "./ChannelSearch";
-import { NavLink } from "react-router-dom";
 import { inject, observer } from "mobx-react";
+import { Transition } from "semantic-ui-react";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 import "./style.css";
 
-@inject("SideBarStore", "PoliciesStore")
+@inject("ChannelStore", "PoliciesStore", "UIStore")
 @observer
 export class ChannelContainer extends React.Component {
-  componentDidMount() {
-    // const { SideBarStore } = this.props;
-    // SideBarStore.loadChannels();
-  }
-
-  componentWillUpdate() {
-    const { SideBarStore } = this.props;
-    const { PoliciesStore } = this.props;
-    if (SideBarStore.active !== PoliciesStore.channelFilter['label']) {
-        PoliciesStore.chanFilter(SideBarStore.active, SideBarStore.channelKeys[SideBarStore.active])
-    }
-    PoliciesStore.displayPolicies()
-
-  }
 
   render() {
-    const { SideBarStore } = this.props;
-    const channelTitles = SideBarStore.displayTitles;
-    const channels = channelTitles.map(title => (
-      <div id={title} key={title} onClick={e => SideBarStore.makeActive(e)}>
-        <Channel text={title} active={SideBarStore.checkActive(title)} />
+    const { ChannelStore, UIStore } = this.props;
+    const channelFilter =
+      UIStore.search.channel === ""
+        ? ChannelStore.allChannels
+        : ChannelStore.allChannels.filter(chan =>
+            chan.label
+              .toLowerCase()
+              .includes(UIStore.search.channel.toLowerCase())
+          )
+
+    const channels = channelFilter.map(chan => (
+      <div
+        key={"chan" + giveMeKey()}
+        onClick={e => UIStore.set("sideNav", "activeChannel", chan.chanID)}
+      >
+        <Channel label={chan.label} active={UIStore.sideNav.activeChannel === chan.chanID} />
       </div>
     ));
 
+    const showChannel =
+      UIStore.sideNav.activePrimary === "faqs" ||
+      UIStore.sideNav.activePrimary === "announcements"
+        ? true
+        : false;
     return (
-      <div className="Container">
-        <ChannelHeader />
-        <ChannelSearch />
-        <div className="ChannelList" />
-        <NavLink to="/panel">
-          <div id="All" onClick={e => SideBarStore.makeActive(e)}>
-            <Channel text="All" active={SideBarStore.checkActive("All")} />
+      <React.Fragment>
+        <Transition visible={showChannel} duration={500}>
+          <div className="Container">
+            <ChannelHeader />
+            <ChannelSearch />
+            <div className="ChannelList">
+              <div
+                onClick={e => UIStore.set("sideNav", "activeChannel", "All")}
+                style={UIStore.search.channel !== "" ? {display: "none"} : null}
+              >
+                <Channel label="All" active={UIStore.sideNav.activeChannel === "All"} />
+              </div>
+
+              {channels}
+            </div>
           </div>
-        </NavLink>
-        {channels}
-      </div>
+        </Transition>
+      </React.Fragment>
     );
   }
 }

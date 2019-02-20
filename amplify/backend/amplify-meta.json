@@ -1,0 +1,51 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "aubrybeta-20190110153405-authRole",
+			"UnauthRoleArn": "arn:aws:iam::443452783700:role/aubrybeta-20190110153405-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::443452783700:role/aubrybeta-20190110153405-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "aubrybeta-20190110153405-deployment",
+			"UnauthRoleName": "aubrybeta-20190110153405-unauthRole",
+			"StackName": "aubrybeta-20190110153405",
+			"StackId": "arn:aws:cloudformation:us-east-1:443452783700:stack/aubrybeta-20190110153405/1310a5c0-1517-11e9-a2bc-0a7c2d2d58f6"
+		}
+	},
+	"auth": {
+		"cognito20203c6d": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/aubrybeta-20190110153405-deployment/amplify-cfn-templates/auth/cognito20203c6d-cloudformation-template.yml",
+				"logicalId": "authcognito20203c6d"
+			},
+			"lastPushTimeStamp": "2019-01-10T20:43:18.057Z",
+			"output": {
+				"AppClientSecret": "1j1lf18ie0am0ko1p4l1jh66guvcds108boi8c73apvs8pd7o0vs",
+				"UserPoolId": "us-east-1_OcP4a5XPd",
+				"AppClientIDWeb": "6v8vc2id9u1862ojvgehhdcbnb",
+				"AppClientID": "7grnv4bpq2p46a0fk76sg3j77o",
+				"IdentityPoolId": "us-east-1:ea59a610-d567-4fcf-8214-c91361a4b6d9",
+				"IdentityPoolName": "cognito20203c6d_identitypool_20203c6d",
+				"UserPoolName": "cognito20203c6d_userpool_20203c6d"
+			},
+			"lastPushDirHash": "KlHGSI3KVkvHjQp6k/8jYMOPGKY="
+		}
+	},
+	"storage": {
+		"quadrancefiles": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/aubrybeta-20190110153405-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storagequadrancefiles"
+			},
+			"lastPushTimeStamp": "2019-01-10T20:43:18.057Z",
+			"output": {
+				"BucketName": "quadrance-files",
+				"Region": "us-east-1"
+			},
+			"lastPushDirHash": "Mzm8U5x9A1HWxuP3taIVgkf1rw0="
+		}
+	}
+}

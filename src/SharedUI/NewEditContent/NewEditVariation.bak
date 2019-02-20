@@ -1,0 +1,74 @@
+import React from "react";
+import {inject, observer} from "mobx-react";
+import { VariationConfig } from "./VariationConfig";
+import { VariationContent} from "./VariationContent";
+import { PublishControls } from "./PublishControls";
+import {writePolicy, modifyPolicy} from "../../DataExchange/Content";
+import holdUnload, {HoldLeave} from "../../SharedUI/ConfirmLeave";
+import { variation, content } from "../../DataExchange/PayloadBuilder"
+import {createPolicy } from "../../DataExchange/Up"
+
+@inject("DataEntryStore", "UserStore","PoliciesStore", "AnnouncementsStore")
+@observer
+export class NewEditVariation extends React.Component { 
+
+  componentWillUnmount = () => {
+    const {DataEntryStore} = this.props
+    holdUnload(DataEntryStore.isEntryUpdated)
+  }
+  componentDidMount() {
+    const {DataEntryStore} = this.props
+    DataEntryStore.loadUneditedFields()
+  }
+  render() {
+    const {DataEntryStore} = this.props
+    const {UserStore} = this.props
+    const {PoliciesStore} = this.props
+    const {AnnouncementsStore} = this.props
+    const mode = this.props.location.pathname.includes("policy") ? "policy" : "announcement"
+    const currentObj = mode === "policy" ? PoliciesStore._currentObj : AnnouncementsStore._currentAnnouncement
+    const currentVari = mode === "policy" ? PoliciesStore._currentObjVariation : AnnouncementsStore._currentAnnouncementVariation
+    
+    const updateMobX = (payload) => {
+    //   let data = payload
+    //   data.variations = JSON.parse(data.variations)
+    //   mode === "policy" ? PoliciesStore.replacePolicy(data) : AnnouncementsStore.replaceAnnouncement(data)
+    //   DataEntryStore.loadUneditedFields()
+    }
+        
+
+    const handleClick = (e) => {
+      if(DataEntryStore.selectedTeam !== null && DataEntryStore.preventSave === false) {
+      let payload = variation(DataEntryStore.isNewVariation ? DataEntryStore.newTempObjVariation : currentVari)
+      payload['stage'] = e 
+      DataEntryStore.isNewObj ?
+      createPolicy(content(DataEntryStore.newTempObj, payload))
+      // writePolicy( DataEntryStore.newTempObj, payload, UserStore.user.userID).then(function (result){
+      //     updateMobX(result.data)
+      //     toast.success("This draft has been saved!", {hideProgressBar: true})
+      // })
+      :
+      modifyPolicy(currentObj, payload, UserStore.user.userID).then(function (result){
+        updateMobX(result.data)
+        
+      })
+    }
+    else if (DataEntryStore.preventSave === true) {
+      
+    }
+    else {
+      
+    }
+  }
+
+  return (
+    <div className="PolicyFrame">
+       <PublishControls variationID={this.props.match.params.id}  
+      stage={DataEntryStore.isNewVariation ? DataEntryStore.newTempObjVariation.stage : this.props.mode === "policy" ? PoliciesStore._currentObjVariation.stage : AnnouncementsStore._currentAnnouncementVariation.stage} 
+      onClick={e => handleClick(e)}/>
+      <VariationConfig mode={mode} currentObj={currentObj} currentObjVariation={currentVari}/>
+      <VariationContent mode={mode} currentObj={currentObj} currentObjVariation={currentVari}/>
+      <HoldLeave value={DataEntryStore.isEntryUpdated}/>  
+     </div>
+  )};
+};

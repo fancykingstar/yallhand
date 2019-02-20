@@ -3,38 +3,52 @@ import "./style.css";
 import { Invite } from "./Invite";
 import { Users } from "./Users";
 import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
-import { TeamConfig } from "./TeamConfig"
-import { Classes } from "./Classes"
+import { Teams } from "./Teams";
+import { Tags } from "./Tags";
+import { inject, observer } from "mobx-react";
 
+@inject("UIStore")
+@observer
 export class TeamFrame extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { activeItem: "invite" };
-  }
-
-  handleItemClick = (e, { name }) => {
-    this.setState({ activeItem: name });
-  };
-  isVisable = (name) => {return (name === this.state.activeItem ? "Visable" : "Hidden")}
   render() {
-    const { activeItem } = this.state;
-    const menuItems = ["invite", "users", "configure teams", "classes"];
-    const useSearch = (this.state.activeItem === 'users') ? true : false;
+    const { UIStore } = this.props;
+    const handleItemClick = (e, { name }) => {
+      UIStore.set("menuItem","teamFrame", name);
+    };
+    const isVisable = name => {
+      return name === UIStore.menuItem.teamFrame ? "Visable" : "Hidden";
+    };
 
+    const menuItems = ["onboard", "users", "teams", "tags"];
+    const handleSearch = val => {
+      UIStore.set("search", "searchUsers", val);
+    };
     return (
       <div>
         <SecondaryMenu
           menuItems={menuItems}
-          activeItem={activeItem}
-          handleClick={this.handleItemClick}
-          useSearch={useSearch}
+          activeItem={UIStore.menuItem.teamFrame}
+          handleClick={handleItemClick}
+          useSearch={UIStore.menuItem.teamFrame === "users"}
+          searchOutput={handleSearch}
         />
         <div className="TeamActionFrame">
-        <div className={this.isVisable("invite")}>   <Invite /></div>
-        <div className={this.isVisable("users")}>   <Users /></div>
-        <div className={this.isVisable("configure teams")}>   <TeamConfig /></div>
-        <div className={this.isVisable("classes")}>   <Classes /></div>
-      
+          <div className={isVisable("onboard")}>
+            {" "}
+            <Invite />
+          </div>
+          <div className={isVisable("users")}>
+            {" "}
+            <Users />
+          </div>
+          <div className={isVisable("teams")}>
+            {" "}
+            <Teams />
+          </div> 
+          <div className={isVisable("tags")}>
+            {" "}
+            <Tags />
+          </div>
         </div>
       </div>
     );

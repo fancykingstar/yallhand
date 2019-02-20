@@ -1,93 +1,157 @@
 import React from "react";
 import "./style.css";
 import {inject, observer} from "mobx-react"
+import {S3Download} from "../DataExchange/S3Download"
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
-import { Icon, Table } from "semantic-ui-react";
+import { Icon, Table, Header, Button, Item } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
-// import { UserPagination, PageIndicies } from "../Teams/UserPagination";
+import { UploadFile } from "../SharedUI/UploadFile";
+import { AssociationSummary } from "../SharedUI/AssociationSummary"
+import {
+  initSearchObj,
+  stupidSearch
+} from "../SharedCalculations/StupidSearch";
+import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey"
+import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
+import { createFile, modifyFile, deleteFileresource } from "../DataExchange/Up";
+
+@inject("ResourcesStore", "UIStore", "DataEntryStore")
+@observer
+export class Files extends React.Component {
+  componentDidMount() {
+    const { UIStore } = this.props;
+    const { ResourcesStore } = this.props;
+    if (UIStore.search.searchFilesData.length === 0) {
+      UIStore.set("search",
+        "searchFilesData",
+        initSearchObj(
+          ResourcesStore.fileResources,
+          "resourceID"
+        ) 
+      );
+    }
+  }
+  render() {
+  const {ResourcesStore} = this.props
+  const {UIStore} = this.props
+  const {DataEntryStore} =this.props
+
+  const edit = (data) => {
+    DataEntryStore.set("fileForUpload", "isNew", false)
+    DataEntryStore.set("fileForUpload", "resourceID", data.resourceID)
+    DataEntryStore.set("fileForUpload", "type", data.type)
+    DataEntryStore.set("fileForUpload", "url", data.url)
+    DataEntryStore.set("fileForUpload", "label", data.label)
+    DataEntryStore.set("fileForUpload", "teamID", data.teamID)
+    DataEntryStore.set("fileForUpload", "tagID", data.tags.length === 0 ? "none" : data.tags[0])
+    DataEntryStore.set("fileForUpload", "associations", data.associations)
+    UIStore.set("modal", "uploadAssocEdit", true)
+    UIStore.set("modal", "uploadFile", true)
+  }
+
+  const handleAddButton = () => {
+    DataEntryStore.reset("fileForUpload", {"isNew": true, "teamID": "global", "tagID": "none", "associations": {"policies": [], "announcements": []}})
+    UIStore.set("modal", "uploadAssocEdit", true)
+    UIStore.set("modal", "uploadFile", true)
+  }
 
 
+  const close = () => {
+    UIStore.set("modal", "uploadFile", false)
+    UIStore.set("modal", "uploadAssocEdit", false)
+  }
 
-
-export const Files = inject("ResourcesStore", "PoliciesStore")(observer((props) => {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     active: 1,
-  //     selectedUser: {},
-  //     modal: false
-  //   };
-  // }
-
-  const {PoliciesStore} = props
-  const {ResourcesStore} = props
-
-  // handlePageChange = (e, { activePage }) => {
-  //   this.setState({ active: activePage });
-  // };
-  // openEditor = info => {
-  //   this.setState({ selectedUser: info, modal: true });
-  // };
-  // handleClose = () => this.setState({ modal: false });
   const getIcon = (filetype) => {return FileTypeIcons[filetype] }
+  // const userData = ResourcesStore.fileResources;
+  
+  const addFile = (val) => {
+    createFile(fileResource())
+  }
 
-    // const userProfile = this.props.profileData
-    // const modalPassed = this.props.open
+  const updateFile = (val) => {
+    modifyFile(fileResourceEdit())
+ }
+ const deleteFile = (val) => {
+  deleteFileresource(val)
+  ///add S3 removal
+}
 
-    const userData = ResourcesStore.fileResources;
+ const downloadFile = (S3Key, label) => {
+    const ext = "." + S3Key.split(".")[1]
+    S3Download("quadrance-files/gramercy", S3Key, label, ext)
+ }
 
-    // const paginationData = UserPagination(userData.length);
-    // const displayPagination = paginationData.usePagination ? (
-    //   <div style={{ textAlign: "center" }}>
-    //     <Pagination
-    //       defaultActivePage={1}
-    //       totalPages={paginationData.totalPages}
-    //       onPageChange={this.handlePageChange}
-    //     />
-    //   </div>
-    // ) : null;
 
-    // const newIndicies = PageIndicies(this.state.active, userData.length);
-    // const currentPage = userData.slice(newIndicies.start, newIndicies.end);
+  const filteredDisplay = () => {
+    if (UIStore.search.searchFiles !== "") {
+      const results = stupidSearch(
+        UIStore.search.searchFilesData,
+        UIStore.search.searchFiles
+      );
+      return ResourcesStore.fileResources.filter(item => results.includes(item.resourceID));
+    } else {
+      return ResourcesStore.fileResources;
+    }
+  };
 
-    const resfiles = userData.map(resfile => (
-      <Table.Row onClick={() => this.openEditor(resfile)} key={resfile.label}>
-    
-    <Table.Cell collapsing>
+
+  const resfiles = filteredDisplay().map(resfile => (
+      <Table.Row key={"files" + giveMeKey()}>
+        <Table.Cell>
           <Icon name={getIcon(resfile.type)} />
-          {resfile.label}
+          <Item style={{cursor: "pointer"}} as="a" onClick={e => downloadFile(resfile.S3Key.split("gramercy/")[1], resfile.label)}>{resfile.label}</Item>
+       
         </Table.Cell>
         <Table.Cell >{resfile.size}</Table.Cell>
         <Table.Cell >{UTCtoFriendly(resfile.updated)}</Table.Cell>
-        <Table.Cell >{resfile.admin.displayName}</Table.Cell>
-        <Table.Cell>{PoliciesStore.variationsToPolicies(resfile.variationID)}</Table.Cell>
+        <Table.Cell >
+        <AssociationSummary data={resfile}/>
+        </Table.Cell>
+        <Table.Cell><Button basic onClick={() => edit(resfile)} key={resfile.label}>Edit</Button></Table.Cell>
+        <Table.Cell>
+          <ConfirmDelete basic confirm={e => deleteFile(resfile.resourceID)}/>
+        </Table.Cell>
       </Table.Row>
     ));
 
     return (
+ 
       <div className="LinkTable">
-      <AddButton/>
-        <Table selectable basic="very">
+           <Header
+      as="h2"
+      content="Manage Files"
+      subheader="Manage files and control access across your teams"
+    />
+
+       <UploadFile
+          open={UIStore.modal.uploadFile}
+          close={e => close}
+          selection={""}
+          title="Upload and configure a new file"
+          output={val => val === "create" ? addFile(val) : updateFile(val)}
+          includeTeamTag={true}
+
+        />
+      <AddButton output={e => handleAddButton()}/>
+        <Table basic="very">
           <Table.Header>
             <Table.Row>
             <Table.HeaderCell>Label</Table.HeaderCell>
             <Table.HeaderCell>Size</Table.HeaderCell>
               <Table.HeaderCell >Last Updated</Table.HeaderCell>
-              <Table.HeaderCell >Uploaded By</Table.HeaderCell>
-              <Table.HeaderCell>Currently Used In</Table.HeaderCell>
+              <Table.HeaderCell>Currently Associated With</Table.HeaderCell>
+              <Table.HeaderCell/>
+              <Table.HeaderCell/>
             </Table.Row>
           </Table.Header>
+    
 
           <Table.Body>{resfiles}</Table.Body>
         </Table>
-        {/* {displayPagination} */}
-        {/* <UserEdit
-          profileData={this.state.selectedUser}
-          open={this.state.modal}
-          close={this.handleClose}
-        /> */}
+       
       </div>
     );
   }
-))
+}

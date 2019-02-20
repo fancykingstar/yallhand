@@ -1,26 +1,27 @@
 import React from 'react'
 import { Icon, Label } from 'semantic-ui-react';
-import { Link } from "react-router-dom";
-// import Style from 'style-it';
 import './card-style.css'
+import {withRouter} from "react-router-dom"
+import {inject, observer} from "mobx-react"
+import { AccountStore } from '../Stores/AccountStore';
+import {adminsAbrev} from "../SharedCalculations/AdminsAbbrev"
+import { UIStore } from '../Stores/UIStore';
 
-export const Card = (props) => {
-        const adminsAbrev = (admins) => {
-            let firstfew = admins.slice(0,3)
-            firstfew.push({displayName: "..."})
-            return firstfew
-        }
+const Card = inject("DataEntryStore", "PoliciesStore", "AccountStore")(observer((props) => {
+        const {DataEntryStore} = props
+        const {PoliciesStore} = props
         const adminsList = props.data.admins.length > 3 ? adminsAbrev(props.data.admins) : props.data.admins
-        const adminLabels = adminsList.map(admin => <Label key={admin.displayName} color='blue' horizontal>{admin.displayName}</Label> )
+        const adminLabels = adminsList.map(admin => <Label 
+            key={AccountStore._getDisplayName(admin)} color='blue' horizontal
+            >
+            {AccountStore._getDisplayName(admin)}
+            </Label> )
         let automationstatus = false
-        for (let vari in props.data.variations) {
-            if (props.data.variations[vari].automation === true) {automationstatus = true}
-        } 
         const automationLabel = automationstatus ? <Icon name='sync alternate' color='grey' size='large' /> : <Icon style={{visibility: 'hidden'}}name='sync alternate' color='grey' size='large' />;
         let counts = {"global": 0, "local": 0}
-        for (let vari in props.data.variations) {
-            counts[props.data.variations[vari].type]++
-        }
+        props.data.variations.forEach(vari => {
+            vari.teamID === 'global' ? counts["global"]++ : counts["local"]++ 
+        })
         const conditions = {
             "ok": {iconName: "check circle", color: 'green'},
             "partial": {iconName: "check circle", color: 'orange'},
@@ -30,16 +31,24 @@ export const Card = (props) => {
         }
       
         const bgimg = props.img
+
+        const handleClick = (e) => {
+            e.preventDefault()
+            UIStore.set("content", "policyID", props.data.policyID)
+            UIStore.set("content", "variationID", PoliciesStore._toggleGlobalVariation(props.data.policyID))
+            DataEntryStore.set("contentmgmt", "label", props.data.label)
+            DataEntryStore.set("contentmgmt", "img", props.data.img)
+            DataEntryStore.set("contentmgmt", "bundle", "queue")
+            DataEntryStore.set("contentmgmt", "keywords", props.data.keywords)
+            DataEntryStore.set("contentmgmt", "reviewAlert", props.data.reviewAlert)
+            props.history.push("/panel/faqs/manage-policy/" + props.data.policyID)
+        }
+
         return(
             
             <div className="CardContainerbg" style={{backgroundImage: `url(${bgimg})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
             <div className="CardContaineralpha"></div>
-            <div className="Card">
-            
-
-           
-
-             <Link to={"/panel/manage-policy/" + props.data.policyID} style={{color: "rgb(45, 45, 45)"}}>
+            <div className="Card" onClick={e => handleClick(e)}> 
                 <div className="displayAdjust">
                 <div className="Q">Q:</div>
                 <div className="Question"><h4>{props.data.label}</h4></div>
@@ -50,11 +59,12 @@ export const Card = (props) => {
                 </div>
                 <div className="CurrentStatus"><Icon name={conditions[props.data.state]['iconName']} color={conditions[props.data.state]['color']} size='large' /></div>
                 <div className="Corner"></div>
+               
                 </div>
-                </Link>
             </div>
             </div>
           
         )
     
-}
+}))
+export default withRouter(Card)

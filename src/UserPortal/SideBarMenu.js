@@ -1,94 +1,97 @@
-import React from "react"
-import {Menu} from "semantic-ui-react"
-import {inject, observer} from "mobx-react"
-import {NavLink, withRouter} from "react-router-dom"
+import React from "react";
+import { Menu, Icon, Responsive, Input } from "semantic-ui-react";
+import { inject, observer } from "mobx-react";
+import { NavLink, withRouter } from "react-router-dom";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 
-@inject("SideBarStore")
+@inject("ChannelStore", "UIStore")
 @observer
 class SideBarMenu extends React.Component {
-    componentDidMount() {
-      const {SideBarStore} = this.props
-        SideBarStore.loadChannels()
 
-    }
 
-    render() {
-        const handleClick = (e) => {
-          SideBarStore.makeActive(e)
-          this.props.history.push('/portal/learn')
+  render() {
+    const { ChannelStore, UIStore } = this.props;
+    const channelList = ChannelStore.allChannels.map(channel => (
+      <Menu.Item name={channel.label} key={"portalmenu" + giveMeKey()} 
+        onClick={e => { this.props.history.push( "/portal" )
+        UIStore.set("sideNav", "activeChannel", channel.chanID)
+      } } />
+    ));
+    channelList.unshift(<Menu.Item name={"All"} key={"portalmenu" + giveMeKey()} 
+      onClick={e => { this.props.history.push( "/portal" )
+      UIStore.set("sideNav", "activeChannel", "All")
+    }} />)
 
-        }
-        const {SideBarStore} = this.props
-        const channelList = SideBarStore.displayTitles.map(channel => (
-            <Menu.Item
-              name={channel}
-              id={channel}
-              onClick={e => handleClick(e)}
-            />
-        ))
-        return(
- 
-            <Menu vertical>
+    return (
+      <Menu compact vertical secondary borderless={true} style={{backgroundColor: "#F9F9F9"}}>
         <Menu.Item>
-          <Menu.Header>Feed</Menu.Header>
-    
+          <Menu.Header>
+          {" "}
+            <Icon name="newspaper outline" />
+            Feed
+          </Menu.Header>
           <Menu.Menu>
-          <Menu.Item disabled>Recent</Menu.Item>
-            <NavLink to="/portal" style={{color: "rgb(45, 45, 45)"}}>
-            <Menu.Item
-              name='Annoucements'
-            /></NavLink>
-       
-           {/* <Menu.Item disabled>Surveys</Menu.Item> */}
+          <Menu.Item disabled>Featured</Menu.Item>
+
+          <NavLink to="/portal" style={{ color: "rgb(45, 45, 45)" }}>
+            <Menu.Item name="Announcements" />
+            
+          </NavLink>
           </Menu.Menu>
         </Menu.Item>
 
         <Menu.Item>
-          {/* <NavLink to="/portal/learn" style={{color: "rgb(45, 45, 45)"}}> */}
-          <Menu.Header>Learn</Menu.Header>
-          {/* </NavLink> */}
+    
+          <Menu.Header>
+            {" "}
+            <Icon name="info circle" />
+            Learn
+          </Menu.Header>
           <Menu.Menu>
             {channelList}
-            </Menu.Menu>
+          </Menu.Menu>
         </Menu.Item>
 
         <Menu.Item>
-          <Menu.Header>Resources</Menu.Header>
+          <Menu.Header>
+            <Icon name="cubes" />
+            Resources
+          </Menu.Header>
 
           <Menu.Menu>
             <Menu.Item
-              name='common'
-            //   active={activeItem === 'shared'}
-            //   onClick={this.handleItemClick}
+              name="common"
+              //   active={activeItem === 'shared'}
+              //   onClick={this.handleItemClick}
             />
             <Menu.Item
-              name='recently used'
-            //   active={activeItem === 'dedicated'}
-            //   onClick={this.handleItemClick}
+              name="recently used"
+              //   active={activeItem === 'dedicated'}
+              //   onClick={this.handleItemClick}
             />
           </Menu.Menu>
         </Menu.Item>
 
         <Menu.Item>
-          <Menu.Header>Support</Menu.Header>
+          <Menu.Header>
+            <Icon name="help circle" />
+            Support
+          </Menu.Header>
 
           <Menu.Menu>
-            {/* <Menu.Item  disabled name='email' >
+            <Menu.Item disabled name="email">
               Directory
-            </Menu.Item> */}
-            {/* <Menu.Item  disabled name='email' >
+            </Menu.Item>
+            <Menu.Item disabled name="email">
               Get Assistance
-            </Menu.Item> */}
-
-            
+            </Menu.Item>
           </Menu.Menu>
         </Menu.Item>
+        <Menu.Item>
+      <Input className='icon' icon='search' placeholder='Search...' />
+    </Menu.Item>
       </Menu>
-
-        )
-    }
+    );
+  }
 }
-export default withRouter(SideBarMenu)
-
-
-
+export default withRouter(SideBarMenu);

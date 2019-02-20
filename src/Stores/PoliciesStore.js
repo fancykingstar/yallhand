@@ -1,219 +1,192 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
+import {addCalculatedAttributes} from "../SharedCalculations/ContentCalculatedAttributes"
+import _ from "lodash";
+// const cardFilterToStage = {ok: "cardFilterPublished", partial: "cardFilterPublished", draft: "cardFilterDrafts", notOk: "cardFilterPublished", archived: "cardFilterArchived"};
 
 class Store {
-  @observable
-  allPolicies = [];
+  @observable allPolicies = [];
+  @observable userAvailablePolicies = [];
+  // @observable channelFilter = { label: "All", chanID: null };
+  // @observable cardFilters = {cardFilterPublished: true, cardFilterDrafts: true, cardFilterArchived: false};
+  // @observable cardSort = "Newest";
+  //currently active
+  // @observable selectedPolicyID = "";
+  // @observable selectedVariationID = "";
 
-  @observable
-  filteredPolicies = [];
-
-  @observable
-  policyTitle= "";
-
-  @observable
-  toggledPolicy = ''
-
-  @observable
-  toggledVariation = ''
-
-  @observable
-  userAvailablePolicies = []
-
-  @observable
-  policyContent = []
-
-//   @observable
-//   userAvailableFilteredPolicies = []
-
-  @observable
-  channelFilter = {'label': 'All', 'chanID': null};
-
-  @observable
-  cardFilters =  {cardFilterPublished: true,
-            cardFilterDrafts: true,
-            cardFilterArchived: false}
-
-@observable
-  cardFilterToStage = {
-    "ok" : "cardFilterPublished",
-      "partial" : "cardFilterPublished",
-    "draft":"cardFilterDrafts" ,
-    "notOk": "cardFilterPublished",
-   "archived": "cardFilterArchived"
-  }
-
-  @observable
-  addPolicyMod = false;
-
-  @observable
-  cardSort = "Newest"
-
-  @observable
-  cardFilterCounts = {}
-
-  
-  
   @action
-  closeMod(e) {
-    e.preventDefault();
-    this.addPolicyMod = false;
-  }
-
-  openMod(e) {
-    e.preventDefault();
-    this.addPolicyMod = true;
-  }
-
-  addPolicy(e, accountInfo, chan) {
-    e.preventDefault();
-    const newPolicy = {
-        "accountID": accountInfo.accountID,
-        "policyID": Math.random().toString(16).slice(2, 8).toUpperCase(),
-        "chanID": chan,
-        "label": this.policyTitle,
-        "img": "",
-        "admins": [{"adminID": accountInfo.adminID, "displayName": accountInfo.displayName}],
-        "keywords": [],
-        "state": "draft",
-        "variations": []
-    }
-    this.togglePolicy(newPolicy.policyID)
-    this.allPolicies.push(newPolicy)
-    this.displayPolicies()
-    this.closeMod(e);
-  }
-
-
-  addVariation(accountInfo, curpolicyID, teamID="", type="global", label="", content="", tags=[], automation=[]) {
-    const newVariation = {
-            "type": type,
-            "label": label,
-            "variationID": Math.random().toString(16).slice(2, 8).toUpperCase(),
-            "teamID": teamID,
-            "content": content,
-            "tags": tags,
-            "admin": {"adminID": accountInfo.adminID, "displayName": accountInfo.displayName},
-            "updated": Date.now(),
-            "automation": automation
-    }
-    this.toggleVariation(newVariation.variationID)
-    const matchPolicyID = (element) => {return element.policyID === curpolicyID}
-    const policyIndex = this.allPolicies.findIndex(matchPolicyID)
-    const newPolicy = this.allPolicies[policyIndex].variations.push(newVariation)
-    const allPolicies = this.allPolicies.splice(policyIndex, 1, newPolicy)
-    this.allPolicies = allPolicies
-}
-
-  displayPolicies() {
-    this.filteredPolicies = this.allPolicies.filter(policy => this.cardFilters[this.cardFilterToStage[policy.state]])
-    if (this.channelFilter.chanID !== null) {
-        const channelpolicies = this.filteredPolicies.filter(policy => policy.chanID === this.channelFilter.chanID)
-        this.filteredPolicies = channelpolicies
-    }
-  }
-
-  loadPolicies() {
-    const policies = require("../MockData/Policies.json");
-    this.allPolicies = policies
-    this.getMostRecent()
-    // this.sortNewOld()
-    this.displayPolicies()
-  };
-
-  updateCardFilter(e) {
-      e.preventDefault()
-      this.cardFilters[e.currentTarget.id] = !(this.cardFilters[e.currentTarget.id])
-      this.displayPolicies()
-  }
-  updateCardSort(val) {
-      this.cardSort = val
-      val === 'Newest' ? this.sortNewOld() : this.sortOldNew()
-  }
-  getMostRecent() {
-        let updatedPolicies = []
-        for (let i in this.allPolicies) {
-            let currentPolicy = this.allPolicies[i]
-            const datesList = currentPolicy.variations.map(variation => Number(variation.updated))
-            currentPolicy['updated'] = Math.max.apply(Math, datesList)
-            updatedPolicies.push(currentPolicy)
-
-        }
-        this.allPolicies = updatedPolicies
-    }
-sortNewOld() {
-    const sorted = this.allPolicies.slice().sort((a,b) => b['updated']-a['updated']);
-    this.allPolicies = sorted
-    this.displayPolicies()
- 
-}
-sortOldNew() {
-    const sorted = this.allPolicies.slice().sort((a,b) => a['updated']-b['updated']);
-    this.allPolicies = sorted
-    this.displayPolicies()
-    
-
-}
-chanFilter(label, id) {
-    //chanID
-    this.channelFilter = {'label':label, 'chanID': id}
-}
-
-toggleVariation(variationID) {
-    this.toggledVariation = variationID
-}
-
-togglePolicy(policyID) {
-    this.toggledPolicy = policyID
-}
-  
-resetVariation() {
-    this.toggledVariation = ''
-}
-
-addTitle(val) {
-    this.policyTitle = val;
-  }
-
-sourcePolicyFriendly(id) {
-    let policyFriendly = ''
-    while (policyFriendly === '') {
-    this.allPolicies.forEach(function(policy) {
-        policy.variations.forEach(function(variation) {
-        
-            if (variation.variationID === id) {
-             
-                policyFriendly = policy.label
-            } 
-        })
+  loadPolicies(val) {
+    return new Promise((resolve, reject) => {
+    this.allPolicies = addCalculatedAttributes(val);
+      resolve(true)
     })
-    break;
+
+  }
+
+  // replacePolicy(val) {
+  //   let policyList = this.allPolicies.filter(
+  //     policy => policy.policyID !== val.policyID
+  //   );
+  //   policyList.push(val);
+  //   this.loadPolicies(policyList);
+  // }
+
+  // updateCardFilter(e) {
+  //   e.preventDefault();
+  //   this.cardFilters[e.currentTarget.id] = !this.cardFilters[
+  //     e.currentTarget.id
+  //   ];
+  // }
+
+  // updateCardSort(val) {
+  //   this.cardSort = val;
+  //   val === "Newest" ? this.sortNewOld() : this.sortOldNew();
+  // }
+
+  // sortNewOld() {
+  //   const sorted = this.allPolicies
+  //     .slice()
+  //     .sort((a, b) => b["updated"] - a["updated"]);
+  //   this.allPolicies = sorted;
+  // }
+
+  // sortOldNew() {
+  //   const sorted = this.allPolicies
+  //     .slice()
+  //     .sort((a, b) => a["updated"] - b["updated"]);
+  //   this.allPolicies = sorted;
+  // }
+
+  // chanFilter(label, id) {
+  //   this.channelFilter = { label: label, chanID: id };
+  // }
+
+  // toggleVariationID(variationID) {
+  //   this.selectedVariationID = variationID;
+  // }
+
+  // togglePolicyID(policyID) {
+  //   this.selectedPolicyID = policyID;
+  // }
+
+  // resetVariation() {
+  //   this.selectedVariationID = "";
+  // }
+
+  sourcePolicyFriendly(id) {
+    let policyFriendly = "";
+    const getFriendly = () => {
+      this.allPolicies.forEach(function(policy) {
+        policy.variations.forEach(function(variation) {
+          if (variation.variationID === id) {
+            policyFriendly = policy.label;
+          }
+        });
+      });
     }
-    return policyFriendly
-}
+    while (policyFriendly === "") {
+      getFriendly()
+      break;
+    }
+    return policyFriendly;
+  }
 
-variationsToPolicies(variations) {
-    const allPolicies = variations.map(variationID => this.sourcePolicyFriendly(variationID))
-    return allPolicies.join(' ')
-}
+  variationsToPolicies(variations) {
+    const allPolicies = variations.map(variationID =>
+      this.sourcePolicyFriendly(variationID)
+    );
+    return allPolicies.join(" ");
+  }
 
-loadUserPortalPolicies(val) {
-    this.userAvailablePolicies = val
-}
-    
-cardFilterCount() {
-        if (this.allPolicies.length === 0) {this.loadPolicies()}
-        let cardFilterCountsLocal = {'published': 0, 'drafts': 0, 'archived': 0}
-        this.allPolicies.forEach(policy => {
-            let val = this.cardFilterToStage[policy.state].toLowerCase()
-            let current = val.split('cardfilter')[1]
-            cardFilterCountsLocal[current] ++
-            
-        })
-        this.cardFilterCounts = cardFilterCountsLocal
-          
-      }
-    
-    
+  loadUserPortalPolicies(val) {
+    this.userAvailablePolicies = val;
+  }
+
+  _toggleGlobalVariation(currentObj) {
+    const current = Object.assign({}, this._getPolicy(currentObj))
+    const globalPolicy = current.variations.filter(
+      vari => vari.teamID === "global"
+    );
+    return globalPolicy.length === 0
+      ? current.variations[0].variationID
+      : globalPolicy[0].variationID
+  }
+
+  // cardFilterCount() {
+
+  //   let cardFilterCountsLocal = { published: 0, drafts: 0, archived: 0 };
+  //   this.allPolicies.forEach(policy => {
+  //     let val = cardFilterToStage[policy.state].toLowerCase();
+  //     let current = val.split("cardfilter")[1];
+  //     cardFilterCountsLocal[current]++;
+  //   });
+  //   return cardFilterCountsLocal;
+  // }
+  _getPolicy(id){
+    if(this.allPolicies.filter(policy => policy.policyID === id).length > 0){
+      return Object.assign({}, this.allPolicies.filter(policy => policy.policyID === id)[0])
+    }
+    else{return {}}
+  }
+
+  _getVariation(policyID, variationID){
+    if(_.isEmpty(this._getPolicy(policyID))){return {}}
+    else if(this._getPolicy(policyID).variations.filter(vari => vari.variationID === variationID).length > 0)
+      {return Object.assign({}, this._getPolicy(policyID).variations.filter(vari => vari.variationID === variationID)[0])}
+    else{return {}}
+   
+  }
+
+  _getPolicyIDfromVariation(variationID){
+    const filtered = this.allPolicies
+      .filter(policy => policy.variations
+        .filter(vari => vari.variationID === variationID).length === 1)
+    return filtered.length === 0? {} : filtered[0].policyID 
+  }
+
+  @computed
+  get _currentObj() {
+    if (this.allPolicies.length !== 0 && this.selectedPolicyID !== "") {
+      return this.allPolicies.filter(
+        policy => policy.policyID === this.selectedPolicyID
+      )[0];
+    } else {
+      return null;
+    }
+  }
+
+  // @computed
+  // get _currentObjVariation() {
+  //   if (
+  //     this.allPolicies.length !== 0 &&
+  //     this.selectedPolicyID !== "" &&
+  //     this.selectedVariationID !== ""
+  //   ) {
+  //     let current = this._currentObj.variations;
+  //     if (!Array.isArray(current)) {
+  //       current = JSON.parse(current);
+  //     }
+  //     return current.filter(
+  //       vari => vari.variationID === this.selectedVariationID
+  //     )[0];
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  // @computed
+  //filters policies displayed by channel  
+  // get filteredPolicies() {
+  //   const filteredPolicies = this.allPolicies.filter(
+  //     policy => this.cardFilters[cardFilterToStage[policy.state]]
+  //   );
+  //   if (this.channelFilter.chanID !== null) {
+  //     const channelpolicies = filteredPolicies.filter(
+  //       policy => policy.chanID === this.channelFilter.chanID
+  //     );
+  //     return channelpolicies;
+  //   }
+  //   else {return filteredPolicies}
+  // }
 
 }
 

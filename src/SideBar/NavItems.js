@@ -3,73 +3,84 @@ import { inject, observer } from "mobx-react";
 import { NavItem } from "./NavItem";
 import "./style.css";
 
-@inject("SideBarStore")
+@inject("UIStore")
 @observer
 export class NavItems extends React.Component {
   render() {
-    const { SideBarStore } = this.props;
+    const { UIStore } = this.props;
     return (
       <div className="Container">
+
+         <NavItem
+          id="dashboard"
+          icon="dashboard"
+          label="Dashboard"
+          active={UIStore.sideNav.activePrimary === "dashboard"}
+        /> 
+
+        <br />
         <NavItem
           id="teams"
           icon="group"
           label="Teams"
-          active={SideBarStore.checkActive("teams")}
+          active={UIStore.sideNav.activePrimary === "teams"}
         />
 
+        <br />
+
+        <NavItem
+          id="faqs"
+          icon="question"
+          label="FAQs"
+          active={UIStore.sideNav.activePrimary === "faqs"}
+        />
+
+        <br />
+
+        <NavItem
+          id="announcements"
+          icon="bullhorn"
+          label="Announcements"
+          active={UIStore.sideNav.activePrimary === "announcements"}
+        />
+
+        <br />
+        <NavItem
+          id="email"
+          icon="mail"
+          label="Email Campaign"
+          active={UIStore.sideNav.activePrimary === "email"}
+        />
+
+        <br />
+
+        <NavItem
+          id="analytics"
+          icon="chart bar outline"
+          label="Analytics"
+          active={UIStore.sideNav.activePrimary === "analytics"}
+        />
         <br />
 
         <NavItem
           id="resources"
           icon="cubes"
           label="Resources"
-          active={SideBarStore.checkActive("resources")}
+          active={UIStore.sideNav.activePrimary === "resources"}
         />
-
- 
-
-        {/* <NavItem
-          id="automations"
-          icon="sync alternate"
-          label="Automations"
-          active={SideBarStore.checkActive("automations")}
-        /> */}
-
-       
-
-        <NavItem
-          id="annoucements"
-          icon="bullhorn"
-          label="Annoucements"
-          active={SideBarStore.checkActive("annoucements")}
-        />
-         {/* <NavItem
-          id="annoucements"
-          icon="check square"
-          label="Surveys and Polls"
-          active={SideBarStore.checkActive("annoucements")}
-        />*/}
-         <NavItem
-          id="knowledge"
-          icon="question circle"
-          label="Knowledgebase"
-          active={SideBarStore.checkActive("All")}
-        /> 
-         <NavItem
-          id="email"
-          icon="mail"
-          label="Email Campaign"
-          active={SideBarStore.checkActive("email")}
-        />
-
-        <br />
 
         {/* <NavItem
           id="staffdirectory"
           icon="list alternate"
           label="Staff Directory"
-          active={SideBarStore.checkActive("staffdirectory")}
+          active={UIStore.sideNav.activePrimary === "staffdirectory"}
         /> */}
+        {/* <NavItem
+          id="announcements"
+          icon="check square"
+          label="Surveys and Polls"
+          active={UIStore.sideNav.activePrimary === "announcements"}
+        />*/}
       </div>
     );
   }

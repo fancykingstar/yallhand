@@ -1,15 +1,15 @@
 body {
-  color: rgb(51, 51, 51); 
+  /* color: rgb(51, 51, 51);  */
   overflow: hidden;
-  font-family: 'Nunito', sans-serif; 
+  /* font-family: 'Nunito', sans-serif;  */
 }
 
 .lightText a {
-  color: darkslategray;
+  /* color: darkslategray; */
 }
 
 h1 h2 h3 h4 h5 span {
-  font-family: 'Nunito', sans-serif; 
+  /* font-family: 'Nunito', sans-serif;  */
   font-weight: 700;
 }
 .App {
@@ -39,3 +39,6 @@ h1 h2 h3 h4 h5 span {
   overflow-x: hidden;
 }
 
+.LoadingDim {
+  opacity: 0.2;
+}

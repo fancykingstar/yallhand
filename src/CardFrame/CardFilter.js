@@ -1,33 +1,80 @@
-import React from 'react'
-import {inject, observer} from 'mobx-react'
-import './style.css'
+import React from "react";
+import { inject, observer } from "mobx-react";
+import "./style.css";
 
-@inject("PoliciesStore")
+@inject("UIStore", "PoliciesStore")
 @observer
 export class CardFilter extends React.Component {
-    componentDidMount() {
-        const {PoliciesStore} = this.props
-        PoliciesStore.cardFilterCount()
-    }
+  componentDidMount() {
+    const { UIStore } = this.props;
+    UIStore.set("filter", "cardFilterPublished", true)
+    UIStore.set("filter", "cardFilterDrafts", true)
+    UIStore.set("filter", "cardFilterArchived", false)
+  }
+
+  render() {
+    const { UIStore, PoliciesStore } = this.props;
+    const filterClass = val => 
+      val ? "CardFilterContainer" : "CardFilterContainer Disabled";
+   
+    const cardFilterToStage = {ok: "cardFilterPublished", partial: "cardFilterPublished", draft: "cardFilterDrafts", notOk: "cardFilterPublished", archived: "cardFilterArchived"};
     
-    render() {
-        const {PoliciesStore} = this.props
-        const filterClass = (val)=> {return val ? "CardFilterContainer" : "CardFilterContainer Disabled"}; 
-        return(
-            <div className="CardFiltersGroup">
-                <div id="cardFilterPublished" className={filterClass(PoliciesStore.cardFilters.cardFilterPublished)} onClick={e => PoliciesStore.updateCardFilter(e)}>
-                    <div className="CardFilter">Published</div>
-                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['published']}</div>
-                </div>
-                <div id="cardFilterDrafts" className={filterClass(PoliciesStore.cardFilters.cardFilterDrafts)} onClick={e => PoliciesStore.updateCardFilter(e)}>
-                    <div className="CardFilter">Drafts</div>
-                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['drafts']}</div>
-                </div>
-                <div id="cardFilterArchived" className={filterClass(PoliciesStore.cardFilters.cardFilterArchived)} onClick={e => PoliciesStore.updateCardFilter(e)}>
-                    <div className="CardFilter">Archived</div>
-                    <div className="CardFilterBadge">{PoliciesStore.cardFilterCounts['archived']}</div>
-                </div>
-            </div>
-        )
-    }
+    const counts = () => {
+      let cardFilterCountsLocal = { published: 0, drafts: 0, archived: 0 };
+      PoliciesStore.allPolicies.forEach(policy => {
+        let val = cardFilterToStage[policy.state].toLowerCase();
+        let current = val.split("cardfilter")[1];
+        cardFilterCountsLocal[current]++;
+      });
+      return cardFilterCountsLocal;
+    };
+
+    return (
+      <div className="CardFiltersGroup">
+        <div
+          id="cardFilterPublished"
+          className={filterClass(UIStore.filter.cardFilterPublished)}
+          onClick={e =>
+            UIStore.set(
+              "filter",
+              "cardFilterPublished",
+              !UIStore.filter.cardFilterPublished
+            )
+          }
+        >
+          <div className="CardFilter">Published</div>
+          <div className="CardFilterBadge">{counts().published}</div>
+        </div>
+        
+        <div
+          id="cardFilterDrafts"
+          className={filterClass(UIStore.filter.cardFilterDrafts)}
+          onClick={e =>
+            UIStore.set(
+              "filter",
+              "cardFilterDrafts",
+              !UIStore.filter.cardFilterDrafts
+            )
+          }
+        >
+          <div className="CardFilter">Drafts</div>
+          <div className="CardFilterBadge">{counts().drafts}</div>
+        </div>
+        <div
+          id="cardFilterArchived"
+          className={filterClass(UIStore.filter.cardFilterArchived)}
+          onClick={e =>
+            UIStore.set(
+              "filter",
+              "cardFilterArchived",
+              !UIStore.filter.cardFilterArchived
+            )
+          }
+        >
+          <div className="CardFilter">Archived</div>
+          <div className="CardFilterBadge">{counts().archived}</div>
+        </div>
+      </div>
+    );
+  }
 }

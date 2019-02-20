@@ -3,10 +3,18 @@
     position: sticky;
     bottom: 0;
     min-height: 100px;
-    background-color: #2fc7f8;
+    /* background-color: #2fc7f8; */
     width: 100%;
     text-align: center;
     z-index: 0;
+    background: rgb(255, 255, 255);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(233, 47, 150, 0.87) 0%,
+      rgba(0, 212, 255, 1) 53%
+    );
+    background-repeat: no-repeat;
 }
 
 .SearchControls {
@@ -20,7 +28,6 @@
 .SideBarFrame {
     width: 230px;
     height: 1800px;
-   
     float: left;
     height: 100vh;
     position: relative;
@@ -32,7 +39,7 @@
     margin-left: 30px;
 }
 
-.Annoucements {
+.Announcements {
     max-width: 900px;
     height: 100%;
     margin-left: 30px;
@@ -47,7 +54,8 @@
 
 .imgBox {
     border-radius: 5px;
-  padding: 20px;
+  padding: 10px;
+    max-width: 200px;
    grid-column: 1 / 1;
    grid-row: 1;
 
@@ -121,7 +129,3 @@
     -moz-box-shadow:    0px 0px 2px 0px #2FC7F8;
     box-shadow:         0px 0px 5px 2px #2FC7F8;
 }
-
-.darklink a {
-  color: #000000;
-} 

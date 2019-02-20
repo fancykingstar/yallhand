@@ -1,6 +1,6 @@
 .LinkTable {
     margin-left: 15px;
-    max-width: 800px;
+    max-width: 805px;
 }
 
 td > a {
@@ -10,8 +10,16 @@ td > a {
 
 td > div {
     display: inline-block;
-    max-width: 400px;
+    max-width: 405px;
     overflow: visible;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+.prompt {
+
+    border-radius: 5px !important;
+    -webkit-border-radius: 5px 5px 5px 5px!important;
+    -moz-border-radius: 5px 5px 5px 5px!important;
+ 
+}

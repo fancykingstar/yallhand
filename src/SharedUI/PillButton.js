@@ -1,13 +1,13 @@
 import React from 'react'
-import { Button, Icon } from "semantic-ui-react";
+import { Form, Icon } from "semantic-ui-react";
 
 export const PillButton = (props) => {
     return (
-        <div style={{ paddingTop: 15 }}>
-        <Button primary icon labelPosition="left" circular size="small">
+        <React.Fragment>
+        <Form.Button primary icon labelPosition="left" style={{minWidth: 230, marginLeft: 10}} size="small" onClick={e => props.onClick()}>
           <Icon name={props.iconName}/>
           {props.label}
-        </Button>
-      </div>
+        </Form.Button>
+        </React.Fragment>
     )
 }

@@ -72,7 +72,7 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
     //     "policyID": ["P5"],
     //     "updated": "1538147254",
     //     "public": true,
-    //     "admin": {"adminID": "adminID", "displayName": "Mark Z."}
+    //     "admin": {"userID": "userID", "displayName": "Mark Z."}
     // },
 
 
