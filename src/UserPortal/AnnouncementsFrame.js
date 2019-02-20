@@ -28,7 +28,7 @@ class AnnouncementsFrame extends React.Component {
                 <Container onClick={e => handleClick(news.announcementID)}>
                     <Header
                     as="h2"
-                    style={{marginLeft: -100}}
+                    // style={{marginLeft: -100}}
                     content={news.label}
                     subheader={UTCtoFriendly(news.updated)}
                   />
