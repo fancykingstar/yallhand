@@ -4,14 +4,13 @@ import SideBarMenu from "./SideBarMenu"
 import { UserWorkspace } from "./UserWorkspace"
 import "./style.css";
 
-export const SideBarFrame = () => {
+
+export const SideBarPortal = (props) => {
   return (
     <div className="SideBarFrame">
-        <div className="SideBarMenu">
-            <UserWorkspace/>
-            <Divider/>
-            <SideBarMenu/>
-        </div>
+            <UserWorkspace mobile={props.mobile}/>
+            <Divider style={{marginTop: 3, marginBottom: 3}}/>
+            <SideBarMenu mobile={props.mobile}/>
     </div>
   );
 };

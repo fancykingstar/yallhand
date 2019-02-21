@@ -3,6 +3,7 @@ import { Menu, Icon, Responsive, Input } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { NavLink, withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
+import "./style.css"
 
 @inject("ChannelStore", "UIStore")
 @observer
@@ -23,7 +24,8 @@ class SideBarMenu extends React.Component {
     }} />)
 
     return (
-      <Menu compact vertical secondary borderless={true} style={{backgroundColor: "#F9F9F9"}}>
+      <div className="PortalSideNav">
+      <Menu compact vertical secondary borderless={true} >
         <Menu.Item>
           <Menu.Header>
           {" "}
@@ -87,10 +89,11 @@ class SideBarMenu extends React.Component {
             </Menu.Item>
           </Menu.Menu>
         </Menu.Item>
-        <Menu.Item>
+        {this.props.mobile?        <Menu.Item>
       <Input className='icon' icon='search' placeholder='Search...' />
-    </Menu.Item>
+    </Menu.Item> : <div/>}
       </Menu>
+      </div>
     );
   }
 }

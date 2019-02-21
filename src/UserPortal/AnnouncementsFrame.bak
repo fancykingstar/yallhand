@@ -22,23 +22,37 @@ class AnnouncementsFrame extends React.Component {
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
     const displayFeed = anncs.map(news => (
-      <React.Fragment>
-        <Item onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
-        {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
-        <Header
+        <React.Fragment>
+      <div className="AnnouncementContainer">
+        {news.img.length !== 0 ? (
+        //   <div className="imgBox">
+            // {" "}
+            <Item.Image rounded size="small" src={news.img} />
+            // {" "}
+        //   </div>
+        ) : null}
+        {/* <div */}
+        {/* //   className={news.img.length !== 0 ? "contentBox" : "fullcontentBox"}
+        //   className="fullcontentBox"
+        // > */}
+          {/* <Container onClick={e => handleClick(news.announcementID)}> */}
+            <Item.Header
               as="h2"
               content={news.label}
               subheader={UTCtoFriendly(news.updated)}
             />
-      </Item>
-      <Divider/>
-      </React.Fragment>
+          {/* </Container> */}
+        </div>
+      {/* </div> */}
+       <div className="divider">
+       <Divider />{" "}
+     </div>
+     </React.Fragment>
     ));
 
     return (
       <div className="Announcements">
         <Item.Group>{displayFeed}</Item.Group>
-        <div style={{paddingTop: 100}}/>
       </div>
     );
   }

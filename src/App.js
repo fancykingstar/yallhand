@@ -4,7 +4,7 @@ import "./App.css";
 import { observer, inject } from "mobx-react";
 import { Switch, Route, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
-import { UserPortal } from "./UserPortal";
+import { UserPortal } from "./UserPortal/UserPortal";
 import { Login } from "./Login/Login";
 import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
