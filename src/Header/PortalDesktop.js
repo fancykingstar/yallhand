@@ -12,7 +12,7 @@ const PortalDesktop = (props) => {
        </div>
 
         <div style={{float: "right", paddingRight: 15, paddingTop: 6}}>
-         <Button size="mini" onClick={e => this.props.history.push("/panel/dashboard")} > Admin Panel </Button>
+         <Button size="mini" onClick={e => props.history.push("/panel/dashboard")} > Admin Panel </Button>
         </div>
         </div>
       

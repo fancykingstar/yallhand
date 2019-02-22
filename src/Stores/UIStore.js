@@ -41,7 +41,8 @@ class Store {
         onBoardUser: "today",
         onBoardAdmin: "today",
         uploadConfig: "content",
-        bundles: "active"
+        bundles: "active",
+        portalAnncSort: "Newest",
     }
     @observable
     modal = {
@@ -86,7 +87,9 @@ class Store {
         searchAnnouncements: "",
         searchAnnouncementsData: [],
         searchBundles: "",
-        searchBundlesData: []
+        searchBundlesData: [],
+        searchPortalAnncValue: "",
+        portalSearchValue: ""
         
     }
 

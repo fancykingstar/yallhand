@@ -9,6 +9,8 @@ import { Login } from "./Login/Login";
 import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
 
+import FullStory from "react-fullstory"
+
 
 
 
@@ -37,6 +39,7 @@ class AppRoute extends React.Component {
     };
     return (
       <div className="App">
+        {/* <FullStory org="JJAMV"/> */}
         {loader()}
         <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
         {/* <Switch>{RouteTraffic}</Switch> */}

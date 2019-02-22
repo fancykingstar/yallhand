@@ -30,6 +30,7 @@
     line-height: 100px;
     min-height: 30px;
     min-width: 500px;
+    margin: auto;
     display: inline-block;
     
 }

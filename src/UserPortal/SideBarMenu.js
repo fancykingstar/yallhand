@@ -1,7 +1,7 @@
 import React from "react";
 import { Menu, Icon, Responsive, Input } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
-import { NavLink, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 import "./style.css"
 
@@ -14,14 +14,12 @@ class SideBarMenu extends React.Component {
     const { ChannelStore, UIStore } = this.props;
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item name={channel.label} key={"portalmenu" + giveMeKey()} 
-        onClick={e => { this.props.history.push( "/portal" )
-        UIStore.set("sideNav", "activeChannel", channel.chanID)
-      } } />
+        onClick={e => { UIStore.set("sideNav", "activeChannel", channel.chanID) }} 
+      />
     ));
     channelList.unshift(<Menu.Item name={"All"} key={"portalmenu" + giveMeKey()} 
-      onClick={e => { this.props.history.push( "/portal" )
-      UIStore.set("sideNav", "activeChannel", "All")
-    }} />)
+      onClick={e => UIStore.set("sideNav", "activeChannel", "All") }/>
+    )
 
     return (
       <div className="PortalSideNav">
@@ -29,28 +27,13 @@ class SideBarMenu extends React.Component {
         <Menu.Item>
           <Menu.Header>
           {" "}
-            <Icon name="newspaper outline" />
+            <Icon name="feed" />
             Feed
           </Menu.Header>
           <Menu.Menu>
-          <Menu.Item disabled>Featured</Menu.Item>
+            <Menu.Item onClick={e => this.props.history.push("/portal")} name="Announcements" />
+            <Menu.Item onClick={e => this.props.history.push("/portal/learn")}>FAQs</Menu.Item>
 
-          <NavLink to="/portal" style={{ color: "rgb(45, 45, 45)" }}>
-            <Menu.Item name="Announcements" />
-            
-          </NavLink>
-          </Menu.Menu>
-        </Menu.Item>
-
-        <Menu.Item>
-    
-          <Menu.Header>
-            {" "}
-            <Icon name="info circle" />
-            Learn
-          </Menu.Header>
-          <Menu.Menu>
-            {channelList}
           </Menu.Menu>
         </Menu.Item>
 
@@ -61,38 +44,32 @@ class SideBarMenu extends React.Component {
           </Menu.Header>
 
           <Menu.Menu>
-            <Menu.Item
-              name="common"
-              //   active={activeItem === 'shared'}
-              //   onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name="recently used"
-              //   active={activeItem === 'dedicated'}
-              //   onClick={this.handleItemClick}
-            />
+            <Menu.Item >Files and URLs</Menu.Item>
+            <Menu.Item name="Staff Directory" />
           </Menu.Menu>
         </Menu.Item>
 
-        <Menu.Item>
+        
+
+
+    <Menu.Item>
           <Menu.Header>
-            <Icon name="help circle" />
-            Support
+            Channels
           </Menu.Header>
-
           <Menu.Menu>
-            <Menu.Item disabled name="email">
-              Directory
-            </Menu.Item>
-            <Menu.Item disabled name="email">
-              Get Assistance
-            </Menu.Item>
+            {channelList}
           </Menu.Menu>
         </Menu.Item>
+
+  
         {this.props.mobile?        <Menu.Item>
-      <Input className='icon' icon='search' placeholder='Search...' />
+      <Input className='icon' 
+        value={UIStore.search.portalSearchValue} 
+        onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)}
+        icon='search' 
+        placeholder='Search...' />
     </Menu.Item> : <div/>}
-      </Menu>
+</Menu>
       </div>
     );
   }
