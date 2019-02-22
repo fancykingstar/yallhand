@@ -155,7 +155,7 @@ export class UserSettings extends React.Component {
          <div style={{height: 30}}>    <ConfirmDelete deleteLabel="Deactivate" size="mini" confirm={handleDeactivate}/></div>
    
        </Segment>
-
+        <div style={{height: 100}}></div>
     
   
       </div>

@@ -5,8 +5,11 @@ import Header from "../Header/Header";
 import { SearchFrame } from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
 import { PortalSearch } from "./PortalSearch";
+import { PortalResources } from "./PortalResources";
+import { PortalDirectory } from "./PortalDirectory"
 import AnnouncementsFrame from "./AnnouncementsFrame";
 import { AnnouncementDetailFrame } from "./AnnoucementDetailFrame";
+import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
 import { CardDetailFrame } from "./CardDetailFrame";
 import { validContent } from "../SharedCalculations/ValidContent";
@@ -79,7 +82,7 @@ export class UserPortal extends React.Component {
         <div className="SideAndAction">
           <Responsive
             {...Responsive.onlyComputer}
-            fireOnMount={(e, val) => checkMobile(val.getWidth())}
+            fireOnMount={true}
             onUpdate={(e, val) => checkMobile(val.getWidth())}
           >
             <SideBarPortal mobile={false} />
@@ -100,17 +103,12 @@ export class UserPortal extends React.Component {
             ) : (
               <Switch location={this.props.location}>
                 <Route path="/portal" component={AnnouncementsFrame} exact />
-                <Route
-                  path="/portal/announcement/:id"
-                  component={AnnouncementDetailFrame}
-                  exact
-                />
+                <Route path="/portal/resources" component={PortalResources} exact />
+                <Route path="/portal/directory" component={PortalDirectory} exact />
+                <Route path="/portal/settings" component={UserSettings} exact />
+                <Route path="/portal/announcement/:id" component={AnnouncementDetailFrame} exact />
                 <Route path="/portal/learn" component={CardFrame} exact />
-                <Route
-                  path="/portal/learn-detail/:id"
-                  component={CardDetailFrame}
-                  exact
-                />
+                <Route path="/portal/learn-detail/:id" component={CardDetailFrame} exact />
               </Switch>
             )}
           </div>

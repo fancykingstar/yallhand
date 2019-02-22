@@ -6,6 +6,7 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import { withRouter } from "react-router-dom";
 import { UIStore } from "../Stores/UIStore";
 import { SortNSearch } from "../SharedUI/SortNSearch"
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("AnnouncementsStore", "UserStore")
 @observer
@@ -23,8 +24,8 @@ class AnnouncementsFrame extends React.Component {
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
     const displayFeed = anncs.map(news => (
-      <React.Fragment>
-        <Item onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
+      <React.Fragment key={"portalAnnc" + giveMeKey()}>
+        <Item  onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
         <Header
               as="h2"
