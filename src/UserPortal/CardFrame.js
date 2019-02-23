@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { UserCard } from "./UserCard";
+import UserCard from "./UserCard";
 import { SortNSearch } from "../SharedUI/SortNSearch"
 import "./style.css";
 

@@ -8,10 +8,7 @@ import { Icon, Table, Header, Button, Item } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { UploadFile } from "../SharedUI/UploadFile";
 import { AssociationSummary } from "../SharedUI/AssociationSummary"
-import {
-  initSearchObj,
-  stupidSearch
-} from "../SharedCalculations/StupidSearch";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"

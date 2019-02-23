@@ -15,7 +15,8 @@ class Store {
         "filter": this.filter,
         "content": this.content,
         "dateTimeSelect": this.dateTimeSelect,
-        "responsive": this.responsive
+        "responsive": this.responsive,
+        "portal": this.portal
     } 
 
     @observable filter = {
@@ -88,9 +89,10 @@ class Store {
         searchAnnouncementsData: [],
         searchBundles: "",
         searchBundlesData: [],
+        searchPeople: "",
+        searchPeopleData: [],
         searchPortalAnncValue: "",
         portalSearchValue: ""
-        
     }
 
     @observable
@@ -149,6 +151,10 @@ class Store {
         policyID: "",
         announcementID: "",
         variationID: ""
+    }
+
+    @observable portal = {
+        sentimentComplete: false
     }
 
     @action

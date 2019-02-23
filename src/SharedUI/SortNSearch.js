@@ -11,10 +11,10 @@ export const SortNSearch = (props) => {
 
     return(
     <div className="CardSort">
-     <div style={{float: "right"}}>  <Input icon='search' placeholder='Search...' 
+     {/* <div style={{float: "right"}}>  <Input icon='search' placeholder='Search...' 
      onChange={(e, val) => props.searchValueChange(val.value)} 
      value={props.searchValue}
-     /></div>
+     /></div> */}
      <div style={{float: "left"}}> 
   <span>
     Sort by{' '}

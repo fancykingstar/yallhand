@@ -52,6 +52,10 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 export const log = (payload) => {apiCall("/itslogs", "POST", payload)} 
 
 
+///Sentiment
+export const createSentiment = (payload) => {apiCall("/sentiments/" + accountID(), "POST", payload)} 
+
+
 
 
 ///SCHEDULE 

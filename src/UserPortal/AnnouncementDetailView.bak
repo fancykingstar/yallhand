@@ -1,0 +1,61 @@
+import React from "react"
+import "./style.css"
+import { inject, observer } from "mobx-react";
+import {  Header, Container, Image, Icon, Button, Grid} from 'semantic-ui-react'
+import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
+import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
+import { AskAQuestion } from "./AskAQuestion"
+import { Sentiment } from "./Sentiment"
+
+@inject("AnnouncementsStore", "UIStore")
+@observer
+export class AnnouncementDetailView extends React.Component {
+
+    componentDidMount() {
+        const {UIStore} = this.props
+        UIStore.set("portal", "sentimentComplete", false)
+    }
+    render() {
+        const {AnnouncementsStore} = this.props
+        const annc = AnnouncementsStore._getAnnouncement(this.props.announcementID)
+        return(
+            <div className="Announcements">
+                <Container>
+                {annc.img.length !== 0 ?  <Image rounded size="large" src={annc.img}/> : null}
+                    <Header
+                    as="h2"
+                    content={annc.label}
+                    subheader={UTCtoFriendly(annc.updated).split(",")[0]}
+                  />
+    
+                  <DraftHTMLDisplay storedState={annc.variations[0].contentRAW}/>
+                  </Container>
+                <br/>
+                <Grid>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <Sentiment
+                            type={"announcementID"}
+                            ID={annc.announcementID}
+                            variationID={annc.variations[0].variationID}
+                            />
+                        </Grid.Column>
+                        <Grid.Column>
+                            <AskAQuestion content={annc}/>
+                            </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+              
+                   
+                </div>
+                
+
+       
+
+        )
+    }
+}
+
+
+
+

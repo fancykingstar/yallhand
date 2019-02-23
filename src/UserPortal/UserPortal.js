@@ -2,16 +2,15 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { Switch, Route } from "react-router-dom";
 import Header from "../Header/Header";
-import { SearchFrame } from "./SearchFrame";
+import SearchFrame from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
-import { PortalSearch } from "./PortalSearch";
+import PortalSearchResults from "./PortalSearchResults";
 import { PortalResources } from "./PortalResources";
 import { PortalDirectory } from "./PortalDirectory"
 import AnnouncementsFrame from "./AnnouncementsFrame";
-import { AnnouncementDetailFrame } from "./AnnoucementDetailFrame";
+import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
-import { CardDetailFrame } from "./CardDetailFrame";
 import { validContent } from "../SharedCalculations/ValidContent";
 import { loadAdmin } from "../DataExchange/LoadProfile";
 import { Responsive, Transition } from "semantic-ui-react";
@@ -98,19 +97,19 @@ export class UserPortal extends React.Component {
           </Transition>
 
           <div className="ActionFrame">
-            {UIStore.search.portalSearchValue !== "" ? (
+            {/* {UIStore.search.portalSearchValue !== "" && UIStore.search.portalDisplayResults? (
               <PortalSearch />
-            ) : (
+            ) : ( */}
               <Switch location={this.props.location}>
                 <Route path="/portal" component={AnnouncementsFrame} exact />
+                <Route path="/portal/search" component={PortalSearchResults} exact />
                 <Route path="/portal/resources" component={PortalResources} exact />
                 <Route path="/portal/directory" component={PortalDirectory} exact />
                 <Route path="/portal/settings" component={UserSettings} exact />
-                <Route path="/portal/announcement/:id" component={AnnouncementDetailFrame} exact />
+                <Route path="/portal/announcement/:id" render={props => <ContentDetail {...props} mode="announcement" />} exact />
                 <Route path="/portal/learn" component={CardFrame} exact />
-                <Route path="/portal/learn-detail/:id" component={CardDetailFrame} exact />
+                <Route path="/portal/learn-detail/:id" render={props => <ContentDetail {...props} mode="policy" />} exact />
               </Switch>
-            )}
           </div>
           <Header />
           {UIStore.responsive.isMobile ? <div /> : <SearchFrame />}

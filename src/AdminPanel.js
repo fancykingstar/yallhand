@@ -54,7 +54,7 @@ export class AdminPanel extends React.Component {
       <div />
     ) : (
       <div className="SideAndAction">
-        <Responsive {...Responsive.onlyComputer} fireOnMount={(e, val) => checkMobile(val.getWidth())} onUpdate={(e, val) => checkMobile(val.getWidth())}>
+        <Responsive {...Responsive.onlyComputer} fireOnMount={true} onUpdate={(e, val) => checkMobile(val.getWidth())}>
         <SideBar />
         </Responsive>
         <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>

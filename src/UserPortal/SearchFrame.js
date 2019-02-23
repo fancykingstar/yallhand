@@ -1,27 +1,55 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { Input, Icon} from "semantic-ui-react";
+import {withRouter} from "react-router-dom"
+import { Input, Icon, Form} from "semantic-ui-react";
 import { QLogo } from "../Assets/Graphics/QLogo"
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import "./style.css";
 
-export const SearchFrame = inject("UIStore")(observer((props) => {
-  const {UIStore} = props
 
-  const handleSearch = (val) => {
-    UIStore.set("search", "portalSearchValue", val)
+@inject("UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore")
+@observer
+class SearchFrame extends React.Component {
+  componentDidMount() {
+    const { AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, AccountStore } = this.props;
+    if (UIStore.search.searchAnnouncementsData.length === 0) {
+      UIStore.set("search", "searchAnnouncementsData", initSearchObj( AnnouncementsStore.allAnnouncements, "announcementID" ) );
+    }
+    if (UIStore.search.searchPoliciesData.length === 0) {
+        UIStore.set("search", "searchPoliciesData", initSearchObj( PoliciesStore.allPolicies, "policyID" ) );
+      }
+    if (UIStore.search.searchUrlsData.length === 0) {
+      UIStore.set("search", "searchUrlsData", initSearchObj( ResourcesStore.urlResources, "resourceID" ) );
+    }
+    if (UIStore.search.searchFilesData.length === 0) {
+      UIStore.set("search", "searchFilesData", initSearchObj( ResourcesStore.fileResources, "resourceID" ) );
+    }
+    if (UIStore.search.searchPeopleData.length === 0) {
+      UIStore.set("search", "searchPeopleData", initSearchObj( AccountStore.allUsers, "userID" ) );
+    }
   }
+  render(){
+  const {UIStore} = this.props
+
+ 
+
+
 
   return (
     <div className="SearchFrame">
       <div className="SearchControls">
-        <Input 
+
+      <Form onSubmit={() => this.props.history.push("/portal/search")}>
+      <Form.Input 
         value={UIStore.search.portalSearchValue}
-        onChange={(e, val) => handleSearch(val.value)} 
+        onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)} 
         fluid icon 
         placeholder="Search...">
           <input />
           <Icon name="search" />
-        </Input>
+        </Form.Input>
+      </Form>
+   
       </div>
       <div className="LoginQuadrance">
       <p style={{fontSize: ".2em", opacity: "0.8", marginBottom: 0}}>powered by</p>
@@ -34,5 +62,6 @@ export const SearchFrame = inject("UIStore")(observer((props) => {
   
     </div>
   );
-}))
- 
+}}
+
+export default withRouter(SearchFrame)

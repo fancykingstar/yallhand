@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Icon, Input, Transition } from "semantic-ui-react";
+import { Menu, Icon, Form, Transition } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
@@ -101,11 +101,16 @@ class SideBarMenu extends React.Component {
         </Transition>
   
         {this.props.mobile?        <Menu.Item>
-      <Input className='icon' 
+      <Form onSubmit={e => {
+        this.props.history.push("/portal/search")
+        UIStore.set("responsive", "mobileNav", false)
+      }}>
+      <Form.Input className='icon' 
         value={UIStore.search.portalSearchValue} 
         onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)}
         icon='search' 
         placeholder='Search...' />
+        </Form>
     </Menu.Item> : <div/>}
 </Menu>
       </div>

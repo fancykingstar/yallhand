@@ -62,9 +62,9 @@ export class PortalResources extends React.Component {
 
   const resources = allResources.map(resource => (
       <Table.Row key={"portalResources" + giveMeKey()}>
-        <Table.Cell>{resource.label}</Table.Cell>       
+        <Table.Cell>{resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFile(resource.S3Key.split("gramercy/")[1], resource.label)}>{resource.label}</p> : <a href={resource.prefix + resource.url} target="_blank">{resource.label}</a>}</Table.Cell>       
             <Table.Cell>
-            {resource.type === undefined? "File" :  "URL"}
+            {resource.type !== undefined? <span>File <Icon name="file outline"/></span> :  <span>URL <Icon name="linkify"/></span>}
             </Table.Cell> 
         <Table.Cell >{UTCtoFriendly(resource.updated)}</Table.Cell>
       </Table.Row>
