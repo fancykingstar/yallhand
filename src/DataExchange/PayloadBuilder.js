@@ -215,7 +215,7 @@ export const urlResource = (obj, id=null) => {
 
 
 ///FILE RESOURCES
-export const fileResource = () => {
+export const fileResource = (assoc=null) => {
   const buildObj = {
   resourceID: generateID(),
   associations: DataEntryStore.fileForUpload.associations,
@@ -228,6 +228,7 @@ export const fileResource = () => {
   teamID: DataEntryStore.fileForUpload.teamID,
   tags: DataEntryStore.fileForUpload.tagID === "none" ? [] : [DataEntryStore.fileForUpload.tagID]
   };
+  assoc !== null? buildObj.associations = assoc : null
   return _.extend({}, base(), buildObj)
 }
 
@@ -246,6 +247,14 @@ export const fileResourceEdit = () => {
     buildObj.type = DataEntryStore.fileForUpload.type,
     buildObj.size = DataEntryStore.fileForUpload.file.size 
   }
+  return _.extend({}, base(), buildObj)
+}
+
+export const fileResourceAssociate = (resourceID, associations) => {
+  const buildObj = {
+    resourceID,
+    associations,
+  };
   return _.extend({}, base(), buildObj)
 }
 

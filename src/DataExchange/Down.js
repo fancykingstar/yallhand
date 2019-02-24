@@ -7,7 +7,15 @@ import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import { AccountStore } from "../Stores/AccountStore"
 import { EmailStore } from "../Stores/EmailStore"
 import { ScheduleStore } from "../Stores/ScheduleStore"
+import { validContent} from "../SharedCalculations/ValidContent"
 import {apiCall_noBody} from "./Fetch"
+
+//get team, tag, channel limits
+const contentFilter = UserStore.previewTeam !== "" || UserStore.previewTag !== ""
+
+//content filter
+//channel filter
+//resource filter
 
 export const account = async (accountID) => 
      await apiCall_noBody("accounts/" + accountID, "GET").then((result) => AccountStore.loadAccount(result[0]))
@@ -32,10 +40,12 @@ export const tags = async (accountID) =>
      await apiCall_noBody("tags/" + accountID, "GET").then((result) => TeamStore.loadTags(result, AccountStore.allUsers))
 
 export const policies = async (accountID) => 
-     await apiCall_noBody("policies/" + accountID, "GET").then((result) => PoliciesStore.loadPolicies(result))
+     await apiCall_noBody("policies/" + accountID, "GET").then((result) => 
+     PoliciesStore.loadPolicies(contentFilter? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const announcements = async (accountID) => 
-     await apiCall_noBody("announcements/" + accountID, "GET").then((result) => AnnouncementsStore.loadAnnouncements(result))
+     await apiCall_noBody("announcements/" + accountID, "GET").then((result) => 
+     AnnouncementsStore.loadAnnouncements(contentFilter? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const files = async (accountID) => 
      await apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(result))

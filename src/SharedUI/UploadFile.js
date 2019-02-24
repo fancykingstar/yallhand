@@ -25,7 +25,7 @@ export class UploadFile extends React.Component {
               if(result !== null){
                 DataEntryStore.set("fileForUpload", "url", result.Location)
                 DataEntryStore.set("fileForUpload", "S3Key", result.Key)
-                console.log(result)
+               
                 // console.log(result)
                    //if sucess, add/update to file DB record
                   //if success, patch policy

@@ -1,24 +1,25 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import {
-  Modal,
-  Form,
-  Header,
-  Message,
-  Dropdown,
-  Input,
-  Transition
-} from "semantic-ui-react";
+import { Modal, Form, Header, Message, Dropdown, Input, Transition, Button, Icon } from "semantic-ui-react";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { UploadConfig } from "../SharedUI/UploadConfig";
+import { URLsSearch} from "../SharedUI/URLsSearch"
 
-@inject("UIStore", "DataEntryStore")
+@inject("UIStore", "DataEntryStore", "ResourcesStore")
 @observer
 export class UploadURL extends React.Component {
   render() {
-    const { UIStore } = this.props;
-    const { DataEntryStore } = this.props;
+    const { UIStore, DataEntryStore, ResourcesStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.urlForUpload.label, 48);
+
+    const addFromResources = (val) => {
+      const resource = ResourcesStore._getUrl(val)
+      DataEntryStore.set("urlForUpload", "url", resource.url)
+      DataEntryStore.set("urlForUpload", "prefix", resource.prefix)
+      DataEntryStore.set("urlForUpload", "resourceID", resource.resourceID)
+      DataEntryStore.set("urlForUpload", "label", resource.label)
+      this.props.onSubmit("create")
+    }
 
     const handleSubmit = type => {
       this.props.onSubmit(type);
@@ -174,7 +175,7 @@ export class UploadURL extends React.Component {
 
                 {useConfig}
 
-                <Form.Group>
+                <Form.Group style={{float: "left"}}>
                   {CreateOrUpdate}
                   <Form.Button
                     onClick={e => UIStore.set("modal", "uploadURL", false)}
@@ -182,7 +183,24 @@ export class UploadURL extends React.Component {
                     Cancel
                   </Form.Button>
                 </Form.Group>
+                <Form.Group style={{float: "right"}}>
+                <Button icon onClick={e => UIStore.set("modal", "uploadURLResource", true)}>
+                      <Icon name='cubes' />
+                       </Button>
+
+                  <Modal open={UIStore.modal.uploadURLResource} closeIcon onClose={e => UIStore.set("modal", "uploadURLResource", false)} size="tiny">
+                       <Modal.Header>Search & Add From Resources...</Modal.Header>
+                       <Modal.Content><URLsSearch output={val => {
+                         UIStore.set("modal", "uploadURLResource", false)
+                         UIStore.set("modal", "uploadURL", false)
+                         addFromResources(val.value)
+                       }}/> </Modal.Content>
+                </Modal>
+                
+          
+                </Form.Group>
               </Form>
+           
               <Message error attached hidden={newLabelStatus.messageHide}>
                 {newLabelStatus.message}
               </Message>

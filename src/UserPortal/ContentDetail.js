@@ -1,7 +1,7 @@
 import React from "react"
 import "./style.css"
 import { inject, observer } from "mobx-react";
-import {  Header, Container, Image, Icon, Button, Grid} from 'semantic-ui-react'
+import {  Header, Container, Image, Icon, Button, Grid, Item } from 'semantic-ui-react'
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
@@ -39,6 +39,19 @@ export class ContentDetail extends React.Component {
                   </Container>
                 <br/>
                 <Grid>
+                    <Grid.Row columns={1}>
+                    <Grid.Column>
+                       <Item.Group>
+                           <Item>
+                               <Item.Content>
+                               <Item.Header>File{" "}</Item.Header>
+                               <Item.Meta><Icon name="cloud download"></Icon></Item.Meta>
+                               </Item.Content>
+                             
+                           </Item>
+                       </Item.Group>
+                       </Grid.Column>
+                    </Grid.Row>
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <Sentiment

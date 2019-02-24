@@ -1,14 +1,17 @@
 import { observable, action } from "mobx";
-
+import {addCalculatedAttributes} from "../SharedCalculations/ContentCalculatedAttributes"
 class Store {
   @observable
   allAnnoucements = [];
 
   @action
-    loadAnnoucements() {
-    const Annoucements = require("../MockData/Annoucements.json");
-    this.allAnnoucements  = Annoucements
-  };
+  loadAnnouncements(val) {
+    return new Promise((resolve, reject) => {
+    this.allAnnoucements = addCalculatedAttributes(val);
+      resolve(true)
+    })
+
+  }
 
 
   

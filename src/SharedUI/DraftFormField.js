@@ -77,7 +77,7 @@ export class DraftFormField extends Component {
   removeLink = this._removeLink.bind(this);
 
   _confirmLink(e) {
-    e.preventDefault();
+    // e.preventDefault();
     const { editorState } = DataEntryStore.draft;
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
@@ -86,7 +86,10 @@ export class DraftFormField extends Component {
       {
         url:
           DataEntryStore.urlForUpload.prefix + DataEntryStore.urlForUpload.url,
-        resourceID: Date.now()
+        _resourceID: DataEntryStore.urlForUpload.resourceID,
+        _url: DataEntryStore.urlForUpload.url,
+        _prefix: DataEntryStore.urlForUpload.prefix,
+        _label: DataEntryStore.urlForUpload.label
       }
     );
    
@@ -136,6 +139,20 @@ export class DraftFormField extends Component {
     const selectedText = currentBlock.getText().slice(start, end);
     return selectedText;
   };
+
+  isLinkSelected = () => {
+    // This block is the verbose DraftJS bullshit required to find out if a link has been selected
+    let selection = DataEntryStore.draft.editorState.getSelection();
+    const contentState = DataEntryStore.draft.editorState.getCurrentContent();
+    const startKey = selection.getStartKey();
+    const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
+    const linkKey = blockWithLinkAtBeginning.getEntityAt(selection.getStartOffset());
+    return linkKey !== null
+    // const linkInstance = contentState.getEntity(linkKey);
+    // const {url} = linkInstance.getData();
+    
+   
+  }
 
   editorStateChanged = (newEditorState: EditorState) => {
     DataEntryStore.setDraft("editorState", newEditorState);
@@ -237,18 +254,23 @@ export class DraftFormField extends Component {
     // console.log(Popover.defaultProps.isOpen);
     // const togglePopover = () => Popover.openUp;
     const urlButtonDisabled = this.getSelectedText() === "";
+    const linkSelected = this.isLinkSelected()
+
     const openURLModal = e => {
       e.preventDefault();
-      UIStore.updateModal("uploadURL", !UIStore.modal.uploadURL);
-      DataEntryStore.seturlForUpload("label", this.getSelectedText());
+      UIStore.set("modal", "uploadURL", !UIStore.modal.uploadURL);
+      DataEntryStore.set("urlForUpload", "label", this.getSelectedText());
     };
     const addURL = this.props.includeURL ? (
       <React.Fragment>
         {" "}
         <Button
-          disabled={urlButtonDisabled}
+          disabled={urlButtonDisabled || linkSelected}
           className="linkbuttons"
-          onClick={e => openURLModal(e)}
+          onClick={e => {
+            DataEntryStore.reset("urlForUpload", {prefix: "https://", associations: {"policies": [], "announcements": []}})
+            openURLModal(e)
+          }}
           icon
         >
           <Icon name="chain" />
@@ -352,11 +374,16 @@ export class DraftFormField extends Component {
             EmojiOne
           </a>{" "}
         </div> */}
+
         <UploadURL
           open={UIStore.modal.uploadURL}
           selection={this.getSelectedText()}
           onSubmit={this.confirmLink}
         />
+
+        
+
+
       </div>
     );
   }

@@ -222,16 +222,16 @@ export const createFile = (payload) => {
         true,{"event": "create", "type":"file"}
     )
 }
-export const modifyFile = (payload) => {
+export const modifyFile = (payload, toast=true) => {
     processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
-        true,{"event": "update", "type":"file"}
+        true,{"event": "update", "type":"file"}, toast
     )
 }
 export const deleteFileresource = (resourceID) => {
     processTemplate(false, "fileresources/" + resourceID, "DELETE", {}, "files", 
     "Selected file deleted 👋", 
-    true,{"event": "delete", "type":"file"})
+    true,{"event": "delete", "type":"file"}), false
 }
 
 

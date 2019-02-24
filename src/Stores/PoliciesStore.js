@@ -5,7 +5,7 @@ import _ from "lodash";
 
 class Store {
   @observable allPolicies = [];
-  @observable userAvailablePolicies = [];
+  // @observable userAvailablePolicies = [];
   // @observable channelFilter = { label: "All", chanID: null };
   // @observable cardFilters = {cardFilterPublished: true, cardFilterDrafts: true, cardFilterArchived: false};
   // @observable cardSort = "Newest";
@@ -97,9 +97,9 @@ class Store {
     return allPolicies.join(" ");
   }
 
-  loadUserPortalPolicies(val) {
-    this.userAvailablePolicies = val;
-  }
+  // loadUserPortalPolicies(val) {
+  //   this.userAvailablePolicies = val;
+  // }
 
   _toggleGlobalVariation(currentObj) {
     const current = Object.assign({}, this._getPolicy(currentObj))

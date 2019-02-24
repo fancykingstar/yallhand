@@ -56,14 +56,37 @@ export class NewEditVariation extends React.Component {
   render() {
     const { DataEntryStore, UIStore, PoliciesStore, AnnouncementsStore } = this.props;
 
+    const updateLinks = () => {
+      const links = _.isEmpty(DataEntryStore.draftContentRAW.entityMap)? [] 
+      : Object.values(DataEntryStore.draftContentRAW.entityMap)
+        .filter(obj => obj.type === "LINK")
+        .map(obj => obj.data)
+
+      if(links.length > 0){
+        //get each link
+          //is link new?
+            //if yes, build with first association
+          //is link not new
+            //if not add
+          
+      }  
+
+    }
+
+    // _label: "www.google.com"
+    // _prefix: "https://"
+    // _resourceID: "JS7O04BE"
+    // _url: "www.google.com"
+
     const changeStage = (stage) => {
-      DataEntryStore.set("content", "stage", stage)
-      if(DataEntryStore.content.isNew){
-        this.mode === "policy"? createPolicy(content(this.mode)): createAnnouncement(content(this.mode))
-      }
-      else{
-        this.mode === "policy"? modifyPolicy(contentEdit(this.mode)): modifyAnnouncement(contentEdit(this.mode))
-      }
+      // DataEntryStore.set("content", "stage", stage)
+      updateLinks()
+      // if(DataEntryStore.content.isNew){
+      //   this.mode === "policy"? createPolicy(content(this.mode)): createAnnouncement(content(this.mode))
+      // }
+      // else{
+      //   this.mode === "policy"? modifyPolicy(contentEdit(this.mode)): modifyAnnouncement(contentEdit(this.mode))
+      // }
     }
     
     const newEditVariation =
@@ -79,9 +102,8 @@ export class NewEditVariation extends React.Component {
           <VariationConfig
             mode={this.mode}
           />
-          <VariationContent
-          //   mode={mode} currentObj={currentObj} currentObjVariation={currentVari}
-          />
+          <VariationContent mode={this.mode}/>
+        
           {/* <HoldLeave
             value={DataEntryStore.isEntryUpdated}
           /> */}

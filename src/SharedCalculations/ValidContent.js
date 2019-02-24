@@ -1,5 +1,8 @@
 export const validContent = (allItems, teamPath, tagPath) => {
+
   let displayItems = [];
+
+  //Returns true if NO SELECTED TAGS or MATCHED TAG EXISTS IN TAG PATH
   const validTags = (alltags) => {
     let tagStatus = false;
     if (alltags.length === 0) {
@@ -16,62 +19,59 @@ export const validContent = (allItems, teamPath, tagPath) => {
     }
     return tagStatus
 };
-  const addPolicy = (poli, vari) => {
-    if (validTags(vari.tags) === true) {
+  //IF VALIDTAGS than ADD NEW POLICY WITH VARIATION TO DISPLAY ITEMS
+  const addContent = (poli, vari) => {
+    if (validTags(vari.tags)) {
         let updatedPolicy = poli;
         updatedPolicy["variations"] = [vari];
         displayItems.push(updatedPolicy);
     } 
   };
+
+  //RETURNS BOOL & (IF THERE IS) DEEPEST MATCH OF VALUE AND PATH
   const checkPath = (val, path) => {
+    let active = true
     let retrievedValue = false;
     let index = 2;
-    while (retrievedValue === false && index > -1) {
+    while (retrievedValue === false && index > -1 && active) {
       if (path[index] === val) {
         retrievedValue = true;
-        index = index - 3; //CHECK THIS
+        active = false;
       }
-      index--;
+      else{index--}
     }
     return { status: retrievedValue, depth: index };
   };
-  allItems.forEach(policy => {
-    if (policy.variations.length > 0) {
+
+
+  allItems.forEach(content => {
       if (
-        policy.variations.length === 1 &&
-        policy.variations[0].teamID === "global"
-      ) {
-        addPolicy(policy, policy.variations[0])
-      } else {
-        let allTeamIDs = policy.variations.map(variation => variation.teamID);
-        allTeamIDs = allTeamIDs.filter(id => {
-          let validID = checkPath(id, teamPath);
-          return validID["status"];
-        });
+        content.variations.length === 1 &&
+        content.variations[0].teamID === "global"
+      ) { addContent(content, content.variations[0]) } 
+
+      else {
+        let allTeamIDs = content.variations.map(variation => variation.teamID);
+        allTeamIDs = allTeamIDs.filter(id => { 
+          let validID = checkPath(id, teamPath); 
+          return validID["status"]; });
+
         if (allTeamIDs.length === 0) {
-          let globalAvail = policy.variations.filter(
-            vari => vari.type === "global"
-          );
-          globalAvail = globalAvail.length > 0;
+          let globalAvail = content.variations.filter( vari => vari.type === "global" ).length > 0
           if (globalAvail) {
-            let globalVariation = policy.variations.filter(
-              variation => variation.type === "global"
-            )[0];
-            addPolicy(policy, globalVariation);
+            let globalVariation = content.variations.filter( variation => variation.type === "global" )[0];
+            addContent(content, globalVariation);
           }
         } else {
           if (allTeamIDs.length === 1) {
-            addPolicy(
-              policy,
-              policy.variations.filter(vari => vari.teamID === allTeamIDs[0])[0]
-            );
+            addContent( content, content.variations.filter(vari => vari.teamID === allTeamIDs[0])[0] );
           } else {
             let i = 2;
             while (i > -1) {
               if (allTeamIDs.includes(teamPath[i])) {
-                addPolicy(
-                  policy,
-                  policy.variations.filter(
+                addContent(
+                  content,
+                  content.variations.filter(
                     vari => vari.teamID === teamPath[i]
                   )[0]
                 );
@@ -83,7 +83,6 @@ export const validContent = (allItems, teamPath, tagPath) => {
           }
         }
       }
-    }
   });
   return displayItems;
 };

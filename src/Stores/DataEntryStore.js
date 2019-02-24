@@ -163,7 +163,8 @@ class Store {
     prefix: "https://",
     teamID: "",
     tagID: "",
-    associations: {"policies": [], "announcements": []}
+    associations: {"policies": [], "announcements": []},
+    resourceID: ""
   };
 
   @observable search = {

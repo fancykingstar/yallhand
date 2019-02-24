@@ -21,6 +21,14 @@ class Store {
       resolve(true)
   }) 
   }; 
+
+  _getFile(ID) {
+    return Object.assign({}, this.fileResources.filter(file => file.resourceID === ID)[0])
+  }
+
+  _getUrl(ID) {
+    return this.urlResources.filter(url => url.resourceID === ID)[0]
+  }
   
    matchedResources(resource_type, source_type, ID, variID) {
     const resources = {"file": this.fileResources, "url": this.urlResources}

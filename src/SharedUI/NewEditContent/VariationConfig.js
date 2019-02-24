@@ -57,7 +57,7 @@ export class VariationConfig extends React.Component {
                 onChange={(e, val) => DataEntryStore.set("content", "label", val.value)}
                 value={DataEntryStore.content.label}
                 placeholder={vari.label !== "" ? obj.label : null}
-                disabled={DataEntryStore.content.teamID === 'global' || DataEntryStore.contentmgmt.label === "" || vari.isNew}
+                disabled={DataEntryStore.content.teamID === 'global' || vari.isNew}
       
               />
             </div>

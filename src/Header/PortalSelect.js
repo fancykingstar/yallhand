@@ -1,13 +1,16 @@
 import React from "react"
 import {Dropdown} from "semantic-ui-react"
 import {TeamStore} from "../Stores/TeamStore"
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 export const PortalSelect = (props) => {
     const allTeams = Object.keys(TeamStore.teamKey)
-    const previewPortalMenuTag = (team) => TeamStore.tags.map(tag => 
-        <Dropdown.Item text={tag.label} value={tag.tagID} key={tag.tagID} onClick={e => props.teamChange(e, {'team': team, 'tag': tag.tagID})} />
+    const allTags = TeamStore.tags.slice()
+    allTags.unshift({label: "No Tag", tagID: "none"})
+    const previewPortalMenuTag = (team) => allTags.map(tag => 
+        <Dropdown.Item text={tag.label} value={tag.tagID} key={giveMeKey()} onClick={e => props.teamChange(e, {'team': team, 'tag': tag.tagID})} />
         )
-  
+
       const previewPortalMenu = allTeams.map(team =>
         
           <Dropdown.Item key={TeamStore.teamKey[team]}>

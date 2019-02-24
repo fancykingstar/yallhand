@@ -18,49 +18,18 @@ import { Responsive, Transition } from "semantic-ui-react";
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
 export class UserPortal extends React.Component {
+  componentWillUnmount(){
+    const {UIStore} = this.props
+    UIStore.reset("adminLoadingComplete")
+  }
   componentDidMount() {
-    const {
-      UIStore,
-      PoliciesStore,
-      UserStore,
-      AnnouncementsStore
-    } = this.props;
+    const { UIStore, PoliciesStore, UserStore, AnnouncementsStore } = this.props;
     if (!UIStore._adminLoadingComplete) {
       loadAdmin();
-    } else {
-      console.log(
-        "policies user",
-        JSON.stringify(
-          validContent(
-            PoliciesStore.allPolicies,
-            UserStore.previewTeamPath,
-            UserStore.previewTagPath
-          )
-        )
-      );
-      console.log(
-        "announcements user",
-        validContent(
-          AnnouncementsStore.allAnnouncements,
-          UserStore.previewTeamPath,
-          UserStore.previewTagPath
-        )
-      );
-      PoliciesStore.loadPolicies(
-        validContent(
-          PoliciesStore.allPolicies,
-          UserStore.previewTeamPath,
-          UserStore.previewTagPath
-        )
-      );
-      AnnouncementsStore.loadAnnouncements(
-        validContent(
-          AnnouncementsStore.allAnnouncements,
-          UserStore.previewTeamPath,
-          UserStore.previewTagPath
-        )
-      );
     }
+    const onlyPublished = (allContent) => allContent.filter(item => item.variations[0].stage === "published")
+    AnnouncementsStore.loadAnnouncements(onlyPublished(AnnouncementsStore.allAnnouncements))
+    PoliciesStore.loadPolicies(onlyPublished(PoliciesStore.allPolicies))
   }
 
   render() {

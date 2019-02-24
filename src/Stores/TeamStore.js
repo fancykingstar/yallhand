@@ -104,6 +104,13 @@ class Store {
     //outputs {0: team, 1: sub-team/tag, 2:sub-team/tag of sub-team/tag}
 
     let teamPath = { 0: "", 1: "", 2: "" };
+    if(type === "team" && id === "global"){
+      return { 0: "", 1: "", 2: "" }
+    }
+    else if(type === "tag" && id === "none"){
+      return { 0: "", 1: "", 2: "" }
+    }
+    else {
     let currentDepth =
       type === "team"
         ? this.structure.filter(team => team.teamID === id)[0].depth
@@ -126,7 +133,7 @@ class Store {
         buildDepth();
       }
       return teamPath;
-    }
+    }}
   }
   _getParent(mode, id) {
       let toreturn = ""
