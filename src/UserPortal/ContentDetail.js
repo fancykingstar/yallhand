@@ -2,38 +2,43 @@ import React from "react"
 import "./style.css"
 import { inject, observer } from "mobx-react";
 import {  Header, Container, Image, Icon, Button, Grid, Item } from 'semantic-ui-react'
-import {S3Download} from "../DataExchange/S3Download"
+
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
 import BackButton from "../SharedUI/BackButton"
+import {downloadFilePortal} from "../DataExchange/DownloadFile"
+
+import { log } from "../DataExchange/Up"
+import { ItsLog } from "../DataExchange/PayloadBuilder"
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore")
 @observer
 export class ContentDetail extends React.Component {
 
     componentDidMount() {
-        const {UIStore} = this.props
+        const {UIStore, AnnouncementsStore, PoliciesStore} = this.props
+        const content = this.props.mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
+        : PoliciesStore._getPolicy(this.props.match.params.id)
+
         UIStore.set("portal", "sentimentComplete", false)
+        log(ItsLog(false, {"type": this.props.mode, "id": this.props.match.params.id, "variation": content.variations[0].variationID}))
     }
 
     render() {
         const {AnnouncementsStore, PoliciesStore, ResourcesStore} = this.props
-
-        const downloadFile = (S3Key, label) => {
-            const ext = "." + S3Key.split(".")[1]
-            S3Download("quadrance-files/gramercy", S3Key, label, ext)
-         }
         
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
         const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
+        // console.log("file", mode, content[mode + "ID"], content.variations[0].variationID)
         const displayFiles = fileResources.map(file =>
-            <Item>
-                <Item.Content onClick={e => downloadFile(file.S3Key.split("gramercy/")[1], file.label)}>
+            <Item key={"contentResource" + giveMeKey()}>
+                <Item.Content onClick={e => downloadFilePortal(file.S3Key.split("gramercy/")[1], file.label, file.resourceID)}>
                 <Item.Header as="a">{file.label}{" "}</Item.Header>
                 <Item.Meta><Icon name="cloud download"></Icon></Item.Meta>
                 </Item.Content>

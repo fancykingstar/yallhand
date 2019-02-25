@@ -52,6 +52,9 @@ export const files = async (accountID) =>
 export const urls = async (accountID) => 
      await apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(result)) 
 
+export const logs = async (accountID) => 
+     await apiCall_noBody("itslogs/" + accountID, "GET").then((result) => AccountStore.loadLogs(result.filter(log => !log.isAction))) 
+
 export const bundles = async (accountID) => 
      await apiCall_noBody("emailbundles/" + accountID, "GET").then((result) => EmailStore.loadBundles(result))
 

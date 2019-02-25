@@ -4,12 +4,10 @@ class Store {
       keys = {
       "account": this.account
     }
-    @observable
-    account = {}
-
-    @observable
-    allUsers = []
-
+    
+    @observable account = {}
+    @observable allUsers = []
+    @observable logs = []
 
     @action
     set(target, key, val){
@@ -63,6 +61,9 @@ class Store {
       this.allUsers.length === 0 ? reject(false) : resolve(true)
 }) 
   }
+    loadLogs(allLogs) {
+      this.logs = allLogs
+    }
 
     _getUsersSelectOptions() {
         return this.allUsers.map(user => ({"text": user.displayName_full, "value": user.userID}))

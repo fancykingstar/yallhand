@@ -38,12 +38,14 @@ class Store {
     @observable
     dropdown = {
         policySort: "Newest",
+        announcementSort: "Newest",
         reviewAlerts: "recur",
         onBoardUser: "today",
         onBoardAdmin: "today",
         uploadConfig: "content",
         bundles: "active",
         portalAnncSort: "Newest",
+        portalPolicySort: "Newest"
     }
     @observable
     modal = {
@@ -117,7 +119,8 @@ class Store {
     menuItem = {
         teamFrame: "onboard",
         resourcesFrame: "URL",
-        emailFrame: "queue"
+        emailFrame: "queue",
+        analyticsHeader: "announcements"
     }
 
     @observable
@@ -145,7 +148,8 @@ class Store {
         announcements: false,
         bundles: false,
         campaigns: false,
-        scheduled: false
+        scheduled: false,
+        logs: false
     }
 
     @observable sideNav = {

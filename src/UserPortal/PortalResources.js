@@ -14,8 +14,11 @@ import {
 } from "../SharedCalculations/StupidSearch";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
+import { downloadFilePortal } from "../DataExchange/DownloadFile"
 import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
 import { createFile, modifyFile, deleteFileresource } from "../DataExchange/Up";
+import { log } from "../DataExchange/Up"
+import { ItsLog } from "../DataExchange/PayloadBuilder"
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
 @observer
@@ -41,10 +44,10 @@ export class PortalResources extends React.Component {
   const getIcon = (filetype) => {return FileTypeIcons[filetype] }
 
   
- const downloadFile = (S3Key, label) => {
-    const ext = "." + S3Key.split(".")[1]
-    S3Download("quadrance-files/gramercy", S3Key, label, ext)
- }
+//  const downloadFile = (S3Key, label) => {
+//     const ext = "." + S3Key.split(".")[1]
+//     S3Download("quadrance-files/gramercy", S3Key, label, ext)
+//  }
 
 //   const filteredDisplay = () => {
 //     if (UIStore.search.searchFiles !== "") {
@@ -62,7 +65,7 @@ export class PortalResources extends React.Component {
 
   const resources = allResources.map(resource => (
       <Table.Row key={"portalResources" + giveMeKey()}>
-        <Table.Cell>{resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFile(resource.S3Key.split("gramercy/")[1], resource.label)}>{resource.label}</p> : <a href={resource.prefix + resource.url} target="_blank">{resource.label}</a>}</Table.Cell>       
+        <Table.Cell>{resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFilePortal(resource.S3Key.split("gramercy/")[1], resource.label, resource.resourceID)}>{resource.label}</p> : <a href={resource.prefix + resource.url} onClick={e => log(ItsLog(false, {"type": "url", "id": resource.resourceID, "variation": ""}))} target="_blank">{resource.label}</a>}</Table.Cell>       
             <Table.Cell>
             {resource.type !== undefined? <span>File <Icon name="file outline"/></span> :  <span>URL <Icon name="linkify"/></span>}
             </Table.Cell> 

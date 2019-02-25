@@ -1,7 +1,8 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { Completed } from "./Completed"
 import {Header, Segment, Icon} from "semantic-ui-react"
+import { Completed } from "./Completed"
+import {Views} from "./Views"
 
 @inject("UIStore")
 @observer
@@ -20,6 +21,8 @@ export class AnalyticsFrame extends React.Component {
         <Header as="h3"> <Icon name="mail" />Email Campaigns</Header>
         <Completed />
         </Segment>
+        <br/>
+         <Views/>
         
       </div>
     );

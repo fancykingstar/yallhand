@@ -4,8 +4,11 @@ import { withRouter } from "react-router-dom"
 import {Card, Image, Icon, Header, Modal, Button, Item} from "semantic-ui-react"
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import {S3Download} from "../DataExchange/S3Download"
+import { downloadFilePortal } from "../DataExchange/DownloadFile"
 import {PortalSearchLogo} from "./PortalSearchLogo"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import { log } from "../DataExchange/Up"
+import { ItsLog } from "../DataExchange/PayloadBuilder"
 
 @inject("UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore")
 @observer
@@ -13,10 +16,10 @@ class PortalSearchResults extends React.Component {
     render(){
     const {AnnouncementsStore, PoliciesStore, UIStore, ResourcesStore, AccountStore} = this.props
     
-    const downloadFile = (S3Key, label) => {
-        const ext = "." + S3Key.split(".")[1]
-        S3Download("quadrance-files/gramercy", S3Key, label, ext)
-     }
+    // const downloadFile = (S3Key, label) => {
+    //     const ext = "." + S3Key.split(".")[1]
+    //     S3Download("quadrance-files/gramercy", S3Key, label, ext)
+    //  }
 
     const filteredAnnc = () => {
         if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchAnnouncementsData, UIStore.search.portalSearchValue );
@@ -77,7 +80,10 @@ class PortalSearchResults extends React.Component {
             <Item key={"searchres" + giveMeKey() }>
                 <Item.Content>
                     <Item.Header>
-                    {resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFile(resource.S3Key.split("gramercy/")[1], resource.label)}>{resource.label}</p> : <a href={resource.prefix + resource.url} target="_blank">{resource.label}</a>}
+                    {resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFilePortal(resource.S3Key.split("gramercy/")[1], resource.label, resource.resourceID)}>{resource.label}</p> 
+                    : <a 
+                    onClick={e => log(ItsLog(false, {"type": "url", "id": resource.resourceID, "variation": ""}))}
+                    href={resource.prefix + resource.url} target="_blank">{resource.label}</a>}
                     </Item.Header>
                 </Item.Content>
             </Item>

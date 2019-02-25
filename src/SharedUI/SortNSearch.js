@@ -8,19 +8,27 @@ const options = [
 ]
 
 export const SortNSearch = (props) => {
+    const includeSearch = props.useSearch === undefined? <div/>:
+    <div style={{float: "right"}}>  
+      <Input icon='search' placeholder='Search...' 
+      onChange={(e, val) => props.searchValueChange(val.value)} 
+      value={props.searchValue}
+      />
+     </div> 
 
     return(
     <div className="CardSort">
-     {/* <div style={{float: "right"}}>  <Input icon='search' placeholder='Search...' 
-     onChange={(e, val) => props.searchValueChange(val.value)} 
-     value={props.searchValue}
-     /></div> */}
+        {includeSearch}     
      <div style={{float: "left"}}> 
-  <span>
-    Sort by{' '}
-    <Dropdown inline options={options} defaultValue={options[0].value} onChange= {(e, {value}) => props.dropdownValueChange(value)} />
-   
-  </span></div>
+    <span>
+      Sort by{' '}
+      <Dropdown 
+      inline options={options} 
+      defaultValue={options[0].value} 
+      onChange= {(e, {value}) => props.dropdownValueChange(value)} />
+    
+    </span>
+  </div>
 
   </div>
     )}

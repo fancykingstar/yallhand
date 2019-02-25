@@ -2,10 +2,7 @@ import React from 'react';
 import {inject, observer} from "mobx-react"
 import Card from './Card'
 import CreateContent from "../SharedUI/ManageContent/CreateContent"
-import {
-    initSearchObj,
-    stupidSearch
-  } from "../SharedCalculations/StupidSearch";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import './style.css'
 
 @inject("PoliciesStore", "UIStore")

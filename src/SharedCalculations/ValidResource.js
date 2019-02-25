@@ -40,13 +40,13 @@ const checkValid = (res) => {
         let valid = false
         res.associations.policies.forEach(policy => {
             let polsmatched = PoliciesStore.allPolicies.filter(i => i.policyID === policy.policyID)
-            if(polsmatched.length === 1 && polsmatched[0].variations[0].variationID === policy.variationID){
+            if(polsmatched.length === 1 && policy.variations.includes(polsmatched[0].variations[0].variationID)){
                 valid = true
             }
         })
         res.associations.announcements.forEach(announcement => {
             let anncsmatched = AnnouncementsStore.allAnnouncements.filter(i => i.announcementID === announcement.announcementID)
-            if(anncsmatched.length === 1 && anncsmatched[0].variations[0].variationID === announcement.variationID){
+            if(anncsmatched.length === 1 && announcement.variations.includes(anncsmatched[0].variations[0].variationID)){
                 valid = true
             }
         })

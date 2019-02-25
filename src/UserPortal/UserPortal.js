@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import Header from "../Header/Header";
 import SearchFrame from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
@@ -16,7 +16,7 @@ import { Responsive, Transition } from "semantic-ui-react";
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
-export class UserPortal extends React.Component {
+class UserPortal extends React.Component {
   componentWillUnmount(){
     const {UIStore} = this.props
     UIStore.reset("adminLoadingComplete")
@@ -24,7 +24,11 @@ export class UserPortal extends React.Component {
   componentDidMount() {
     const { UIStore, PoliciesStore, UserStore, AnnouncementsStore } = this.props;
       UIStore.reset("adminLoadingComplete")
-      loadAdmin();
+      if(UserStore.previewTag === "" && UserStore.previewTeam === ""){
+        this.props.history.push("/panel/dashboard")
+      }
+      else{loadAdmin();}
+      
   }
 
   render() {
@@ -85,3 +89,5 @@ export class UserPortal extends React.Component {
     return <React.Fragment>{userPortal}</React.Fragment>;
   }
 }
+
+export default withRouter(UserPortal)

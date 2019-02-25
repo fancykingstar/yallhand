@@ -11,7 +11,14 @@ class SideBarMenu extends React.Component {
 
   componentDidMount() {
     const {UIStore} = this.props
-    UIStore.set("sideNav", "activePrimary", "announcements")
+    const location = this.props.location.pathname
+    if(location.includes("portal/learn-detail/")){UIStore.set("sideNav", "activePrimary", "policies")}
+    else if(location.includes("/portal/learn")){UIStore.set("sideNav", "activePrimary", "policies")}
+    else if(location.includes("/portal/announcement/")){UIStore.set("sideNav", "activePrimary", "announcements")}
+    else if(location.includes("/portal/resources")){UIStore.set("sideNav", "activePrimary", "resources")}
+    else if(location.includes("/portal/directory")){UIStore.set("sideNav", "activePrimary", "directory")}
+    else if(location.includes("/portal/search")){UIStore.set("sideNav", "activePrimary", "")}
+    else{UIStore.set("sideNav", "activePrimary", "announcements")}
     UIStore.set("sideNav", "activeChannel", "All")
   }
 

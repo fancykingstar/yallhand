@@ -1,11 +1,25 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
+import { withRouter } from "react-router-dom"
 import { NavItem } from "./NavItem";
 import "./style.css";
 
 @inject("UIStore")
 @observer
-export class NavItems extends React.Component {
+class NavItems extends React.Component {
+  componentDidMount() {
+    const { UIStore } = this.props;
+    const location = this.props.location.pathname
+    if(location.includes("/panel/dashboard")){UIStore.set("sideNav", "activePrimary", "dashboard")}
+    else if(location.includes("/panel/teams")){UIStore.set("sideNav", "activePrimary", "teams")}
+    else if(location.includes("/panel/faqs")){UIStore.set("sideNav", "activePrimary", "faqs")}
+    else if(location.includes("/panel/announcements")){UIStore.set("sideNav", "activePrimary", "announcements")}
+    else if(location.includes("/panel/email")){UIStore.set("sideNav", "activePrimary", "email")}
+    else if(location.includes("/panel/analytics")){UIStore.set("sideNav", "activePrimary", "analytics")}
+    else if(location.includes("/panel/resources")){UIStore.set("sideNav", "activePrimary", "resources")}
+    else{UIStore.set("sideNav", "activePrimary", "")}
+    UIStore.set("sideNav", "activeChannel", "All")
+  }
   render() {
     const { UIStore } = this.props;
     return (
@@ -85,3 +99,4 @@ export class NavItems extends React.Component {
     );
   }
 }
+export default withRouter(NavItems)

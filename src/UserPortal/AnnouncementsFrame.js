@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+
 import { inject, observer } from "mobx-react";
 import { Item, Header, Container, Divider } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
@@ -7,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import { UIStore } from "../Stores/UIStore";
 import { SortNSearch } from "../SharedUI/SortNSearch"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import { sortByUTC } from "../SharedCalculations/SortByUTC";
 
 @inject("AnnouncementsStore", "UserStore")
 @observer
@@ -23,7 +25,7 @@ class AnnouncementsFrame extends React.Component {
             .slice()
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
-    const displayFeed = anncs.map(news => (
+    const displayFeed = sortByUTC(anncs, UIStore.dropdown.portalAnncSort).map(news => (
       <React.Fragment key={"portalAnnc" + giveMeKey()}>
         <Item  onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }

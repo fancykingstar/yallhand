@@ -25,9 +25,10 @@ export const loadAdmin = () => {
             const bundles = load.bundles(accountID).then((res) => {UIStore.set("adminLoadingComplete", "bundles", true)})
             const campaigns = load.campaigns(accountID).then((res) => {UIStore.set("adminLoadingComplete", "campaigns", true)})
             const scheduled = load.scheduled(accountID).then((res) => {UIStore.set("adminLoadingComplete", "scheduled", true)})
-            
+            const logs = load.logs(accountID).then((res) => {UIStore.set("adminLoadingComplete", "logs", true)})
+
             Promise.all([account, policies, 
-                users_and_teams, channels, files, urls, announcements, bundles, campaigns, scheduled]).then(() => {
+                users_and_teams, channels, files, urls, announcements, bundles, campaigns, scheduled, logs]).then(() => {
                 UIStore.toggleScreenLoading()
             })  
     }, 0)

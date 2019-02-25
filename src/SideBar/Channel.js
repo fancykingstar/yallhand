@@ -30,6 +30,7 @@ export const Channel = inject(
 
     const delChannel = () => {
       deleteChannel(UIStore.sideNav.activeChannel).then(() => {
+        UIStore.set("sideNav", "activeChannel", "All")
         DataEntryStore.set("channel", "label", "")
         UIStore.set("modal", "modifyChannel", false)
       })
