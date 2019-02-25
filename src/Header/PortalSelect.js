@@ -13,7 +13,7 @@ export const PortalSelect = (props) => {
 
       const previewPortalMenu = allTeams.map(team =>
         
-          <Dropdown.Item key={TeamStore.teamKey[team]}>
+          <Dropdown.Item key={"portalView" + giveMeKey()}>
             <Dropdown text={TeamStore.teamKey[team]}>
               <Dropdown.Menu>
                 {previewPortalMenuTag(team)}

@@ -199,10 +199,10 @@ export const createUrlResource = (payload) => {
     true,{"event": "create", "type":"url"}
 )
 }
-export const modifyUrlResource = (payload) => {
+export const modifyUrlResource = (payload, toast=true) => {
     processTemplate(true, "urls/" + payload.resourceID, "PATCH", payload, "urlResources", 
         "Your URL as been updated 🛠☁️", 
-        true,{"event": "update", "type":"url"}
+        true,{"event": "update", "type":"url"}, toast
     )
 }
 export const deleteUrlResource = (resourceID) => {

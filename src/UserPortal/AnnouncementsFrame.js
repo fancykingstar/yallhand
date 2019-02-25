@@ -29,7 +29,7 @@ class AnnouncementsFrame extends React.Component {
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
         <Header
               as="h2"
-              content={news.label}
+              content={news.variations[0].label === ""? news.label : news.variations[0].label}
               subheader={UTCtoFriendly(news.updated)}
             />
       </Item>

@@ -1,6 +1,18 @@
 export const validContent = (allItems, teamPath, tagPath) => {
-
   let displayItems = [];
+
+  const publishedOnly = (allContent) => {
+    let published = []
+    allContent.forEach(content => {
+      const avail = content.variations.filter(vari => vari.stage === "published")
+      if(avail.length > 0){
+        let newContent = Object.assign({}, content)
+        newContent.variations = avail
+        published.push(newContent)
+      } 
+    })
+    return published
+  }
 
   //Returns true if NO SELECTED TAGS or MATCHED TAG EXISTS IN TAG PATH
   const validTags = (alltags) => {
@@ -44,7 +56,7 @@ export const validContent = (allItems, teamPath, tagPath) => {
   };
 
 
-  allItems.forEach(content => {
+  publishedOnly(allItems).forEach(content => {
       if (
         content.variations.length === 1 &&
         content.variations[0].teamID === "global"

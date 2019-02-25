@@ -8,14 +8,12 @@ import { AccountStore } from "../Stores/AccountStore"
 import { EmailStore } from "../Stores/EmailStore"
 import { ScheduleStore } from "../Stores/ScheduleStore"
 import { validContent} from "../SharedCalculations/ValidContent"
+import { validResources } from "../SharedCalculations/ValidResource"
 import {apiCall_noBody} from "./Fetch"
 
-//get team, tag, channel limits
-const contentFilter = UserStore.previewTeam !== "" || UserStore.previewTag !== ""
 
-//content filter
-//channel filter
-//resource filter
+//get team, tag, channel limits
+const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag !== ""
 
 export const account = async (accountID) => 
      await apiCall_noBody("accounts/" + accountID, "GET").then((result) => AccountStore.loadAccount(result[0]))
@@ -41,14 +39,15 @@ export const tags = async (accountID) =>
 
 export const policies = async (accountID) => 
      await apiCall_noBody("policies/" + accountID, "GET").then((result) => 
-     PoliciesStore.loadPolicies(contentFilter? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+     PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const announcements = async (accountID) => 
      await apiCall_noBody("announcements/" + accountID, "GET").then((result) => 
-     AnnouncementsStore.loadAnnouncements(contentFilter? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+     AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const files = async (accountID) => 
-     await apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(result))
+     await apiCall_noBody("fileresources/" + accountID, "GET").then((result) => 
+     ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
 
 export const urls = async (accountID) => 
      await apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(result)) 

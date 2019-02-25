@@ -6,12 +6,14 @@ class Store {
   structure = [];
 
   @observable
+  //for UI elements
   structureSelect = [];
 
   @observable
   tags = [];
 
   @observable
+   //for UI elements
   tagsSelect = [];
 
   @observable

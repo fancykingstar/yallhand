@@ -4,7 +4,15 @@ import { Menu, Icon } from "semantic-ui-react";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 export class PublishControls extends React.Component {
-  handleItemClick = (e, { name }) => this.props.onClick(name);
+  clickActions = {
+    "draft":"draft",
+    "published": "published",
+    "update": "published",
+    "unpublish": "draft",
+    "archived": "archived",
+    "restore": "draft"
+  }
+  handleItemClick = (e, { name }) => this.props.onClick(this.clickActions[name]);
   render() {
     const actionOptions = {
       draft: ["draft", "published", "archived"],

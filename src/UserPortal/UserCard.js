@@ -14,7 +14,7 @@ const UserCard = props => {
     className="PortalCard">
           <div className="PortaldisplayAdjust">
             <div className="PortalQuestion">
-              <h3>{props.data.label}</h3>
+              <h3>{props.data.variations[0].label === ""? props.data.label : props.data.variations[0].label}</h3>
             </div>
           </div>
         </div>

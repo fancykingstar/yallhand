@@ -20,8 +20,9 @@ export class BaseSettings extends React.Component {
     DataEntryStore.set("baseSettings", "img", AccountStore.account.img);
     DataEntryStore.set("baseSettings", "userID", AccountStore.account.userID);
     DataEntryStore.set( "baseSettings", "timezone", AccountStore.account.timezone );
-    DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert
-    );
+    DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert );
+    DataEntryStore.set( "baseSettings", "generalEmail", AccountStore.account.generalEmail );
+
   }
   render() {
     const { AccountStore } = this.props;
@@ -84,6 +85,14 @@ export class BaseSettings extends React.Component {
                 onChange={(e, { value }) => DataEntryStore.set("baseSettings", "reviewAlert", value)}
                 value={DataEntryStore.baseSettings.reviewAlert}
               />
+                <Form.Input
+                label="General Query Email Address"
+                value={DataEntryStore.baseSettings.generalEmail}
+                onChange={(e, val) => DataEntryStore.set("baseSettings", "generalEmail", val.value)}
+              >
+                {" "}
+                <input maxLength="24" />{" "}
+              </Form.Input>
 
               <Button
                 disabled={DataEntryStore.baseSettings.label === ""}

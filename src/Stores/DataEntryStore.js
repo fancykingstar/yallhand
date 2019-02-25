@@ -215,6 +215,7 @@ class Store {
     userID: "",
     timezone: "",
     reviewAlert: "",
+    generalEmail: "",
   }
 
   @observable userSettings = {
@@ -340,6 +341,10 @@ class Store {
     this.draftContentRAW = {};
     this.draftContentHTML = "";
     // this.draft = {};
+  }
+
+  setDraftRAW(val){
+    this.draftContentRAW = val;
   }
 
 }

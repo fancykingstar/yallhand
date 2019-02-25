@@ -11,7 +11,6 @@ import AnnouncementsFrame from "./AnnouncementsFrame";
 import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
-import { validContent } from "../SharedCalculations/ValidContent";
 import { loadAdmin } from "../DataExchange/LoadProfile";
 import { Responsive, Transition } from "semantic-ui-react";
 
@@ -24,12 +23,8 @@ export class UserPortal extends React.Component {
   }
   componentDidMount() {
     const { UIStore, PoliciesStore, UserStore, AnnouncementsStore } = this.props;
-    if (!UIStore._adminLoadingComplete) {
+      UIStore.reset("adminLoadingComplete")
       loadAdmin();
-    }
-    const onlyPublished = (allContent) => allContent.filter(item => item.variations[0].stage === "published")
-    AnnouncementsStore.loadAnnouncements(onlyPublished(AnnouncementsStore.allAnnouncements))
-    PoliciesStore.loadPolicies(onlyPublished(PoliciesStore.allPolicies))
   }
 
   render() {

@@ -2,13 +2,14 @@ import React from "react"
 import "./style.css"
 import { inject, observer } from "mobx-react";
 import {  Header, Container, Image, Icon, Button, Grid, Item } from 'semantic-ui-react'
+import {S3Download} from "../DataExchange/S3Download"
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
 import BackButton from "../SharedUI/BackButton"
 
-@inject("AnnouncementsStore", "PoliciesStore", "UIStore")
+@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore")
 @observer
 export class ContentDetail extends React.Component {
 
@@ -18,11 +19,26 @@ export class ContentDetail extends React.Component {
     }
 
     render() {
-        const {AnnouncementsStore, PoliciesStore, UIStore} = this.props
+        const {AnnouncementsStore, PoliciesStore, ResourcesStore} = this.props
+
+        const downloadFile = (S3Key, label) => {
+            const ext = "." + S3Key.split(".")[1]
+            S3Download("quadrance-files/gramercy", S3Key, label, ext)
+         }
+        
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
+        const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
+        const displayFiles = fileResources.map(file =>
+            <Item>
+                <Item.Content onClick={e => downloadFile(file.S3Key.split("gramercy/")[1], file.label)}>
+                <Item.Header as="a">{file.label}{" "}</Item.Header>
+                <Item.Meta><Icon name="cloud download"></Icon></Item.Meta>
+                </Item.Content>
+            </Item>
+        )
 
         return(
             <div className="Content">
@@ -31,7 +47,7 @@ export class ContentDetail extends React.Component {
                 {content.img.length !== 0 ?  <Image rounded size="large" src={content.img}/> : null}
                     <Header
                     as="h2"
-                    content={content.label}
+                    content={content.variations[0].label === ""? content.label: content.variations[0].label}
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
     
@@ -39,19 +55,13 @@ export class ContentDetail extends React.Component {
                   </Container>
                 <br/>
                 <Grid>
+                    {displayFiles.length === 0? null : 
                     <Grid.Row columns={1}>
-                    <Grid.Column>
-                       <Item.Group>
-                           <Item>
-                               <Item.Content>
-                               <Item.Header>File{" "}</Item.Header>
-                               <Item.Meta><Icon name="cloud download"></Icon></Item.Meta>
-                               </Item.Content>
-                             
-                           </Item>
-                       </Item.Group>
-                       </Grid.Column>
+                        <Grid.Column>
+                            <Item.Group> {displayFiles} </Item.Group>
+                        </Grid.Column>
                     </Grid.Row>
+                    }
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <Sentiment

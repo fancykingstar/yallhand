@@ -210,7 +210,13 @@ export const urlResource = (obj, id=null) => {
   return _.extend({}, base(), buildObj)
 }
 
-
+export const urlResourceAssociate = (resourceID, associations) => {
+  const buildObj = {
+    resourceID,
+    associations,
+  };
+  return _.extend({}, base(), buildObj)
+}
 
 
 
@@ -455,7 +461,8 @@ export const emailCampaign = (completed=false) => {
       img: DataEntryStore.baseSettings.img,
       userID: DataEntryStore.baseSettings.userID,
       timezone: DataEntryStore.baseSettings.timezone,
-      reviewAlert: DataEntryStore.baseSettings.reviewAlert
+      reviewAlert: DataEntryStore.baseSettings.reviewAlert,
+      generalEmail: DataEntryStore.baseSettings.generalEmail
     };
     return buildObj
   }
