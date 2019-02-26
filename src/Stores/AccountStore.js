@@ -8,6 +8,7 @@ class Store {
     @observable account = {}
     @observable allUsers = []
     @observable logs = []
+    @observable sentiments = []
 
     @action
     set(target, key, val){
@@ -63,6 +64,10 @@ class Store {
   }
     loadLogs(allLogs) {
       this.logs = allLogs
+    }
+
+    loadSentiments(allSentiments) {
+      this.sentiments = allSentiments
     }
 
     _getUsersSelectOptions() {

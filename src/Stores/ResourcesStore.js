@@ -31,7 +31,6 @@ class Store {
   }
   
    matchedResources(resource_type, source_type, ID, variID) {
-     console.log(resource_type, source_type, ID, variID)
     const resources = {"file": this.fileResources, "url": this.urlResources}
     const assocLabels = {"policy": "policies", "announcement": "announcements"}
     const idNames = {"policy": "policyID", "announcement": "announcementID"}

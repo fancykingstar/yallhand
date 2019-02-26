@@ -55,6 +55,12 @@ export const log = (payload) => {apiCall("/itslogs", "POST", payload)}
 ///Sentiment
 export const createSentiment = (payload) => {apiCall("/sentiments/" + accountID(), "POST", payload)} 
 
+///History
+export const createHistory = (payload) => {
+    console.log("history", JSON.stringify(payload))
+    apiCall("/histories/" + accountID(), "POST", payload)
+} 
+
 
 
 
@@ -252,14 +258,12 @@ export const createAnnouncement = (payload) => {
     )
 }
 export const modifyPolicy = (payload) => {
-    console.log(JSON.stringify(payload))
     return processTemplate(true, "policies/" + payload.policyID, "PATCH", payload, "policies", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
 )
 }
 export const modifyAnnouncement = (payload) => {
-    console.log(JSON.stringify(payload))
     return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}

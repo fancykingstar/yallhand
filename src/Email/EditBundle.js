@@ -159,18 +159,6 @@ class EditBundle extends React.Component {
             moveDown={val => moveDown(val)}
           />
         )}
-     
-
-        <Segment style={DataEntryStore.emailCampaign.editBundleLastUsed === "" ? {display: "none"} : null}>
-          <div style={{ maxWidth: 400 }}>
-            <Header>History</Header>
-            <Button style={{ display: "inline-block", marginLeft: 5 }}>
-              Download
-            </Button>
-
-            <br />
-          </div>
-        </Segment>
         <div style={{marginLeft: 8}}><Form>
         <Form.Group>
         <Button primary onClick={e => updateBundle()}>Update</Button>

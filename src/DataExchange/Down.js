@@ -11,7 +11,6 @@ import { validContent} from "../SharedCalculations/ValidContent"
 import { validResources } from "../SharedCalculations/ValidResource"
 import {apiCall_noBody} from "./Fetch"
 
-
 //get team, tag, channel limits
 const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag !== ""
 
@@ -27,7 +26,7 @@ export const users_and_teams = async (accountID, userID) =>
 
 export const users = async (accountID) => 
      await apiCall_noBody("users/" + accountID, "GET").then((result) => AccountStore.loadUsers(result))
-
+``
 export const channels = async (accountID) => 
      await apiCall_noBody("channels/" + accountID, "GET").then((result) => ChannelStore.loadChannels(result))
 
@@ -55,6 +54,9 @@ export const urls = async (accountID) =>
 export const logs = async (accountID) => 
      await apiCall_noBody("itslogs/" + accountID, "GET").then((result) => AccountStore.loadLogs(result.filter(log => !log.isAction))) 
 
+export const sentiments = async (accountID) => 
+     await apiCall_noBody("sentiments/" + accountID, "GET").then((result) => AccountStore.loadSentiments(result)) 
+
 export const bundles = async (accountID) => 
      await apiCall_noBody("emailbundles/" + accountID, "GET").then((result) => EmailStore.loadBundles(result))
 
@@ -64,3 +66,5 @@ export const campaigns= async (accountID) =>
 export const scheduled= async (accountID) => 
      await apiCall_noBody("schedules/" + accountID, "GET").then((result) => ScheduleStore.loadScheduled(result))
 
+export const history = async () => 
+     await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET").then((result) => result)

@@ -4,8 +4,8 @@ import { VariationConfig } from "./VariationConfig";
 import { VariationContent } from "./VariationContent";
 import { PublishControls } from "./PublishControls";
 import holdUnload, { HoldLeave } from "../../SharedUI/ConfirmLeave";
-import {content, contentEdit} from "../../DataExchange/PayloadBuilder"
-import {createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement} from "../../DataExchange/Up"
+import {content, contentEdit, history} from "../../DataExchange/PayloadBuilder"
+import {createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory} from "../../DataExchange/Up"
 import _ from "lodash";
 import { link } from "fs";
 import {validateURLs} from "./ValidateURLs"
@@ -62,7 +62,18 @@ export class NewEditVariation extends React.Component {
 
     const changeStage = (stage) => {
       DataEntryStore.set("content", "stage", stage)
+      //History
+      if(stage === "published"){
+        if(DataEntryStore.content.isNew){
+          createHistory(history(this.mode, UIStore.content[this.mode + "ID"], content(this.mode)))
+        }
+        else{
+          createHistory(history(this.mode, UIStore.content[this.mode + "ID"], contentEdit(this.mode)))
+        }
+      }
+      //Update any links 
       validateURLs(this.mode)
+      //Push actual content update
       if(DataEntryStore.content.isNew){
         this.mode === "policy"? createPolicy(content(this.mode)): createAnnouncement(content(this.mode))
       }

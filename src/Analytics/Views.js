@@ -12,15 +12,12 @@ export class Views extends React.Component {
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
 
         const getLabel = (data) => {
-            console.log("get label", data)
            if(data.type === "announcement"){return AnnouncementsStore._getAnnouncement(data.id).label}
            else if(data.type === "policy"){return PoliciesStore._getPolicy(data.id).label}
            else if(data.type === "file"){return ResourcesStore._getFile(data.id).label}
            else if(data.type === "url"){return ResourcesStore._getUrl(data.id).label}
            else {return "No label available"}
         }
-
-   
 
         const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file", "urls":"url"}
         const rawlogs = AccountStore.logs
@@ -29,7 +26,6 @@ export class Views extends React.Component {
         let uniqueLogs = _.uniq(rawlogs.map(i => JSON.stringify(i)))
             .map(i => JSON.parse(i))
     
-
         uniqueLogs.forEach(log => {
             const dupes = uniqueLogs.filter(i => i.id === log.id)
             if(dupes.length > 0){
@@ -38,8 +34,6 @@ export class Views extends React.Component {
                 delete log.variation } 
             uniqueLogs = uniqueLogs.filter(i => i.variations !== undefined || !dupes.map(i => i.id).includes(i.id))
             })
-
-
 
             const variData = (log) => {
                 const content = log.type === "policy"? PoliciesStore._getPolicy(log.id) : AnnouncementsStore._getAnnouncement(log.id)
@@ -59,16 +53,15 @@ export class Views extends React.Component {
                     <Table.Cell>{displayTeamTag(vari)}</Table.Cell>
                     <Table.Cell>{rawlogs.filter(i => i.variation === vari).length}</Table.Cell>
                     <Table.Cell>0</Table.Cell>
+                    {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+                             <React.Fragment>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 2).length}</Table.Cell>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 1).length}</Table.Cell>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari &&  i.sentiment === 0).length}</Table.Cell>
+                               </React.Fragment>
+                                : null }
                     </Table.Row>
-                    
-                    )
-                
-
-             
-            }
-
-  
-        
+                ) }
             const varis = (log) => {
                 return log.variations.length === 1? 
                 <Table.Cell>{getLabel(log)}</Table.Cell>
@@ -80,13 +73,20 @@ export class Views extends React.Component {
                 >
                     <Modal.Content>
                     <Header as="h3">{getLabel(log)}</Header>
-                    <Table basic="very">
+                    <Table basic="very" >
                      <Table.Header>
                          <Table.Row>
                              <Table.HeaderCell>Label</Table.HeaderCell>
                              <Table.HeaderCell>Audience</Table.HeaderCell>
                              <Table.HeaderCell>Portal Views</Table.HeaderCell>
                              <Table.HeaderCell>Email Clicks</Table.HeaderCell>
+                             {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+                             <React.Fragment>
+                               <Table.HeaderCell ><Icon name='smile outline' /></Table.HeaderCell>
+                               <Table.HeaderCell><Icon name='meh outline' /></Table.HeaderCell>
+                               <Table.HeaderCell><Icon name='frown outline' /></Table.HeaderCell>
+                               </React.Fragment>
+                                : null }
                          </Table.Row>
                      </Table.Header>
                      <Table.Body>
@@ -94,19 +94,23 @@ export class Views extends React.Component {
                      </Table.Body>
                      </Table>
                     </Modal.Content>
-                   
                 </Modal>
             }
-        
         
         const displayResults = uniqueLogs.map(log => 
             <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
                 <Table.Cell>{rawlogs.filter(i => i.id === log.id).length}</Table.Cell>
                 <Table.Cell>0</Table.Cell>
+                {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+                             <React.Fragment>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 2).length}</Table.Cell>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 1).length}</Table.Cell>
+                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id &&  i.sentiment === 0).length}</Table.Cell>
+                               </React.Fragment>
+                                : null }
             </Table.Row>
             )
-
 
         return(
             <Segment style={{marginRight: 50}}>
@@ -139,6 +143,13 @@ export class Views extends React.Component {
                     <Table.HeaderCell>Label</Table.HeaderCell>
                     <Table.HeaderCell>Portal Views</Table.HeaderCell>
                     <Table.HeaderCell>Email Clicks</Table.HeaderCell>
+                               {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+                             <React.Fragment>
+                               <Table.HeaderCell><Icon name='smile outline' /></Table.HeaderCell>
+                               <Table.HeaderCell><Icon name='meh outline' /></Table.HeaderCell>
+                               <Table.HeaderCell><Icon name='frown outline' /></Table.HeaderCell>
+                               </React.Fragment>
+                                : null }
                 </Table.Row>
             </Table.Header>
             <Table.Body>

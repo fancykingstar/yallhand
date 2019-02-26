@@ -36,6 +36,20 @@ export const ItsLog = (action, data) => {
   return _.extend({}, base(), buildObj)
 }
 
+//
+export const history = (type, id, data) => {
+  const buildObj = {
+    historyID: uuidv4(),
+    accountID: accountID(),
+    updated: now(),
+    type,
+    id,
+    data
+  };
+  return buildObj
+}
+
+
 
 ///SENTIMENT
 export const sentiment = (sentiment, type, ID, variationID=null) => {

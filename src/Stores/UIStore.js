@@ -58,15 +58,10 @@ class Store {
         editUser: false,
         offboard: false,
         uploadAssocEdit: false,
-        // createAnnouncement: false,
-        // createPolicy: false,
         createContent: false,
         createChannel: false,
-        modifyChannel: false
-
-        // resourceUrlAdd: false,
-        // resourceFileAdd: false
-
+        modifyChannel: false,
+        historyView: false
     }
 
     @observable
@@ -149,7 +144,8 @@ class Store {
         bundles: false,
         campaigns: false,
         scheduled: false,
-        logs: false
+        logs: false,
+        sentiments: false
     }
 
     @observable sideNav = {
@@ -161,7 +157,8 @@ class Store {
     @observable content = {
         policyID: "",
         announcementID: "",
-        variationID: ""
+        variationID: "",
+        history: []
     }
 
     @observable portal = {

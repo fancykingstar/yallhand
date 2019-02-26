@@ -9,8 +9,6 @@ import { Table, Header, Button, Checkbox} from "semantic-ui-react";
 export class Completed extends React.Component {
   render() {
     const {EmailStore} = this.props
-    console.log(EmailStore.allCampaigns
-        .filter(camp => camp.completed))
     const outbounds = EmailStore.allCampaigns
         .filter(camp => camp.completed)
          .map(camp => 

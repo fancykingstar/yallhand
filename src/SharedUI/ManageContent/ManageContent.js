@@ -282,7 +282,7 @@ class ManageContent extends React.Component {
                 state={obj.state} 
                 mode={this.mode}
                  />
-                <History />
+                <History mode={this.mode} />
                 <Settings 
                 mode={this.mode} 
                 defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
