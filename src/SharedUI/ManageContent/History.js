@@ -17,8 +17,8 @@ export class History extends React.Component {
     const variDisplay = (variations) => 
       variations.map(vari => (
         <div key={"history" + giveMeKey()}>
-          <p>Audience Label: {vari.label === "" ? "(none)" : vari.label}</p>
-          <p>Team / Tag: {displayTeamTag(vari.teamID, vari.tags)}</p>
+          <p><span style={{fontWeight: 800}}>Audience Label: </span>{vari.label === "" ? "(none)" : vari.label}</p>
+          <p><span style={{fontWeight: 800}}>Team / Tag: </span>{displayTeamTag(vari.teamID, vari.tags)}</p>
           <span dangerouslySetInnerHTML={{ __html: vari.contentHTML }} />
         </div>
       ));
@@ -63,7 +63,7 @@ export class History extends React.Component {
           >
             <Modal.Header>History</Modal.Header>
             <Modal.Content>
-              <Modal.Description>{historyDisplay}</Modal.Description>
+              <Modal.Description>{UIStore.content.history.length > 0? historyDisplay : "No published history to display"}</Modal.Description>
             </Modal.Content>
             <Modal.Actions />
           </Modal>
