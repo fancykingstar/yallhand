@@ -29,7 +29,7 @@ export const Keywords = inject("DataEntryStore", "PoliciesStore", "UserStore", "
     const submitUpdate = () => {
       const mode = props.mode === "policy" ? "policy" : "announcement"
       let patchObj = {keywords: DataEntryStore.contentmgmt.keywords}
-      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
+      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.anncID = UIStore.content.anncID
       mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
     }
     return(

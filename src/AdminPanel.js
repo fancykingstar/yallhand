@@ -36,9 +36,9 @@ import { ToastContainer } from "react-toastify";
 export class AdminPanel extends React.Component {
   componentDidMount() {
     const { UIStore } = this.props;
-    // if (!UIStore._adminLoadingComplete) {
+    if (!UIStore._adminLoadingComplete) {
       loadAdmin()
-  // }
+  }
 }
 
   render() {

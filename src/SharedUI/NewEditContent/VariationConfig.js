@@ -29,7 +29,7 @@ export class VariationConfig extends React.Component {
 
     const obj = Object.assign({}, this.props.mode === "policy" ? 
       PoliciesStore._getPolicy(UIStore.content.policyID)
-      : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
+      : AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
      const vari = DataEntryStore.content
 
     return (

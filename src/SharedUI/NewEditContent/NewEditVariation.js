@@ -30,7 +30,7 @@ export class NewEditVariation extends React.Component {
     const load = (vari) => {
       UIStore.set("content", "variationID", this.props.match.params.id)
       this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(this.props.match.params.id), this.props.match.params.id)
-        :UIStore.set("content", "announcementID", AnnouncementsStore._getAnnouncementIDfromVariation(this.props.match.params.id), this.props.match.params.id)
+        :UIStore.set("content", "anncID", AnnouncementsStore._getAnnouncementIDfromVariation(this.props.match.params.id), this.props.match.params.id)
       DataEntryStore.set("content", "label", vari.label)
       DataEntryStore.set("content", "teamID", vari.teamID)
       DataEntryStore.set("content", "tagID", vari.tags.length === 0? "none" : vari.tags[0])
@@ -48,7 +48,7 @@ export class NewEditVariation extends React.Component {
       }
     }
     else if(this.mode === "announcement") {
-        if(UIStore.content.announcementID === "" || this.props.match.params.id !== UIStore.content.variationID){
+        if(UIStore.content.anncID === "" || this.props.match.params.id !== UIStore.content.variationID){
           const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(this.props.match.params.id), this.props.match.params.id)
           if(!_.isEmpty(vari)){load(vari)}
           else{this.props.history.push("/panel/announcements")}

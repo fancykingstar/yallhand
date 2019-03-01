@@ -432,7 +432,7 @@ export const emailCampaign = (completed=false) => {
   }
 
   export const contentEdit = (type) => {
-    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
+    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
     const buildObj = {
         variationID: UIStore.content.variationID,
         stage: DataEntryStore.content.stage,
@@ -462,7 +462,7 @@ export const emailCampaign = (completed=false) => {
     const buildObj = {
         img: DataEntryStore.contentmgmt.img,
     }
-    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.announcementID = UIStore.content.announcementID
+    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.anncID = UIStore.content.anncID
     return _.extend({}, base(), buildObj)
   }
 

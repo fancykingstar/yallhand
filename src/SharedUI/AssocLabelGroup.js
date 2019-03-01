@@ -16,7 +16,7 @@ export class AssocLabelGroup extends React.Component {
         const {TeamStore} = this.props
 
         const labelKey = (type, data) => { 
-            const idType = {"policy": "policyID", "announcement": "announcementID"}[type]
+            const idType = {"policy": "policyID", "announcement": "anncID"}[type]
             let key = {}
             data.forEach(i => i.variations
                     .forEach(vari => 

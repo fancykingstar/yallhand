@@ -12,10 +12,10 @@ export const removeAssociation = (assocs, type, ID, variID) => {
   }
   if(type === "announcement"){
     let newVaris = newAssocs.announcements
-        .filter(announcement => announcement.announcementID === ID)[0].variations
+        .filter(announcement => announcement.anncID === ID)[0].variations
         .filter(vari => vari !== variID)
-    newVaris.length === 0? newAssocs.announcements = newAssocs.announcements.filter(announcement => announcement.announcementID !== ID)
-    : newAssocs.announcements.filter(announcement => announcement.announcementID === ID)[0].variations = newVaris
+    newVaris.length === 0? newAssocs.announcements = newAssocs.announcements.filter(announcement => announcement.anncID !== ID)
+    : newAssocs.announcements.filter(announcement => announcement.anncID === ID)[0].variations = newVaris
     
 }
 return newAssocs

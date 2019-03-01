@@ -21,7 +21,7 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
         }
 
         const handleClick = () => {
-            const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"announcementID": UIStore.content.announcementID} 
+            const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"anncID": UIStore.content.anncID} 
             const task = DataEntryStore.contentmgmt.eventType === "publish" ? "publish content" : "unpublish content"
             createSchedule(schedule(DataEntryStore.contentmgmt.eventDateTime, task, data))
         }

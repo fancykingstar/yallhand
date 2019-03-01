@@ -45,7 +45,7 @@ const checkValid = (res) => {
             }
         })
         res.associations.announcements.forEach(announcement => {
-            let anncsmatched = AnnouncementsStore.allAnnouncements.filter(i => i.announcementID === announcement.announcementID)
+            let anncsmatched = AnnouncementsStore.allAnnouncements.filter(i => i.anncID === announcement.anncID)
             if(anncsmatched.length === 1 && announcement.variations.includes(anncsmatched[0].variations[0].variationID)){
                 valid = true
             }

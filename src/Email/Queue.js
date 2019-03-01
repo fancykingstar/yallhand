@@ -32,7 +32,7 @@ export class Queue extends React.Component {
       }
       else if(item.type === "announcement") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"announcementID": item.value})
+        updatedQueue.push({"anncID": item.value})
         DataEntryStore.set("emailCampaign", "queue", updatedQueue)
     }
   }

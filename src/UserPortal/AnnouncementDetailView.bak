@@ -17,7 +17,7 @@ export class AnnouncementDetailView extends React.Component {
     }
     render() {
         const {AnnouncementsStore} = this.props
-        const annc = AnnouncementsStore._getAnnouncement(this.props.announcementID)
+        const annc = AnnouncementsStore._getAnnouncement(this.props.anncID)
         return(
             <div className="Announcements">
                 <Container>
@@ -35,8 +35,8 @@ export class AnnouncementDetailView extends React.Component {
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <Sentiment
-                            type={"announcementID"}
-                            ID={annc.announcementID}
+                            type={"anncID"}
+                            ID={annc.anncID}
                             variationID={annc.variations[0].variationID}
                             />
                         </Grid.Column>

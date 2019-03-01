@@ -13,7 +13,7 @@ class SearchFrame extends React.Component {
   componentDidMount() {
     const { AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, AccountStore } = this.props;
     if (UIStore.search.searchAnnouncementsData.length === 0) {
-      UIStore.set("search", "searchAnnouncementsData", initSearchObj( AnnouncementsStore.allAnnouncements, "announcementID" ) );
+      UIStore.set("search", "searchAnnouncementsData", initSearchObj( AnnouncementsStore.allAnnouncements, "anncID" ) );
     }
     if (UIStore.search.searchPoliciesData.length === 0) {
         UIStore.set("search", "searchPoliciesData", initSearchObj( PoliciesStore.allPolicies, "policyID" ) );

@@ -11,7 +11,7 @@ import _ from "lodash";
 const newUrlResource = (link, mode) => {
   const associations = mode === "policy"? 
     {"policies":[{"policyID": UIStore.content.policyID, "variations":[UIStore.content.variationID]}], "announcements": []} :
-    {"announcements":[{"announcementID": UIStore.content.announcementID, "variations":[UIStore.content.variationID]}], "policies": []}
+    {"announcements":[{"anncID": UIStore.content.anncID, "variations":[UIStore.content.variationID]}], "policies": []}
   const payload = urlResource({
     "associations": associations,
     "label": link._label,

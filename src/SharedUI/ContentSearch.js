@@ -43,7 +43,7 @@ export class ContentSearch extends React.Component {
       UIStore.set(
         "search",
         "searchAnnouncementsData",
-        initSearchObj(AnnouncementsStore.allAnnouncements, "announcementID")
+        initSearchObj(AnnouncementsStore.allAnnouncements, "anncID")
       );
     }
   }
@@ -83,12 +83,12 @@ export class ContentSearch extends React.Component {
             }));
           const announcements = AnnouncementsStore.allAnnouncements
             .filter(item =>
-              announcementRawResults.includes(item.announcementID)
+              announcementRawResults.includes(item.anncID)
             )
             .map(announcement => ({
               title: announcement.label,
               image: announcement.img,
-              value: announcement.announcementID,
+              value: announcement.anncID,
               type: "announcement"
             }));
           UIStore.set(

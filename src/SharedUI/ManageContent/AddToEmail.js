@@ -26,11 +26,11 @@ export const AddToEmail = inject("DataEntryStore", "UIStore")(
     DataEntryStore.set("contentmgmt", "bundle", val)
   }
   const handleClick = () => {
-    if(EmailStore._doesBundleContain(props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, DataEntryStore.contentmgmt.bundle)){
+    if(EmailStore._doesBundleContain(props.mode === "policy" ? UIStore.content.policyID : UIStore.content.anncID, DataEntryStore.contentmgmt.bundle)){
       toast.error("Whoops, that bundle already contains this content 😬", {hideProgressBar: true})
     }else{
       const newBundle = EmailStore._getBundle(DataEntryStore.contentmgmt.bundle).bundle
-      props.mode === "policy" ? newBundle.push({policyID: UIStore.content.policyID}) : newBundle.push({announcementID: UIStore.content.announcementID})
+      props.mode === "policy" ? newBundle.push({policyID: UIStore.content.policyID}) : newBundle.push({anncID: UIStore.content.anncID})
       modifyBundle(_.assign({}, EmailStore._getBundle(DataEntryStore.contentmgmt.bundle), {"bundle": newBundle}))
     }
     

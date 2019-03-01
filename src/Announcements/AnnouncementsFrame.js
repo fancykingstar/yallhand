@@ -21,7 +21,7 @@ class AnnouncementsFrame extends React.Component {
           "searchAnnouncementsData",
           initSearchObj(
             AnnouncementsStore.allAnnouncements,
-            "announcementID"
+            "anncID"
           ) 
         );
       }
@@ -31,16 +31,16 @@ class AnnouncementsFrame extends React.Component {
 
     const handleClick = val => {
       // AnnouncementsStore.toggleAnnouncementID(val);
-      UIStore.set("content", "announcementID", val)
+      UIStore.set("content", "anncID", val)
       const annc = Object.assign({}, AnnouncementsStore._getAnnouncement(val))
-      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(annc.announcementID))
+      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(annc.anncID))
       DataEntryStore.set("contentmgmt", "label",  annc.label)
       DataEntryStore.set("contentmgmt", "img",  annc.img)
       DataEntryStore.set("contentmgmt", "bundle", "queue")
       DataEntryStore.set("contentmgmt", "keywords",  annc.keywords)
       DataEntryStore.set("contentmgmt", "reviewAlert",  annc.reviewAlert)
       this.props.history.push(
-        "/panel/announcements/manage-announcement/" + UIStore.content.announcementID
+        "/panel/announcements/manage-announcement/" + UIStore.content.anncID
       );
     };
 
@@ -52,7 +52,7 @@ class AnnouncementsFrame extends React.Component {
           UIStore.search.searchAnnouncements
         );
         
-        return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.announcementID));
+        return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.anncID));
       } else {
         return filteredByChannel
       }

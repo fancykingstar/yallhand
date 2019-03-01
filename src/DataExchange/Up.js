@@ -252,7 +252,7 @@ export const createPolicy = (payload) => {
     )
 }
 export const createAnnouncement = (payload) => {
-    processTemplate(true, "announcements/" + accountID(), "POST", payload, "announcements", 
+    processTemplate(true, "anncs/" + accountID(), "POST", payload, "announcements", 
         "Your new Announcement has been created 🙌", 
         true,{"event": "create", "type":"announcement"}
     )
@@ -264,7 +264,7 @@ export const modifyPolicy = (payload) => {
 )
 }
 export const modifyAnnouncement = (payload) => {
-    return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
+    return processTemplate(true, "anncs/" + payload.anncID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
 )

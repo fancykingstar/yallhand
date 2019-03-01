@@ -12,7 +12,7 @@ export const FeedItem = inject("AccountStore")(observer((props) => {
     const adminLabels = adminsList.map(admin => <Label key={AccountStore._getDisplayName(admin)} color='blue' horizontal>{AccountStore._getDisplayName(admin)}</Label> )   
 
     return(
-    <Item style={{paddingBottom: 25}} onClick={e => props.clicked(props.data.announcementID)}>
+    <Item style={{paddingBottom: 25}} onClick={e => props.clicked(props.data.anncID)}>
       <Item.Content>
         <Item.Header as='a'>{props.data.label}</Item.Header>
         <Item.Meta>Updated: {UTCtoFriendly(props.data.updated)} <Icon name="check circle" color='green'/></Item.Meta>

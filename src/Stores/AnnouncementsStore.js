@@ -20,16 +20,16 @@ class Store {
     this.userAvailableAnnouncements = val;
   }
   _getAnnouncement(id){
-    if(this.allAnnouncements.filter(annc => annc.announcementID === id).length > 0){
-      return Object.assign({}, this.allAnnouncements.filter(annc => annc.announcementID === id)[0])
+    if(this.allAnnouncements.filter(annc => annc.anncID === id).length > 0){
+      return Object.assign({}, this.allAnnouncements.filter(annc => annc.anncID === id)[0])
     }
     else{return {}}
   }
  
-  _getVariation(anncID, variationID){
-    if(_.isEmpty(this._getAnnouncement(anncID))){return {}}
-    else if(this._getAnnouncement(anncID).variations.filter(vari => vari.variationID === variationID).length > 0)
-      {return Object.assign({}, this._getAnnouncement(anncID).variations.filter(vari => vari.variationID === variationID)[0])}
+  _getVariation(ID, variationID){
+    if(_.isEmpty(this._getAnnouncement(ID))){return {}}
+    else if(this._getAnnouncement(ID).variations.filter(vari => vari.variationID === variationID).length > 0)
+      {return Object.assign({}, this._getAnnouncement(ID).variations.filter(vari => vari.variationID === variationID)[0])}
     else{return {}}
   }
 
@@ -37,7 +37,7 @@ class Store {
     const filtered = this.allAnnouncements
       .filter(annc => annc.variations
         .filter(vari => vari.variationID === variationID).length === 1)
-    return filtered.length === 0? {} : filtered[0].announcementID
+    return filtered.length === 0? {} : filtered[0].anncID
   }
 
   _toggleGlobalVariation(id) {

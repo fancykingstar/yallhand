@@ -65,7 +65,7 @@ export class UploadConfig extends React.Component {
 
     const removeAssociation = (obj) => {
         let allAssoc = Object.assign({}, DataEntryStore[key].associations)
-        const idKey = {"policy": "policyID", "announcement": "announcementID"}[obj.type]
+        const idKey = {"policy": "policyID", "announcement": "anncID"}[obj.type]
         const assocKey = {"policy": "policies", "announcement": "announcements"}[obj.type]
             let assoc = obj.type === "policy" ? allAssoc.policies.slice() : allAssoc.announcements.slice()
             assoc.filter(assoc => assoc[idKey] === obj[idKey])[0].variations.length === 1 ?

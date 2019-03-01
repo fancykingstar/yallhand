@@ -27,7 +27,7 @@ class AnnouncementsFrame extends React.Component {
 
     const displayFeed = sortByUTC(anncs, UIStore.dropdown.portalAnncSort).map(news => (
       <React.Fragment key={"portalAnnc" + giveMeKey()}>
-        <Item  onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
+        <Item  onClick={e => handleClick(news.anncID)} style={{paddingBottom: 15}}>
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
         <Header
               as="h2"

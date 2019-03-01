@@ -8,7 +8,7 @@ import {inject, observer} from "mobx-react"
 export class AttachedURLs extends React.Component {
   render() {
     const {ResourcesStore} = this.props
-    const currentLinks = !this.props.isNew ? ResourcesStore.matchedResources("url", this.props.mode, this.props.mode === "policy" ? this.props.currentObj.PolicyID : this.props.currentObj.announcementID, this.props.currentObjVariation.variationID) : []
+    const currentLinks = !this.props.isNew ? ResourcesStore.matchedResources("url", this.props.mode, this.props.mode === "policy" ? this.props.currentObj.PolicyID : this.props.currentObj.anncID, this.props.currentObjVariation.variationID) : []
     const displayLinks = currentLinks.length !== 0? currentLinks.map(link => (
       <Table.Row key={link.label}>
         <Table.Cell>

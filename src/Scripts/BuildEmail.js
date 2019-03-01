@@ -55,7 +55,7 @@ export const buildEmail = (campaignID) => {
     const allContentIDs = EmailStore._getBundle(EmailStore._getCampaign(campaignID).bundleID).bundle
     const allContent = allContentIDs
         .map(content => Object.keys(content)[0] === "policyID"?
-        getContentData("policy", content.policyID) : getContentData("announcement", content.announcementID)
+        getContentData("policy", content.policyID) : getContentData("announcement", content.anncID)
         )
     const targetUsers = campaign.targetUsers.length > 0? campaign.targetUsers : getUsersByTeamTag(campaign.teamID, campaign.tags[0])
     targetUsers.forEach(user => {

@@ -41,7 +41,7 @@ export const policies = async (accountID) =>
      PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const announcements = async (accountID) => 
-     await apiCall_noBody("announcements/" + accountID, "GET").then((result) => 
+     await apiCall_noBody("anncs/" + accountID, "GET").then((result) => 
      AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
 
 export const files = async (accountID) => 

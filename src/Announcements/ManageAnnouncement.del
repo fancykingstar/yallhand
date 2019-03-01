@@ -30,13 +30,13 @@ class ManageAnnouncement extends React.Component {
     console.log(this.props)
     const { UIStore, AnnouncementsStore, DataEntryStore } = this.props;
    
-      if(UIStore.content.announcementID === "" 
-        || this.props.match.params.id !== UIStore.content.announcementID
+      if(UIStore.content.anncID === "" 
+        || this.props.match.params.id !== UIStore.content.anncID
         || DataEntryStore._isReset("contentmgmt")){
         if(!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.id))) {
-          UIStore.set("content", "announcementID", this.props.match.params.id)
-          const obj = Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
-          UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(obj.announcementID))
+          UIStore.set("content", "anncID", this.props.match.params.id)
+          const obj = Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
+          UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(obj.anncID))
           DataEntryStore.set("contentmgmt", "label", obj.label)
           DataEntryStore.set("contentmgmt", "img", obj.img)
           DataEntryStore.set("contentmgmt", "bundle", "queue")
@@ -47,7 +47,7 @@ class ManageAnnouncement extends React.Component {
         else{this.props.history.push("/panel/announcements")}
       
     
-      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(UIStore.content.announcementID))
+      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(UIStore.content.anncID))
       
     }
     
@@ -63,7 +63,7 @@ class ManageAnnouncement extends React.Component {
 
     const variations = () => {
       return AnnouncementsStore._getAnnouncement(
-        UIStore.content.announcementID
+        UIStore.content.anncID
       ).variations.map(variation => ({
         key: variation.variationID,
         value: variation.variationID,
@@ -76,7 +76,7 @@ class ManageAnnouncement extends React.Component {
     const handleEdit = e => {
       e.preventDefault();
       const vari = Object.assign({}, 
-      AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID))
+      AnnouncementsStore._getVariation(UIStore.content.anncID, UIStore.content.variationID))
       DataEntryStore.set("content", "label", vari.label)
       DataEntryStore.set("content", "teamID", vari.teamID)
       DataEntryStore.set("content", "tagID", vari.tags.length === 0? "none" : vari.tags[0])
@@ -105,8 +105,8 @@ class ManageAnnouncement extends React.Component {
     }; 
 
     const manageAnnouncement =
-      UIStore.content.announcementID === "" ? (
-        <div>{UIStore.content.announcementID} hi</div>
+      UIStore.content.anncID === "" ? (
+        <div>{UIStore.content.anncID} hi</div>
       ) : (
         <React.Fragment>
           <BackButton />
@@ -139,7 +139,7 @@ class ManageAnnouncement extends React.Component {
               </Button>
             </div>
             <ManageVariationData 
-             variation={AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)} 
+             variation={AnnouncementsStore._getVariation(UIStore.content.anncID, UIStore.content.variationID)} 
              type={"announcement"}
           />
           </Segment>
@@ -158,7 +158,7 @@ class ManageAnnouncement extends React.Component {
             date={val => console.log(val)}
             clicked={e => console.log("clicked")}
           />
-          <Schedule state={AnnouncementsStore._getAnnouncement(UIStore.content.announcementID).state} />
+          <Schedule state={AnnouncementsStore._getAnnouncement(UIStore.content.anncID).state} />
           <History />
           {/* <Settings mode={"policy"} /> */}
 

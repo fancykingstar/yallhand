@@ -23,7 +23,7 @@ class PortalSearchResults extends React.Component {
 
     const filteredAnnc = () => {
         if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchAnnouncementsData, UIStore.search.portalSearchValue );
-          return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.announcementID));
+          return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.anncID));
         } else {
           return []
         }
@@ -66,7 +66,7 @@ class PortalSearchResults extends React.Component {
         <Item key={"searchres" + giveMeKey() } onClick={e => {
             UIStore.set("search", "portalDisplayResults", false)
             item.policyID !== undefined? this.props.history.push("/portal/learn-detail/" + item.policyID):
-            this.props.history.push("/portal/announcement/" + item.announcementID) 
+            this.props.history.push("/portal/announcement/" + item.anncID) 
 
         }}
         >
