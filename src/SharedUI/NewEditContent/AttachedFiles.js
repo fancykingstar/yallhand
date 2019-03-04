@@ -28,7 +28,7 @@ export class AttachedFiles extends React.Component {
     const addFile = (val) => {
       const assoc = this.props.mode === "policy"? 
         {"announcements":[], "policies": [{"policyID": UIStore.content.policyID, "variations":[UIStore.content.variationID]}]}
-        : {"policies":[], "announcements": [{"anncID": UIStore.content.anncID, "variations":[UIStore.content.variationID]}]}
+        : {"policies":[], "announcements": [{"announcementID": UIStore.content.announcementID, "variations":[UIStore.content.variationID]}]}
       createFile(fileResource(assoc))
     }
   
@@ -55,7 +55,7 @@ export class AttachedFiles extends React.Component {
    }
 
 
-    const getFiles = () => ResourcesStore.matchedResources("file", this.props.mode, this.props.mode === "policy" ? UIStore.content.policyID : UIStore.content.anncID, UIStore.content.variationID) 
+    const getFiles = () => ResourcesStore.matchedResources("file", this.props.mode, this.props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, UIStore.content.variationID) 
     const currentFiles = DataEntryStore.content.isNew !== true ? getFiles() : []
     const attachedList = currentFiles.map(attach => (
       <List.Item>

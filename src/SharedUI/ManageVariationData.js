@@ -5,24 +5,22 @@
  import {JoinLinksCommas} from "../SharedCalculations/JoinLinksCommas"
  import {TagID2Friendly } from "../SharedCalculations/TagID2Friendly"
 
-export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "AnnouncementsStore", "TeamStore", "UserStore", "AccountStore")(observer((props) => {
+export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "AnnouncementsStore", "TeamStore", "UserStore", "AccountStore", "UIStore")(observer((props) => {
         const {ResourcesStore} = props
-        const {PoliciesStore} = props
         const {TeamStore} = props
         const {UserStore} = props
+        const {UIStore} = props
         const {AccountStore} = props
-        const {AnnouncementsStore} = props
-  
         const sourceType = props.type
         const resources = {
           "policy": {
-            "files": ResourcesStore.matchedResources("file", "policy", PoliciesStore.selectedPolicyID, PoliciesStore.selectedVariationID),
-            "urls": ResourcesStore.matchedResources("url", "policy", PoliciesStore.selectedPolicyID, PoliciesStore.selectedVariationID)
+            "files": ResourcesStore.matchedResources("file", "policy", UIStore.content.policyID, UIStore.content.variationID),
+            "urls": ResourcesStore.matchedResources("url", "policy", UIStore.content.policyID, UIStore.content.variationID)
           }
           ,
           "announcement": {
-            "files": ResourcesStore.matchedResources("file", "announcement", AnnouncementsStore.selectedAnnouncementID, AnnouncementsStore.selectedAnnouncementVariationID),
-            "urls": ResourcesStore.matchedResources("url", "announcement", AnnouncementsStore.selectedAnnouncementID, AnnouncementsStore.selectedAnnouncementVariationID),
+            "files": ResourcesStore.matchedResources("file", "announcement", UIStore.content.announcementID, UIStore.content.variationID),
+            "urls": ResourcesStore.matchedResources("url", "announcement", UIStore.content.announcementID, UIStore.content.variationID),
           }
         }
         const files = resources[sourceType]["files"]

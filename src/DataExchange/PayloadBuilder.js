@@ -286,7 +286,9 @@ export const fileResourceAssociate = (resourceID, associations) => {
 export const queueEdit = () => {
   const buildObj = {
     bundleID: "queue",
+    // bundleID: DataEntryStore.emailCampaign.queueID,
     bundle: DataEntryStore.emailCampaign.queue,
+    // isQueue: true,
     label: DataEntryStore.emailCampaign.queueLabel,
     subject: DataEntryStore.emailCampaign.queueSubject,
     body: DataEntryStore.draft,
@@ -298,7 +300,9 @@ export const queueEdit = () => {
 
 export const bundle = (queue=false) => {
   const buildObj = {
-    bundleID: queue? "queue":generateID(),
+    bundleID: queue? "queue" : generateID(),
+    // bundleID: generateID(),
+    // isQueue: queue? true : false,
     bundle: DataEntryStore.emailCampaign.queue,
     label: DataEntryStore.emailCampaign.queueLabel,
     subject: DataEntryStore.emailCampaign.queueSubject,
@@ -432,7 +436,7 @@ export const emailCampaign = (completed=false) => {
   }
 
   export const contentEdit = (type) => {
-    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
+    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
     const buildObj = {
         variationID: UIStore.content.variationID,
         stage: DataEntryStore.content.stage,
@@ -462,7 +466,7 @@ export const emailCampaign = (completed=false) => {
     const buildObj = {
         img: DataEntryStore.contentmgmt.img,
     }
-    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.anncID = UIStore.content.anncID
+    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.announcementID = UIStore.content.announcementID
     return _.extend({}, base(), buildObj)
   }
 

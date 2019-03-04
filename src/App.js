@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 
 import { observer, inject } from "mobx-react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
 import UserPortal from "./UserPortal/UserPortal";
 import { Login } from "./Login/Login";
@@ -44,13 +44,13 @@ class AppRoute extends React.Component {
         <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
         {/* <Switch>{RouteTraffic}</Switch> */}
         <Switch>
-          <Route path="/panel" component={AdminPanel} />
-          <Route path="/portal" component={UserPortal} />
-
+          <Route path="*" component={AdminPanel} />
+          {/* <Route path="/portal" component={UserPortal} /> */}
+{/* 
           <Route path="/login" component={Login} />
-          <Route path="*" component={TwilightZone} />
+          <Route path="*" component={TwilightZone} /> */}
         </Switch>
-        {/* <Redirect push to="/panel" /> */}
+        {/* <Redirect push to="/panel/dashboard" /> */}
         </div>
       </div>
     );

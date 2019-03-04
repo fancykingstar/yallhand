@@ -1,7 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-
 import { Label, Button, Icon, Header, Segment } from "semantic-ui-react";
 import { SelectVariation } from "../../SharedUI/SelectVariation";
 import { ManageVariationData } from "../../SharedUI/ManageVariationData";
@@ -82,8 +81,8 @@ class ManageContent extends React.Component {
       );
     } else if (this.mode === "announcement") {
       if (
-        UIStore.content.anncID === "" ||
-        this.props.match.params.id !== UIStore.content.anncID ||
+        UIStore.content.announcementID === "" ||
+        this.props.match.params.id !== UIStore.content.announcementID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
         if (
@@ -91,15 +90,15 @@ class ManageContent extends React.Component {
             AnnouncementsStore._getAnnouncement(this.props.match.params.id)
           )
         ) {
-          UIStore.set("content", "anncID", this.props.match.params.id);
+          UIStore.set("content", "announcementID", this.props.match.params.id);
           const obj = Object.assign(
             {},
-            AnnouncementsStore._getAnnouncement(UIStore.content.anncID)
+            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
           );
           UIStore.set(
             "content",
             "variationID",
-            AnnouncementsStore._toggleGlobalVariation(obj.anncID)
+            AnnouncementsStore._toggleGlobalVariation(obj.announcementID)
           );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
@@ -115,7 +114,7 @@ class ManageContent extends React.Component {
           "content",
           "variationID",
           AnnouncementsStore._toggleGlobalVariation(
-            UIStore.content.anncID
+            UIStore.content.announcementID
           )
         );
       }
@@ -134,7 +133,7 @@ class ManageContent extends React.Component {
 
     const obj = this.mode === "policy" ? 
     PoliciesStore._getPolicy(UIStore.content.policyID) 
-    : AnnouncementsStore._getAnnouncement(UIStore.content.anncID)
+    : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
 
     const variations = () => {     
         return obj.variations.map(variation => ({
@@ -162,7 +161,7 @@ class ManageContent extends React.Component {
       Object.assign(
         {},
         AnnouncementsStore._getVariation(
-          UIStore.content.anncID,
+          UIStore.content.announcementID,
           UIStore.content.variationID
         )
       )
@@ -214,7 +213,7 @@ class ManageContent extends React.Component {
       const vari = () => {
           return this.mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
           :
-          AnnouncementsStore._getVariation(UIStore.content.anncID, UIStore.content.variationID)
+          AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)
       }
       
       const manageContent = () => {
@@ -223,7 +222,7 @@ class ManageContent extends React.Component {
             return <div/>
           }
 
-        else if(this.mode === "announcement" && UIStore.content.anncID === "")
+        else if(this.mode === "announcement" && UIStore.content.announcementID === "")
         {return <div/>}    
 
         else{

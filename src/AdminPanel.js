@@ -21,6 +21,7 @@ import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import { ToastContainer } from "react-toastify";
 
+
 @inject(
   "ChannelStore",
   "PoliciesStore",
@@ -30,13 +31,16 @@ import { ToastContainer } from "react-toastify";
   "AnnouncementsStore",
   "AccountStore",
   "UIStore",
-  "EmailStore"
+  "EmailStore",
 )
 @observer
 export class AdminPanel extends React.Component {
   componentDidMount() {
-    const { UIStore } = this.props;
+    const { UIStore, UserStore } = this.props;
     if (!UIStore._adminLoadingComplete) {
+      this.props.history.push("/panel/dashboard")
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
       loadAdmin()
   }
 }
@@ -67,32 +71,15 @@ export class AdminPanel extends React.Component {
         <div className="ActionFrame">
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
-            <Route
-              path="/panel/faqs/manage-policy/:id"
-              component={ManageContent}
-              exact
-            />
-            <Route
-              path="/panel/faqs/policy-variation/:id"
-              render={props => <NewEditVariation {...props} mode="policy" />}
-            />{" "}
-            />
+            <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
+            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" />} />{" "} />
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
-            <Route path="/panel/announcements" component={AnnouncementsFrame} exact />
+            <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
             <Route path="/panel/dashboard" component={DashboardFrame} />
             <Route path="/panel/analytics" component={AnalyticsFrame} />
-            <Route
-              path="/panel/announcements/manage-announcement/:id"
-              component={ManageContent}
-              exact
-            />
-            <Route
-              path="/panel/announcements/announcement-variation/:id"
-              render={props => (
-                <NewEditVariation {...props} mode="announcement" />
-              )}
-            />
+            <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
+            <Route path="/panel/announcements/announcement-variation/:id" render={props => ( <NewEditVariation {...props} mode="announcement" /> )} />
             <Route path="/panel/email/edit-bundle" component={EditBundle} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

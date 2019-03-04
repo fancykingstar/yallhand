@@ -16,7 +16,7 @@ export class AssocLabelGroup extends React.Component {
         const {TeamStore} = this.props
 
         const labelKey = (type, data) => { 
-            const idType = {"policy": "policyID", "announcement": "anncID"}[type]
+            const idType = {"policy": "policyID", "announcement": "announcementID"}[type]
             let key = {}
             data.forEach(i => i.variations
                     .forEach(vari => 
@@ -31,9 +31,9 @@ export class AssocLabelGroup extends React.Component {
         }
         const policyKey = labelKey("policy", this.props.assoc.policies)
         const policyLabels = Object.keys(policyKey).map(item => <Label removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(policyKey[item])} name="delete"/></Label>)
-        const anncKey = labelKey("announcement", this.props.assoc.announcements)
-         const anncLabels = Object.keys(anncKey).map(item => <Label removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(anncKey[item])} name="delete"/></Label>)
-        const labels = <Label.Group>{[...policyLabels, ...anncLabels].sort()}</Label.Group>
+        const announcementKey = labelKey("announcement", this.props.assoc.announcements)
+         const announcementLabels = Object.keys(announcementKey).map(item => <Label removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(announcementKey[item])} name="delete"/></Label>)
+        const labels = <Label.Group>{[...policyLabels, ...announcementLabels].sort()}</Label.Group>
         return(
             <div>{labels}</div>
         )

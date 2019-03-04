@@ -179,6 +179,7 @@ class Store {
 
   @observable emailCampaign = {
     //queue
+    queueID: "",
     queue: [],
     queueLabel: "",
     queueSubject: "",

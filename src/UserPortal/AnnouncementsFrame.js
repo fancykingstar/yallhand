@@ -18,16 +18,16 @@ class AnnouncementsFrame extends React.Component {
     const handleClick = val => {
       this.props.history.push("/portal/announcement/" + val);
     };
-    const anncs =
+    const announcements =
       UIStore.sideNav.activeChannel === "All"
         ? AnnouncementsStore.allAnnouncements.slice()
         : AnnouncementsStore.allAnnouncements
             .slice()
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
-    const displayFeed = sortByUTC(anncs, UIStore.dropdown.portalAnncSort).map(news => (
-      <React.Fragment key={"portalAnnc" + giveMeKey()}>
-        <Item  onClick={e => handleClick(news.anncID)} style={{paddingBottom: 15}}>
+    const displayFeed = sortByUTC(announcements, UIStore.dropdown.portalannouncementSort).map(news => (
+      <React.Fragment key={"portalannouncement" + giveMeKey()}>
+        <Item  onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
         <Header
               as="h2"
@@ -42,9 +42,9 @@ class AnnouncementsFrame extends React.Component {
     return (
       <div className="Announcements" style={{marginTop: -35, paddingRight: 15}}>
         <SortNSearch 
-          dropdownValueChange={val => UIStore.set("dropdown", "portalAnncSort", val)} 
-          searchValueChange={val =>  UIStore.set("search", "searchPortalAnncValue", val)} 
-          searchValue={UIStore.search.searchPortalAnncValue}
+          dropdownValueChange={val => UIStore.set("dropdown", "portalannouncementSort", val)} 
+          searchValueChange={val =>  UIStore.set("search", "searchPortalannouncementValue", val)} 
+          searchValue={UIStore.search.searchPortalannouncementValue}
           />
         <Item.Group>{displayFeed}</Item.Group>
         <div style={{paddingTop: 100}}/>

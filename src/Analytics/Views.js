@@ -1,6 +1,6 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Icon, Table, Modal} from "semantic-ui-react"
+import { Segment, Header, Menu, Icon, Table, Modal, Tab} from "semantic-ui-react"
 import _ from 'lodash'
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
@@ -11,13 +11,40 @@ export class Views extends React.Component {
     render(){
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
 
-        const getLabel = (data) => {
-           if(data.type === "announcement"){return AnnouncementsStore._getAnnouncement(data.id).label}
-           else if(data.type === "policy"){return PoliciesStore._getPolicy(data.id).label}
-           else if(data.type === "file"){return ResourcesStore._getFile(data.id).label}
-           else if(data.type === "url"){return ResourcesStore._getUrl(data.id).label}
-           else {return "No label available"}
+            const getLabel = (data) => {
+            let label = ""
+           try {
+           if(data.type === "announcement"){label = AnnouncementsStore._getAnnouncement(data.id).label}
+           else if(data.type === "policy"){label = PoliciesStore._getPolicy(data.id).label}
+           else if(data.type === "file"){label = ResourcesStore._getFile(data.id).label}
+           else if(data.type === "url"){label =ResourcesStore._getUrl(data.id).label}
+           }
+           catch(error) {
+               label = ""
+           }
+        //    else {return "No label available"}
+           return label === "" || label === undefined? "obsoleted data" : label
         }
+
+        const templateHeader = (vari=false) =>    
+        <Table.Header>
+        <Table.Row>
+            <Table.HeaderCell rowSpan='2'>Label</Table.HeaderCell>
+            {vari?
+            <Table.HeaderCell textAlign="center" rowSpan='2'>Audience</Table.HeaderCell>: null}
+            <Table.HeaderCell textAlign="center" rowSpan='2'>Portal Views</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" rowSpan='2'>Email Views</Table.HeaderCell>
+            {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+            <Table.HeaderCell textAlign="center"colSpan='3' textAlign="center">Feedback</Table.HeaderCell>: null}
+        </Table.Row>
+        {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
+        <Table.Row>
+            <Table.HeaderCell textAlign="center"><Icon style={{paddingLeft:8}} name='smile outline' /></Table.HeaderCell>
+            <Table.HeaderCell textAlign="center"><Icon  style={{paddingLeft:5}} name='meh outline' /></Table.HeaderCell>
+            <Table.HeaderCell textAlign="center"><Icon style={{paddingLeft:3}} name='frown outline' /></Table.HeaderCell>
+        </Table.Row>: null}
+        </Table.Header>
+
 
         const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file", "urls":"url"}
         const rawlogs = AccountStore.logs
@@ -50,14 +77,14 @@ export class Views extends React.Component {
                 return log.variations.map(vari => 
                     <Table.Row key={"analyticsResult" + giveMeKey()}>
                      <Table.Cell>{getContentLabel(vari)}</Table.Cell>
-                    <Table.Cell>{displayTeamTag(vari)}</Table.Cell>
-                    <Table.Cell>{rawlogs.filter(i => i.variation === vari).length}</Table.Cell>
-                    <Table.Cell>0</Table.Cell>
+                    <Table.Cell textAlign="center">{displayTeamTag(vari)}</Table.Cell>
+                    <Table.Cell textAlign="center">{rawlogs.filter(i => i.variation === vari).length}</Table.Cell>
+                    <Table.Cell textAlign="center">0</Table.Cell>
                     {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
                              <React.Fragment>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 2).length}</Table.Cell>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 1).length}</Table.Cell>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.variationID === vari &&  i.sentiment === 0).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 2).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.variationID === vari  && i.sentiment === 1).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.variationID === vari &&  i.sentiment === 0).length}</Table.Cell>
                                </React.Fragment>
                                 : null }
                     </Table.Row>
@@ -74,21 +101,7 @@ export class Views extends React.Component {
                     <Modal.Content>
                     <Header as="h3">{getLabel(log)}</Header>
                     <Table basic="very" >
-                     <Table.Header>
-                         <Table.Row>
-                             <Table.HeaderCell>Label</Table.HeaderCell>
-                             <Table.HeaderCell>Audience</Table.HeaderCell>
-                             <Table.HeaderCell>Portal Views</Table.HeaderCell>
-                             <Table.HeaderCell>Email Clicks</Table.HeaderCell>
-                             {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
-                             <React.Fragment>
-                               <Table.HeaderCell ><Icon name='smile outline' /></Table.HeaderCell>
-                               <Table.HeaderCell><Icon name='meh outline' /></Table.HeaderCell>
-                               <Table.HeaderCell><Icon name='frown outline' /></Table.HeaderCell>
-                               </React.Fragment>
-                                : null }
-                         </Table.Row>
-                     </Table.Header>
+                     {templateHeader(true)}
                      <Table.Body>
                      {variData(log)}
                      </Table.Body>
@@ -100,17 +113,18 @@ export class Views extends React.Component {
         const displayResults = uniqueLogs.map(log => 
             <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
-                <Table.Cell>{rawlogs.filter(i => i.id === log.id).length}</Table.Cell>
-                <Table.Cell>0</Table.Cell>
+                <Table.Cell textAlign="center">{rawlogs.filter(i => i.id === log.id).length}</Table.Cell>
+                <Table.Cell textAlign="center">0</Table.Cell>
                 {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
                              <React.Fragment>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 2).length}</Table.Cell>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 1).length}</Table.Cell>
-                               <Table.Cell>{AccountStore.sentiments.filter(i => i.ID === log.id &&  i.sentiment === 0).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 2).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.ID === log.id  && i.sentiment === 1).length}</Table.Cell>
+                               <Table.Cell textAlign="center">{AccountStore.sentiments.filter(i => i.ID === log.id &&  i.sentiment === 0).length}</Table.Cell>
                                </React.Fragment>
                                 : null }
             </Table.Row>
             )
+
 
         return(
             <Segment style={{marginRight: 50}}>
@@ -138,20 +152,8 @@ export class Views extends React.Component {
             />
             </Menu>
             <Table basic="very">
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell>Label</Table.HeaderCell>
-                    <Table.HeaderCell>Portal Views</Table.HeaderCell>
-                    <Table.HeaderCell>Email Clicks</Table.HeaderCell>
-                               {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
-                             <React.Fragment>
-                               <Table.HeaderCell><Icon name='smile outline' /></Table.HeaderCell>
-                               <Table.HeaderCell><Icon name='meh outline' /></Table.HeaderCell>
-                               <Table.HeaderCell><Icon name='frown outline' /></Table.HeaderCell>
-                               </React.Fragment>
-                                : null }
-                </Table.Row>
-            </Table.Header>
+            {templateHeader()}
+            
             <Table.Body>
             {displayResults}
             </Table.Body>

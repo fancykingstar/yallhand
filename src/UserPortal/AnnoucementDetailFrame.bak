@@ -9,7 +9,7 @@ export const AnnouncementDetailFrame = ({match}) => (
       
 
        
-         <AnnouncementDetailView anncID={match.params.id}/>
+         <AnnouncementDetailView announcementID={match.params.id}/>
         </div>
       </div>
     );

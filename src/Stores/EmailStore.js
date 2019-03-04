@@ -14,7 +14,8 @@ class Store {
 
     @observable
     queue = {
-            bundleID: "queue",
+            bundleID: "",
+            isQueue: true,
             bundle: [],
             label: "",
             subject: "",
@@ -72,6 +73,7 @@ class Store {
     loadBundles(allBundles) {
       return new Promise((resolve, reject) => {
         const queue = allBundles.filter(bundle => bundle.bundleID === "queue")
+        // const queue = allBundles.filter(bundle => bundle.isQueue)
         if(queue.length === 1) {this.queue = queue[0]}
         else{this.queue = bundle(true)}
         this.allBundles = allBundles

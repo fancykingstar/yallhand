@@ -17,31 +17,31 @@ export class AnnouncementDetailView extends React.Component {
     }
     render() {
         const {AnnouncementsStore} = this.props
-        const annc = AnnouncementsStore._getAnnouncement(this.props.anncID)
+        const announcement = AnnouncementsStore._getAnnouncement(this.props.announcementID)
         return(
             <div className="Announcements">
                 <Container>
-                {annc.img.length !== 0 ?  <Image rounded size="large" src={annc.img}/> : null}
+                {announcement.img.length !== 0 ?  <Image rounded size="large" src={announcement.img}/> : null}
                     <Header
                     as="h2"
-                    content={annc.label}
-                    subheader={UTCtoFriendly(annc.updated).split(",")[0]}
+                    content={announcement.label}
+                    subheader={UTCtoFriendly(announcement.updated).split(",")[0]}
                   />
     
-                  <DraftHTMLDisplay storedState={annc.variations[0].contentRAW}/>
+                  <DraftHTMLDisplay storedState={announcement.variations[0].contentRAW}/>
                   </Container>
                 <br/>
                 <Grid>
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <Sentiment
-                            type={"anncID"}
-                            ID={annc.anncID}
-                            variationID={annc.variations[0].variationID}
+                            type={"announcementID"}
+                            ID={announcement.announcementID}
+                            variationID={announcement.variations[0].variationID}
                             />
                         </Grid.Column>
                         <Grid.Column>
-                            <AskAQuestion content={annc}/>
+                            <AskAQuestion content={announcement}/>
                             </Grid.Column>
                     </Grid.Row>
                 </Grid>

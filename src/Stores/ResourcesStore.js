@@ -33,7 +33,7 @@ class Store {
    matchedResources(resource_type, source_type, ID, variID) {
     const resources = {"file": this.fileResources, "url": this.urlResources}
     const assocLabels = {"policy": "policies", "announcement": "announcements"}
-    const idNames = {"policy": "policyID", "announcement": "anncID"}
+    const idNames = {"policy": "policyID", "announcement": "announcementID"}
     let matchedResources = []
     resources[resource_type].forEach(resource => {
       if(resource.associations[assocLabels[source_type]].length > 0) {

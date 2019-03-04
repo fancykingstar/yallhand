@@ -25,7 +25,7 @@ export class SideBar extends React.Component {
             <div style={{ float: "left", paddingTop: 7, paddingLeft: 12 }}>
               <QLogo />
             </div>
-            <div>quadrance.</div>
+            <div>yallhands</div>
           </div>
         </div>
       </div>

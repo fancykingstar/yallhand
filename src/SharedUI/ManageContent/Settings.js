@@ -35,14 +35,14 @@ export const Settings = inject(
 
     const updateSettings = () => {
       let patchObj = {label: DataEntryStore.contentmgmt.settingsLabel, chanID: DataEntryStore.contentmgmt.settingsChannel}
-      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.anncID = UIStore.content.anncID
+      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
       mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
     }
 
     const archiveAll = () => {
-      const patchObj = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
+      const patchObj = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
       patchObj.variations.forEach(vari => vari.stage = "archived")
-      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.anncID = UIStore.content.anncID
+      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
       mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
 
     }

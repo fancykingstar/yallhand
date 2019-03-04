@@ -26,7 +26,7 @@ export class Login extends React.Component {
             {" "}
             <QLogo fill="#FFFFFF" style="" width="48px" height="60px" />{" "}
           </div>
-          <div style={{ float: "right", lineHeight: "48px" }}> quadrance.</div>
+          <div style={{ float: "right", lineHeight: "48px" }}> yallhands.</div>
         </div>
       </div>
     );

@@ -14,14 +14,14 @@ class AnnouncementsFrame extends React.Component {
     const handleClick = val => {
       this.props.history.push("/portal/announcement/" + val);
     };
-    const anncs =
+    const announcements =
       UIStore.sideNav.activeChannel === "All"
         ? AnnouncementsStore.allAnnouncements.slice()
         : AnnouncementsStore.allAnnouncements
             .slice()
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
-    const displayFeed = anncs.map(news => (
+    const displayFeed = announcements.map(news => (
         <React.Fragment>
       <div className="AnnouncementContainer">
         {news.img.length !== 0 ? (
@@ -35,7 +35,7 @@ class AnnouncementsFrame extends React.Component {
         {/* //   className={news.img.length !== 0 ? "contentBox" : "fullcontentBox"}
         //   className="fullcontentBox"
         // > */}
-          {/* <Container onClick={e => handleClick(news.anncID)}> */}
+          {/* <Container onClick={e => handleClick(news.announcementID)}> */}
             <Item.Header
               as="h2"
               content={news.label}

@@ -131,6 +131,7 @@ export class Links extends React.Component {
           title="Add and configure a new URL"
           onSubmit={val => val === "create" ? addUrl(DataEntryStore.urlForUpload) : modifyUrl(DataEntryStore.urlForUpload)}
           includeTeamTag={true}
+          hideResource={true}
 
         />
         <AddButton output={e => handleAddButton()}/>

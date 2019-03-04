@@ -69,9 +69,9 @@ export const validContent = (allItems, teamPath, tagPath) => {
           return validID["status"]; });
 
         if (allTeamIDs.length === 0) {
-          let globalAvail = content.variations.filter( vari => vari.type === "global" ).length > 0
+          let globalAvail = content.variations.filter( vari => vari.teamID === "global" ).length > 0
           if (globalAvail) {
-            let globalVariation = content.variations.filter( variation => variation.type === "global" )[0];
+            let globalVariation = content.variations.filter( vari => vari.teamID === "global"  )[0];
             addContent(content, globalVariation);
           }
         } else {

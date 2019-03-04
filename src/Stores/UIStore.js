@@ -22,7 +22,11 @@ class Store {
     @observable filter = {
         cardFilterPublished: true, 
         cardFilterDrafts: true, 
-        cardFilterArchived: false
+        cardFilterArchived: false,
+        anncFilterPublished: true, 
+        anncFilterDrafts: true, 
+        anncFilterArchived: false,
+        
     }
   
     @observable
@@ -44,7 +48,7 @@ class Store {
         onBoardAdmin: "today",
         uploadConfig: "content",
         bundles: "active",
-        portalAnncSort: "Newest",
+        portalannouncementSort: "Newest",
         portalPolicySort: "Newest"
     }
     @observable
@@ -95,7 +99,7 @@ class Store {
         searchBundlesData: [],
         searchPeople: "",
         searchPeopleData: [],
-        searchPortalAnncValue: "",
+        searchPortalannouncementValue: "",
         portalSearchValue: ""
     }
 
@@ -156,7 +160,7 @@ class Store {
     //previewing in display
     @observable content = {
         policyID: "",
-        anncID: "",
+        announcementID: "",
         variationID: "",
         history: []
     }

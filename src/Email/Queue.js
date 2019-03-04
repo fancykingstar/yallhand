@@ -13,6 +13,7 @@ export class Queue extends React.Component {
   componentDidMount() {
     const { EmailStore, DataEntryStore } = this.props;
     DataEntryStore.set("emailCampaign", "queue", EmailStore.queue.bundle)
+    DataEntryStore.set("emailCampaign", "queueID", EmailStore.queue.bundleID)
     DataEntryStore.set("emailCampaign", "queueLabel", EmailStore.queue.label)
     DataEntryStore.set("emailCampaign", "queueSubject", EmailStore.queue.subject)
     DataEntryStore.set("emailCampaign", "queueSaveSelect", "queue")
@@ -32,7 +33,7 @@ export class Queue extends React.Component {
       }
       else if(item.type === "announcement") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"anncID": item.value})
+        updatedQueue.push({"announcementID": item.value})
         DataEntryStore.set("emailCampaign", "queue", updatedQueue)
     }
   }

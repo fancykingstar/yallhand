@@ -20,7 +20,6 @@ class CreateCard extends React.Component {
       DataEntryStore.set("content", "stage", "draft")
       UIStore.set("content", "policyID", generateID())
       UIStore.set("content", "variationID", generateID())
-
       this.props.history.push('/panel/faqs/policy-variation/' + UIStore.content.variationID)
     }
 

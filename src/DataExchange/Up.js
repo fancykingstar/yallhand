@@ -27,9 +27,9 @@ const refresh = {
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true
 ) => {
-    console.log("Payload to LB " + meth, JSON.stringify(payload))
+    console.log("Payload to LB ", endpoint, meth, JSON.stringify(payload))
     const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
-    let spinnerDelay = setTimeout(() => UIStore.toggleScreenLoading(), 200)
+    // let spinnerDelay = setTimeout(() => UIStore.toggleScreenLoading(), 200)
     log(ItsLog(isAction, data))
     return callApi(endpoint, meth, payload).then((result) => {
         if(result.ok){
@@ -40,8 +40,8 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
             toast.error(result.statusText, {hideProgressBar: true})
         }
     }).then(() => {
-        clearTimeout(spinnerDelay)
-        if(UIStore.isScreenLoading){UIStore.toggleScreenLoading()}
+        // clearTimeout(spinnerDelay)
+        // if(UIStore.isScreenLoading){UIStore.toggleScreenLoading()}
     })
 }
 
@@ -49,16 +49,16 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 
 
 ///LOGS (event type options: create, update, delete)
-export const log = (payload) => {apiCall("/itslogs", "POST", payload)} 
+export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
 
 
 ///Sentiment
-export const createSentiment = (payload) => {apiCall("/sentiments/" + accountID(), "POST", payload)} 
+export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
 
 ///History
 export const createHistory = (payload) => {
     console.log("history", JSON.stringify(payload))
-    apiCall("/histories/" + accountID(), "POST", payload)
+    apiCall("/histories", "POST", payload)
 } 
 
 
@@ -66,7 +66,7 @@ export const createHistory = (payload) => {
 
 ///SCHEDULE 
 export const createSchedule = (payload, toastEnabled) => {
-    return processTemplate(true, "schedules/" + accountID(), "POST", payload, "schedule", 
+    return processTemplate(true, "schedules", "POST", payload, "schedule", 
         `Your ${payload.task} task is scheduled! ⏳`, 
         true,{"event": "create", "type":"schedule"}, toastEnabled
     )
@@ -82,7 +82,7 @@ export const deleteSchedule = (scheduleID) => {
 
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
-    processTemplate(true, "teams/" + accountID(), "POST", payload, "teams", 
+    processTemplate(true, "teams", "POST", payload, "teams", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"team"}
     )
@@ -106,7 +106,7 @@ export const deleteTeam = (teamID) => {
 
 ///TAGS 
 export const createTag = (payload) => {
-    processTemplate(true, "tags/" + accountID(), "POST", payload, "tags", 
+    processTemplate(true, "tags", "POST", payload, "tags", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"tag"}
     )
@@ -140,7 +140,7 @@ export const sendInviteEmail = (data) => {
     })
 }
 export const createUser = (payload, toastEnabled) => {
-    return processTemplate(true, "users/" + accountID(), "POST", payload, "users", 
+    return processTemplate(true, "users", "POST", payload, "users", 
     `🎉 ${payload.email} has been invited to Join ✉️`, 
     true,{"event": "create", "type":"user"}, toastEnabled
 )
@@ -175,7 +175,7 @@ export const deleteUser = (userID) => {
 
 ///CHANNEL
 export const createChannel = (payload) => {
-    processTemplate(true, "channels/" + accountID(), "POST", payload, "channels", 
+    processTemplate(true, "channels", "POST", payload, "channels", 
         "Your new channel has been created 🙌", 
         true,{"event": "create", "type":"channel"}
     )
@@ -200,7 +200,7 @@ export const deleteChannel = (chanID) => {
 
 ///URL Resources
 export const createUrlResource = (payload) => {
-    return processTemplate(true, "urls/" + accountID(), "POST", payload, "urlResources", 
+    return processTemplate(true, "urls", "POST", payload, "urlResources", 
     `Your new URL has been created 🙌`, 
     true,{"event": "create", "type":"url"}
 )
@@ -223,7 +223,7 @@ export const deleteUrlResource = (resourceID) => {
 
 ///FILE RESOURCES
 export const createFile = (payload) => {
-    processTemplate(true, "fileresources/" + accountID(), "POST", payload, "files", 
+    processTemplate(true, "fileresources", "POST", payload, "files", 
         "Your file has been uploaded ☁️", 
         true,{"event": "create", "type":"file"}
     )
@@ -246,13 +246,13 @@ export const deleteFileresource = (resourceID) => {
 
 ///POLICIES AND ANNOUNCEMENTS (SAME DATA SCHEMA)
 export const createPolicy = (payload) => {
-    processTemplate(true, "policies/" + accountID(), "POST", payload, "policies", 
+    return processTemplate(true, "policies", "POST", payload, "policies", 
         "Your new FAQ has been created 🙌", 
         true,{"event": "create", "type":"policy"}
     )
 }
 export const createAnnouncement = (payload) => {
-    processTemplate(true, "anncs/" + accountID(), "POST", payload, "announcements", 
+    return processTemplate(true, "announcements", "POST", payload, "announcements", 
         "Your new Announcement has been created 🙌", 
         true,{"event": "create", "type":"announcement"}
     )
@@ -264,7 +264,7 @@ export const modifyPolicy = (payload) => {
 )
 }
 export const modifyAnnouncement = (payload) => {
-    return processTemplate(true, "anncs/" + payload.anncID, "PATCH", payload, "announcements", 
+    return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
 )
@@ -274,7 +274,7 @@ export const modifyAnnouncement = (payload) => {
 
 ///EMAIL CAMPAIGN --- BUNDLE
 export const modifyBundle = (payload, toastEnabled) => {
-    const msg = payload.bundleID === "queue" ? "Your email queue has been updated ✉️🛠" : "Your email bundle has been updated ✉️🛠"
+    const msg = payload.isQueue? "Your email queue has been updated ✉️🛠" : "Your email bundle has been updated ✉️🛠"
     return processTemplate(true, "emailbundles/" + payload.bundleID, "PATCH", payload, "bundles", 
     msg,
     true,{"event": "update", "type":"bundle"}, toastEnabled
@@ -282,7 +282,7 @@ export const modifyBundle = (payload, toastEnabled) => {
 }
 
 export const createBundle = (payload) => {
-    return processTemplate(true, "emailbundles/" + accountID(), "POST", payload, "bundles", 
+    return processTemplate(true, "emailbundles", "POST", payload, "bundles", 
         "Your new bundle has been created 🙌", 
         true,{"event": "create", "type":"bundle"}
     )
@@ -295,7 +295,7 @@ export const deleteBundle = (bundleID) => {
 }
 
 export const createCampaign = (payload, toastEnabled) => {
-    return processTemplate(true, "emailcampaigns/" + accountID(), "POST", payload, "campaigns", 
+    return processTemplate(true, "emailcampaigns", "POST", payload, "campaigns", 
         payload.isTriggered ? "Your email trigger is set and sending will be automated to eligible users 🤖✉️"   :`Your campaign is being built and will send momentarily 🚀✉️` , 
         true,{"event": "create", "type":"campaign"}, toastEnabled
     )

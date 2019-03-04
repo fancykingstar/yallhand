@@ -70,8 +70,8 @@ export class ContentDetail extends React.Component {
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <Sentiment
-                            type={mode === "announcement"? "anncID" : "policyID"}
-                            ID={mode === "announcement"? content.anncID : content.policyID}
+                            type={mode === "announcement"? "announcementID" : "policyID"}
+                            ID={mode === "announcement"? content.announcementID : content.policyID}
                             variationID={content.variations[0].variationID}
                             />
                         </Grid.Column>
