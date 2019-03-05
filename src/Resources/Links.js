@@ -1,30 +1,21 @@
 import React from "react";
-import "./style.css";
-import { Table, Header, Button, 
-  // Confirm  
-} from "semantic-ui-react";
+import { Table, Header, Button, } from "semantic-ui-react";
 import { AddButton } from "../SharedUI/AddButton";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { UploadURL } from "../SharedUI/UploadURL";
 import { AssociationSummary } from "../SharedUI/AssociationSummary"
-import {
-  initSearchObj,
-  stupidSearch
-} from "../SharedCalculations/StupidSearch";
-// import _ from "lodash";
-import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { urlResource } from "../DataExchange/PayloadBuilder";
 import { createUrlResource, modifyUrlResource, deleteUrlResource } from "../DataExchange/Up";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
+import "./style.css";
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
 @observer
 export class Links extends React.Component {
   componentDidMount() {
-    const { UIStore } = this.props;
-    // const { TeamStore } = this.props;
-    const { ResourcesStore } = this.props;
+    const { UIStore, ResourcesStore } = this.props;
     if (UIStore.search.searchUrlsData.length === 0) {
       UIStore.set("search",
         "searchUrlsData",
@@ -36,11 +27,8 @@ export class Links extends React.Component {
     }
   }
   render() {
-    const {ResourcesStore} =this.props
-    const {UIStore} =this.props
-    const {DataEntryStore} =this.props
+    const { UIStore, ResourcesStore, DataEntryStore } = this.props;
     const edit = (data) => {
-      console.log(data)
       DataEntryStore.set("urlForUpload", "isNew", false)
       DataEntryStore.set("urlForUpload", "resourceID", data.resourceID)
       DataEntryStore.set("urlForUpload", "url", data.url)
@@ -81,7 +69,6 @@ export class Links extends React.Component {
     }
 
     const deleteUrl = (val) => {
-      // console.log(val)
       deleteUrlResource(val)
     }
 
@@ -103,7 +90,7 @@ export class Links extends React.Component {
       <Table.Row key={"links" + giveMeKey()}>
         <Table.Cell> {resurl.label}</Table.Cell>
         <Table.Cell>
-          <a href={resurl.url} target="_blank">
+          <a href={resurl.prefix + resurl.url} target="_blank">
             {resurl.url}
           </a>
         </Table.Cell>
@@ -113,7 +100,9 @@ export class Links extends React.Component {
         </Table.Cell>
         <Table.Cell><Button basic onClick={() => edit(resurl)} key={resurl.label}>Edit</Button></Table.Cell>
         <Table.Cell>
-          <ConfirmDelete basic confirm={e => deleteUrl(resurl.resourceID)}/>
+          {resurl.associations.policies.length === 0 && resurl.associations.announcements.length === 0?
+            <Button basic negative onClick={e => deleteUrl(resurl.resourceID)}>Delete</Button>
+          : null }
         </Table.Cell>
       </Table.Row>
     ));

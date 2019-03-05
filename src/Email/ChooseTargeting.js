@@ -44,12 +44,12 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
               }
             />
           </Form.Group>
-          <p>
+          {/* <p>
             <span>Targeting: </span>
             <span style={{ fontStyle: "italic" }}>
               <a href="">42 users</a>
             </span>
-          </p>
+          </p> */}
         </Form>
       ) : (
         <Form
@@ -117,10 +117,10 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
           </span>
 
           {targetOptions}
-          <p>
+          {/* <p>
             <span>Email Variations Created: </span>
             <span style={{ marginTop: 5, fontStyle: "italic" }}> 3</span>
-          </p>
+          </p> */}
         </div>
       </Segment>
     );

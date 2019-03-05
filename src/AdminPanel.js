@@ -64,7 +64,8 @@ export class AdminPanel extends React.Component {
         <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
           <div style={{marginTop: 40, position: "fixed", zIndex: 50}}> 
         
-          <SideBar />
+          <div style={{float: "left"}}> <SideBar /> </div>
+          <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
          
         </div>
         </Transition>

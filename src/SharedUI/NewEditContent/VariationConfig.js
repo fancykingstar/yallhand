@@ -46,7 +46,7 @@ export class VariationConfig extends React.Component {
   
                   <span>
                     Alternate Title For Audience (optional)
-                    <InfoPopUp content="Alter the title for this particular audience without effecting other teams." />
+                    <InfoPopUp content="Alter the title for this particular audience without effecting other teams. Not available for Global teams or when creating new content." />
                   </span>
               
         

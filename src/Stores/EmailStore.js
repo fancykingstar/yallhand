@@ -72,10 +72,11 @@ class Store {
 
     loadBundles(allBundles) {
       return new Promise((resolve, reject) => {
-        const queue = allBundles.filter(bundle => bundle.bundleID === "queue")
-        // const queue = allBundles.filter(bundle => bundle.isQueue)
+        const queue = allBundles.filter(bundle => bundle.isQueue)
         if(queue.length === 1) {this.queue = queue[0]}
-        else{this.queue = bundle(true)}
+        else{
+          this.queue = bundle(true)
+        }
         this.allBundles = allBundles
           resolve(true)
       }) 
@@ -96,7 +97,7 @@ class Store {
     }
 
     _doesBundleContain(id, bundleID){
-      const collection = bundleID === "queue" ? this.queue.bundle : this._getBundle(bundleID).bundle
+      const collection = this._getBundle(bundleID).bundle
       const allIDs = []
       collection.forEach(content => allIDs.push(Object.values(content)[0]))
       return allIDs.includes(id)

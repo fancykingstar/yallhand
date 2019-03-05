@@ -22,7 +22,7 @@ export class PublishControls extends React.Component {
  
     const iconKey = {
       draft: "keyboard",
-      published: "fly",
+      published: "rocket",
       update: "angle double up",
       unpublish: "remove circle",
       archived: "archive",

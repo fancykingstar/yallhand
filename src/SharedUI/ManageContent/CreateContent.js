@@ -46,7 +46,7 @@ class CreateContent extends React.Component {
             <Button circular icon="plus" color="blue" size="large" />
           </div>
           <div className="CreateNewHeader">
-            <h3>{`Create a new ${this.mode}`}</h3>
+            <h3>{`Create a new ${this.mode === "policy"? "FAQ" : this.mode}`}</h3>
           </div>
         </div>
       </React.Fragment>
@@ -73,15 +73,16 @@ class CreateContent extends React.Component {
             closeIcon
             size="small"
           >
-            <Modal.Header>{`Add New ${this.mode.charAt(0).toUpperCase() +
+            <Modal.Header>{`Add New ${this.mode === "policy"? "FAQ" : this.mode
+              .charAt(0).toUpperCase() +
               this.mode.slice(1)} Under ${ UIStore.sideNav.activeChannel === "All" ? "All" : ChannelStore._getChannel(UIStore.sideNav.activeChannel).label
               
             } Category`}</Modal.Header>
             <Modal.Content>
-              <h4>Enter a common query</h4>
+              <h4>{this.mode === "policy"? "Enter a frequently asked question" : "Enter a title for your announcement"}</h4>
               <Form onSubmit={e => handleClick(e)}>
                 <Form.Input
-                  placeholder="example: Where can I find...?"
+                  placeholder={this.mode === "policy"? "example: Where can I find...?" : "example: This month we will be featuring..."}
                   fluid
                   onChange={(e, val) =>
                     DataEntryStore.set("contentmgmt", "label", val.value)
@@ -92,13 +93,7 @@ class CreateContent extends React.Component {
               </Form>
             </Modal.Content>
             <Modal.Actions>
-              <Button
-                primary
-                icon="checkmark"
-                labelPosition="right"
-                content="Submit"
-                onClick={e => handleClick(e)}
-              />
+              <Button primary onClick={e => handleClick(e)} >Submit</Button>
             </Modal.Actions>
           </Modal>
         </div>

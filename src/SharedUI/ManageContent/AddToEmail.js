@@ -7,9 +7,9 @@ import { modifyBundle } from "../../DataExchange/Up"
 import "./style.css";
 import _ from "lodash";
 
-export const AddToEmail = inject("DataEntryStore", "UIStore")(
+export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
   observer(props => {
-  const {DataEntryStore, UIStore} = props
+  const {DataEntryStore, UIStore, EmailStore} = props
   const bundleBuildOption = EmailStore.allBundles
     .filter(bundle => bundle.bundleID !== "queue")
     .map(bundle => ({
@@ -20,7 +20,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore")(
   bundleBuildOption.unshift({
     text: "Add to queue",
     icon: "plus",
-    value: "queue"
+    value: EmailStore.queue.bundleID
   });
   const handleSelect = (val) => {
     DataEntryStore.set("contentmgmt", "bundle", val)
@@ -47,7 +47,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore")(
               label="Select Action"
               style={{ width: 350 }}
               options={bundleBuildOption}
-              defaultValue={"queue"}
+              defaultValue={EmailStore.queue.bundleID}
               onChange={(e, val) => handleSelect(val.value)}
             />
             <Form.Button label="" primary>

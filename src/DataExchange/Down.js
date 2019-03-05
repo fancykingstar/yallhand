@@ -24,9 +24,11 @@ export const users_and_teams = async (accountID, userID) =>
      .then(() => apiCall_noBody("teams/" + accountID, "GET").then((result) => TeamStore.loadStructure(result, AccountStore.allUsers)))
      .then(() => apiCall_noBody("tags/" + accountID, "GET").then((result) => TeamStore.loadTags(result, AccountStore.allUsers)))
 
-export const users = async (accountID) => 
-     await apiCall_noBody("users/" + accountID, "GET").then((result) => AccountStore.loadUsers(result))
-``
+export const users = async (accountID, userID) => 
+     await apiCall_noBody("users/" + accountID, "GET").then((result) => 
+          AccountStore.loadUsers(result))
+          .then(() => UserStore.loadUser(AccountStore._getUser(userID)))
+
 export const channels = async (accountID) => 
      await apiCall_noBody("channels/" + accountID, "GET").then((result) => ChannelStore.loadChannels(result))
 

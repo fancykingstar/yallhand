@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Segment, Form, Button, Message } from "semantic-ui-react";
+import { Header, Segment, Form, Button, Message, Icon, Input } from "semantic-ui-react";
 import { FeaturedAvatar} from "../SharedUI/ManageContent/FeaturedAvatar";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
@@ -10,13 +10,13 @@ import { userSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyUser } from "../DataExchange/Up"
 // import _ from "lodash";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("UserStore", "DataEntryStore")
 @observer
 export class UserSettings extends React.Component {
   componentDidMount() {
-    const { UserStore } = this.props;
-    const { DataEntryStore } = this.props;
+    const { DataEntryStore, UserStore } = this.props;
     DataEntryStore.set("userSettings", "img", UserStore.user.img)
     DataEntryStore.set("userSettings", "timezone", UserStore.user.timezone)
     DataEntryStore.set("userSettings", "displayName_full", UserStore.user.displayName_full)
@@ -26,8 +26,7 @@ export class UserSettings extends React.Component {
 
   }
   render() {
-    const { DataEntryStore } = this.props;
-    const { UserStore } = this.props;
+    const { DataEntryStore, UserStore } = this.props;
     const timezones = require("../TemplateData/timezones.json")
     .map(time => ({ text: time.text, value: time.offset }))
     .reverse();
@@ -43,31 +42,51 @@ export class UserSettings extends React.Component {
     const handleName = val => {
       DataEntryStore.set("userSettings", "displayName", val);
     };
-    const handleProfileChanges = val => {
-      DataEntryStore.set("userSettings", val.label, val.value);
+    const handleTitle = val =>{
+      DataEntryStore.set("userSettings", "Title", val)
     }
-    const profileLabels = ["Title", "Department", "Location", "Phone or Extension", "Mobile", "About Me"].map(i => ({label: i, prefix: null, value: DataEntryStore.userSettings[i]}))
-    const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: DataEntryStore.userSettings[i.network]}))
+    const profileLabels = ["Title", "Department", "Location", "Phone or Extension", "Mobile", "About Me"].map(i => ({label: i, prefix: null, value: i}))
+    const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network}))
     const multipleInputs = [...profileLabels,...socialLabels]
-
-    // const updateProfile = () => {
-    //   const allLabels = [...socialLabels.map(i => i.label),...profileLabels.map(i => i.label)]
-    //   const userSettings = Object.assign({}, DataEntryStore.userSettings)
-    //   let profile = {}
-    //   Object.keys(userSettings).forEach(attribute => {
-    //    if(allLabels.includes(attribute)){
-    //      profile[attribute] = userSettings[attribute]
-    //      delete userSettings[attribute]
-    //    }
-    //   })
-    //   userSettings["profile"] = profile
-    //   modifyUserSettings(userSettings)
-    // }
+    
 
     const handleDeactivate = () => {
       deactivateUser(UserStore.user)
     }
 
+    // const allTheFields = multipleInputs.map(attribute =>
+    //   attribute.prefix !== null ? (
+    //     <React.Fragment key = {"multipleInptsFragements" + giveMeKey()}>
+    //       <Form.Input
+      
+    //         label={
+    //           <span>
+    //             <Icon name={attribute.label.toLowerCase()} /> {attribute.label}{" "}
+    //           </span>
+    //         }
+    //       >
+    //         {" "}
+    //         <Input
+    //           key = {"multipleInpts" + giveMeKey()}
+    //           label={attribute.prefix}
+    //           value={attribute.value}
+    //           onChange={(e, val) =>
+    //             DataEntryStore.set("userSettings", attribute.value, val.value)
+    //           }
+    //         />
+    //       </Form.Input>
+    //     </React.Fragment>
+    //   ) : (
+    //     <Form.Input
+    //       label={attribute.label}
+    //       key = {"multipleInpts" + giveMeKey()}
+    //       value={DataEntryStore.userSettings[attribute.label]}
+    //       onChange={(e, val) =>
+    //         DataEntryStore.set("userSettings", attribute.label, val.value)
+    //       }
+    //     />
+    //   )
+    // );
    
 
     return (
@@ -114,10 +133,71 @@ export class UserSettings extends React.Component {
                   onChange={(e, { value }) => handleTimezone(value)}
                   search
                 />
-              <MultipleInputFields
-           input={multipleInputs}
-           onChange={handleProfileChanges}
-          /> <br/>
+              <Form.Input
+                label={"Title"}
+                value={DataEntryStore.userSettings.Title}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Title", val.value)}    
+               />    
+              <Form.Input
+                label={"Department"}
+                value={DataEntryStore.userSettings.Department}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Department", val.value)}    
+               />     
+             <Form.Input
+                label={"Location"}
+                value={DataEntryStore.userSettings.Location}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Location", val.value)}    
+               />      
+              <Form.Input
+                label={"Phone or Extension"}
+                value={DataEntryStore.userSettings["Phone or Extension"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Phone or Extension", val.value)}    
+               />     
+               <Form.Input
+                label={"Mobile"}
+                value={DataEntryStore.userSettings["Mobile"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Mobile", val.value)}    
+               />      
+              <Form.Input
+                label={"About Me"}
+                value={DataEntryStore.userSettings["About Me"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "About Me", val.value)}    
+               />     
+
+{/* const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network})) */}
+            {/* <Form.Input label={ <span> <Icon name="Twitter" />Twitter</span> } > {" "} */}
+            <Form.Input label={ <span> <Icon name={"twitter"} /> {"Twitter"}{" "} </span> } > {" "}
+            <Input
+                label={"@"}
+                value={DataEntryStore.userSettings["Twitter"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Twitter", val.value)}    
+               /> 
+            </Form.Input>   
+
+            <Form.Input label={ <span> <Icon name={"medium"} /> {"Medium"}{" "} </span> } > {" "}
+            <Input
+                label={"https://medium.com/@"}
+                value={DataEntryStore.userSettings["Medium"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Medium", val.value)}    
+               /> 
+            </Form.Input>    
+
+            <Form.Input label={ <span> <Icon name={"github"} /> {"Github"}{" "} </span> } > {" "}
+            <Input
+                label={"https://github.com/"}
+                value={DataEntryStore.userSettings["Github"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Github", val.value)}    
+               /> 
+            </Form.Input>    
+
+            <Form.Input label={ <span> <Icon name={"linkedin"} /> {"LinkedIn"}{" "} </span> } > {" "}
+            <Input
+                label={"https://linkedin.com/"}
+                value={DataEntryStore.userSettings["LinkedIn"]}
+                onChange={(e, val) => DataEntryStore.set("userSettings", "LinkedIn", val.value)}    
+               /> 
+            </Form.Input>    
+<br/>
               <Button primary type="submit"
               disabled={DataEntryStore.userSettings.displayName === "" || DataEntryStore.userSettings.displayName_full === ""}
               onClick={e => modifyUser(userSettingsEdit())}
@@ -151,10 +231,10 @@ export class UserSettings extends React.Component {
         </Segment>
         
        
-       <Segment>
+       {/* <Segment>
          <div style={{height: 30}}>    <ConfirmDelete deleteLabel="Deactivate" size="mini" confirm={handleDeactivate}/></div>
    
-       </Segment>
+       </Segment> */}
         <div style={{height: 100}}></div>
     
   

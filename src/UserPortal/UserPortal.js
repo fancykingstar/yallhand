@@ -19,7 +19,9 @@ import { Responsive, Transition } from "semantic-ui-react";
 class UserPortal extends React.Component {
   componentWillUnmount(){
     const {UIStore} = this.props
+    UIStore.reset("search")
     UIStore.reset("adminLoadingComplete")
+
   }
   componentDidMount() {
     const { UIStore, PoliciesStore, UserStore, AnnouncementsStore } = this.props;
@@ -60,7 +62,9 @@ class UserPortal extends React.Component {
             duration={500}
           >
             <div className="PortalContainerNavMobile">
-              <SideBarPortal mobile={true} />
+              
+              <div style={{float: "left", borderRight: "1px solid"}} > <SideBarPortal mobile={true} /> </div>
+               <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
             </div>
           </Transition>
 

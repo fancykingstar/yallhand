@@ -1,8 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Modal, Form, Header, Message, 
-  // Dropdown, Input 
-} from "semantic-ui-react";
+import { Modal, Form, Header, Message, } from "semantic-ui-react";
 import { GenerateFileName } from "../SharedCalculations/GenerateFileName";
 import { S3Upload } from "../DataExchange/S3Upload";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
@@ -25,12 +23,7 @@ export class UploadFile extends React.Component {
               if(result !== null){
                 DataEntryStore.set("fileForUpload", "url", result.Location)
                 DataEntryStore.set("fileForUpload", "S3Key", result.Key)
-               
-                // console.log(result)
-                   //if sucess, add/update to file DB record
-                  //if success, patch policy
-                //   this.props.updateStore("img", result.Location)
-              }
+            }
           }
         ).then(() => {
           UIStore.set("modal", "uploadFile", false);
@@ -38,11 +31,6 @@ export class UploadFile extends React.Component {
         })
       }
       
-
-      // DataEntryStore.reset("fileForUpload", {
-      //   teamID: "global",
-      //   tagID: "none"
-      // });
     };
 
     const handleFileChange = e => {
@@ -57,27 +45,6 @@ export class UploadFile extends React.Component {
       reader.readAsDataURL(file);
     };
 
-    
-    // const includeTeamTag =
-    //   this.props.includeTeamTag !== undefined &&
-    //   this.props.includeTeamTag === true ? (
-    //     <React.Fragment>
-    //       <TeamSelect
-    //         label={"Limit Access To Teams"}
-    //         placeholder="choose team..."
-    //         value={DataEntryStore.fileForUpload.teamID}
-    //         outputVal={val =>
-    //           DataEntryStore.set("fileForUpload", "teamID", val)
-    //         }
-    //       />
-    //       <TagSelect
-    //         label={"Limit Access By Tag"}
-    //         placeholder="choose tag..."
-    //         value={DataEntryStore.fileForUpload.tagID}
-    //         outputVal={val => DataEntryStore.set("fileForUpload", "tagID", val)}
-    //       />
-    //     </React.Fragment>
-    //   ) : null;
     const title =
       this.props.title === undefined
         ? `Upload a new file to associate with this ${
@@ -86,11 +53,6 @@ export class UploadFile extends React.Component {
         : this.props.title;
     const CreateOrUpdate = !DataEntryStore.fileForUpload.isNew ? (
         <Form.Button
-          // type="submit"
-          // disabled={
-          //   DataEntryStore.fileForUpload.label === "" ||
-          //   DataEntryStore.fileForUpload.file === ""
-          // }
           onClick={e => handleSubmit("update")}
           primary
         >
@@ -98,7 +60,6 @@ export class UploadFile extends React.Component {
         </Form.Button>
       ) : (
         <Form.Button
-          // type="submit"
           disabled={
             DataEntryStore.fileForUpload.label === "" ||
             DataEntryStore.fileForUpload.file === ""

@@ -8,10 +8,10 @@ import { AssocLabelGroup } from "../SharedUI/AssocLabelGroup"
 
 import "./style.css"
 
-const selectOptions = [
-  { text: "selected content", value: "content" },
-  { text: "general availability", value: "general" }
-];
+// const selectOptions = [
+//   { text: "selected content", value: "content" },
+//   { text: "general availability", value: "general" }
+// ];
 
 @inject("UIStore", "DataEntryStore")
 @observer
@@ -52,12 +52,13 @@ export class UploadConfig extends React.Component {
       ) : (
         <React.Fragment>
           <Form.Group style={{paddingTop: 15}}>
-            <ContentSearch 
+            {/* <ContentSearch 
             styleOveride={true} 
-            output={val => addContent(val)}/>
+            output={val => addContent(val)}/> */}
             <AssocLabelGroup
               assoc={DataEntryStore[key].associations}
               remove={val => removeAssociation(val)}
+              disableRemove
             />
           </Form.Group>
         </React.Fragment>
@@ -84,15 +85,15 @@ export class UploadConfig extends React.Component {
       <React.Fragment>
           <Segment secondary>
         <span>
-          Associate with{" "}
-          <Dropdown
+          Associated with
+          {/* <Dropdown
             inline
             value={UIStore.dropdown.uploadConfig}
             options={selectOptions}
             onChange={(e, val) =>
               UIStore.set("dropdown", "uploadConfig", val.value)
             }
-          />
+          /> */}
           <div className="UploadConfig">
           {config}
           </div>

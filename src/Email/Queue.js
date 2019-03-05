@@ -28,13 +28,17 @@ export class Queue extends React.Component {
     const addToQueue = (item) => {
       if(item.type === "policy") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"policyID": item.value})
-        DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        if(!JSON.stringify(updatedQueue).includes(item.value)){
+          updatedQueue.push({"policyID": item.value})
+          DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        }
       }
       else if(item.type === "announcement") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"announcementID": item.value})
-        DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        if(!JSON.stringify(updatedQueue).includes(item.value)){
+          updatedQueue.push({"announcementID": item.value})
+          DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        }
     }
   }
 

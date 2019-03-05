@@ -31,8 +31,9 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
         const tagsDisplay = tags.length !== 0 ? tags.join(', ') : "None"
         const valStyle = {fontWeight: '400', fontStyle: 'italic'}
         
-        const filesDisplay = resources[sourceType].files.length !== 0 ? JoinLinksCommas(resources[sourceType].files.length, files, "label", "url") : "none"
-        const urlsDisplay = urls.length !== 0 ? JoinLinksCommas(urls.length, urls, "label", "url") : "none"
+        const filesDisplay = resources[sourceType].files.length !== 0 ? JoinLinksCommas(resources[sourceType].files.length, files, "label", "file") : "none"
+        const urlsDisplay =  urls.length !== 0 ? JoinLinksCommas(urls.length, urls, "label", "url") : "none"
+       
          return(
             <div>
               <div className="Form">

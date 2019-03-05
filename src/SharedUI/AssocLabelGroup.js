@@ -1,6 +1,7 @@
 import React from "react"
 import { inject, observer } from "mobx-react";
 import { Label, Icon } from "semantic-ui-react";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 
 //labels for policies/announcements : "name (if team, if tag)"
@@ -30,8 +31,12 @@ export class AssocLabelGroup extends React.Component {
          return key
         }
         const policyKey = labelKey("policy", this.props.assoc.policies)
-        const policyLabels = Object.keys(policyKey).map(item => <Label removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(policyKey[item])} name="delete"/></Label>)
-        const announcementKey = labelKey("announcement", this.props.assoc.announcements)
+        const policyLabels = Object.keys(policyKey)
+            .map(item => 
+            {return this.props.disableRemove === undefined?
+            <Label key={"labelkey" + giveMeKey()} removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(policyKey[item])} name="delete"/></Label>
+            : <Label key={"labelkey" + giveMeKey()}>{item}</Label>})
+         const announcementKey = labelKey("announcement", this.props.assoc.announcements)
          const announcementLabels = Object.keys(announcementKey).map(item => <Label removeIcon='remove'>{item}<Icon onClick={e => this.props.remove(announcementKey[item])} name="delete"/></Label>)
         const labels = <Label.Group>{[...policyLabels, ...announcementLabels].sort()}</Label.Group>
         return(

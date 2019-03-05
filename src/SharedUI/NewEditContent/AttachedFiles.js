@@ -10,6 +10,7 @@ import { createFile, modifyFile } from "../../DataExchange/Up";
 import { addAssociation } from "../../SharedCalculations/AddAssociation"
 import { removeAssociation } from "../../SharedCalculations/RemoveAssociation"
 import {S3Download} from "../../DataExchange/S3Download"
+import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
@@ -58,7 +59,7 @@ export class AttachedFiles extends React.Component {
     const getFiles = () => ResourcesStore.matchedResources("file", this.props.mode, this.props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, UIStore.content.variationID) 
     const currentFiles = DataEntryStore.content.isNew !== true ? getFiles() : []
     const attachedList = currentFiles.map(attach => (
-      <List.Item>
+      <List.Item key={"attachedResource" + giveMeKey()}>
         <List.Icon name="file" size="large"/>
         <List.Content floated="right" verticalAlign='middle'>
         </List.Content>

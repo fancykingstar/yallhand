@@ -1,11 +1,11 @@
 import React from "react";
-import { Menu, Icon, Form, Transition } from "semantic-ui-react";
+import { Menu, Icon, Form, Transition, Button } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 import "./style.css"
 
-@inject("ChannelStore", "UIStore")
+@inject("ChannelStore", "UIStore", "UserStore")
 @observer
 class SideBarMenu extends React.Component {
 
@@ -23,7 +23,7 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore } = this.props;
+    const { ChannelStore, UIStore, UserStore } = this.props;
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item 
         name={channel.label} 
@@ -120,6 +120,12 @@ class SideBarMenu extends React.Component {
         </Form>
     </Menu.Item> : <div/>}
 </Menu>
+{this.props.mobile && UserStore.user.isAdmin?
+      <div style={{marginLeft:15}}><Button size="mini" onClick={e => {
+        this.props.history.push("/panel/dashboard")
+        UIStore.set("responsive", "mobileNav", false)
+      }} >Return To Admin Panel </Button></div>
+    : null}
       </div>
     );
   }

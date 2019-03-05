@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Label, Button, Icon, Header, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import { SelectVariation } from "../../SharedUI/SelectVariation";
 import { ManageVariationData } from "../../SharedUI/ManageVariationData";
 import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
@@ -231,7 +231,8 @@ class ManageContent extends React.Component {
                 <BackButton />
                 <Header
                   as="h2"
-                  content={`Manage ${this.mode.charAt(0).toUpperCase() + this.mode.slice(1)}`}
+                  content={`Manage ${this.mode === "policy"? "FAQ" : this.mode
+                    .charAt(0).toUpperCase() + this.mode.slice(1)}`}
                   subheader={DataEntryStore.contentmgmt.label}
                 />
                 <Segment>
@@ -272,7 +273,7 @@ class ManageContent extends React.Component {
                   mode={this.mode}
                   />
       
-                <Keywords output={e => alert("hi")} />
+                <Keywords mode={this.mode} />
                 <ReviewAlerts
                   defaultVal={DataEntryStore.contentmgmt.reviewAlert}
                   mode={this.mode}

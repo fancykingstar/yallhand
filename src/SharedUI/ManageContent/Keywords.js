@@ -1,7 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import {Segment, Form, Header, Label, Icon} from "semantic-ui-react"
-import {patchPolicy} from "../../DataExchange/Content"
 import { StdInputValidation } from "../../SharedCalculations/StdInputValidation"
 import { contentPatch } from "../../DataExchange/PayloadBuilder"
 import { modifyAnnouncement, modifyPolicy} from "../../DataExchange/Up"
@@ -13,7 +12,7 @@ export const Keywords = inject("DataEntryStore", "PoliciesStore", "UserStore", "
     const {DataEntryStore, PoliciesStore, UserStore, UIStore} = props
 
     const addKeyword = (val) => {
-      if(StdInputValidation(val, DataEntryStore.contentmgmt.keywords).valid){
+      if(StdInputValidation(val, DataEntryStore.contentmgmt.keywords).valid && val.trim() !== ""){
         let newarry = DataEntryStore.contentmgmt.keywords.slice()
         newarry.push(val)
         DataEntryStore.set("contentmgmt", "keywords", newarry)
@@ -27,10 +26,9 @@ export const Keywords = inject("DataEntryStore", "PoliciesStore", "UserStore", "
         </Label>
       ));
     const submitUpdate = () => {
-      const mode = props.mode === "policy" ? "policy" : "announcement"
       let patchObj = {keywords: DataEntryStore.contentmgmt.keywords}
-      mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
-      mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
+      props.mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
+      props.mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
     }
     return(
         <Segment>
@@ -41,16 +39,15 @@ export const Keywords = inject("DataEntryStore", "PoliciesStore", "UserStore", "
               <Form onSubmit={e => addKeyword(DataEntryStore.contentmgmt.keywordInput)}>
               <Form.Group inline>
               <Form.Input
-                // id="keyword"
                 value={DataEntryStore.contentmgmt.keywordInput}
                 onChange={(e, val) => DataEntryStore.set("contentmgmt", "keywordInput", val.value)}
                 label="Add Related Keywords or Phrases (optional)"
                 style={{ width: 350 }}
                 action="Add"
                 placeholder="Enter term(s)..."
-              /><Form.Button label="" primary type="button"
-              // disabled={DataEntryStore.selectedKeywords.toString() === currentObjVariation.keywords.toString()} 
-              onClick={e => submitUpdate()}>Update</Form.Button></Form.Group>
+              />
+              <Form.Button disabled={DataEntryStore.contentmgmt.keywordInput === "" && DataEntryStore.contentmgmt.keywords.length === 0} label="" primary type="button" onClick={e => submitUpdate()}>Update</Form.Button>
+              </Form.Group>
               </Form>
               <div className="Form">{keywords}</div>
             </div>

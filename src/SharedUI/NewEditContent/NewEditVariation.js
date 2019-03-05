@@ -26,7 +26,8 @@ export class NewEditVariation extends React.Component {
     }
   componentDidMount() {
     const { UIStore, PoliciesStore, AnnouncementsStore, DataEntryStore } = this.props;
-    
+    UIStore.set("modal", "uploadAssocEdit", false)
+
     const load = (vari) => {
       UIStore.set("content", "variationID", this.props.match.params.id)
       this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(this.props.match.params.id), this.props.match.params.id)

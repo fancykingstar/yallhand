@@ -1,6 +1,6 @@
-import {UIStore} from "../Stores/UIStore"
 import {apiCall, apiCall_noBody, apiCall_del} from "./Fetch"
 import {AccountStore} from "../Stores/AccountStore"
+import {UserStore} from "../Stores/UserStore"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {ItsLog} from "../DataExchange/PayloadBuilder"
@@ -9,12 +9,13 @@ import * as reload from "../DataExchange/Down"
 import _ from "lodash";
 
 const accountID = () => AccountStore.account.accountID.slice()
+const userID = () => UserStore.user.userID.slice()
 
 const refresh = {
     "schedule": () => reload.scheduled(accountID()),
     "teams": () => reload.structure(accountID()),
     "tags": () => reload.tags(accountID()),
-    "users": () => reload.users(accountID()),
+    "users": () => reload.users(accountID(), userID()),
     "channels": () => reload.channels(accountID()),
     "urlResources": () => reload.urls(accountID()),
     "policies": () => reload.policies(accountID()),
@@ -320,12 +321,6 @@ export const modifyAccount = (payload) => {
 )
 }
 
-// export const modifyUser = (payload) => {
-//     return processTemplate(true, "users/" + payload.userID, "PATCH", payload, "users", 
-//     "Your account settings have been updated 🛠", 
-//     true,{"event": "update", "type":"user"}
-// )
-// }
 
 
 
@@ -336,74 +331,38 @@ export const modifyAccount = (payload) => {
 ////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
 
 
-export const modifyQueue = (val) => {
-    setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-}
+// export const modifyQueue = (val) => {
+//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
+// }
 
 
-export const modifyBaseSettings = (val) => {
-    setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-}
+// export const modifyBaseSettings = (val) => {
+//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
+// }
 
 
-export const deleteBaseAccount = (val) => {
-    setTimeout(() => {console.log("account queued for deletion", val)}, 1000)
-}
+// export const deleteBaseAccount = (val) => {
+//     setTimeout(() => {console.log("account queued for deletion", val)}, 1000)
+// }
 
-export const modifyUserSettings = (val) => {
-    setTimeout(() => {console.log("User settings modified", val)}, 1000)
-}
+// export const modifyUserSettings = (val) => {
+//     setTimeout(() => {console.log("User settings modified", val)}, 1000)
+// }
 
 export const deactivateUser = (val) => {
     setTimeout(() => {console.log("user deactivated", val)}, 1000)
 }
 
+export const sendEmailPreview = (val) => {
+    setTimeout(() => {console.log("Preview Sent", val)}, 1000)
+}
 
-
-
-
-// export const uploadBundle = (val) => {
-//     return new Promise((resolve, reject) => {
+// export const sendEmailNow = (val) => {
 //     setTimeout(() => {
-
-//             console.log("queue uploaded", val)
+//         console.log("Preview Sent", val)
+//         return new Promise((resolve, reject) => {
 //             resolve(true)
 //     }, 3000)
 //     })
 // }
 
-
-// export const mergeBundle = (id, old_bundle, new_bundle) => {
-//     //add updated
-//     const updatedBundle = _.merge(old_bundle, new_bundle)
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//         console.log("bundle merged", updatedBundle)
-//         resolve(true)
-// }, 3000)
-// })
-// }
-
-export const sendEmailPreview = (val) => {
-    setTimeout(() => {console.log("Preview Sent", val)}, 1000)
-}
-
-export const sendEmailNow = (val) => {
-    setTimeout(() => {
-        console.log("Preview Sent", val)
-        return new Promise((resolve, reject) => {
-            resolve(true)
-    }, 3000)
-    })
-}
-
-// export const sendEmailLater = (val) => {
-//     UIStore.toggleScreenLoading()
-//     return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//         console.log("Email will be Sent later", val)
-//         UIStore.toggleScreenLoading()
-//         resolve(true)
-//     }, 3000)
-//     })
-// }
