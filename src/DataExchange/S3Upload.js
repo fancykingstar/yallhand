@@ -1,14 +1,8 @@
 let AWS = require("aws-sdk");
-AWS.config.update({ region: process.env.REACT_APP_REGION });
-const bucketRegion = process.env.REACT_APP_REGION;
-const IdentityPoolId = process.env.REACT_APP_POOLID;
-
-AWS.config.update({
-  region: bucketRegion,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IdentityPoolId
-  })
-});
+AWS.config.update({ 
+  region: process.env.REACT_APP_REGION,
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY });
 
 export const S3Upload = (ACL = "public-read", bucket, filename, file) => {
   return new Promise((resolve, reject) => {

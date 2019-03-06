@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { modifyBundle } from "../../DataExchange/Up"
 import "./style.css";
 import _ from "lodash";
+import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
   observer(props => {
@@ -13,6 +14,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
   const bundleBuildOption = EmailStore.allBundles
     .filter(bundle => bundle.bundleID !== "queue")
     .map(bundle => ({
+      key: giveMeKey(),
       text: "Add to" + bundle.label,
       value: bundle.bundleID,
       icon: "plus"
