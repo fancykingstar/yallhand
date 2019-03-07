@@ -22,11 +22,13 @@ const newUrlResource = (link, mode) => {
   })
   createUrlResource(payload,false)
   
-  const newRAW = Object.values(DataEntryStore.draftContentRAW.entityMap)
-  newRAW
+  const newRAWvals = Object.values(DataEntryStore.draftContentRAW.entityMap)
+  newRAWvals
     .filter(obj => obj.type === "LINK")
     .filter(obj => obj.data._url === link._url)
     [0].data._resourceID = payload.resourceID
+  let newRAW = Object.assign({}, DataEntryStore.draftContentRAW)
+  newRAW.entityMap = newRAWvals
   DataEntryStore.setDraftRAW(newRAW)
 
 }

@@ -12,20 +12,14 @@ import { Keywords } from "./Keywords";
 import { ReviewAlerts } from "./ReviewAlerts";
 import { Schedule } from "./Schedule";
 import { History } from "./History";
-import { Settings } from "./Settings";
 import { generateID } from "../../SharedCalculations/GenerateID";
+import Settings from "./Settings";
 
 import "./style.css";
 import _ from "lodash";
 
 
-@inject(
-  "TeamStore",
-  "DataEntryStore",
-  "PoliciesStore",
-  "UIStore",
-  "AnnouncementsStore"
-)
+@inject( "TeamStore", "DataEntryStore", "PoliciesStore", "UIStore", "AnnouncementsStore", "EmailStore")
 @observer
 class ManageContent extends React.Component {
   constructor(props) {
@@ -43,7 +37,7 @@ class ManageContent extends React.Component {
   }
 
   componentDidMount() {
-    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore } = this.props;
+    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, EmailStore } = this.props;
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
@@ -52,18 +46,11 @@ class ManageContent extends React.Component {
       ) {
         if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.id))) {
           UIStore.set("content", "policyID", this.props.match.params.id);
-          const obj = Object.assign(
-            {},
-            PoliciesStore._getPolicy(UIStore.content.policyID)
-          );
-          UIStore.set(
-            "content",
-            "variationID",
-            PoliciesStore._toggleGlobalVariation(obj.policyID)
-          );
+          const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
+          UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
-          DataEntryStore.set("contentmgmt", "bundle", "queue");
+          DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
@@ -123,13 +110,7 @@ class ManageContent extends React.Component {
 
   render() {    
     
-    const {
-      TeamStore,
-      DataEntryStore,
-      PoliciesStore,
-      AnnouncementsStore,
-      UIStore
-    } = this.props;
+    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
 
     const obj = this.mode === "policy" ? 
     PoliciesStore._getPolicy(UIStore.content.policyID) 

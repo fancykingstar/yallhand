@@ -224,7 +224,7 @@ export const deleteUrlResource = (resourceID) => {
 
 ///FILE RESOURCES
 export const createFile = (payload) => {
-    processTemplate(true, "fileresources", "POST", payload, "files", 
+    return processTemplate(true, "fileresources", "POST", payload, "files", 
         "Your file has been uploaded ☁️", 
         true,{"event": "create", "type":"file"}
     )
@@ -270,7 +270,17 @@ export const modifyAnnouncement = (payload) => {
     true,{"event": "update", "type":"policy"}
 )
 }
+export const deletePolicy = (policyID) => {
+    return processTemplate(false, "policies/" + policyID, "DELETE", {}, "policies", 
+    "Selected policy deleted 👋", 
+    true,{"event": "delete", "type":"policy"}), false
+}
 
+export const deleteAnnouncement = (announcementID) => {
+    return processTemplate(false, "announcements/" + announcementID, "DELETE", {}, "announcements", 
+    "Selected announcement deleted 👋", 
+    true,{"event": "delete", "type":"announcement"}), false
+}
 
 
 ///EMAIL CAMPAIGN --- BUNDLE

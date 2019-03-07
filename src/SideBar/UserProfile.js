@@ -21,6 +21,7 @@ export class UserProfile extends React.Component {
                
     <Dropdown.Header><div className="Avatar-Wrap"> <Image className="Avatar" size="small"  src={UserStore.user.img} /></div> </Dropdown.Header>
       <Dropdown.Item text='Settings...' as={NavLink} to='/panel/user-settings'/>
+      <Dropdown.Item text='Contact Support' as="a" href="mailto:support@yallhands.com?subject=Report%20an%20issue"/>
       <Dropdown.Item text='Log Out'/>
     </Dropdown.Menu>
   </Dropdown>

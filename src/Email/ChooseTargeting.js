@@ -1,11 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Header, Dropdown, Segment, Form } from "semantic-ui-react";
-import {
-  LabelGroup,
-  validateAdd,
-  labelsOneRemoved
-} from "../SharedUI/LabelGroup";
+import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 

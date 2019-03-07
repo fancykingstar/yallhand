@@ -4,7 +4,7 @@ const addPolicyState = (policy) => {
       return "ok";
     } else if (stages.has("published") && stages.size > 1) {
       return "partial";
-    } else if (stages.has("draft") && stages.size === 1) {
+    } else if (stages.has("draft") && stages.size >= 1) {
       return "draft";
     } else if (stages.has("archived") && stages.size === 1) {
       return "archived";

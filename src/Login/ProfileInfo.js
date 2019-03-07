@@ -27,8 +27,12 @@ export const ProfileInfo = props => {
             </Form.Input>
             <Form.Input icon="phone" label="mobile"/>
             <Form.Input icon="mail" label="email"/>
-            <Form.Input icon="key" type="password" label="password"/>
-            <Form.Input icon="key" type="password" label="pasword confirm"/>
+            {props.gmail? null :
+              <React.Fragment>
+                <Form.Input icon="key" type="password" label="password"/>
+                <Form.Input icon="key" type="password" label="pasword confirm"/>
+              </React.Fragment>
+            }
             <Form.Button primary>Continue</Form.Button>
           </Form>
         </div>

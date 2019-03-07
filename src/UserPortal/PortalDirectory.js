@@ -16,14 +16,14 @@ export const PortalDirectory = () => {
 
   const socials = (user) => {
       let socials = []
-      user.profile.Twitter === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://twitter.com/${user.profile.Twitter}`}><Icon key={giveMeKey()} name="twitter"/>Twitter</a></p>)
-      user.profile.Medium === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://medium.com/@${user.profile.Medium}`}><Icon key={giveMeKey()} name="medium"/>Medium</a></p>)
-      user.profile.Github === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://github.com/${user.profile.Twitter}`}><Icon key={giveMeKey()} name="github"/>Github</a></p>)
-      user.profile.LinkedIn === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://linkedin.com/${user.profile.LinkedIn}`}><Icon key={giveMeKey()} name="linkedin"/>LinkedIn</a></p>)
+      user.profile.Twitter === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://twitter.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="twitter"/>Twitter</a></p>)
+      user.profile.Medium === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://medium.com/@${user.profile.Medium}`} target="_blank"><Icon key={giveMeKey()} name="medium"/>Medium</a></p>)
+      user.profile.Github === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://github.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="github"/>Github</a></p>)
+      user.profile.LinkedIn === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://linkedin.com/${user.profile.LinkedIn}`} target="_blank"><Icon key={giveMeKey()} name="linkedin"/>LinkedIn</a></p>)
       return socials
     }
 
-  const users = AccountStore.allUsers.map(user => (
+  const users = AccountStore._allActiveUsers.map(user => (
     <Card key={"staffDir" + giveMeKey()}>
       <Card.Content>
         <Image floated="right" size="mini" src={user.img} />

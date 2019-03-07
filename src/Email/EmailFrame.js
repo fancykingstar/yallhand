@@ -27,8 +27,7 @@ export class EmailFrame extends React.Component {
   componentWillUnmount() {
     this.updateQueue()
   }
-
-
+  
   render() {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {

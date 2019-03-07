@@ -49,8 +49,9 @@
 }
 
 .ERM {
+  /* text-align: center; */
+  padding-top: 10px;
   text-align: center;
-  padding-top: 20px;
   color: #797979;
 }
 

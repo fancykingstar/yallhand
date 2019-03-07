@@ -6,9 +6,8 @@ import { PublishControls } from "./PublishControls";
 import holdUnload, { HoldLeave } from "../../SharedUI/ConfirmLeave";
 import {content, contentEdit, history} from "../../DataExchange/PayloadBuilder"
 import {createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory} from "../../DataExchange/Up"
-import _ from "lodash";
-import { link } from "fs";
 import {validateURLs} from "./ValidateURLs"
+import _ from "lodash";
 
 @inject("DataEntryStore", "UserStore", "PoliciesStore", "AnnouncementsStore", "UIStore", "ResourcesStore")
 @observer
@@ -78,7 +77,7 @@ export class NewEditVariation extends React.Component {
       else{
         this.mode === "policy"? modifyPolicy(contentEdit(this.mode)): modifyAnnouncement(contentEdit(this.mode))
       }
-      DataEntryStore.content.isNew? DataEntryStore.set("content", "isNew", "false") : null
+      DataEntryStore.content.isNew? DataEntryStore.set("content", "isNew", false) : null
     }
     
     const newEditVariation =

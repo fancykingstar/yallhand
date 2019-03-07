@@ -9,7 +9,7 @@ export const flashQueue = () => {
     const decorator = new CompositeDecorator([ { strategy: this.findLinkEntities, component: this.Link } ]);
     DataEntryStore.resetDraft()
     DataEntryStore.setDraft( "editorState", EditorState.createEmpty(decorator) );
-    DataEntryStore.reset("emailCampaign")
+    DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
     DataEntryStore.set("emailCampaign", "queueSaveSelect", "queue")
     modifyBundle(bundle(true),false)
 }

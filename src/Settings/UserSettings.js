@@ -94,7 +94,7 @@ export class UserSettings extends React.Component {
         <Header
           as="h2"
           content="Your Profile Settings"
-          subheader="Settings for your personal Quadrance account"
+          subheader="Settings for your personal Yallhands account"
         />
             <FeaturedAvatar
             label="Avatar"

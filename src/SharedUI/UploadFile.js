@@ -134,7 +134,7 @@ export class UploadFile extends React.Component {
               </Message>
               <p style={{ fontSize: ".8em" }}>
                 <span role="img" aria-labelledby="jsx-a11y/accessible-emoji">💡 </span>Uploaded files get encrypted and are only accessable via
-                Quadrance to admins and to the designated audiences of
+                Yallhands to admins and to the designated audiences of
                 associated variations
               </p>
             </Modal.Description>

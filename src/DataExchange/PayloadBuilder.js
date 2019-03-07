@@ -324,11 +324,10 @@ export const bundleEdit = () => {
       bundle: DataEntryStore.emailCampaign.editBundleBundle,
       label: DataEntryStore.emailCampaign.editBundleLabel,
       subject: DataEntryStore.emailCampaign.editBundleSubject,
-      body: DataEntryStore.emailCampaign.editBundleDraft,
+      body: DataEntryStore.draft,
+      bodyContentHTML: DataEntryStore.draftContentHTML,
+      bodyContentRAW: DataEntryStore.draftContentRAW,
       stage: DataEntryStore.emailCampaign.editBundleStage,
-      draft: DataEntryStore.draft,
-      draftContentHTML: DataEntryStore.draftContentHTML,
-      draftContentRAW: DataEntryStore.draftContentRAW
   }
   return _.extend({}, base(), buildObj)
 }

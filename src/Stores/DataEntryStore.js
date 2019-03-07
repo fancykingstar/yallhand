@@ -189,6 +189,7 @@ class Store {
     editBundleStage: "",
     editBundleLabel: "",
     editBundleSubject: "",
+    editBundleContentRAW: {},
     editBundleSaveSelect: "",
     editBundleBundle: [],
     //send email

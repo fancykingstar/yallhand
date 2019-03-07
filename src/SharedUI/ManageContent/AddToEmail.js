@@ -11,6 +11,7 @@ import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
   observer(props => {
   const {DataEntryStore, UIStore, EmailStore} = props
+
   const bundleBuildOption = EmailStore.allBundles
     .filter(bundle => bundle.bundleID !== "queue")
     .map(bundle => ({
@@ -24,6 +25,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
     icon: "plus",
     value: EmailStore.queue.bundleID
   });
+
   const handleSelect = (val) => {
     DataEntryStore.set("contentmgmt", "bundle", val)
   }
@@ -31,7 +33,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
     if(EmailStore._doesBundleContain(props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, DataEntryStore.contentmgmt.bundle)){
       toast.error("Whoops, that bundle already contains this content 😬", {hideProgressBar: true})
     }else{
-      const newBundle = EmailStore._getBundle(DataEntryStore.contentmgmt.bundle).bundle
+      const newBundle = EmailStore._getBundle(DataEntryStore.contentmgmt.bundle).bundle.slice()
       props.mode === "policy" ? newBundle.push({policyID: UIStore.content.policyID}) : newBundle.push({announcementID: UIStore.content.announcementID})
       modifyBundle(_.assign({}, EmailStore._getBundle(DataEntryStore.contentmgmt.bundle), {"bundle": newBundle}))
     }

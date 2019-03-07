@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import _ from "lodash";
 class Store {
       keys = {
@@ -71,7 +71,9 @@ class Store {
     }
 
     _getUsersSelectOptions() {
-        return this.allUsers.map(user => ({"text": user.displayName_full, "value": user.userID}))
+        return this.allUsers
+          .filter(user => user.displayName_full !== "" && user.isActive)
+          .map(user => ({"text": user.displayName_full, "value": user.userID}))
     }
 
     _getUser(ID) {
@@ -82,6 +84,10 @@ class Store {
         return this._getUser(ID).displayName
     }
 
+    @computed
+    get _allActiveUsers() {
+      return this.allUsers.filter(user => user.displayName_full !== "" && user.isActive)
+    }
    
     
    

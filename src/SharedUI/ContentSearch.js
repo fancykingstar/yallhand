@@ -1,15 +1,8 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
+import { Search } from "semantic-ui-react";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import _ from "lodash";
-import {
-  Search
-  // Grid, Header, Segment, Input
-} from "semantic-ui-react";
-import {
-  initSearchObj,
-  stupidSearch
-} from "../SharedCalculations/StupidSearch";
-import { DataEntryStore } from "../Stores/DataEntryStore";
 
 @inject("UIStore", "PoliciesStore", "AnnouncementsStore")
 @observer
@@ -25,17 +18,14 @@ export class ContentSearch extends React.Component {
   }
 
   componentDidMount() {
-    const { UIStore } = this.props;
-    const { PoliciesStore } = this.props;
-    const { AnnouncementsStore } = this.props;
-
+    const { UIStore, PoliciesStore, AnnouncementsStore } = this.props;
     this.resetComponent();
     //Policies
     if (UIStore.search.searchPoliciesData.length === 0) {
       UIStore.set(
         "search",
         "searchPoliciesData",
-        initSearchObj(PoliciesStore.allPolicies, "policyID")
+        initSearchObj(PoliciesStore.allPolicies.filter(i => i.state !== "archived"), "policyID")
       );
     }
     //Announcements
@@ -43,7 +33,7 @@ export class ContentSearch extends React.Component {
       UIStore.set(
         "search",
         "searchAnnouncementsData",
-        initSearchObj(AnnouncementsStore.allAnnouncements, "announcementID")
+        initSearchObj(AnnouncementsStore.allAnnouncements.filter(i => i.state !== "archived"), "announcementID")
       );
     }
   }

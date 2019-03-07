@@ -21,10 +21,7 @@ export class Queue extends React.Component {
   }
   render() {
     const {DataEntryStore, UIStore} = this.props
-
-
     const queuePopulated = DataEntryStore.emailCampaign.queue.length === 0
-
     const addToQueue = (item) => {
       if(item.type === "policy") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
