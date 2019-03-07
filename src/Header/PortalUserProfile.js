@@ -4,10 +4,16 @@ import { Dropdown, Image } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import "./style.css";
 // import { DataEntryStore } from "../Stores/DataEntryStore";
+import { deleteUser } from "../DataExchange/Fetch"
 
 @inject("UserStore")
 @observer
 export class PortalUserProfile extends React.Component {
+
+  logout () {
+    deleteUser()
+  }
+
   render() {
     const { UserStore } = this.props;
 
@@ -38,7 +44,7 @@ export class PortalUserProfile extends React.Component {
                 as={NavLink}
                 to="/portal/settings"
               />
-              <Dropdown.Item text="Log Out" />
+              <Dropdown.Item text="Log Out" onClick={() => this.logout()} />
             </Dropdown.Menu>
           </Dropdown>
         </div>

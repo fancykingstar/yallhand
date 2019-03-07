@@ -10,7 +10,7 @@ import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import _ from "lodash";
 const uuidv4 = require('uuid/v4')
 
-const accountID = () => AccountStore.account.accountID;
+const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
 const userID = () => UserStore.user.userID;
 const now = () => Date.now();
 const formatTag = (val) => val === "" ? [] : [val]

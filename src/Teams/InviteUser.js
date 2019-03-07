@@ -10,6 +10,7 @@ import { user } from "../DataExchange/PayloadBuilder"
 import { schedule } from "../DataExchange/PayloadBuilder"
 import moment from "moment"
 import "./style.css";
+import { apiCall } from "../DataExchange/Fetch"
 
 @inject("DataEntryStore", "UIStore")
 @observer
@@ -32,6 +33,22 @@ export class InviteUser extends React.Component {
   componentDidMount() {
     this.reset()
   }
+
+  async onboardNow () {
+    const userData = user()
+    const data = {
+      invitedBy: userData.invitedBy,
+      email: userData.email,
+      teamID: userData.teamID,
+      tags: userData.tags,
+      isAdmin: false
+    }
+    await apiCall('validations', 'POST', data).then(response => {
+      // this.setState({code: response.code})
+      // this.getCodes()
+    })
+  }
+
   render() {
     const { DataEntryStore } = this.props;
     const { UIStore } = this.props;
@@ -48,6 +65,8 @@ export class InviteUser extends React.Component {
       UIStore.set("dropdown", "onBoardUser", val)
     }
 
+    const { onOffBoarding } = DataEntryStore;
+    const { onBoardingDate } = onOffBoarding;
     const onboardLater = () => {
       createUser(user(), false).then(() => {
         //need to get USERID back
@@ -59,19 +78,17 @@ export class InviteUser extends React.Component {
       })
     };
 
-   
-
-    const onboardNow = () => {
-      createUser(user()).then(() => {
-        this.reset()
-        UIStore.set("dropdown", "onBoardUser", "today")
-      })
-    }
+    // const onboardNow = () => {
+    //   createUser(user()).then(() => {
+    //     this.reset()
+    //     UIStore.set("dropdown", "onBoardUser", "today")
+    //   })
+    // }
 
     const userOnboardWhen = UIStore.dropdown.onBoardUser === "today" ? (
       <Form.Button
       size="small"
-      onClick={e => onboardNow()}
+      onClick={e => this.onboardNow()}
       content="Onboard Now"
       icon="street view"
       primary

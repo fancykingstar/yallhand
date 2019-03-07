@@ -6,31 +6,23 @@ import { EmailLogin } from "./EmailLogin";
 import { Register } from "./Register"
 
 export class PrimaryLogins extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {errorMsg: true}
+  constructor(props){
+    super(props)
+    this.state = {
+      code: props.code ? props.code : '',
+      errorMsg: false
     }
+  }
+
   render() {
-    
-    const messages =  this.state.errorMsg?
-        <Message 
-        icon="warning" 
-        content="Sorry, that invite code is invalid"
-        negative/> : null
+    const { code, errorMsg } = this.state
+    const { stage, next } = this.props
 
-
-    const inviteCodeLink = this.props.stage !== "reauth"? <div/> :
-      <span
-        className="inviteCode"
-        onClick={e => alert("hi")}
-        style={{ marginTop: 10, marginLeft: 5, color: "#FFFFFF" }}
-      >
-        Did your organizaiton send you an invite code?
-      </span>
-
-
-    const stages = {"reauth":<Reauth/>, "reauthEmail": <EmailLogin/>, "register": <Register/>}
-           
+    const stages = {
+      "reauth": <Reauth next={(...args) => next(...args)}/>,
+      "reauthEmail": <EmailLogin/>,
+      "register": <Register code={code} next={(...args) => next(...args)} setError={(e) => this.setState({errorMsg: e})}/>
+    }
 
     const loginDisplay = stages[this.props.stage]
 
@@ -39,17 +31,24 @@ export class PrimaryLogins extends React.Component {
         <div className="ContainerLogin">
           <div className="Login">
             <div className="LoginWorkspace">
-                <div style={{width: "100%", textAlign: "center"}}><QLogo fill="#797777" style="" width="48px" height="60px" /></div>
-                <div style={{width: "100%"}}><Grid.Column width={13}><div style={{ lineHeight: "48px", textAlign: "center" ,fontSize: "2.8em" }} >yallhands</div> </Grid.Column></div>
+              <div style={{width: "100%", textAlign: "center"}}><QLogo fill="#797777" style="" width="48px" height="60px" /></div>
+              <div style={{width: "100%"}}>
+                <Grid.Column width={13}>
+                  <div style={{lineHeight: "48px", textAlign: "center", fontSize: "2.8em"}} >
+                    yallhands
+                  </div>
+                </Grid.Column>
+              </div>
             </div>
             <div className="ERM">Employee Relationship Management</div>
             <Divider />
             {loginDisplay}
           </div>
-          {inviteCodeLink}
-          {messages}
+          {stage && <span className="inviteCode" onClick={e => alert("hi")} style={{marginTop: 10, marginLeft: 5, color: "#FFFFFF"}}>
+            Did your organizaiton send you an invite code?
+          </span>}
+          {errorMsg && <Message  icon="warning"  content={errorMsg} negative/>}
         </div>
-        <div />
       </React.Fragment>
     );
   }
