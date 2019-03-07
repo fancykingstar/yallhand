@@ -109,10 +109,6 @@ export const teamUpdate = () => {
 }
 
 
-
-
-
-
 ///TAGS
 export const tag = () => {
   const buildObj = {
@@ -158,7 +154,8 @@ export const user = () => {
       "displayName_full": "",
       "displayName": "",
       "isAdmin": isAdmin,
-      "adminLimits": x.adminConfig === "all" ? {} : {"teams": x.adminTeams,"tags":x.adminTags, "channels":x.adminChannels},
+      "adminLimits": {},
+      // "adminLimits": x.adminConfig === "all" ? {} : {"teams": x.adminTeams,"tags":x.adminTags, "channels":x.adminChannels},
       "teamID": isAdmin ? x.teamID : x.adminTeamID ,
       "tags": isAdmin ? x.adminTagID === "none" ? [] : [x.adminTagID] : x.tagID === "none" ? [] :[x.tagID],
       "email": isAdmin ? x.adminEmail: x.email,
@@ -170,19 +167,25 @@ export const user = () => {
 }
 
 export const userUpdate = () => {
-  const x = DataEntryStore.userEditFields
-  const buildObj = {userID: x.userEdit.userID,adminLimits: {}};
-  if(x.adminChannels.length > 0){buildObj.adminLimits.channels = x.adminChannels}
-  if(x.adminTeams.length > 0){buildObj.adminLimits.teams = x.adminTeams}
-  if(x.adminTags.length > 0){buildObj.adminLimits.tags = x.adminTags}
-  if(x.adminConfig === "all"){buildObj.adminLimits = {}}
-  if(x.displayName_full !== ""){buildObj.displayName_full = x.displayName_full}
-  if(x.displayName !== ""){buildObj.displayName_full = x.displayName}
-  if(x.email !== ""){buildObj.email = x.email}
-  if(x.isAdmin !== x.userEdit.isAdmin){buildObj.isAdmin = x.isAdmin}
-  if(x.teamID !== ""){buildObj.teamID = x.teamID}
-  if(x.tagID !== ""){buildObj.tags = [x.tagID]}
-  return _.extend({}, {"accountID": accountID()}, buildObj)
+  const x = Object.assign({}, DataEntryStore.userEditFields)
+  let buildObj = {}
+  Object.keys(x).forEach(key => {
+    if(typeof x[key] === "string" && x[key] !== ""){
+      key === "tagID"? buildObj["tags"] = [x[key]] : buildObj[key] = x[key]
+    }} )
+  buildObj.isAdmin = x.isAdmin
+  // const buildObj = {userID: x.userEdit.userID,adminLimits: {}};
+  // if(x.adminChannels.length > 0){buildObj.adminLimits.channels = x.adminChannels}
+  // if(x.adminTeams.length > 0){buildObj.adminLimits.teams = x.adminTeams}
+  // if(x.adminTags.length > 0){buildObj.adminLimits.tags = x.adminTags}
+  // if(x.adminConfig === "all"){buildObj.adminLimits = {}}
+  // if(x.displayName_full !== ""){buildObj.displayName_full = x.displayName_full}
+  // if(x.displayName !== ""){buildObj.displayName_full = x.displayName}
+  // if(x.email !== ""){buildObj.email = x.email}
+  // if(x.isAdmin !== x.userEdit.isAdmin){buildObj.isAdmin = x.isAdmin}
+  // if(x.teamID !== ""){buildObj.teamID = x.teamID}
+  // if(x.tagID !== ""){buildObj.tags = [x.tagID]}
+  return _.extend({}, {"accountID": accountID(), "userID": userID()}, buildObj)
 }
 
 
@@ -285,8 +288,10 @@ export const fileResourceAssociate = (resourceID, associations) => {
 ///EMAIL BUNDLES
 export const queueEdit = () => {
   const buildObj = {
-    bundleID: "queue",
+    // bundleID: "queue",
+    bundleID: DataEntryStore.emailCampaign.queueID,
     bundle: DataEntryStore.emailCampaign.queue,
+    isQueue: true,
     label: DataEntryStore.emailCampaign.queueLabel,
     subject: DataEntryStore.emailCampaign.queueSubject,
     body: DataEntryStore.draft,
@@ -298,7 +303,9 @@ export const queueEdit = () => {
 
 export const bundle = (queue=false) => {
   const buildObj = {
-    bundleID: queue? "queue":generateID(),
+    // bundleID: queue? "queue" : generateID(),
+    bundleID: generateID(),
+    isQueue: queue? true : false,
     bundle: DataEntryStore.emailCampaign.queue,
     label: DataEntryStore.emailCampaign.queueLabel,
     subject: DataEntryStore.emailCampaign.queueSubject,
@@ -317,11 +324,10 @@ export const bundleEdit = () => {
       bundle: DataEntryStore.emailCampaign.editBundleBundle,
       label: DataEntryStore.emailCampaign.editBundleLabel,
       subject: DataEntryStore.emailCampaign.editBundleSubject,
-      body: DataEntryStore.emailCampaign.editBundleDraft,
+      body: DataEntryStore.draft,
+      bodyContentHTML: DataEntryStore.draftContentHTML,
+      bodyContentRAW: DataEntryStore.draftContentRAW,
       stage: DataEntryStore.emailCampaign.editBundleStage,
-      draft: DataEntryStore.draft,
-      draftContentHTML: DataEntryStore.draftContentHTML,
-      draftContentRAW: DataEntryStore.draftContentRAW
   }
   return _.extend({}, base(), buildObj)
 }
@@ -432,7 +438,7 @@ export const emailCampaign = (completed=false) => {
   }
 
   export const contentEdit = (type) => {
-    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.anncID))
+    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
     const buildObj = {
         variationID: UIStore.content.variationID,
         stage: DataEntryStore.content.stage,
@@ -462,7 +468,7 @@ export const emailCampaign = (completed=false) => {
     const buildObj = {
         img: DataEntryStore.contentmgmt.img,
     }
-    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.anncID = UIStore.content.anncID
+    type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.announcementID = UIStore.content.announcementID
     return _.extend({}, base(), buildObj)
   }
 

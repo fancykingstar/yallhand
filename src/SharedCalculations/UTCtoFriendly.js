@@ -1,8 +1,13 @@
-import moment from "moment"
+import {UserStore} from "../Stores/UserStore"
 
-function UTCtoFriendly(val, adjustment) {
-    const time = moment.utc(val).utcOffset(adjustment * 60)
-    return (time.format('MMMM Do YYYY, h:mm a'))
+const preferredTZ = {"-4": "America/New_York", "-5":"America/Chicago", "-6":"America/Denver", "-8":"America/Los_Angeles"}
+const moment = require('moment-timezone');
+
+
+const UTCtoFriendly = (val, adjustment) => {
+    const useTZ = preferredTZ[String(UserStore.user !== null? UserStore.user.timezone: -4)]
+    const time = moment.utc(val).tz(useTZ).format('MMMM Do YYYY, h:mm a')
+    return time
 }
 
 export default UTCtoFriendly

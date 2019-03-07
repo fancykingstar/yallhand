@@ -20,6 +20,7 @@ export class DateTimeSelect extends React.Component {
       const updateValue = () => {
         const dateTime = UIStore.dateTimeSelect.date.slice(0,10) +' '+ UIStore.dateTimeSelect.time
         this.props.value(moment(dateTime).valueOf())
+        console.log(moment(dateTime).valueOf())
           }
 
       const handleDate = (val) => {

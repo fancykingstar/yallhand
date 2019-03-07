@@ -16,15 +16,18 @@ export class EmailFrame extends React.Component {
     const { UIStore, DataEntryStore } = this.props;
     this.updateQueue = (name=null) => {
       if (UIStore.menuItem.emailFrame === "queue" && name !== "queue") {
-        modifyBundle(queueEdit(), false)
-        DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
-        DataEntryStore.resetDraft()
+        modifyBundle(queueEdit(), false).then(() => {
+          DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
+          DataEntryStore.resetDraft()
+        })
+  
       }
     }
   }
   componentWillUnmount() {
     this.updateQueue()
   }
+  
   render() {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {

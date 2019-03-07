@@ -8,10 +8,10 @@ import { AssocLabelGroup } from "../SharedUI/AssocLabelGroup"
 
 import "./style.css"
 
-const selectOptions = [
-  { text: "selected content", value: "content" },
-  { text: "general availability", value: "general" }
-];
+// const selectOptions = [
+//   { text: "selected content", value: "content" },
+//   { text: "general availability", value: "general" }
+// ];
 
 @inject("UIStore", "DataEntryStore")
 @observer
@@ -52,12 +52,13 @@ export class UploadConfig extends React.Component {
       ) : (
         <React.Fragment>
           <Form.Group style={{paddingTop: 15}}>
-            <ContentSearch 
+            {/* <ContentSearch 
             styleOveride={true} 
-            output={val => addContent(val)}/>
+            output={val => addContent(val)}/> */}
             <AssocLabelGroup
               assoc={DataEntryStore[key].associations}
               remove={val => removeAssociation(val)}
+              disableRemove
             />
           </Form.Group>
         </React.Fragment>
@@ -65,7 +66,7 @@ export class UploadConfig extends React.Component {
 
     const removeAssociation = (obj) => {
         let allAssoc = Object.assign({}, DataEntryStore[key].associations)
-        const idKey = {"policy": "policyID", "announcement": "anncID"}[obj.type]
+        const idKey = {"policy": "policyID", "announcement": "announcementID"}[obj.type]
         const assocKey = {"policy": "policies", "announcement": "announcements"}[obj.type]
             let assoc = obj.type === "policy" ? allAssoc.policies.slice() : allAssoc.announcements.slice()
             assoc.filter(assoc => assoc[idKey] === obj[idKey])[0].variations.length === 1 ?
@@ -84,15 +85,15 @@ export class UploadConfig extends React.Component {
       <React.Fragment>
           <Segment secondary>
         <span>
-          Associate with{" "}
-          <Dropdown
+          Associated with
+          {/* <Dropdown
             inline
             value={UIStore.dropdown.uploadConfig}
             options={selectOptions}
             onChange={(e, val) =>
               UIStore.set("dropdown", "uploadConfig", val.value)
             }
-          />
+          /> */}
           <div className="UploadConfig">
           {config}
           </div>

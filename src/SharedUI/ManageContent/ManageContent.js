@@ -1,8 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-
-import { Label, Button, Icon, Header, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import { SelectVariation } from "../../SharedUI/SelectVariation";
 import { ManageVariationData } from "../../SharedUI/ManageVariationData";
 import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
@@ -13,20 +12,14 @@ import { Keywords } from "./Keywords";
 import { ReviewAlerts } from "./ReviewAlerts";
 import { Schedule } from "./Schedule";
 import { History } from "./History";
-import { Settings } from "./Settings";
 import { generateID } from "../../SharedCalculations/GenerateID";
+import Settings from "./Settings";
 
 import "./style.css";
 import _ from "lodash";
 
 
-@inject(
-  "TeamStore",
-  "DataEntryStore",
-  "PoliciesStore",
-  "UIStore",
-  "AnnouncementsStore"
-)
+@inject( "TeamStore", "DataEntryStore", "PoliciesStore", "UIStore", "AnnouncementsStore", "EmailStore")
 @observer
 class ManageContent extends React.Component {
   constructor(props) {
@@ -44,7 +37,7 @@ class ManageContent extends React.Component {
   }
 
   componentDidMount() {
-    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore } = this.props;
+    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, EmailStore } = this.props;
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
@@ -53,18 +46,11 @@ class ManageContent extends React.Component {
       ) {
         if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.id))) {
           UIStore.set("content", "policyID", this.props.match.params.id);
-          const obj = Object.assign(
-            {},
-            PoliciesStore._getPolicy(UIStore.content.policyID)
-          );
-          UIStore.set(
-            "content",
-            "variationID",
-            PoliciesStore._toggleGlobalVariation(obj.policyID)
-          );
+          const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
+          UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
-          DataEntryStore.set("contentmgmt", "bundle", "queue");
+          DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
@@ -82,8 +68,8 @@ class ManageContent extends React.Component {
       );
     } else if (this.mode === "announcement") {
       if (
-        UIStore.content.anncID === "" ||
-        this.props.match.params.id !== UIStore.content.anncID ||
+        UIStore.content.announcementID === "" ||
+        this.props.match.params.id !== UIStore.content.announcementID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
         if (
@@ -91,15 +77,15 @@ class ManageContent extends React.Component {
             AnnouncementsStore._getAnnouncement(this.props.match.params.id)
           )
         ) {
-          UIStore.set("content", "anncID", this.props.match.params.id);
+          UIStore.set("content", "announcementID", this.props.match.params.id);
           const obj = Object.assign(
             {},
-            AnnouncementsStore._getAnnouncement(UIStore.content.anncID)
+            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
           );
           UIStore.set(
             "content",
             "variationID",
-            AnnouncementsStore._toggleGlobalVariation(obj.anncID)
+            AnnouncementsStore._toggleGlobalVariation(obj.announcementID)
           );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
@@ -115,7 +101,7 @@ class ManageContent extends React.Component {
           "content",
           "variationID",
           AnnouncementsStore._toggleGlobalVariation(
-            UIStore.content.anncID
+            UIStore.content.announcementID
           )
         );
       }
@@ -124,17 +110,11 @@ class ManageContent extends React.Component {
 
   render() {    
     
-    const {
-      TeamStore,
-      DataEntryStore,
-      PoliciesStore,
-      AnnouncementsStore,
-      UIStore
-    } = this.props;
+    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
 
     const obj = this.mode === "policy" ? 
     PoliciesStore._getPolicy(UIStore.content.policyID) 
-    : AnnouncementsStore._getAnnouncement(UIStore.content.anncID)
+    : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
 
     const variations = () => {     
         return obj.variations.map(variation => ({
@@ -162,7 +142,7 @@ class ManageContent extends React.Component {
       Object.assign(
         {},
         AnnouncementsStore._getVariation(
-          UIStore.content.anncID,
+          UIStore.content.announcementID,
           UIStore.content.variationID
         )
       )
@@ -214,7 +194,7 @@ class ManageContent extends React.Component {
       const vari = () => {
           return this.mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
           :
-          AnnouncementsStore._getVariation(UIStore.content.anncID, UIStore.content.variationID)
+          AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)
       }
       
       const manageContent = () => {
@@ -223,7 +203,7 @@ class ManageContent extends React.Component {
             return <div/>
           }
 
-        else if(this.mode === "announcement" && UIStore.content.anncID === "")
+        else if(this.mode === "announcement" && UIStore.content.announcementID === "")
         {return <div/>}    
 
         else{
@@ -232,7 +212,8 @@ class ManageContent extends React.Component {
                 <BackButton />
                 <Header
                   as="h2"
-                  content={`Manage ${this.mode.charAt(0).toUpperCase() + this.mode.slice(1)}`}
+                  content={`Manage ${this.mode === "policy"? "FAQ" : this.mode
+                    .charAt(0).toUpperCase() + this.mode.slice(1)}`}
                   subheader={DataEntryStore.contentmgmt.label}
                 />
                 <Segment>
@@ -273,7 +254,7 @@ class ManageContent extends React.Component {
                   mode={this.mode}
                   />
       
-                <Keywords output={e => alert("hi")} />
+                <Keywords mode={this.mode} />
                 <ReviewAlerts
                   defaultVal={DataEntryStore.contentmgmt.reviewAlert}
                   mode={this.mode}

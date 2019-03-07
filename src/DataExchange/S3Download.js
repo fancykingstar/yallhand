@@ -1,15 +1,9 @@
 let AWS = require("aws-sdk");
-AWS.config.update({ region: process.env.REACT_APP_REGION });
+AWS.config.update({ 
+region: process.env.REACT_APP_REGION,   
+accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY });
 const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
-const bucketRegion = process.env.REACT_APP_REGION;
-const IdentityPoolId = process.env.REACT_APP_POOLID;
-
-AWS.config.update({
-  region: bucketRegion,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IdentityPoolId
-  })
-});
 
 export const S3Download = (bucket, filename, label, extension) => {
   s3.getSignedUrl(
@@ -19,8 +13,10 @@ export const S3Download = (bucket, filename, label, extension) => {
       Expires: 60,
       Key: filename,
       ResponseContentDisposition: 'attachment; filename ="' + label.split(" ").join("-") + extension + '"'
-    },
+    }
+    ,
     function(err, url) {
+      if(url !== undefined){
       var element = document.createElement("a");
       element.setAttribute("href", url);
       element.setAttribute("download", filename);
@@ -29,5 +25,10 @@ export const S3Download = (bucket, filename, label, extension) => {
       element.click();
       document.body.removeChild(element);
     }
+    else {
+      console.log(err)
+    }
+  }
+ 
   );
 };

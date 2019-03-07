@@ -15,9 +15,7 @@ export class UserEdit extends React.Component {
   render() {
     const { DataEntryStore } = this.props;
     const defaultValues = val =>
-      _.isEmpty(DataEntryStore.userEditFields.userEdit)
-        ? ""
-        : DataEntryStore.userEditFields.userEdit[val];
+        DataEntryStore.userEditFields.userEdit[val];
     const adminSettings =
       DataEntryStore.userEditFields.isAdmin === false ? null : <AdminEdit />;
     const handleInput = (e, val, type) => {
@@ -34,30 +32,26 @@ export class UserEdit extends React.Component {
       })
      
     }
+
+    const displayAvatar = defaultValues("img") === ""? null :
+    <Modal closeIcon trigger={
+      <div className="Avatar-Wrap"> 
+      <Image
+        className="Avatar"
+        src={defaultValues("img")}
+        size="small"
+        floated="left"
+        style={defaultValues("img") === "" ? {display: "none"}: {}}
+      /></div> } basic size="small" >
+    <Modal.Content> <Image src={defaultValues("img")} fluid /> </Modal.Content>
+  </Modal>
+
     return (
       <Modal open={this.props.open} onClose={handleCancel} size="small">
         <Header as="h2">
-          <Modal
-            closeIcon
-            trigger={
-              <div className="Avatar-Wrap"> 
-              <Image
-                className="Avatar"
-                src={defaultValues("img")}
-                size="small"
-                floated="left"
-                style={defaultValues("img") === "" ? {display: "none"}: {}}
-              /></div>
-            }
-            basic
-            size="small"
-          >
-            <Modal.Content>
-              <Image src={defaultValues("img")} fluid />
-            </Modal.Content>
-          </Modal>
+          {displayAvatar}
           <Header.Content>
-            Editing User
+            {defaultValues("displayName_full") === ""? "Invited User": "Editing User"}
             <Header.Subheader>
               {defaultValues("displayName_full")}
             </Header.Subheader>
@@ -67,16 +61,19 @@ export class UserEdit extends React.Component {
         <Modal.Content>
           <Form size="small">
             <Form.Field>
+              {defaultValues("displayName_full") === ""? null :
+              <React.Fragment>
               <Form.Input
-                label="Full Name"
-                defaultValue={defaultValues("displayName_full")}
-                onChange={(e, val) => handleInput(e, val, "displayName_full")}
+              label="Full Name"
+              defaultValue={defaultValues("displayName_full")}
+              onChange={(e, val) => handleInput(e, val, "displayName_full")}
               />
               <Form.Input
-                label="Display Name"
-                defaultValue={defaultValues("displayName")}
-                onChange={(e, val) => handleInput(e, val, "displayName")}
+              label="Display Name"
+              defaultValue={defaultValues("displayName")}
+              onChange={(e, val) => handleInput(e, val, "displayName")}
               />
+              </React.Fragment>}
               <Form.Input
                 label="Email"
                 defaultValue={defaultValues("email")}
@@ -86,8 +83,7 @@ export class UserEdit extends React.Component {
                 label=""
                 defaultVal={defaultValues("teamID")}
                 outputVal={val =>
-                  DataEntryStore.set("userEditFields", "teamID", val)
-                }
+                  DataEntryStore.set("userEditFields", "teamID", val)}
               />
               <TagSelect
                 label=""
@@ -112,7 +108,7 @@ export class UserEdit extends React.Component {
                   label="Admin"
                 />
               </Form.Group>
-              {adminSettings}
+              {/* {adminSettings} */}
             </Form.Field>
           </Form>
         </Modal.Content>

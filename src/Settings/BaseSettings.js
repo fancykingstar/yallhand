@@ -41,7 +41,7 @@ export class BaseSettings extends React.Component {
         <Header
           as="h2"
           content="Account Settings"
-          subheader="Settings for your Quadrance account"
+          subheader="Settings for your Yallhands account"
         />
         <Segment>
           <div style={{ width: 400 }}>
@@ -125,8 +125,8 @@ export class BaseSettings extends React.Component {
           <div style={{height: 50}}>  
           <Form>
             <Form.Field >
-              <label>Delete Your Quadrance Account</label>
-              <ConfirmDelete size="mini" label="your entire Quadrance account" confirm={e => handleDelete()}/>
+              <label>Delete Your Yallhands Account</label>
+              <ConfirmDelete size="mini" label="your entire Yallhands account" confirm={e => handleDelete()}/>
             </Form.Field>
           </Form>
           </div> 

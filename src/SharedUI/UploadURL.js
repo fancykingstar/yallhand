@@ -184,10 +184,10 @@ export class UploadURL extends React.Component {
                   </Form.Button>
                 </Form.Group>
                 <Form.Group style={{float: "right"}}>
-                <Button icon onClick={e => UIStore.set("modal", "uploadURLResource", true)}>
-                      <Icon name='cubes' />
-                       </Button>
-
+                {
+                  this.props.hideResource !== undefined? null :
+                  <Button icon onClick={e => UIStore.set("modal", "uploadURLResource", true)}> <Icon name='cubes' /> </Button>
+                }
                   <Modal open={UIStore.modal.uploadURLResource} closeIcon onClose={e => UIStore.set("modal", "uploadURLResource", false)} size="tiny">
                        <Modal.Header>Search & Add From Resources...</Modal.Header>
                        <Modal.Content><URLsSearch output={val => {

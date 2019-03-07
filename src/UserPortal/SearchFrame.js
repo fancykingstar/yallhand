@@ -13,7 +13,7 @@ class SearchFrame extends React.Component {
   componentDidMount() {
     const { AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, AccountStore } = this.props;
     if (UIStore.search.searchAnnouncementsData.length === 0) {
-      UIStore.set("search", "searchAnnouncementsData", initSearchObj( AnnouncementsStore.allAnnouncements, "anncID" ) );
+      UIStore.set("search", "searchAnnouncementsData", initSearchObj( AnnouncementsStore.allAnnouncements, "announcementID" ) );
     }
     if (UIStore.search.searchPoliciesData.length === 0) {
         UIStore.set("search", "searchPoliciesData", initSearchObj( PoliciesStore.allPolicies, "policyID" ) );
@@ -57,7 +57,7 @@ class SearchFrame extends React.Component {
             {" "}
             <QLogo fill="#FFFFFF" style="" width="16px" height="20px" />{" "}
           </div>
-          <div style={{ float: "right", lineHeight: "15px", fontSize: ".5em" }}> quadrance.</div>
+          <div style={{ float: "right", lineHeight: "15px", fontSize: ".5em" }}> yallhands</div>
         </div>
   
     </div>

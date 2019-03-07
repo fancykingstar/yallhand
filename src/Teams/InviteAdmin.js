@@ -130,8 +130,8 @@ export class InviteAdmin extends React.Component {
                   outputVal={val => tagChange(val)}
                 />
               </Form.Group>
-              <PermissionLevel value={DataEntryStore.onOffBoarding.adminConfig} output={changeConfig} />
-              {configOptions}
+              {/* <PermissionLevel value={DataEntryStore.onOffBoarding.adminConfig} output={changeConfig} />
+              {configOptions} */}
             </Form>
       
           <Form style={{paddingTop: 15}}>

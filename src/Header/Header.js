@@ -31,7 +31,7 @@ class Header extends React.Component {
 
     const header = () => {
       if(this.mode === "panel" && UIStore.responsive.isMobile === false){return <AdminDesktop teamChange={(e, val) => teamChange(e, val)}/>}
-      else if(this.mode === "panel" && UIStore.responsive.isMobile){return <AdminMobile/>}
+      else if(this.mode === "panel" && UIStore.responsive.isMobile){return <AdminMobile teamChange={(e, val) => teamChange(e, val)}/>}
       else if(this.mode === "portal" && UIStore.responsive.isMobile === false){return <PortalDesktop/>}
       else if(this.mode === "portal" && UIStore.responsive.isMobile){return <PortalMobile/>}
     }

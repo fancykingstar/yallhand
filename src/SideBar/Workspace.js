@@ -8,6 +8,18 @@ import { inject, observer } from "mobx-react";
 export class Workspace extends React.Component {
   render() {
     const { AccountStore } = this.props;
+    const styles = {7: {fontSize: "1.8em"}, 14: {fontSize: "1.3em"}, 30: {fontSize: "0.85em"}}
+    const getStyle = val => {
+      let style = {}
+      let found = false
+      Object.keys(styles).forEach(size => {
+        if(val.length <= Number(size) && !found){
+          found = true
+          style = styles[size]
+        }
+      })
+      return style
+    }
     return (
       <div className="Workspace">
         <NavLink to="/panel/base-settings">
@@ -19,7 +31,9 @@ export class Workspace extends React.Component {
         </NavLink>
 
         <div className="WorkspaceName">
-          <div className="CompanyName">{AccountStore.account.label}</div>
+          <div 
+          style={getStyle(AccountStore.account.label)}
+          className="CompanyName">{AccountStore.account.label}</div>
         </div>
       </div>
     );
