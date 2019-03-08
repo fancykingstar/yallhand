@@ -46,16 +46,19 @@ export class ProfileInfo extends React.Component {
     let error = ''
     const field = this.state[type]
 
+    new RegExp("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/")
+
     if (this.isEmpty(field)) error += `field ${humanReadableType} cannot be empty`
     else if (this.isWeak(field)) error += `field ${humanReadableType} is to weak`
+    else if (type === 'password' && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(field))) error += `field ${humanReadableType} must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character`
     else if (type === 'email' && this.isInvalidEmail(field)) error += `${humanReadableType} is not valid`
-    else if (type === 'pasword_confirm' && this.isPasswordNotEqual(field)) error += `${humanReadableType} is not equal to password`
+    else if (type === 'password_confirm' && this.isPasswordNotEqual(field)) error += `${humanReadableType} is not equal to password`
 
     this.setState({error: error === '' ? null : error})
 
     return error
   }
-  
+
   register () {
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
@@ -89,7 +92,7 @@ export class ProfileInfo extends React.Component {
       apiCall(`/validations/${id}`, 'PUT', validateCode)
     })
   }
-  
+
   render () {
     const { error, email_disable } = this.state
     return (
@@ -103,7 +106,7 @@ export class ProfileInfo extends React.Component {
                 <input maxLength="32" />
               </Form.Input>
               <Form.Input
-                icon="user circle outline" 
+                icon="user circle outline"
                 value={this.state.username} onChange={(e) => this.setState({username: e.target.value})}
                 onBlur={() => this.validate('username', 'display name')}
                 label={
@@ -114,30 +117,30 @@ export class ProfileInfo extends React.Component {
               }>
                 <input maxLength="16" />
               </Form.Input>
-              <Form.Input 
-                icon="phone" 
-                label="mobile" 
+              <Form.Input
+                icon="phone"
+                label="mobile"
                 type="tel"
-                onChange={(e) => this.setState({phone: e.target.value})} 
+                onChange={(e) => this.setState({phone: e.target.value})}
                 onBlur={() => this.validate('phone', 'phone')}/>
-              <Form.Input 
-                icon="mail" 
-                label="email" 
-                onChange={(e) => this.setState({email: e.target.value})} 
+              <Form.Input
+                icon="mail"
+                label="email"
+                onChange={(e) => this.setState({email: e.target.value})}
                 onBlur={() => this.validate('email', 'email')}
                 disabled={email_disable}
                 value={this.state.email}/>
-              <Form.Input 
-                icon="key" 
-                type="password" 
-                label="password" 
-                onChange={(e) => this.setState({password: e.target.value})} 
+              <Form.Input
+                icon="key"
+                type="password"
+                label="password"
+                onChange={(e) => this.setState({password: e.target.value})}
                 onBlur={() => this.validate('password', 'password')}/>
-              <Form.Input 
-                icon="key" 
-                type="password" 
-                label="password confirm" 
-                onChange={(e) => this.setState({password_confirm: e.target.value})} 
+              <Form.Input
+                icon="key"
+                type="password"
+                label="password confirm"
+                onChange={(e) => this.setState({password_confirm: e.target.value})}
                 onBlur={() => this.validate('password_confirm', 'password confirm')}/>
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
               {error && <span className="error">{error}</span>}
