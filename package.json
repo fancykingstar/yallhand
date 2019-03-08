@@ -40,6 +40,7 @@
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.5.2",
     "react-fullstory": "^1.0.3",
+    "react-google-login": "^5.0.2",
     "react-html-parser": "^2.0.2",
     "react-moment": "^0.8.4",
     "react-router-dom": "^4.3.1",

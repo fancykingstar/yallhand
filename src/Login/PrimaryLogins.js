@@ -1,7 +1,7 @@
 import React from "react";
 import { QLogo } from "../Assets/Graphics/QLogo";
 import { Divider, Grid, Message } from "semantic-ui-react";
-import {Reauth} from "./Reauth"
+import Reauth from "./Reauth"
 import { EmailLogin } from "./EmailLogin";
 import { Register } from "./Register"
 
