@@ -34,134 +34,91 @@ export class InviteUser extends React.Component {
     this.reset()
   }
 
-  async onboardNow () {
+  getDataNewUser () {
+    const { DataEntryStore } = this.props;
     const userData = user()
-    const data = {
+    return {
       invitedBy: userData.invitedBy,
       email: userData.email,
-      teamID: userData.teamID,
-      tags: userData.tags,
+      teamID: DataEntryStore.onOffBoarding.teamID,
+      accountID: userData.accountID,
+      tags: DataEntryStore.onOffBoarding.tagID === "none" ? [] : [DataEntryStore.onOffBoarding.tagID],
       isAdmin: false
     }
-    await apiCall('validations', 'POST', data).then(response => {
-      // this.setState({code: response.code})
-      // this.getCodes()
-    })
   }
+
+  async onboardNow () {
+    let newUser = this.getDataNewUser()
+    newUser.now = true
+    await apiCall('validations', 'POST', newUser).then(response => {})
+  }
+
+  async onboardLater () {
+    const { DataEntryStore } = this.props;
+    let newUser = this.getDataNewUser()
+    newUser.now = false
+    newUser.date = moment(DataEntryStore.onOffBoarding.onBoardingDate).valueOf()
+    await apiCall('validations', 'POST', newUser).then(response => {})
+  };
 
   render() {
     const { DataEntryStore } = this.props;
     const { UIStore } = this.props;
-    const teamChange = val =>
-      DataEntryStore.set("onOffBoarding", "teamID", val);
+    const teamChange = val => DataEntryStore.set("onOffBoarding", "teamID", val);
     const tagChange = val => DataEntryStore.set("onOffBoarding", "tagID", val);
-    const emailChange = val => {
-      DataEntryStore.set("onOffBoarding", "email", val);
-    };
-    const setOnBoardDate = day => {
-      DataEntryStore.set("onOffBoarding", "onBoardingDate", day);
-    };
-    const toggleOnboardWhen = (val) => {
-      UIStore.set("dropdown", "onBoardUser", val)
-    }
+    const emailChange = val => DataEntryStore.set("onOffBoarding", "email", val);
+    const setOnBoardDate = day => DataEntryStore.set("onOffBoarding", "onBoardingDate", day);
+    const toggleOnboardWhen = (val) =>  UIStore.set("dropdown", "onBoardUser", val)
 
     const { onOffBoarding } = DataEntryStore;
-    const { onBoardingDate } = onOffBoarding;
-    const onboardLater = () => {
-      createUser(user(), false).then(() => {
-        //need to get USERID back
-        createSchedule(schedule(moment(DataEntryStore.onOffBoarding.onBoardingDate).valueOf(), "onboard user", {"userID": "unknown"}))
-        .then(() => {
-        this.reset() 
-        UIStore.set("dropdown", "onBoardUser", "today")
-      })
-      })
-    };
-
-    // const onboardNow = () => {
-    //   createUser(user()).then(() => {
-    //     this.reset()
-    //     UIStore.set("dropdown", "onBoardUser", "today")
-    //   })
-    // }
-
-    const userOnboardWhen = UIStore.dropdown.onBoardUser === "today" ? (
+    const { onBoardingDate, email, teamID, tagID } = onOffBoarding;
+    const { dropdown } = UIStore;
+    
+    const userOnboardWhen = dropdown.onBoardUser === "today" ? (
       <Form.Button
-      size="small"
-      onClick={e => this.onboardNow()}
-      content="Onboard Now"
-      icon="street view"
-      primary
-      disabled={!isValidEmail(DataEntryStore.onOffBoarding.email)}
-    />
+        size="small"
+        onClick={e => this.onboardNow()}
+        content="Onboard Now"
+        icon="street view"
+        primary
+        disabled={!isValidEmail(email)}/>
      ) : (
       <React.Fragment>
-        
-                <Form.Input label="Choose Date">
-                <DatePicker from={"tomorrow"} output={setOnBoardDate} />
-                </Form.Input>
-                <Form.Button
-                onClick={e => onboardLater()}
-                size="small"
-                content="Schedule Start Day"
-                icon="clock"
-                disabled={
-                  !isValidEmail(DataEntryStore.onOffBoarding.email) || (DataEntryStore.onOffBoarding.onBoardingDate === "" || DataEntryStore.onOffBoarding.onBoardingDate === undefined) }
-                />
+        <Form.Input label="Choose Date">
+          <DatePicker from={"tomorrow"} output={setOnBoardDate} />
+        </Form.Input>
+        <Form.Button
+          onClick={e => this.onboardLater()}
+          size="small"
+          content="Schedule Start Day"
+          icon="clock"
+          disabled={!isValidEmail(email) || (onBoardingDate === "" || onBoardingDate === undefined)}/>
       </React.Fragment>
-     )
-
-    
+    )
 
     return (
       <div className="Segment" style={{ position: "relative" }}>
-        <Header
-          as="h2"
-          content="Onboard Users"
-          subheader="Send invite for new user to join organization"
-        />
+        <Header as="h2" content="Onboard Users" subheader="Send invite for new user to join organization"/>
         <Segment>
           <Form>
             <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label="Email"
-                value={DataEntryStore.onOffBoarding.email}
-                placeholder="jane@placethatwework.co"
-                onChange={(e, val) => emailChange(val.value)}
-              />
-              <TeamSelect
-                label="Choose Team:"
-                value={DataEntryStore.onOffBoarding.teamID}
-                outputVal={val => teamChange(val)}
-              />
-              <TagSelect
-                label="Choose Tag (optional):"
-                value={DataEntryStore.onOffBoarding.tagID}
-                outputVal={val => tagChange(val)}
-              />
+              <Form.Input fluid label="Email" value={email} placeholder="jane@placethatwework.co" onChange={(e, val) => emailChange(val.value)}/>
+              <TeamSelect label="Choose Team:" value={teamID} outputVal={val => teamChange(val)}/>
+              <TagSelect label="Choose Tag (optional):" value={tagID} outputVal={val => tagChange(val)}/>
             </Form.Group>
 
             <span>
-              start user{' '}
-              <Dropdown
-            inline
-            value={UIStore.dropdown.onBoardAdmin}
-                options={[
-                  { text: "today ⚡️", value: "today" },
-                  { text: "in the future ⏳", value: "future" }
-                ]
-              } 
-              onChange={(e, val) => toggleOnboardWhen(val.value)}
-              />
+              start user
+              <Dropdown inline
+                options={[{ text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future" }]}
+                onChange={(e, val) => toggleOnboardWhen(val.value)}
+                value={dropdown.onBoardAdmin} />
             </span>
-              <div style={{paddingTop: 10}}>
+            <div style={{paddingTop: 10}}>
               <Form.Group inline>
-              {userOnboardWhen}
-            </Form.Group>
-              </div>
-
-
+                {userOnboardWhen}
+              </Form.Group>
+            </div>
           </Form>
         </Segment>
       </div>

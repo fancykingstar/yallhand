@@ -17,9 +17,12 @@ export class ProfileInfo extends React.Component {
       password: '',
       password_confirm: '',
       tag: props.item && props.item.tags ? props.item.tags : [],
-      teamID: props.tags && props.item.teamID ? props.item.teamID : '',
-      isAdmin: props.tags && props.item.isAdmin ? props.item.isAdmin : false,
-      invitedBy: props.tags && props.item.invitedBy ? props.item.invitedBy : '',
+      teamID: props.item && props.item.teamID ? props.item.teamID : '',
+      isAdmin: props.item && props.item.isAdmin ? props.item.isAdmin : false,
+      invitedBy: props.item && props.item.invitedBy ? props.item.invitedBy : '',
+      accountID: props.item && props.item.accountID ? props.item.accountID : '',
+      now: props.item && props.item.now ? props.item.now : false,
+      date: props.item && props.item.date ? props.item.date : '',
     };
   }
 
@@ -72,13 +75,18 @@ export class ProfileInfo extends React.Component {
       email: this.state.email,
       img: "",
       phone: this.state.phone,
-      password: this.state.password
+      password: this.state.password,
+      accountID: this.state.accountID,
+      now: this.state.now,
+      date: this.state.date,
     })
     .then((res) => res.json())
     .then((res) => {
       let validateCode = this.props.item;
       validateCode.userId = res.userID;
-      apiCall(`/validations/${validateCode.id}`, 'PUT', validateCode)
+      const { id } = validateCode
+      delete validateCode.id
+      apiCall(`/validations/${id}`, 'PUT', validateCode)
     })
   }
   
