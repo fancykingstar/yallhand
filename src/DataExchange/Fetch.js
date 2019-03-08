@@ -16,6 +16,7 @@ export const setUser = (user) => {
 export const deleteUser = (user) => {
   UIStore.toggleScreenLoading()
   localStorage.removeItem('user')
+
 }
 
 export const getHeaders = () => {
