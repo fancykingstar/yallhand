@@ -13,10 +13,11 @@ import { withRouter } from "react-router-dom"
 class UserProfile extends React.Component {
 
   logout () {
-    const { UIStore } = this.props
+    const { UserStore, UIStore } = this.props
     deleteUser()
-    this.props.history.push("/login");
     if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
+    UserStore.isAuthenticated = false;
+    this.props.history.push("/login");
   }
 
   render() {
@@ -28,7 +29,9 @@ class UserProfile extends React.Component {
           <Dropdown icon="chevron down" trigger={<div className="UserSettingsTrigger"/>} >
             <Dropdown.Menu>
               <Dropdown.Header>
-                <div className="Avatar-Wrap"> <Image className="Avatar" size="small"  src={UserStore.user.img} /></div>
+                <div className="Avatar-Wrap">
+                  {UserStore.user && UserStore.user.img && <Image className="Avatar" size="small"  src={UserStore.user.img} />}
+                </div>
               </Dropdown.Header>
               <Dropdown.Item text='Settings...' as={NavLink} to='/panel/user-settings'/>
               <Dropdown.Item text='Contact Support' as="a" href="mailto:support@yallhands.com?subject=Report%20an%20issue"/>
@@ -38,7 +41,7 @@ class UserProfile extends React.Component {
         </div>
         <div className="UserName">
           <div>
-            <h4>{UserStore.user.displayName_full}</h4>
+            <h4>{UserStore.user && UserStore.user.displayName_full}</h4>
           </div>
         </div>
       </div>

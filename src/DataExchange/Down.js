@@ -14,68 +14,125 @@ import {apiCall_noBody} from "./Fetch"
 //get team, tag, channel limits
 const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag !== ""
 
-export const account = async (accountID) => 
-  await apiCall_noBody("accounts/" + accountID, "GET").then((result) => {
-    AccountStore.loadAccount(result[0]).catch(e => {
-      console.log('err', e)
-    })
-  })
+export const account = async (accountID) => {
+  const result = await apiCall_noBody("accounts/" + accountID, "GET")
+  AccountStore.loadAccount(result[0])
 
-export const users_and_teams = async (accountID, userID) => 
-     await apiCall_noBody("users/" + accountID, "GET")
-     .then((result) => {
-      apiCall_noBody(`users/all?filter={"where":{"teamID":"${result[0].teamID}"}}`, "GET").then((res) => AccountStore.loadUsers(res))
-     })
-     .then(() => UserStore.loadUser(AccountStore._getUser(userID)))
-     .then(() => apiCall_noBody("teams/" + accountID, "GET").then((result) => TeamStore.loadStructure(result, AccountStore.allUsers)))
-     .then(() => apiCall_noBody("tags/" + accountID, "GET").then((result) => TeamStore.loadTags(result, AccountStore.allUsers)))
-
-export const users = async (accountID, userID) => {
-  return await apiCall_noBody("users/" + accountID, "GET").then((result) => {
-    return AccountStore.loadUsers(result)
-  }).then(() => {
-    return UserStore.loadUser(AccountStore._getUser(userID))
-  })
+  return result
 }
 
-export const channels = async (accountID) => 
-     await apiCall_noBody("channels/" + accountID, "GET").then((result) => ChannelStore.loadChannels(result))
+export const users_and_teams = async (accountID, userID) => {
+  const resp = await apiCall_noBody("users/" + accountID, "GET");
+  const users = await apiCall_noBody(`users/all?filter={"where":{"teamID":"${resp[0].teamID}"}}`, "GET");
+  AccountStore.loadUsers(users);
+  UserStore.loadUser(AccountStore._getUser(userID));
+  const teams = await apiCall_noBody("teams/" + accountID, "GET");
+  TeamStore.loadStructure(teams, AccountStore.allUsers);
+  const tags = await apiCall_noBody("tags/" + accountID, "GET");
+  TeamStore.loadTags(tags, AccountStore.allUsers);
 
-export const structure = async (accountID) => 
-     await apiCall_noBody("teams/" + accountID, "GET").then((result) => TeamStore.loadStructure(result, AccountStore.allUsers))
+  return resp
+}
 
-export const tags = async (accountID) => 
-     await apiCall_noBody("tags/" + accountID, "GET").then((result) => TeamStore.loadTags(result, AccountStore.allUsers))
+export const users = async (accountID, userID) => {
+  const result = await apiCall_noBody("users/" + accountID, "GET");
+  await AccountStore.loadUsers(result);
+  await UserStore.loadUser(AccountStore._getUser(userID));
 
-export const policies = async (accountID) => 
-     await apiCall_noBody("policies/" + accountID, "GET").then((result) => 
-     PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+  return result
+}
 
-export const announcements = async (accountID) => 
-     await apiCall_noBody("announcements/" + accountID, "GET").then((result) => 
-     AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+export const channels = async (accountID) => {
+  const result = await apiCall_noBody("channels/" + accountID, "GET")
+  ChannelStore.loadChannels(result)
 
-export const files = async (accountID) => 
-     await apiCall_noBody("fileresources/" + accountID, "GET").then((result) => 
-     ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
+  return result
+}
 
-export const urls = async (accountID) => 
-     await apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(result)) 
+export const structure = async (accountID) => {
+  const result = await apiCall_noBody("teams/" + accountID, "GET")
+  TeamStore.loadStructure(result, AccountStore.allUsers)
 
-export const logs = async (accountID) => 
-     await apiCall_noBody("itslogs/" + accountID, "GET").then((result) => AccountStore.loadLogs(result.filter(log => !log.isAction))) 
+  return result
+}
 
-export const sentiments = async (accountID) => 
-     await apiCall_noBody("sentiments/" + accountID, "GET").then((result) => AccountStore.loadSentiments(result)) 
+export const tags = async (accountID) => {
+  const result = await apiCall_noBody("tags/" + accountID, "GET")
+  TeamStore.loadTags(result, AccountStore.allUsers)
 
-export const bundles = async (accountID) => 
-     await apiCall_noBody("emailbundles/" + accountID, "GET").then((result) => EmailStore.loadBundles(result))
+  return result
+}
 
-export const campaigns= async (accountID) => 
-     await apiCall_noBody("emailcampaigns/" + accountID, "GET").then((result) => EmailStore.loadCampaigns(result))
+export const policies = async (accountID) => {
+  const result = await apiCall_noBody("policies/" + accountID, "GET")
+  PoliciesStore.loadPolicies(contentFilter() ? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)
 
-export const scheduled= async (accountID) => 
-     await apiCall_noBody("schedules/" + accountID, "GET").then((result) => ScheduleStore.loadScheduled(result))
+  return result
+}
 
-export const history = async () => 
-     await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET").then((result) => result)
+export const announcements = async (accountID) => {
+  const result = await apiCall_noBody("announcements/" + accountID, "GET")
+  AnnouncementsStore.loadAnnouncements(contentFilter() ? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)
+
+  return result
+}
+
+export const files = async (accountID) => {
+  const result = await apiCall_noBody("fileresources/" + accountID, "GET")
+  ResourcesStore.loadFiles(contentFilter() ? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)
+
+  return result
+}
+
+export const urls = async (accountID) => {
+  const result = await apiCall_noBody("urls/" + accountID, "GET")
+  ResourcesStore.loadUrls(result)
+  
+  return result
+}
+
+export const logs = async (accountID) => {
+  const result = await apiCall_noBody("itslogs/" + accountID, "GET")
+  AccountStore.loadLogs(result.filter(log => !log.isAction))
+
+  return result
+}
+
+export const sentiments = async (accountID) => {
+  const result = await apiCall_noBody("sentiments/" + accountID, "GET")
+  AccountStore.loadSentiments(result)
+
+  return result
+}
+
+export const bundles = async (accountID) => {
+  const result = await apiCall_noBody("emailbundles/" + accountID, "GET")
+  console.log(result)
+  try {
+    EmailStore.loadBundles(result)
+  } catch(e) {
+    console.log(e)
+  }
+
+  return result
+}
+
+export const campaigns= async (accountID) => {
+  const result = await apiCall_noBody("emailcampaigns/" + accountID, "GET")
+  EmailStore.loadCampaigns(result)
+
+  return result
+}
+
+export const scheduled= async (accountID) => {
+  const result = await apiCall_noBody("schedules/" + accountID, "GET")
+  ScheduleStore.loadScheduled(result)
+
+  return result
+}
+
+export const history = async () => {
+  const result = await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET")
+
+  return result
+}
