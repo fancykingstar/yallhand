@@ -30,8 +30,6 @@ class AppRoute extends React.Component {
                          (!isAuthenticated && (path.indexOf( "/panel") > -1 && path.indexOf( "/portal") > -1));
 
     const RouteTraffic = isAuthenticated ? <Redirect push to="/panel" /> : <Redirect push to="/login" />;
-
-    console.log('isAuthenticated', isAuthenticated)
   
     return (
       <div className="App">
