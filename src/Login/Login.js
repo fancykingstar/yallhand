@@ -4,7 +4,10 @@ import ProfileLogin from "./ProfileLogin"
 import { PrimaryLogins} from "./PrimaryLogins"
 import { withRouter } from "react-router-dom";
 import "./style.css";
+import {inject, observer} from "mobx-react"
 
+@inject("UIStore")
+@observer
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +38,7 @@ class Login extends React.Component {
   }
 
   render() {
+    const { UIStore } = this.props
     const { item } = this.state
     const views = {
       "reauth": <PrimaryLogins stage="reauth" next={(...args) => this.next(...args)}/>,
@@ -47,7 +51,7 @@ class Login extends React.Component {
 
     return (
       <div className="LoginFrame">
-        {views[this.state.view]}
+        {!UIStore.isScreenLoading && views[this.state.view]}
       </div>
     );
   }

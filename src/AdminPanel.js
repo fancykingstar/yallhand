@@ -21,7 +21,6 @@ import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import { ToastContainer } from "react-toastify";
 
-
 @inject(
   "ChannelStore",
   "PoliciesStore",
@@ -48,12 +47,15 @@ export class AdminPanel extends React.Component {
   render() {
     const { UIStore } = this.props;
     const checkMobile = (width) => {
-      if(width < 992){UIStore.set("responsive", "isMobile", true)}
+      if(width < 992){
+        UIStore.set("responsive", "isMobile", true)
+      }
       else{
           UIStore.set("responsive", "mobileNav", false)
           UIStore.set("responsive", "isMobile", false)
         }
     }
+
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
     ) : (
@@ -63,10 +65,10 @@ export class AdminPanel extends React.Component {
         </Responsive>
         <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
           <div style={{marginTop: 40, position: "fixed", zIndex: 50}}> 
-        
-          <div style={{float: "left"}}> <SideBar /> </div>
+          <div style={{float: "left"}}>
+            <SideBar />
+          </div>
           <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
-         
         </div>
         </Transition>
         <div className="ActionFrame">
@@ -80,7 +82,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/dashboard" component={DashboardFrame} />
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
-            <Route path="/panel/announcements/announcement-variation/:id" render={props => ( <NewEditVariation {...props} mode="announcement" /> )} />
+            <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
             <Route path="/panel/email/edit-bundle" component={EditBundle} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

@@ -38,6 +38,10 @@ export const loadAdmin = () => {
         UIStore.set("adminLoadingComplete", "structure", true)
         UIStore.set("adminLoadingComplete", "tags", true)
       }).catch(e => {
+        UIStore.set("adminLoadingComplete", "user", true)
+        UIStore.set("adminLoadingComplete", "users", true)
+        UIStore.set("adminLoadingComplete", "structure", true)
+        UIStore.set("adminLoadingComplete", "tags", true)
         console.log('Error in promise users_and_teams')
       }))
       promises.push(load.policies(accountID).then(() => {
@@ -64,6 +68,7 @@ export const loadAdmin = () => {
         UIStore.set("adminLoadingComplete", "bundles", true)
       }).catch(e => {
         console.log('Error in promise bundles')
+        UIStore.set("adminLoadingComplete", "bundles", true)
       }))
       promises.push(load.campaigns(accountID).then(() => {
         UIStore.set("adminLoadingComplete", "campaigns", true)

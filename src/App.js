@@ -14,32 +14,31 @@ import FullStory from "react-fullstory"
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
-  componentDidMount(){
+
+  componentDidMount() {
     const { UserStore } = this.props;
     if(UserStore.isAuthenticated === false){
       this.props.history.push("/login");
     }
   }
+
   render() {
-    const { UserStore, UIStore } = this.props;
+    const { UserStore, UIStore, location } = this.props;
+    const { isAuthenticated } = UserStore;
+    const path = location.pathname;
+    const shouldRedirect = (isAuthenticated && (path === "/register" || path === "/login")) ||
+                         (!isAuthenticated && (path.indexOf( "/panel") > -1 && path.indexOf( "/portal") > -1));
+
+    const RouteTraffic = isAuthenticated ? <Redirect push to="/panel" /> : <Redirect push to="/login" />;
+
+    console.log('isAuthenticated', isAuthenticated)
   
-    const RouteTraffic = UserStore.isAuthenticated ? (
-      <Redirect push to="/panel/dashboard" />
-    ) : (
-      <Redirect push to="/login" />
-    );
-  
-    const loader = () => {
-      if (UIStore.isScreenLoading) {
-        return <Spinner />;
-      }
-    };
     return (
       <div className="App">
         {/* <FullStory org="JJAMV"/> */}
-        {loader()}
+        {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
-        <Switch>{RouteTraffic}</Switch>
+        {shouldRedirect && <Switch>{RouteTraffic}</Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
