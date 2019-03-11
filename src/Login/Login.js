@@ -1,5 +1,5 @@
 import React from "react";
-import { ProfileInfo } from "./ProfileInfo"
+import ProfileInfo from "./ProfileInfo"
 import ProfileLogin from "./ProfileLogin"
 import { PrimaryLogins} from "./PrimaryLogins"
 import { withRouter } from "react-router-dom";

@@ -5,18 +5,23 @@ import { inject, observer} from "mobx-react"
 import "./style.css";
 // import { DataEntryStore } from "../Stores/DataEntryStore";
 import { deleteUser } from "../DataExchange/Fetch"
+import { withRouter } from "react-router-dom"
 
-@inject("UserStore")
 @observer
-export class UserProfile extends React.Component {
- 
+@inject("UserStore", "UIStore")
+@observer
+class UserProfile extends React.Component {
+
   logout () {
+    const { UIStore } = this.props
     deleteUser()
+    this.props.history.push("/login");
+    if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
   }
 
   render() {
     const {UserStore} = this.props
- 
+
     return (
       <div className="UserProfile">
         <div className="UserSettingsDropdown" >
@@ -40,3 +45,5 @@ export class UserProfile extends React.Component {
     );
   }
 }
+
+export default withRouter(UserProfile)

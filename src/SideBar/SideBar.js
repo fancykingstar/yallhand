@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Workspace } from "./Workspace";
-import { UserProfile } from "./UserProfile";
+import UserProfile from "./UserProfile";
 import { ChannelContainer } from "./ChannelContainer";
 import NavItems from "./NavItems";
 import { QLogo } from "../Assets/Graphics/QLogo";

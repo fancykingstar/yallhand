@@ -1,17 +1,18 @@
 import React from "react";
 import { Form, Divider, Header, Button } from "semantic-ui-react";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
-import { apiCall } from "../DataExchange/Fetch"
+import { apiCall, setUser } from "../DataExchange/Fetch";
+import { withRouter } from "react-router-dom";
 
-export class ProfileInfo extends React.Component {
+class ProfileInfo extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       error: null,
-      name: '',
-      username: '',
-      phone: '',
+      name: props.item && props.item.displayName_full ? props.item.displayName_full : '',
+      username: props.item && props.item.displayName ? props.item.displayName : '',
+      phone: props.item && props.item.phone ? props.item.phone : '',
       email: props.item && props.item.email ? props.item.email : '',
       email_disable: props.item && props.item.email ? true : false,
       password: '',
@@ -23,6 +24,7 @@ export class ProfileInfo extends React.Component {
       accountID: props.item && props.item.accountID ? props.item.accountID : '',
       now: props.item && props.item.now ? props.item.now : false,
       date: props.item && props.item.date ? props.item.date : '',
+      googleId: props.item && props.item.googleId ? props.item.googleId : '',
     };
   }
 
@@ -38,6 +40,10 @@ export class ProfileInfo extends React.Component {
     return !(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(value).toLowerCase()))
   }
 
+  isInvalidPassword (value) {
+    return !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(String(value)))
+  }
+
   isPasswordNotEqual () {
     return this.state.password !== this.state.password_confirm
   }
@@ -50,7 +56,7 @@ export class ProfileInfo extends React.Component {
 
     if (this.isEmpty(field)) error += `field ${humanReadableType} cannot be empty`
     else if (this.isWeak(field)) error += `field ${humanReadableType} is to weak`
-    else if (type === 'password' && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(field))) error += `field ${humanReadableType} must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character`
+    else if (type === 'password' && this.isInvalidPassword(field)) error += `field ${humanReadableType} must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character`
     else if (type === 'email' && this.isInvalidEmail(field)) error += `${humanReadableType} is not valid`
     else if (type === 'password_confirm' && this.isPasswordNotEqual(field)) error += `${humanReadableType} is not equal to password`
 
@@ -60,28 +66,30 @@ export class ProfileInfo extends React.Component {
   }
 
   register () {
+    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     else if (this.validate('phone', 'phone') !== '') return;
     else if (this.validate('email', 'email') !== '') return;
-    else if (this.validate('password', 'password') !== '') return;
-    else if (this.validate('password_confirm', 'password confirm') !== '') return;
+    else if (!googleId && this.validate('password', 'password') !== '') return;
+    else if (!googleId && this.validate('password_confirm', 'password confirm') !== '') return;
 
     apiCall('/users', 'POST', {
       isActive: true,
-      invitedBy: this.state.invitedBy,
-      displayName_full: this.state.name,
-      displayName: this.state.username,
-      isAdmin: this.state.isAdmin,
-      teamID: this.state.teamID,
-      tags: this.state.tags,
-      email: this.state.email,
+      invitedBy: invitedBy,
+      displayName_full: name,
+      displayName: username,
+      isAdmin: isAdmin,
+      teamID: teamID,
+      tags: tags,
+      email: email,
       img: "",
-      phone: this.state.phone,
-      password: this.state.password,
-      accountID: this.state.accountID,
-      now: this.state.now,
-      date: this.state.date,
+      phone: phone,
+      password: googleId ? googleId : password,
+      accountID: accountID,
+      now: now,
+      date: date,
+      googleId: googleId,
     })
     .then((res) => res.json())
     .then((res) => {
@@ -89,12 +97,23 @@ export class ProfileInfo extends React.Component {
       validateCode.userId = res.userID;
       const { id } = validateCode
       delete validateCode.id
-      apiCall(`/validations/${id}`, 'PUT', validateCode)
+      apiCall(`/validations/${id}`, 'PUT', validateCode).then(() => {
+        if (!googleId) return
+        const { history } = this.props
+        apiCall('users/login', 'POST', {email: email, password: googleId})
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.token) {
+              setUser({token: res.token})
+              history.push('/panel')
+            }
+          })
+        })
     })
   }
 
   render () {
-    const { error, email_disable } = this.state
+    const { error, email_disable, googleId } = this.state
     return (
       <React.Fragment>
         <div className="ContainerLogin">
@@ -130,18 +149,18 @@ export class ProfileInfo extends React.Component {
                 onBlur={() => this.validate('email', 'email')}
                 disabled={email_disable}
                 value={this.state.email}/>
-              <Form.Input
+              {!googleId && <Form.Input
                 icon="key"
                 type="password"
                 label="password"
                 onChange={(e) => this.setState({password: e.target.value})}
-                onBlur={() => this.validate('password', 'password')}/>
-              <Form.Input
+                onBlur={() => this.validate('password', 'password')}/>}
+              {!googleId && <Form.Input
                 icon="key"
                 type="password"
                 label="password confirm"
                 onChange={(e) => this.setState({password_confirm: e.target.value})}
-                onBlur={() => this.validate('password_confirm', 'password confirm')}/>
+                onBlur={() => this.validate('password_confirm', 'password confirm')}/>}
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
               {error && <span className="error">{error}</span>}
             </Form>
@@ -151,3 +170,5 @@ export class ProfileInfo extends React.Component {
     );
   }
 };
+
+export default withRouter(ProfileInfo);
