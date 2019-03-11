@@ -8,6 +8,7 @@ deploy_project: &deploy_project
           git fetch --all
           git reset --hard origin/$CIRCLE_BRANCH
           npm i
+          npm run build
         EOF
 
 version: 2
