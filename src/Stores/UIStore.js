@@ -46,6 +46,7 @@ class Store {
         reviewAlerts: "recur",
         onBoardUser: "today",
         onBoardAdmin: "today",
+        usersFilter: "active",
         uploadConfig: "content",
         bundles: "active",
         portalannouncementSort: "Newest",
@@ -166,7 +167,8 @@ class Store {
     }
 
     @observable portal = {
-        sentimentComplete: false
+        sentimentComplete: false,
+        sentimentAvailable: []
     }
 
     @action

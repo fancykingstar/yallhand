@@ -1,13 +1,10 @@
 import React from "react";
-import { Header, Table, Image } from "semantic-ui-react";
+import { Header, Table, Image, Dropdown } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { UserEdit } from "./UserEdit";
 import { getDisplayTags } from "../SharedCalculations/GetDisplayTags";
 import { getDisplayTeams } from "../SharedCalculations/GetDisplayTeams";
-import {
-  initSearchObj,
-  stupidSearch
-} from "../SharedCalculations/StupidSearch";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { UserImgPlaceholder } from "../SharedCalculations/UserImgPlaceholder";
 
@@ -33,7 +30,13 @@ export class Users extends React.Component {
     }
   }
   render() {
-    const {UIStore ,DataEntryStore, AccountStore, TeamStore, UserStore } = this.props;
+    const {UIStore ,DataEntryStore, AccountStore, TeamStore } = this.props;
+
+    const displayFilter = (all) => {
+      return UIStore.dropdown.usersFilter === "active"?
+        all.filter(user => user.isActive) 
+        : all.filter(user => !user.isActive)
+    }
 
     const openEditor = info => {
       DataEntryStore.reset("userEditFields", {adminConfig: "all"});
@@ -56,7 +59,7 @@ export class Users extends React.Component {
         );
         return AccountStore.allUsers.filter(item => results.includes(item.userID));
       } else {
-        return AccountStore.allUsers;
+        return displayFilter(AccountStore.allUsers)
       }
     };
 
@@ -90,6 +93,16 @@ export class Users extends React.Component {
     ));
     return (
       <div className="UserTable">
+      <span>
+              view{' '}
+              <Dropdown
+              inline
+              value={UIStore.dropdown.usersFilter}
+                options={[
+                  { text: "active", value: "active" },
+                  { text: "offboarded", value: "offboarded" }
+                ]} onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)} />
+            </span>
         <Table basic="very" selectable fixed columns={8}>
           <Table.Header>
             <Table.Row>

@@ -56,9 +56,9 @@ export class InviteAdmin extends React.Component {
         UIStore.set("dropdown", "onBoardAdmin", val)
       }
       const onboardLater = () => {
-        createUser(user(), false).then(() => {
-          //need to get USERID back
-          createSchedule(schedule(moment(DataEntryStore.onOffBoarding.adminOnBoardingDate).valueOf(), "onboard user", {"userID": "unknown"}))
+        const newUser = user()
+        createUser(newUser, false).then(() => {
+          createSchedule(schedule(moment(DataEntryStore.onOffBoarding.adminOnBoardingDate).valueOf(), "onboard user", {"userID": newUser.userID}))
           .then(() => {
           this.reset() 
           UIStore.set("dropdown", "onBoardAdmin", "today")

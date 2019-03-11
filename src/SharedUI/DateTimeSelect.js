@@ -18,10 +18,10 @@ export class DateTimeSelect extends React.Component {
   render() {
       const {UIStore} = this.props
       const updateValue = () => {
+        if(UIStore.dateTimeSelect.date !== 0){
         const dateTime = UIStore.dateTimeSelect.date.slice(0,10) +' '+ UIStore.dateTimeSelect.time
         this.props.value(moment(dateTime).valueOf())
-        console.log(moment(dateTime).valueOf())
-          }
+      }}
 
       const handleDate = (val) => {
         UIStore.set("dateTimeSelect", "date", val)
@@ -39,6 +39,7 @@ export class DateTimeSelect extends React.Component {
           <Form.Input label="Choose Date">
             <DatePicker
               from={"tomorrow"}
+              readOnly={true}
               output={val => handleDate(val)}
             />
           </Form.Input>

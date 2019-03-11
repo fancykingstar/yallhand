@@ -1,6 +1,7 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Icon, Table, Modal, Tab} from "semantic-ui-react"
+import { Segment, Header, Menu, Icon, Table, Modal } from "semantic-ui-react"
+import { InfoPopUp } from "../SharedUI/InfoPopUp"
 import _ from 'lodash'
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
@@ -128,7 +129,11 @@ export class Views extends React.Component {
 
         return(
             <Segment style={{marginRight: 50}}>
-            <Header as="h3"> <Icon name="chart line" />Views</Header>
+            <div style={{display: "inline"}}>
+                <div style={{float: "left"}}> <Header as="h3"> <Icon name="chart line" />Views</Header> </div>
+                <div><InfoPopUp content="Items with no views are not displayed" /> </div>
+            </div>
+         
             <Menu secondary>
             <Menu.Item
               name='announcements'
