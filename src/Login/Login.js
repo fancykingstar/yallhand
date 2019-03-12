@@ -1,7 +1,7 @@
 import React from "react";
 import ProfileInfo from "./ProfileInfo"
 import ProfileLogin from "./ProfileLogin"
-import { PrimaryLogins} from "./PrimaryLogins"
+import PrimaryLogins from "./PrimaryLogins"
 import { withRouter } from "react-router-dom";
 import "./style.css";
 import {inject, observer} from "mobx-react"
@@ -32,6 +32,7 @@ class Login extends React.Component {
   ckeckForCode () {
     const { item } = this.state
     const { location } = this.props
+
     if (location.search && location.search.indexOf('inviteCode') > -1 && !item.code) {
       this.setState({item: {code: location.search.replace('?inviteCode=', '')}})
     }

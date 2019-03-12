@@ -6,6 +6,7 @@ import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
 import UserPortal from "./UserPortal/UserPortal";
 import Login from "./Login/Login";
+import Forgot from "./Login/Forgot";
 import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
 
@@ -16,8 +17,8 @@ import FullStory from "react-fullstory"
 class AppRoute extends React.Component {
 
   componentDidMount() {
-    const { UserStore } = this.props;
-    if(UserStore.isAuthenticated === false){
+    const { UserStore, location } = this.props;
+    if(UserStore.isAuthenticated === false && location.pathname !== "/forgot"){
       this.props.history.push("/login");
     }
   }
@@ -26,21 +27,22 @@ class AppRoute extends React.Component {
     const { UserStore, UIStore, location } = this.props;
     const { isAuthenticated } = UserStore;
     const path = location.pathname;
-    const shouldRedirect = (isAuthenticated && (path === "/register" || path === "/login")) ||
-                         (!isAuthenticated && (path.indexOf( "/panel") > -1 && path.indexOf( "/portal") > -1));
+    const shouldRedirect = (isAuthenticated && (path === "/register" || path === "/login" || path === "/forgot")) ||
+                           (!isAuthenticated && (path.indexOf("/panel") > -1 && path.indexOf("/portal") > -1));
 
     const RouteTraffic = isAuthenticated ? <Redirect push to="/panel" /> : <Redirect push to="/login" />;
-  
+
     return (
       <div className="App">
         {/* <FullStory org="JJAMV"/> */}
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
-        {shouldRedirect && <Switch>{RouteTraffic}</Switch>}
+        {shouldRedirect && path !== "/forgot" && <Switch>{RouteTraffic}</Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
           <Route path="/register" component={Login} />
+          <Route path="/forgot" component={Forgot} />
           <Route path="/login" component={Login} />
           <Route path="*" component={TwilightZone} />
         </Switch>

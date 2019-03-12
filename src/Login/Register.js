@@ -19,13 +19,16 @@ export class Register extends React.Component {
   async next (type, itemGoogle = false) {
     const { setError } = this.props
     await apiCall_noBody(`validations?filter={"where":{"code":"${this.state.code}"}}`, 'GET').then(response => {
-      if (response.length === 0) setError('Sorry, that invite code is invalid')
+      if (response.length === 0) setError('Code does not exist in database')
       else {
         let item = response[0]
-        if (item.userId && item.userId !== '') setError('Sorry, that invite code is already used')
+        if (item.userId && item.userId !== '') setError('Code is already used')
         else {
           const { email } = item
-          if (itemGoogle) item = Object.assign(item, itemGoogle, {email: email})
+          if (itemGoogle) {
+            if (itemGoogle.email !== email) return setError('Code is not linked to the email in database')
+            item = Object.assign(item, itemGoogle, {email: email})
+          }
           setError(null)
           this.setState({type: type})
           this.props.next(type, item)
@@ -45,26 +48,29 @@ export class Register extends React.Component {
   }
 
   render () {
+    const style = {width: 'calc(100% - 20px)', marginLeft: 10}
     const { error } = this.props;
     return (
       <React.Fragment>
         <Form>
           <Form.Input label="Invite Code" value={this.state.code} onChange={(e) => this.handleChange(e)}/>  
-          <Form.Button primary icon labelPosition="left" style={{minWidth: 230, marginLeft: 4}} size="small" onClick={e => this.next('profileinfoGmail')}>
-            <Icon name={"google"}/>{"Register with G-Suite"}
-          </Form.Button>
-          <Form.Button primary icon labelPosition="left" style={{minWidth: 230, marginLeft:4}} size="small" onClick={e => this.next('profileinfo')}>
+          <div className="field">
+            <GoogleLogin
+              className="ui small icon primary left labeled button"
+              clientId="679925808292-ubbvg6ffga3paa1ooj1285ap3hljft1d.apps.googleusercontent.com"
+              render={renderProps => (
+                <button className="ui small icon primary left labeled button" style={style} onClick={renderProps.onClick} role="button">
+                  <i aria-hidden="true" className="google icon"></i>Register with G-Suite
+                </button>
+              )}
+              onSuccess={(e) => this.responseGoogle(e)}
+              onFailure={(e) => this.responseGoogle(e)}
+              buttonText="Login">
+            </GoogleLogin>
+          </div>
+          <Form.Button primary icon labelPosition="left" size="small" style={style} onClick={e => this.next('profileinfo')}>
             <Icon name={"mail"}/>{"Register with Email"}
           </Form.Button>
-          <GoogleLogin
-            clientId="679925808292-ubbvg6ffga3paa1ooj1285ap3hljft1d.apps.googleusercontent.com"
-            render={renderProps => (
-              <button onClick={renderProps.onClick}>This is my custom Google button</button>
-            )}
-            buttonText="Login"
-            onSuccess={(e) => this.responseGoogle(e)}
-            onFailure={(e) => this.responseGoogle(e)}
-          />
           {error && <span className="error">{error}</span>}
         </Form>
       </React.Fragment>

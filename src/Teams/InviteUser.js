@@ -50,6 +50,14 @@ export class InviteUser extends React.Component {
     }
   }
 
+  error (validation) {
+    let message = '';
+    if (validation.userId) message = `${this.state.email} has already been invited to Join and is registered`
+    else message = `${this.state.email} has already been invited to Join with code ${validation.code}`
+    toast.error(message, {hideProgressBar: true})
+    this.setState(this.reset());
+  }
+
   success () {
     toast.success(`🎉 ${this.state.email} has been invited to Join ✉️`, {hideProgressBar: true})
     this.setState(this.reset());
@@ -67,7 +75,7 @@ export class InviteUser extends React.Component {
     let newUser = this.getDataNewUser()
     newUser.now = !later
     if (later) newUser.date = moment(this.state.date).valueOf()
-    await apiCall('validations', 'POST', newUser).then(() => this.success())
+    await apiCall('validations', 'POST', newUser).then((res) => res.json()).then((res) => res.error ? this.error(res) : this.success())
   }
 
   render() {

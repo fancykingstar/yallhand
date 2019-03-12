@@ -1,5 +1,25 @@
-.inviteCode:hover {
+.btn.inviteCode {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.forgot label {
+  display: block;
+  color: #000;
+}
+
+.switch-forgot {
+  
+}
+
+.switch-forgot:hover {
+  cursor: pointer;
+}
+
+.btn.inviteCode:hover {
   color: #f8127d !important;
+  cursor: pointer;
 }
 
 .LoginFrame {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Divider, Header, Button } from "semantic-ui-react";
+import { Message, Form, Divider, Header } from "semantic-ui-react";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
 import { apiCall, setUser } from "../DataExchange/Fetch";
 import { withRouter } from "react-router-dom";
@@ -98,8 +98,8 @@ class ProfileInfo extends React.Component {
       const { id } = validateCode
       delete validateCode.id
       apiCall(`/validations/${id}`, 'PUT', validateCode).then(() => {
-        if (!googleId) return
         const { history } = this.props
+        if (!googleId) return window.location.reload()
         apiCall('users/login', 'POST', {email: email, password: googleId})
           .then((res) => res.json())
           .then((res) => {
@@ -113,7 +113,7 @@ class ProfileInfo extends React.Component {
   }
 
   render () {
-    const { error, email_disable, googleId } = this.state
+    const { error, email_disable, googleId } = this.state;
     return (
       <React.Fragment>
         <div className="ContainerLogin">
@@ -121,50 +121,44 @@ class ProfileInfo extends React.Component {
             <Header as="h2">Register your account</Header>
             <Divider />
             <Form>
-              <Form.Input label="Full Name" value={this.state.name} onChange={(e) => this.setState({name: e.target.value})} onBlur={() => this.validate('name', 'name')}>
+              <Form.Input label="Full Name"
+                          value={this.state.name}
+                          onBlur={() => this.validate('name', 'name')}
+                          onChange={(e) => this.setState({name: e.target.value})}>
                 <input maxLength="32" />
               </Form.Input>
-              <Form.Input
-                icon="user circle outline"
-                value={this.state.username} onChange={(e) => this.setState({username: e.target.value})}
-                onBlur={() => this.validate('username', 'display name')}
-                label={
-                <span style={{color: "#000000"}}>
-                  Display Name
-                  <InfoPopUp content="Short name or nickname" />
-                </span>
-              }>
+              <Form.Input onBlur={() => this.validate('username', 'display name')}
+                          value={this.state.username} onChange={(e) => this.setState({username: e.target.value})}
+                          label={<span style={{color: "#000000"}}>Display Name<InfoPopUp content="Short name or nickname" /></span>}>
                 <input maxLength="16" />
               </Form.Input>
-              <Form.Input
-                icon="phone"
-                label="mobile"
-                type="tel"
-                onChange={(e) => this.setState({phone: e.target.value})}
-                onBlur={() => this.validate('phone', 'phone')}/>
-              <Form.Input
-                icon="mail"
-                label="email"
-                onChange={(e) => this.setState({email: e.target.value})}
-                onBlur={() => this.validate('email', 'email')}
-                disabled={email_disable}
-                value={this.state.email}/>
-              {!googleId && <Form.Input
-                icon="key"
-                type="password"
-                label="password"
-                onChange={(e) => this.setState({password: e.target.value})}
-                onBlur={() => this.validate('password', 'password')}/>}
-              {!googleId && <Form.Input
-                icon="key"
-                type="password"
-                label="password confirm"
-                onChange={(e) => this.setState({password_confirm: e.target.value})}
-                onBlur={() => this.validate('password_confirm', 'password confirm')}/>}
+              <Form.Input icon="phone"
+                          type="tel"
+                          label="mobile"
+                          onBlur={() => this.validate('phone', 'phone')}
+                          onChange={(e) => this.setState({phone: e.target.value})}/>
+              <Form.Input icon="mail"
+                          label="email" 
+                          value={this.state.email}
+                          disabled={email_disable}
+                          onBlur={() => this.validate('email', 'email')}
+                          onChange={(e) => this.setState({email: e.target.value})}/>
+              {!googleId &&
+                <Form.Input icon="key"
+                            type="password"
+                            label="password" 
+                            onBlur={() => this.validate('password', 'password')}
+                            onChange={(e) => this.setState({password: e.target.value})}/>}
+              {!googleId &&
+                <Form.Input icon="key"
+                            type="password"
+                            label="password confirm" 
+                            onBlur={() => this.validate('password_confirm', 'password confirm')}
+                            onChange={(e) => this.setState({password_confirm: e.target.value})}/>}
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
-              {error && <span className="error">{error}</span>}
             </Form>
           </div>
+          {error && <Message  icon="warning"  content={error} negative/>}
         </div>
       </React.Fragment>
     );

@@ -4,27 +4,28 @@ import { Divider, Grid, Message } from "semantic-ui-react";
 import Reauth from "./Reauth"
 import { EmailLogin } from "./EmailLogin";
 import { Register } from "./Register"
+import { withRouter } from "react-router-dom";
 
-export class PrimaryLogins extends React.Component {
+class PrimaryLogins extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       code: props.code ? props.code : '',
-      errorMsg: false
+      errorMsg: false,
+      stage: props.stage
     }
   }
 
   render() {
-    const { code, errorMsg } = this.state
-    const { stage, next } = this.props
+    const style = {marginTop: 10, marginLeft: 5, color: "#FFFFFF"}
+    const { code, stage, errorMsg } = this.state
+    const { next } = this.props
 
     const stages = {
       "reauth": <Reauth next={(...args) => next(...args)}/>,
       "reauthEmail": <EmailLogin/>,
       "register": <Register code={code} next={(...args) => next(...args)} setError={(e) => this.setState({errorMsg: e})}/>
     }
-
-    const loginDisplay = stages[this.props.stage]
 
     return (
       <React.Fragment>
@@ -42,10 +43,13 @@ export class PrimaryLogins extends React.Component {
             </div>
             <div className="ERM">Employee Relationship Management</div>
             <Divider />
-            {loginDisplay}
+            {stages[stage]}
           </div>
-          {stage && <span className="inviteCode" onClick={e => alert("hi")} style={{marginTop: 10, marginLeft: 5, color: "#FFFFFF"}}>
+          {stage === 'reauth' && <span className="btn inviteCode" onClick={e => this.setState({stage: 'register'})} style={style}>
             Did your organizaiton send you an invite code?
+          </span>}
+          {stage === 'register' && <span className="btn inviteCode" onClick={e => this.setState({stage: 'reauth'})} style={style}>
+            Already have an account?
           </span>}
           {errorMsg && <Message  icon="warning"  content={errorMsg} negative/>}
         </div>
@@ -53,3 +57,5 @@ export class PrimaryLogins extends React.Component {
     );
   }
 }
+
+export default withRouter(PrimaryLogins)
