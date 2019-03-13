@@ -29,7 +29,7 @@ export class BundleConfig extends React.Component {
     };
 
     const bundleBuildOption = EmailStore.allBundles
-      .filter(bundle => bundle.bundleID !== "queue")
+      .filter(bundle => !bundle.isQueue)
       .map(bundle => ({
         text: `Merge with ${bundle.label === ""? bundle.subject : bundle.label}`,
         value: bundle.bundleID,

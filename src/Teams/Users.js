@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Table, Image } from "semantic-ui-react";
+import { Header, Table, Image, Dropdown } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { UserEdit } from "./UserEdit";
 import { getDisplayTags } from "../SharedCalculations/GetDisplayTags";
@@ -26,6 +26,12 @@ export class Users extends React.Component {
     const { adminLimits } = userEdit;
     const { search } = UIStore;
 
+    const displayFilter = (all) => {
+      return UIStore.dropdown.usersFilter === "active"?
+        all.filter(user => user.isActive) 
+        : all.filter(user => !user.isActive)
+    }
+
     const openEditor = info => {
       DataEntryStore.reset("userEditFields", {adminConfig: "all"});
       DataEntryStore.set("userEditFields", "userEdit", AccountStore._getUser(info) );
@@ -43,7 +49,7 @@ export class Users extends React.Component {
         const results = stupidSearch(search.searchUsersData, search.searchUsers);
         return AccountStore.allUsers.filter(item => results.includes(item.userID));
       } else {
-        return AccountStore.allUsers;
+        return displayFilter(AccountStore.allUsers)
       }
     };
 
@@ -72,6 +78,16 @@ export class Users extends React.Component {
     ));
     return (
       <div className="UserTable">
+      <span>
+              view{' '}
+              <Dropdown
+              inline
+              value={UIStore.dropdown.usersFilter}
+                options={[
+                  { text: "active", value: "active" },
+                  { text: "offboarded", value: "offboarded" }
+                ]} onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)} />
+            </span>
         <Table basic="very" selectable fixed columns={8}>
           <Table.Header>
             <Table.Row>

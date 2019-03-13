@@ -17,6 +17,7 @@ const Settings = inject( "DataEntryStore", "PoliciesStore", "UserStore", "Announ
       let patchObj = {label: DataEntryStore.contentmgmt.settingsLabel, chanID: DataEntryStore.contentmgmt.settingsChannel}
       props.mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
       props.mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
+      DataEntryStore.set("contentmgmt","label", DataEntryStore.contentmgmt.settingsLabel)
     }
 
     const archiveAll = () => {

@@ -24,7 +24,7 @@ export class DashboardFrame extends React.Component {
           <Grid.Row>
             <Grid.Column>
               <Segment>
-                <h4>Content Battery</h4>
+                <h4>Content</h4>
                 <Statistic.Group widths={2}>
                 <Statistic>
                   <Statistic.Value>{AnnouncementsStore.allAnnouncements.length}</Statistic.Value>
@@ -39,7 +39,7 @@ export class DashboardFrame extends React.Component {
             </Grid.Column>
             <Grid.Column>
               <Segment>
-                <h4>Team</h4>
+                <h4>Teams</h4>
                 <Statistic.Group widths={2}>
                 <Statistic>
                   <Statistic.Value>{TeamStore.structure.length}</Statistic.Value>
@@ -58,7 +58,7 @@ export class DashboardFrame extends React.Component {
                 <Statistic.Group widths={1}>
                 <Statistic>
                   <Statistic.Value>{EmailStore.allCampaigns.filter(i => !i.completed).length}</Statistic.Value>
-                  <Statistic.Label>Active Campaigns</Statistic.Label>
+                  <Statistic.Label>Campaigns</Statistic.Label>
                 </Statistic>
                 </Statistic.Group>
               </Segment>

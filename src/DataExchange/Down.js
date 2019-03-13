@@ -49,6 +49,12 @@ export const channels = async (accountID) => {
   return result
 }
 
+export const allContent = async (accountID) => 
+     await apiCall_noBody("policies/" + accountID, "GET").then((result) => PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+     .then(()=> apiCall_noBody("announcements/" + accountID, "GET").then((result) => AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)))
+     .then(()=> apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
+     .then(()=> apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)) ) )
+
 export const structure = async (accountID) => {
   const result = await apiCall_noBody("teams/" + accountID, "GET")
   TeamStore.loadStructure(result, AccountStore.allUsers)
@@ -59,6 +65,10 @@ export const structure = async (accountID) => {
 export const tags = async (accountID) => {
   const result = await apiCall_noBody("tags/" + accountID, "GET")
   TeamStore.loadTags(result, AccountStore.allUsers)
+
+export const urls = async (accountID) => 
+      await apiCall_noBody("urls/" + accountID, "GET").then((result) => 
+      ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
 
   return result
 }

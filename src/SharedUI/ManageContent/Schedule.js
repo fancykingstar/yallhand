@@ -47,7 +47,7 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
              />
              </Form.Group></Form>
              {/* <p style={{marginTop: 10}}>{UserStore.user.timezone}</p> */}
-              <Button primary disabled={DataEntryStore.contentmgmt.eventType === ""} onClick={e => handleClick()}>Set</Button>
+              <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.event === ""} onClick={e => handleClick()}>Set</Button>
 
     
    

@@ -20,6 +20,7 @@ export const DatePicker = (props) => {
         props.output(adjusted.add(delta).format())
         }
         return(
+          <div onKeyPress={(e)=> e.preventDefault()}>
             <DayPickerInput
             dayPickerProps={{ disabledDays: { before: startingDate[props.from] } }}
             format="M/D/YYYY"
@@ -28,5 +29,6 @@ export const DatePicker = (props) => {
             placeholder="MM/DD/YYYY"
             onDayChange={val => dayChange(val)}
           />
+          </div>
         )
     }

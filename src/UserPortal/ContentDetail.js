@@ -1,41 +1,43 @@
 import React from "react"
-import "./style.css"
 import { inject, observer } from "mobx-react";
-import {  Header, Container, Image, Icon, Button, Grid, Item } from 'semantic-ui-react'
-
-import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
+import {  Header, Container, Image, Icon, Grid, Item } from 'semantic-ui-react'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
-import BackButton from "../SharedUI/BackButton"
 import {downloadFilePortal} from "../DataExchange/DownloadFile"
-
 import { log } from "../DataExchange/Up"
 import { ItsLog } from "../DataExchange/PayloadBuilder"
+import { apiCall_noBody } from "../DataExchange/Fetch"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import BackButton from "../SharedUI/BackButton"
+import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
+import "./style.css"
 
-@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore")
+@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore")
 @observer
 export class ContentDetail extends React.Component {
 
     componentDidMount() {
-        const {UIStore, AnnouncementsStore, PoliciesStore} = this.props
+        const {UIStore, AnnouncementsStore, PoliciesStore, UserStore} = this.props
         const content = this.props.mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
         UIStore.set("portal", "sentimentComplete", false)
         log(ItsLog(false, {"type": this.props.mode, "id": this.props.match.params.id, "variation": content.variations[0].variationID}))
+    
+        apiCall_noBody(`sentiments/usersentiment/${UserStore.user.userID}/${this.props.mode === "policy"? content.policyID : content.announcementID}/${this.props.mode === "policy"? "policyID":"announcementID"}`, "GET")
+            .then(result => UIStore.set("portal", "sentimentAvailable", result))
+            
     }
 
     render() {
-        const {AnnouncementsStore, PoliciesStore, ResourcesStore} = this.props
+        const {AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore} = this.props
         
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
         const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
-        // console.log("file", mode, content[mode + "ID"], content.variations[0].variationID)
         const displayFiles = fileResources.map(file =>
             <Item key={"contentResource" + giveMeKey()}>
                 <Item.Content onClick={e => downloadFilePortal(file.S3Key.split("gramercy/")[1], file.label, file.resourceID)}>
@@ -44,6 +46,13 @@ export class ContentDetail extends React.Component {
                 </Item.Content>
             </Item>
         )
+
+        const displaySentiment = UIStore.portal.sentimentAvailable.length > 0? <div/> : 
+            <Sentiment
+            type={mode === "announcement"? "announcementID" : "policyID"}
+            ID={mode === "announcement"? content.announcementID : content.policyID}
+            variationID={content.variations[0].variationID}
+            />
 
         return(
             <div className="Content">
@@ -69,11 +78,7 @@ export class ContentDetail extends React.Component {
                     }
                     <Grid.Row columns={2}>
                         <Grid.Column>
-                            <Sentiment
-                            type={mode === "announcement"? "announcementID" : "policyID"}
-                            ID={mode === "announcement"? content.announcementID : content.policyID}
-                            variationID={content.variations[0].variationID}
-                            />
+                            {displaySentiment}
                         </Grid.Column>
                         <Grid.Column>
                             <AskAQuestion content={content}/>
