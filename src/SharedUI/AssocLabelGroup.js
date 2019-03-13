@@ -24,12 +24,13 @@ export class AssocLabelGroup extends React.Component {
                         {
                         const fullObj = type === "policy" ?  PoliciesStore._getPolicy(i[idType]) : AnnouncementsStore._getAnnouncement(i[idType])
                         const fullVari = type === "policy" ?  PoliciesStore._getVariation(i[idType], vari) : AnnouncementsStore._getVariation(i[idType], vari)
-                        key[(`${fullObj.label} (${fullVari.teamID === "global" ? "Global" : TeamStore._getTeam(fullVari.teamID.label)} ${fullVari.tags.length === 0 ? "" : TeamStore._getTag(fullVari.tags[0].label)})`)] = {"type": type, [idType]: i[idType], "variationID": vari}
+                        key[(`${fullObj.label} (${fullVari.teamID === "global" ? "Global" : TeamStore._getTeam(fullVari.teamID).label} ${fullVari.tags.length === 0 ? "" : TeamStore._getTag(fullVari.tags[0]).label})`)] = {"type": type, [idType]: i[idType], "variationID": vari}
                     }
                         )
                         )
+                       
          return key
-        }
+        } 
         const policyKey = labelKey("policy", this.props.assoc.policies)
         const policyLabels = Object.keys(policyKey)
             .map(item => 

@@ -10,7 +10,7 @@ export class AnalyticsFrame extends React.Component {
   render() {
     const { UIStore } = this.props;
     return (
-      <div>
+      <div style={{overflowY: "auto"}}>
         <Header
           as="h2"
           content="Analytics"

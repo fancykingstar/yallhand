@@ -161,8 +161,13 @@ export const user = () => {
       "email": isAdmin ? x.adminEmail: x.email,
       "img": "",
       "timezone": AccountStore.account.timezone,
-      "profile": {"About Me":"","Department":"","Github":"","LinkedIn":"","Location":"","Medium":"","Mobile":"","Phone or Extension":"","Title":"","Twitter":""}
-  };
+      "profile": {"About Me":"","Department":"","Github":"","LinkedIn":"","Location":"","Medium":"","Mobile":"","Phone or Extension":"","Title":"","Twitter":""},
+      "phone": "string",
+      "password": "string",
+      "now": true,
+      "date": "string",
+      "googleId": "string"
+    };
   return buildObj
 }
 

@@ -40,10 +40,12 @@ const checkValid = (res) => {
         let valid = false
         res.associations.policies.forEach(policy => {
             let polsmatched = PoliciesStore.allPolicies.filter(i => i.policyID === policy.policyID)
+            console.log(polsmatched)
             if(polsmatched.length === 1 && policy.variations.includes(polsmatched[0].variations[0].variationID)){
                 valid = true
             }
         })
+
         res.associations.announcements.forEach(announcement => {
             let announcementsmatched = AnnouncementsStore.allAnnouncements.filter(i => i.announcementID === announcement.announcementID)
             if(announcementsmatched.length === 1 && announcement.variations.includes(announcementsmatched[0].variations[0].variationID)){

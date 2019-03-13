@@ -38,6 +38,12 @@ export const structure = async (accountID) =>
 export const tags = async (accountID) => 
      await apiCall_noBody("tags/" + accountID, "GET").then((result) => TeamStore.loadTags(result, AccountStore.allUsers))
 
+export const allContent = async (accountID) => 
+     await apiCall_noBody("policies/" + accountID, "GET").then((result) => PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
+     .then(()=> apiCall_noBody("announcements/" + accountID, "GET").then((result) => AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)))
+     .then(()=> apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
+     .then(()=> apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)) ) )
+
 export const policies = async (accountID) => 
      await apiCall_noBody("policies/" + accountID, "GET").then((result) => 
      PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
@@ -51,7 +57,8 @@ export const files = async (accountID) =>
      ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
 
 export const urls = async (accountID) => 
-     await apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(result)) 
+     await apiCall_noBody("urls/" + accountID, "GET").then((result) => 
+     ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
 
 export const logs = async (accountID) => 
      await apiCall_noBody("itslogs/" + accountID, "GET").then((result) => AccountStore.loadLogs(result.filter(log => !log.isAction))) 

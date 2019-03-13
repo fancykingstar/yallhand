@@ -67,7 +67,7 @@ export const Tree = props => {
   };
 
   collection = [];
-  buildTrees(props.data, props.id, 0);
+  buildTrees(props.data, props.id, props.id === "teamID"? -1 : 0);
   return (
     <div>
       <List>{collection}</List>

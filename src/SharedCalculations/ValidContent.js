@@ -14,28 +14,54 @@ export const validContent = (allItems, teamPath, tagPath) => {
     return published
   }
 
+  const returnValidArrayByTag = (arry) => {
+    let arryIndex = -1
+    let pathIndex = 2
+    const alltags = arry.map(i => i.tags[0])
+    while (pathIndex > -1) {
+      if(alltags.includes(tagPath[pathIndex])){
+        arryIndex = alltags.indexOf(tagPath[pathIndex])
+        pathIndex = pathIndex - 3
+      }
+      pathIndex--
+    }
+    return arryIndex
+  }
+
   //Returns true if NO SELECTED TAGS or MATCHED TAG EXISTS IN TAG PATH
-  const validTags = (alltags) => {
-    let tagStatus = false;
-    if (alltags.length === 0) {
-      tagStatus = true;
-    } else {
-      let index = 2;
-      while (tagStatus === false && index > -1) {
-        if (alltags.includes(tagPath[index])) {
-          tagStatus = true;
+  const validTags = (allvaris) => {
+    //return {status/data}
+    let status = false;
+    let data = {}
+    let index = 2;
+    let tagsMap = []
+    if(allvaris.length > 0){
+      tagsMap = allvaris.map(i => i.tags.length === 0? "none" : i.tags[0])
+      while (status === false && index > -1) {
+        if (tagsMap.includes(tagPath[index])) {
+          status = true;
         } else {
           index--;
         }
-      } 
     }
-    return tagStatus
+    }
+  
+    if(status === true){
+      data = allvaris.filter(i => i.tags[0] === tagPath[index])[0]
+    }
+    else if(status === false && tagsMap.includes("none")){
+      status = true
+      data = allvaris.filter(i => i.tags.length === 0)[0]
+    }
+    return {status, data}
 };
   //IF VALIDTAGS than ADD NEW POLICY WITH VARIATION TO DISPLAY ITEMS
-  const addContent = (poli, vari) => {
-    if (validTags(vari.tags)) {
+  const addContent = (poli, varis) => {
+    //varis is array of all eligable content BY TEAM
+    const valid = validTags(varis)
+    if (valid.status) {
         let updatedPolicy = poli;
-        updatedPolicy["variations"] = [vari];
+        updatedPolicy["variations"] = [valid.data];
         displayItems.push(updatedPolicy);
     } 
   };
@@ -60,7 +86,7 @@ export const validContent = (allItems, teamPath, tagPath) => {
       if (
         content.variations.length === 1 &&
         content.variations[0].teamID === "global"
-      ) { addContent(content, content.variations[0]) } 
+      ) { addContent(content, content.variations) } 
 
       else {
         let allTeamIDs = content.variations.map(variation => variation.teamID);
@@ -71,12 +97,12 @@ export const validContent = (allItems, teamPath, tagPath) => {
         if (allTeamIDs.length === 0) {
           let globalAvail = content.variations.filter( vari => vari.teamID === "global" ).length > 0
           if (globalAvail) {
-            let globalVariation = content.variations.filter( vari => vari.teamID === "global"  )[0];
+            let globalVariation = content.variations.filter( vari => vari.teamID === "global"  );
             addContent(content, globalVariation);
           }
         } else {
           if (allTeamIDs.length === 1) {
-            addContent( content, content.variations.filter(vari => vari.teamID === allTeamIDs[0])[0] );
+            addContent( content, content.variations.filter(vari => vari.teamID === allTeamIDs[0]) );
           } else {
             let i = 2;
             while (i > -1) {
@@ -85,7 +111,7 @@ export const validContent = (allItems, teamPath, tagPath) => {
                   content,
                   content.variations.filter(
                     vari => vari.teamID === teamPath[i]
-                  )[0]
+                  )
                 );
                 i = i - 3;
               } else {

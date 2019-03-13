@@ -4,7 +4,7 @@ import { InviteUser } from './InviteUser'
 
 export const Invite = () => {
     return(
-    <div>
+    <div style={{overflowY: "auto"}}>
     <InviteUser/>
     <InviteAdmin/>
     </div>)
