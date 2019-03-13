@@ -66,12 +66,12 @@ export const tags = async (accountID) => {
   const result = await apiCall_noBody("tags/" + accountID, "GET")
   TeamStore.loadTags(result, AccountStore.allUsers)
 
+  return result
+}
+
 export const urls = async (accountID) => 
       await apiCall_noBody("urls/" + accountID, "GET").then((result) => 
       ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
-
-  return result
-}
 
 export const policies = async (accountID) => {
   const result = await apiCall_noBody("policies/" + accountID, "GET")
@@ -91,13 +91,6 @@ export const files = async (accountID) => {
   const result = await apiCall_noBody("fileresources/" + accountID, "GET")
   ResourcesStore.loadFiles(contentFilter() ? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)
 
-  return result
-}
-
-export const urls = async (accountID) => {
-  const result = await apiCall_noBody("urls/" + accountID, "GET")
-  ResourcesStore.loadUrls(result)
-  
   return result
 }
 
