@@ -44,17 +44,12 @@ class Store {
           value: item[id],
           text: "-- " + item.label
         }));
-        const group = [
-          { key: depth1.label, value: depth1[id], text: "- " + depth1.label },
-          ...depth2s
-        ];
+        const group = [{key: depth1.label, value: depth1[id], text: "- " + depth1.label}, ...depth2s];
         group.forEach(item => sortedStructure.push(item));
       });
     });
-    type !== "team"?
-      sortedStructure.unshift({ key: "no-tag", value: "none", text: "Don't Limit By Tag" })
-      : sortedStructure.unshift({ key: "global key", value: "global", text: "Global (All Teams)"})
-    
+    type !== "team" ? sortedStructure.unshift({key: "no-tag", value: "none", text: "Don't Limit By Tag"}) :
+                      sortedStructure.unshift({key: "global key", value: "global", text: "Global (All Teams)"})
 
     return sortedStructure;
   }

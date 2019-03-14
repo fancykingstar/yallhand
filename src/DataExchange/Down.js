@@ -111,7 +111,6 @@ export const sentiments = async (accountID) => {
 
 export const bundles = async (accountID) => {
   const result = await apiCall_noBody("emailbundles/" + accountID, "GET")
-  console.log(result)
   try {
     EmailStore.loadBundles(result)
   } catch(e) {
