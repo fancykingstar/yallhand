@@ -16,6 +16,10 @@ export const loadAdmin = () => {
     }
 
     apiCall_noBody(`users/all?filter={"where":{"email":"${encodeURIComponent(res.email)}"}}`, 'GET').then(async (res) => {
+      if(res.length === 0) {
+        deleteUser()
+        return
+      }
       const { accountID, userID } = res[0]
 
       const account = await load.account(accountID);

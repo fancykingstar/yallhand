@@ -34,10 +34,9 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
     log(ItsLog(isAction, data))
     return callApi(endpoint, meth, payload).then((result) => {
         if(result.ok){
-            console.log(result)
-            refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{})
+            refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
+            if (key === 'users') reload.users_and_teams(accountID(), userID())
         } else {
-            console.log(result)
             toast.error(result.statusText, {hideProgressBar: true})
         }
     }).then(() => {

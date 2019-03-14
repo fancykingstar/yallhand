@@ -24,12 +24,11 @@ export class Users extends React.Component {
     const { UIStore, DataEntryStore, AccountStore, TeamStore } = this.props;
     const { userEdit } = DataEntryStore.userEditFields;
     const { adminLimits } = userEdit;
-    const { search } = UIStore;
+    const { dropdown, search } = UIStore;
 
     const displayFilter = (all) => {
-      return UIStore.dropdown.usersFilter === "active"?
-        all.filter(user => user.isActive) 
-        : all.filter(user => !user.isActive)
+      if (dropdown.usersFilter === "active") return all.filter(user => user.isActive || (user.password === '' && user.userId === '')) 
+      return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
     }
 
     const openEditor = info => {
@@ -79,15 +78,13 @@ export class Users extends React.Component {
     return (
       <div className="UserTable">
       <span>
-              view{' '}
-              <Dropdown
-              inline
-              value={UIStore.dropdown.usersFilter}
-                options={[
-                  { text: "active", value: "active" },
-                  { text: "offboarded", value: "offboarded" }
-                ]} onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)} />
-            </span>
+        view{' '}
+        <Dropdown
+          inline
+          value={dropdown.usersFilter}
+          onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)}
+          options={[{text: "active", value: "active" }, { text: "offboarded", value: "offboarded"}]} />
+        </span>
         <Table basic="very" selectable fixed columns={8}>
           <Table.Header>
             <Table.Row>
