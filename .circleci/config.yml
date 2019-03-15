@@ -1,0 +1,42 @@
+deploy_project: &deploy_project
+  docker:
+    - image: circleci/node:10
+  steps:
+    - run: |
+        ssh -o StrictHostKeyChecking=no -p 2525 www-data@$SERVER /bin/bash << EOF
+          cd $VHOST
+          git fetch --all
+          git reset --hard origin/$CIRCLE_BRANCH
+          npm i
+          npm run build
+        EOF
+
+version: 2
+jobs:
+
+  deploy_develop:
+    <<: *deploy_project
+    working_directory: /tmp/quadrance
+    environment:
+      VHOST: /var/www/vhosts/quadrance-develop.fabtesting.com
+      SERVER: fabtesting.com
+
+  deploy_preprod:
+    <<: *deploy_project
+    working_directory: /tmp/quadrance
+    environment:
+      VHOST: /var/www/vhosts/quadrance.fabtesting.com
+      SERVER: fabtesting.com
+
+workflows:
+  version: 2
+  deploy_fabtesting:
+    jobs:
+      - deploy_develop:
+          filters:
+            branches:
+              only: adfab-develop
+      - deploy_preprod:
+          filters:
+            branches:
+              only: adfab-master

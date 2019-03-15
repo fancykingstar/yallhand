@@ -18,10 +18,10 @@ export const ConfirmDelete = inject("UIStore")((observer((props) => {
     }
 
     const handleClick = () => {
-      props.confirm()
+      props.idLabel === undefined?   props.confirm() : props.confirm(props.idLabel)
+   
       UIStore.set("modal", "confirmDelete", false) 
     }
-
     const term = props.deleteLabel === undefined ? "Delete" : props.deleteLabel
     const size = props.size === undefined ? "medium" : props.size
     return(

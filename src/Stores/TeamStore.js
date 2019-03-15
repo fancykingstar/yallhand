@@ -44,16 +44,12 @@ class Store {
           value: item[id],
           text: "-- " + item.label
         }));
-        const group = [
-          { key: depth1.label, value: depth1[id], text: "- " + depth1.label },
-          ...depth2s
-        ];
+        const group = [{key: depth1.label, value: depth1[id], text: "- " + depth1.label}, ...depth2s];
         group.forEach(item => sortedStructure.push(item));
       });
     });
-    if (type !== "team") {
-      sortedStructure.unshift({ key: "no-tag", value: "none", text: "Don't Limit By Tag" });
-    }
+    type !== "team" ? sortedStructure.unshift({key: "no-tag", value: "none", text: "Don't Limit By Tag"}) :
+                      sortedStructure.unshift({key: "global key", value: "global", text: "Global (All Teams)"})
 
     return sortedStructure;
   }
@@ -73,7 +69,7 @@ class Store {
           teamID: "global",
           label: "Global (All Teams)",
           parent: "self",
-          depth: 0
+          depth: -1
         });
       }
       this.structureSelect = this.sortStructure(structure, "team");

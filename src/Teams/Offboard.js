@@ -94,7 +94,7 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
                   size="large"
                 />
                 <p style={{ paddingTop: 10 }}>
-                  User will immediately be deactivated from Quadrance.
+                  User will immediately be deactivated from Yallhands.
                 </p>
               </Container>
             </Grid.Column>

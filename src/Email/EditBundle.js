@@ -1,24 +1,16 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import {
-  Select,
-  Icon,
-  Segment,
-  Header,
-  Accordion,
-  Button,
-  Form
-} from "semantic-ui-react";
-import { DraftFormField } from "../SharedUI/DraftFormField";
 import {withRouter} from "react-router-dom"
+import { Select, Icon, Header, Accordion, Button, Form } from "semantic-ui-react";
+import { DraftFormField } from "../SharedUI/DraftFormField";
 import { ContentSearch } from "../SharedUI/ContentSearch";
 import { BundleContent } from "../SharedUI/Bundle/BundleContent";
-import BackButton from "../SharedUI/BackButton";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
-import _ from "lodash";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { bundleEdit } from "../DataExchange/PayloadBuilder"
 import { modifyBundle, deleteBundle } from "../DataExchange/Up";
+import BackButton from "../SharedUI/BackButton";
+import _ from "lodash";
 
 
 @inject("UIStore", "DataEntryStore", "EmailStore")
@@ -26,17 +18,18 @@ import { modifyBundle, deleteBundle } from "../DataExchange/Up";
 class EditBundle extends React.Component {
   render() {
     const { UIStore, DataEntryStore, EmailStore } = this.props;
+
     const handleAccClick = e => {
       e.preventDefault();
       UIStore.set("accordion", "editBundle", !UIStore.accordion.editBundle);
     };
+
     const bundlePopulated =
       DataEntryStore.emailCampaign.editBundleBundle.length === 0;
 
     const updateBundle = () => {
       modifyBundle(bundleEdit()).then(() => {
-                // DataEntryStore.resetDraft()
-        DataEntryStore.reset("emailCampaign")
+        DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
         EmailStore.reset("queue")
         this.props.history.push('/panel/email')
       })
@@ -76,12 +69,19 @@ class EditBundle extends React.Component {
     const updateSelectedContent = (item) => {
       if(item.type === "policy") {
         const updatedBundle = DataEntryStore.emailCampaign.editBundleBundle.slice()
-        updatedBundle.push({"policyID": item.value})
-        DataEntryStore.set("emailCampaign", "editBundleBundle", updatedBundle)
-      } 
+        if(!JSON.stringify(updatedBundle).includes(item.value)){
+          updatedBundle.push({"policyID": item.value})
+          DataEntryStore.set("emailCampaign", "editBundleBundle", updatedBundle)
+        }
+      }
+      else if(item.type === "announcement") {
+        const updatedBundle = DataEntryStore.emailCampaign.editBundleBundle.slice()
+        if(!JSON.stringify(updatedBundle).includes(item.value)){
+          updatedBundle.push({"announcementID": item.value})
+          DataEntryStore.set("emailCampaign", "editBundleBundle", updatedBundle)
+        }
     }
-   
-
+    }
     return (
       <div style={{ minWidth: 400, maxWidth: 850 }}>
         <BackButton />
@@ -137,9 +137,9 @@ class EditBundle extends React.Component {
           >
             <DraftFormField
               loadContent={
-                _.isEmpty(DataEntryStore.emailCampaign.editBundleDraft)
+                _.isEmpty(DataEntryStore.emailCampaign.editBundleContentRAW)
                   ? null
-                  : DataEntryStore.emailCampaign.editBundleDraft
+                  : DataEntryStore.emailCampaign.editBundleContentRAW
               }
             />
           </Accordion.Content>

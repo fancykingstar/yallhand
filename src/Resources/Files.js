@@ -1,5 +1,4 @@
 import React from "react";
-import "./style.css";
 import {inject, observer} from "mobx-react"
 import {S3Download} from "../DataExchange/S3Download"
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
@@ -9,10 +8,10 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { UploadFile } from "../SharedUI/UploadFile";
 import { AssociationSummary } from "../SharedUI/AssociationSummary"
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
-import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
 import { createFile, modifyFile, deleteFileresource } from "../DataExchange/Up";
+import "./style.css";
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
 @observer
@@ -31,9 +30,7 @@ export class Files extends React.Component {
     }
   }
   render() {
-  const {ResourcesStore} = this.props
-  const {UIStore} = this.props
-  const {DataEntryStore} =this.props
+  const {ResourcesStore, UIStore, DataEntryStore} = this.props
 
   const edit = (data) => {
     DataEntryStore.set("fileForUpload", "isNew", false)
@@ -61,7 +58,6 @@ export class Files extends React.Component {
   }
 
   const getIcon = (filetype) => {return FileTypeIcons[filetype] }
-  // const userData = ResourcesStore.fileResources;
   
   const addFile = (val) => {
     createFile(fileResource())
@@ -108,7 +104,7 @@ export class Files extends React.Component {
         </Table.Cell>
         <Table.Cell><Button basic onClick={() => edit(resfile)} key={resfile.label}>Edit</Button></Table.Cell>
         <Table.Cell>
-          <ConfirmDelete basic confirm={e => deleteFile(resfile.resourceID)}/>
+          <Button basic negative onClick={e => deleteFile(resfile.resourceID)}>Delete</Button>
         </Table.Cell>
       </Table.Row>
     ));

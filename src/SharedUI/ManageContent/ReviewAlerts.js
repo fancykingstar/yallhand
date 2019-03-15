@@ -22,11 +22,11 @@ export const ReviewAlerts = inject("UIStore", "AccountStore", "DataEntryStore")(
     const handleClick = () => {
       if(UIStore.dropdown.reviewAlerts === "recur"){
           let patchObj = {reviewAlert: DataEntryStore.contentmgmt.reviewAlert}
-          mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.anncID = UIStore.content.anncID
+          mode === "policy" ? patchObj.policyID = UIStore.content.policyID : patchObj.announcementID = UIStore.content.announcementID
           mode === "policy" ? modifyPolicy(contentPatch(patchObj)) : modifyAnnouncement(contentPatch(patchObj))
       }
       else{
-        const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"anncID": UIStore.content.anncID} 
+        const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"announcementID": UIStore.content.announcementID} 
         createSchedule(schedule(DataEntryStore.contentmgmt.schedAlert, "review alert", data))
       }
     }

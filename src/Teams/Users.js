@@ -1,84 +1,66 @@
 import React from "react";
-import { Header, Table, Image } from "semantic-ui-react";
+import { Header, Table, Image, Dropdown } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { UserEdit } from "./UserEdit";
 import { getDisplayTags } from "../SharedCalculations/GetDisplayTags";
 import { getDisplayTeams } from "../SharedCalculations/GetDisplayTeams";
-import {
-  initSearchObj,
-  stupidSearch
-} from "../SharedCalculations/StupidSearch";
+import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { UserImgPlaceholder } from "../SharedCalculations/UserImgPlaceholder";
-
 
 @inject("TeamStore", "UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class Users extends React.Component {
   componentDidMount() {
-    const { UIStore } = this.props;
-    const { TeamStore } = this.props;
-    const { AccountStore } = this.props;
+    const { AccountStore, TeamStore, UIStore } = this.props;
     if (UIStore.search.searchUsersData.length === 0) {
       UIStore.set("search",
         "searchUsersData",
-        initSearchObj(
-         AccountStore.allUsers,
-          "userID",
-          TeamStore.structure,
-          TeamStore.tags,
-          true
-        ) 
+        initSearchObj(AccountStore.allUsers, "userID", TeamStore.structure, TeamStore.tags, true)
       );
     }
   }
   render() {
-    const {UIStore ,DataEntryStore, AccountStore, TeamStore, UserStore } = this.props;
+    const { UIStore, DataEntryStore, AccountStore, TeamStore } = this.props;
+    const { userEdit } = DataEntryStore.userEditFields;
+    const { adminLimits } = userEdit;
+    const { dropdown, search } = UIStore;
+
+    const displayFilter = (all) => {
+      if (dropdown.usersFilter === "active") return all.filter(user => user.isActive || (user.password === '' && user.userId === '')) 
+      return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
+    }
 
     const openEditor = info => {
       DataEntryStore.reset("userEditFields", {adminConfig: "all"});
-      DataEntryStore.set(
-        "userEditFields",
-        "userEdit",
-        AccountStore._getUser(info)
-      );
-      DataEntryStore.set(
-        "userEditFields",
-        "isAdmin",
-        DataEntryStore.userEditFields.userEdit.isAdmin
-      );
-      if(DataEntryStore.userEditFields.userEdit.isAdmin){
-      DataEntryStore.set("userEditFields", "adminTeams", DataEntryStore.userEditFields.userEdit.adminLimits.teams)
-      DataEntryStore.set("userEditFields", "adminTags", DataEntryStore.userEditFields.userEdit.adminLimits.tags)
-      DataEntryStore.set("userEditFields", "adminChannels", DataEntryStore.userEditFields.userEdit.adminLimits.channels)
+      DataEntryStore.set("userEditFields", "userEdit", AccountStore._getUser(info) );
+      DataEntryStore.set("userEditFields", "isAdmin", userEdit.isAdmin);
+      if(userEdit.isAdmin){
+        DataEntryStore.set("userEditFields", "adminTeams", adminLimits.teams)
+        DataEntryStore.set("userEditFields", "adminTags", adminLimits.tags)
+        DataEntryStore.set("userEditFields", "adminChannels", adminLimits.channels)
       }
       UIStore.set("modal", "editUser", true);
     };
     const handleClose = () => UIStore.set("modal", "editUser", false);
     const filteredDisplay = () => {
-      if (UIStore.search.searchUsers !== "") {
-        const results = stupidSearch(
-          UIStore.search.searchUsersData,
-          UIStore.search.searchUsers
-        );
+      if (search.searchUsers !== "") {
+        const results = stupidSearch(search.searchUsersData, search.searchUsers);
         return AccountStore.allUsers.filter(item => results.includes(item.userID));
       } else {
-        return AccountStore.allUsers;
+        return displayFilter(AccountStore.allUsers)
       }
     };
 
     const users = filteredDisplay().map(user => (
-      <Table.Row 
-        disabled={!user.isActive}
-        key={"user" + giveMeKey()} 
-        onClick={() => openEditor(user.userID)}>
+      <Table.Row  disabled={!user.isActive} key={`user${giveMeKey()}`} onClick={() => openEditor(user.userID)}>
         <Table.Cell width={3}>
           <Header disabled={!user.isActive}>
             <Header.Content>
               {user.displayName_full}
               <Header.Subheader>
                 <Image src={user.img !== "" ? user.img : UserImgPlaceholder()} avatar />
-                {user.isAdmin ? "Admin" : null}{" "}
+                {user.isAdmin ? "Admin" : null}
                 {user.displayName_full === "" ? "Invite Sent" : null}
               </Header.Subheader>
             </Header.Content>
@@ -89,14 +71,20 @@ export class Users extends React.Component {
           {getDisplayTeams(user.teamID, TeamStore.structure)}
         </Table.Cell>
         <Table.Cell>
-          {user.tags.length === 0
-            ? "None"
-            : getDisplayTags(user.tags, TeamStore.tags)}
+          {user.tags.length === 0 ? "None" : getDisplayTags(user.tags, TeamStore.tags)}
         </Table.Cell>
       </Table.Row>
     ));
     return (
       <div className="UserTable">
+      <span>
+        view{' '}
+        <Dropdown
+          inline
+          value={dropdown.usersFilter}
+          onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)}
+          options={[{text: "active", value: "active" }, { text: "offboarded", value: "offboarded"}]} />
+        </span>
         <Table basic="very" selectable fixed columns={8}>
           <Table.Header>
             <Table.Row>

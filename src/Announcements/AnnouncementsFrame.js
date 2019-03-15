@@ -7,8 +7,9 @@ import { FeedItem } from "./FeedItem";
 import { sortByUTC } from "../SharedCalculations/SortByUTC"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import CreateContent from "../SharedUI/ManageContent/CreateContent"
-import "./style.css";
 import { SortNSearch } from "../SharedUI/SortNSearch";
+import { AnnouncementFilter } from "./AnnouncementFilter";
+import "./style.css";
 
 
 @inject("AnnouncementsStore", "AccountStore", "UIStore", "DataEntryStore")
@@ -21,7 +22,7 @@ class AnnouncementsFrame extends React.Component {
           "searchAnnouncementsData",
           initSearchObj(
             AnnouncementsStore.allAnnouncements,
-            "anncID"
+            "announcementID"
           ) 
         );
       }
@@ -31,16 +32,16 @@ class AnnouncementsFrame extends React.Component {
 
     const handleClick = val => {
       // AnnouncementsStore.toggleAnnouncementID(val);
-      UIStore.set("content", "anncID", val)
-      const annc = Object.assign({}, AnnouncementsStore._getAnnouncement(val))
-      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(annc.anncID))
-      DataEntryStore.set("contentmgmt", "label",  annc.label)
-      DataEntryStore.set("contentmgmt", "img",  annc.img)
+      UIStore.set("content", "announcementID", val)
+      const announcement = Object.assign({}, AnnouncementsStore._getAnnouncement(val))
+      UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(announcement.announcementID))
+      DataEntryStore.set("contentmgmt", "label",  announcement.label)
+      DataEntryStore.set("contentmgmt", "img",  announcement.img)
       DataEntryStore.set("contentmgmt", "bundle", "queue")
-      DataEntryStore.set("contentmgmt", "keywords",  annc.keywords)
-      DataEntryStore.set("contentmgmt", "reviewAlert",  annc.reviewAlert)
+      DataEntryStore.set("contentmgmt", "keywords",  announcement.keywords)
+      DataEntryStore.set("contentmgmt", "reviewAlert",  announcement.reviewAlert)
       this.props.history.push(
-        "/panel/announcements/manage-announcement/" + UIStore.content.anncID
+        "/panel/announcements/manage-announcement/" + UIStore.content.announcementID
       );
     };
 
@@ -52,30 +53,49 @@ class AnnouncementsFrame extends React.Component {
           UIStore.search.searchAnnouncements
         );
         
-        return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.anncID));
+        return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.announcementID));
       } else {
         return filteredByChannel
       }
     };
 
+    const filteredByStatus = () => {
+      let filtered = AnnouncementsStore.allAnnouncements.slice()
+      filtered = UIStore.filter.anncFilterPublished? filtered : 
+        filtered
+        .filter(policy => !["ok", "partial", "notOk"].includes(policy.state))
+      filtered = UIStore.filter.anncFilterDrafts? filtered : 
+      filtered
+        .filter(policy => policy.state !== "draft")
+      filtered = UIStore.filter.anncFilterArchived? filtered : 
+      filtered
+      .filter(policy => policy.state !== "archived")
+      return filtered
+    } 
+
     const filteredByChannel =
       UIStore.sideNav.activeChannel === "All"
-        ? AnnouncementsStore.allAnnouncements
-        : AnnouncementsStore.allAnnouncements.filter(
-            annc => annc.chanID === UIStore.sideNav.activeChannel
+        ? filteredByStatus()
+        : filteredByStatus().filter(
+            announcement => announcement.chanID === UIStore.sideNav.activeChannel
           );
-    const contentFeed = sortByUTC(filteredBySearch(), UIStore.dropdown.announcementSort).map(annc => (
-      <FeedItem key={"annc" + giveMeKey()} data={annc} clicked={handleClick} />
+    const contentFeed = sortByUTC(filteredBySearch(), UIStore.dropdown.announcementSort).map(announcement => (
+      <FeedItem key={"announcement" + giveMeKey()} data={announcement} clicked={handleClick} />
     ));
 
     return (
       <div style={{ maxWidth: 800 }}>
-        <Header as="h2" style={{ paddingBottom: 15 }}>
+        <Header as="h2">
           Annoucements Feed
           <Header.Subheader>
             Post relevant content for news and other updates
           </Header.Subheader>
         </Header>
+        <div style={{width: '100%', height: 50}}>
+        <AnnouncementFilter />
+        </div>
+        
+      
         <SortNSearch useSearch
         searchValue={UIStore.search.searchAnnouncements}
         searchValueChange={val => UIStore.set("search", "searchAnnouncements", val)}
@@ -85,8 +105,6 @@ class AnnouncementsFrame extends React.Component {
         <CreateContent mode="announcement"/>
         <Item.Group>{contentFeed}</Item.Group>
         </div>
-     
-     
         <div className="createPost" />
       </div>
     );

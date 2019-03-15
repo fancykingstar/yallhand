@@ -3,7 +3,7 @@ import _ from "lodash";
 
 class Store {
   @observable
-  isAuthenticated = true;
+  isAuthenticated = false;
 
   @observable
   user = null;

@@ -21,7 +21,7 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
         }
 
         const handleClick = () => {
-            const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"anncID": UIStore.content.anncID} 
+            const data = mode === "policy" ? {"policyID": UIStore.content.policyID} : {"announcementID": UIStore.content.announcementID} 
             const task = DataEntryStore.contentmgmt.eventType === "publish" ? "publish content" : "unpublish content"
             createSchedule(schedule(DataEntryStore.contentmgmt.eventDateTime, task, data))
         }
@@ -47,7 +47,7 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
              />
              </Form.Group></Form>
              {/* <p style={{marginTop: 10}}>{UserStore.user.timezone}</p> */}
-              <Button primary disabled={DataEntryStore.contentmgmt.eventType === ""} onClick={e => handleClick()}>Set</Button>
+              <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.event === ""} onClick={e => handleClick()}>Set</Button>
 
     
    

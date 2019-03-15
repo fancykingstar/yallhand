@@ -12,7 +12,7 @@ export class CardFrame extends React.Component {
     const { PoliciesStore, UIStore } = this.props;
     const validData = PoliciesStore.allPolicies;
     const cardData =
-      UIStore.sideNav.activePrimary === ""
+    UIStore.sideNav.activeChannel === "All"
         ? validData
         : validData.filter(
             policy => policy.chanID === UIStore.sideNav.activeChannel

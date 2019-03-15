@@ -179,6 +179,7 @@ class Store {
 
   @observable emailCampaign = {
     //queue
+    queueID: "",
     queue: [],
     queueLabel: "",
     queueSubject: "",
@@ -188,6 +189,7 @@ class Store {
     editBundleStage: "",
     editBundleLabel: "",
     editBundleSubject: "",
+    editBundleContentRAW: {},
     editBundleSaveSelect: "",
     editBundleBundle: [],
     //send email

@@ -32,7 +32,7 @@ class Bundles extends React.Component {
       const editBundle = (bundle) => {
           DataEntryStore.set("emailCampaign","editBundleLabel",bundle.label)
           DataEntryStore.set("emailCampaign","editBundleSubject",bundle.subject)
-          DataEntryStore.set("emailCampaign","editBundleDraft",bundle.draft)
+          DataEntryStore.set("emailCampaign","editBundleContentRAW",bundle.bodyContentRAW)
           DataEntryStore.set("emailCampaign","editBundleBundle",bundle.bundle)
           DataEntryStore.set("emailCampaign","editBundleLastUsed",bundle.lastUsed)
           DataEntryStore.set("emailCampaign","editBundleID", bundle.bundleID)
@@ -64,7 +64,7 @@ class Bundles extends React.Component {
       >
       <Table.Cell style={{paddingLeft: 5}}>{bundle.label}</Table.Cell>
       <Table.Cell>{bundle.subject}</Table.Cell>
-      <Table.Cell>{bundle.lastUsed === "" ? "Never Used" : "Last Used " + UTCtoFriendly(bundle.lastUsed)}</Table.Cell>
+      <Table.Cell>{bundle.lastUsed === 0 ? "Never Used" : "Last Used " + UTCtoFriendly(bundle.lastUsed)}</Table.Cell>
       <Table.Cell>{UTCtoFriendly(bundle.updated)}</Table.Cell>
 
     </Table.Row>

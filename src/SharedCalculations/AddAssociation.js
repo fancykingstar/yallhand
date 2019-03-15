@@ -17,12 +17,12 @@ export const addAssociation = (assocs, type, ID, variID) => {
     }
   }
   if(type === "announcement"){
-   if(newAssocs.announcements.filter(annc => JSON.stringify(annc).includes(variID)).length > 0){
+   if(newAssocs.announcements.filter(announcement => JSON.stringify(announcement).includes(variID)).length > 0){
      duplicate = true}
    else{
-    newAssocs.announcements.filter(annc => annc.anncID === ID).length > 0? 
-    newAssocs.announcements.filter(annc => annc.anncID === ID)[0].variations.push(variID)
-    : newAssocs.announcements.push({"anncID": ID, "variations": [variID]})
+    newAssocs.announcements.filter(announcement => announcement.announcementID === ID).length > 0? 
+    newAssocs.announcements.filter(announcement => announcement.announcementID === ID)[0].variations.push(variID)
+    : newAssocs.announcements.push({"announcementID": ID, "variations": [variID]})
  }
 }
   if(duplicate){return null}

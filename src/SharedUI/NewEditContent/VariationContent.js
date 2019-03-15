@@ -10,6 +10,8 @@ import _ from "lodash";
 export class VariationContent extends React.Component {
   render() {
     const { DataEntryStore } = this.props;
+    const attachedStyle = DataEntryStore.content.isNew? { paddingTop: 35, maxWidth: 450, pointerEvents: "none" }: { paddingTop: 35, maxWidth: 450 }
+
     return (
       <div>
         <DraftFormField
@@ -17,8 +19,8 @@ export class VariationContent extends React.Component {
           loadContent={DataEntryStore.content.contentRAW}
         />
 
-        <div className="AMenu" style={{ paddingTop: 35, maxWidth: 450 }}>
-          <Segment>
+        <div className="AMenu" style={attachedStyle}>
+          <Segment disabled={DataEntryStore.content.isNew}>
             <AttachedFiles mode={this.props.mode}  />
           </Segment>
           <br/>

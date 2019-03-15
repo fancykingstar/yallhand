@@ -30,26 +30,23 @@ import { ToastContainer } from "react-toastify";
   "AnnouncementsStore",
   "AccountStore",
   "UIStore",
-  "EmailStore"
+  "EmailStore",
 )
 @observer
 export class AdminPanel extends React.Component {
-  componentDidMount() {
-    const { UIStore } = this.props;
-    if (!UIStore._adminLoadingComplete) {
-      loadAdmin()
-  }
-}
 
   render() {
     const { UIStore } = this.props;
     const checkMobile = (width) => {
-      if(width < 992){UIStore.set("responsive", "isMobile", true)}
+      if(width < 992){
+        UIStore.set("responsive", "isMobile", true)
+      }
       else{
           UIStore.set("responsive", "mobileNav", false)
           UIStore.set("responsive", "isMobile", false)
         }
     }
+
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
     ) : (
@@ -59,40 +56,24 @@ export class AdminPanel extends React.Component {
         </Responsive>
         <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
           <div style={{marginTop: 40, position: "fixed", zIndex: 50}}> 
-        
-          <SideBar />
-         
+          <div style={{float: "left"}}>
+            <SideBar />
+          </div>
+          <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
         </div>
         </Transition>
         <div className="ActionFrame">
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
-            <Route
-              path="/panel/faqs/manage-policy/:id"
-              component={ManageContent}
-              exact
-            />
-            <Route
-              path="/panel/faqs/policy-variation/:id"
-              render={props => <NewEditVariation {...props} mode="policy" />}
-            />{" "}
-            />
+            <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
+            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" />} />{" "} />
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
-            <Route path="/panel/announcements" component={AnnouncementsFrame} exact />
+            <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
             <Route path="/panel/dashboard" component={DashboardFrame} />
             <Route path="/panel/analytics" component={AnalyticsFrame} />
-            <Route
-              path="/panel/announcements/manage-announcement/:id"
-              component={ManageContent}
-              exact
-            />
-            <Route
-              path="/panel/announcements/announcement-variation/:id"
-              render={props => (
-                <NewEditVariation {...props} mode="announcement" />
-              )}
-            />
+            <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
+            <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
             <Route path="/panel/email/edit-bundle" component={EditBundle} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

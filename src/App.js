@@ -1,56 +1,53 @@
 import React from "react";
 import "./App.css";
-
 import { observer, inject } from "mobx-react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
 import UserPortal from "./UserPortal/UserPortal";
-import { Login } from "./Login/Login";
+import Login from "./Login/Login";
+import Forgot from "./Login/Forgot";
 import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
-
-import FullStory from "react-fullstory"
-
-
-
+import { loadAdmin } from "./DataExchange/LoadProfile";
 
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
-  componentDidMount(){
-    const { UserStore} = this.props;
-    if(UserStore.isAuthenticated === false){
-      this.props.history.push("/login");
+
+  componentDidMount() {
+    const { UserStore, UIStore } = this.props;
+    if (!UIStore._adminLoadingComplete) {
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
+      loadAdmin()
     }
   }
+
   render() {
-    const { UIStore } = this.props;
-  
-    // const RouteTraffic = UserStore.isAuthenticated ? (
-    //   <Redirect push to="/panel/dashboard" />
-    // ) : (
-    //   <Redirect push to="/login" />
-    // );
-  
-    const loader = () => {
-      if (UIStore.isScreenLoading) {
-        return <Spinner />;
-      }
-    };
+    const { UserStore, UIStore, location } = this.props;
+    const { isAuthenticated } = UserStore;
+    const path = location.pathname;
+    const loggedOutRoutes = ['/login', '/register', '/forgot'];
+    const loggedInRoutes = ['/panel', '/portal'];
+    const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/login"
+    let shouldRedirect = false;
+
+    if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => path.indexOf(route) > -1);
+
     return (
       <div className="App">
         {/* <FullStory org="JJAMV"/> */}
-        {loader()}
-        <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
-        {/* <Switch>{RouteTraffic}</Switch> */}
+        {UIStore.isScreenLoading && <Spinner />}
+        <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
+        {shouldRedirect && <Switch><Redirect push to={redirect}/></Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
-
+          <Route path="/register" component={Login} />
+          <Route path="/forgot" component={Forgot} />
           <Route path="/login" component={Login} />
           <Route path="*" component={TwilightZone} />
         </Switch>
-        {/* <Redirect push to="/panel" /> */}
         </div>
       </div>
     );

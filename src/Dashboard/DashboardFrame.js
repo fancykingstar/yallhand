@@ -24,23 +24,23 @@ export class DashboardFrame extends React.Component {
           <Grid.Row>
             <Grid.Column>
               <Segment>
-                <h4>Content Battery</h4>
-                <Statistic.Group>
+                <h4>Content</h4>
+                <Statistic.Group widths={2}>
                 <Statistic>
                   <Statistic.Value>{AnnouncementsStore.allAnnouncements.length}</Statistic.Value>
                   <Statistic.Label>Announcements</Statistic.Label>
                 </Statistic>
                 <Statistic>
                   <Statistic.Value>{PoliciesStore.allPolicies.length}</Statistic.Value>
-                  <Statistic.Label>Policies</Statistic.Label>
+                  <Statistic.Label>FAQs</Statistic.Label>
                 </Statistic>
               </Statistic.Group>
               </Segment>
             </Grid.Column>
             <Grid.Column>
               <Segment>
-                <h4>Team</h4>
-                <Statistic.Group>
+                <h4>Teams</h4>
+                <Statistic.Group widths={2}>
                 <Statistic>
                   <Statistic.Value>{TeamStore.structure.length}</Statistic.Value>
                   <Statistic.Label>Teams</Statistic.Label>
@@ -55,10 +55,10 @@ export class DashboardFrame extends React.Component {
             <Grid.Column>
               <Segment>
                 <h4>Email Campaigns</h4>
-                <Statistic.Group>
+                <Statistic.Group widths={1}>
                 <Statistic>
                   <Statistic.Value>{EmailStore.allCampaigns.filter(i => !i.completed).length}</Statistic.Value>
-                  <Statistic.Label>Active Campaigns</Statistic.Label>
+                  <Statistic.Label>Campaigns</Statistic.Label>
                 </Statistic>
                 </Statistic.Group>
               </Segment>

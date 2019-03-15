@@ -21,9 +21,9 @@ class PortalSearchResults extends React.Component {
     //     S3Download("quadrance-files/gramercy", S3Key, label, ext)
     //  }
 
-    const filteredAnnc = () => {
+    const filteredannouncement = () => {
         if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchAnnouncementsData, UIStore.search.portalSearchValue );
-          return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.anncID));
+          return AnnouncementsStore.allAnnouncements.filter(item => results.includes(item.announcementID));
         } else {
           return []
         }
@@ -66,7 +66,7 @@ class PortalSearchResults extends React.Component {
         <Item key={"searchres" + giveMeKey() } onClick={e => {
             UIStore.set("search", "portalDisplayResults", false)
             item.policyID !== undefined? this.props.history.push("/portal/learn-detail/" + item.policyID):
-            this.props.history.push("/portal/announcement/" + item.anncID) 
+            this.props.history.push("/portal/announcement/" + item.announcementID) 
 
         }}
         >
@@ -141,11 +141,11 @@ class PortalSearchResults extends React.Component {
             )
     }
      
-    const content = [...filteredAnnc(), ...filteredPolicy()].length === 0? null : 
+    const content = [...filteredannouncement(), ...filteredPolicy()].length === 0? null : 
         <React.Fragment>
         <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Announcements & FAQs</Header>
         <Item.Group divided>
-            {contentResults([...filteredAnnc(), ...filteredPolicy()])}
+            {contentResults([...filteredannouncement(), ...filteredPolicy()])}
         </Item.Group>
         </React.Fragment>
 
@@ -169,7 +169,7 @@ class PortalSearchResults extends React.Component {
 
 
     const isSearchResults = 
-    filteredAnnc().length !== 0 
+    filteredannouncement().length !== 0 
     || filteredPolicy().length !== 0
     || filteredURLs().length !== 0
     || filteredFiles().length !== 0

@@ -13,6 +13,7 @@ export class Queue extends React.Component {
   componentDidMount() {
     const { EmailStore, DataEntryStore } = this.props;
     DataEntryStore.set("emailCampaign", "queue", EmailStore.queue.bundle)
+    DataEntryStore.set("emailCampaign", "queueID", EmailStore.queue.bundleID)
     DataEntryStore.set("emailCampaign", "queueLabel", EmailStore.queue.label)
     DataEntryStore.set("emailCampaign", "queueSubject", EmailStore.queue.subject)
     DataEntryStore.set("emailCampaign", "queueSaveSelect", "queue")
@@ -20,20 +21,21 @@ export class Queue extends React.Component {
   }
   render() {
     const {DataEntryStore, UIStore} = this.props
-
-
     const queuePopulated = DataEntryStore.emailCampaign.queue.length === 0
-
     const addToQueue = (item) => {
       if(item.type === "policy") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"policyID": item.value})
-        DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        if(!JSON.stringify(updatedQueue).includes(item.value)){
+          updatedQueue.push({"policyID": item.value})
+          DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        }
       }
       else if(item.type === "announcement") {
         const updatedQueue = DataEntryStore.emailCampaign.queue.slice()
-        updatedQueue.push({"anncID": item.value})
-        DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        if(!JSON.stringify(updatedQueue).includes(item.value)){
+          updatedQueue.push({"announcementID": item.value})
+          DataEntryStore.set("emailCampaign", "queue", updatedQueue)
+        }
     }
   }
 

@@ -1,37 +1,26 @@
 import React, { Component } from "react";
 import Editor from "draft-js-plugins-editor";
 import createEmojiPlugin from "draft-js-emoji-plugin";
-import { Button, Icon, Popup, 
-  // Transition 
-} from "semantic-ui-react";
-import {
-  EditorState,
-  RichUtils,
-  convertToRaw,
-  convertFromRaw,
-  CompositeDecorator
-} from "draft-js";
-import "draft-js-emoji-plugin/lib/plugin.css";
-import "draft-js/dist/Draft.css";
-import "draft-js-linkify-plugin/lib/plugin.css";
-import "draft-js-emoji-plugin/lib/plugin.css";
-import createLinkifyPlugin from "draft-js-linkify-plugin";
-import "draft-js-counter-plugin/lib/plugin.css";
-import createCounterPlugin from "draft-js-counter-plugin";
+import { Button, Icon, Popup, } from "semantic-ui-react";
+import { EditorState, RichUtils, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import { inject, observer } from "mobx-react";
 import { UploadURL } from "./UploadURL.js";
 import { DataEntryStore } from "../Stores/DataEntryStore";
 import { UIStore } from "../Stores/UIStore";
+import {stateToHTML} from 'draft-js-export-html';
+import createLinkifyPlugin from "draft-js-linkify-plugin";
+import createCounterPlugin from "draft-js-counter-plugin";
+import "draft-js-emoji-plugin/lib/plugin.css";
+import "draft-js/dist/Draft.css";
+import "draft-js-linkify-plugin/lib/plugin.css";
+import "draft-js-emoji-plugin/lib/plugin.css";
+import "draft-js-counter-plugin/lib/plugin.css";
 import "../../node_modules/draft-js-linkify-plugin/lib/plugin.css";
 import "../../node_modules/draft-js-emoji-plugin/lib/plugin.css";
 import "./style.css";
 
-
-import {stateToHTML} from 'draft-js-export-html';
-
 const counterPlugin = createCounterPlugin();
 const { WordCounter } = counterPlugin;
-
 
 const emojiPlugin = createEmojiPlugin({
   selectButtonContent: "☺",
@@ -77,15 +66,13 @@ export class DraftFormField extends Component {
   removeLink = this._removeLink.bind(this);
 
   _confirmLink(e) {
-    // e.preventDefault();
     const { editorState } = DataEntryStore.draft;
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity(
       "LINK",
       "MUTABLE",
       {
-        url:
-          DataEntryStore.urlForUpload.prefix + DataEntryStore.urlForUpload.url,
+        url: DataEntryStore.urlForUpload.prefix + DataEntryStore.urlForUpload.url,
         _resourceID: DataEntryStore.urlForUpload.resourceID,
         _url: DataEntryStore.urlForUpload.url,
         _prefix: DataEntryStore.urlForUpload.prefix,
@@ -120,10 +107,7 @@ export class DraftFormField extends Component {
     const { editorState } = DataEntryStore.draft;
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
-      DataEntryStore.setDraft(
-        "editorState",
-        RichUtils.toggleLink(editorState, selection, null)
-      );
+      DataEntryStore.setDraft( "editorState", RichUtils.toggleLink(editorState, selection, null) );
     }
   }
   getSelectedText = () => {
@@ -154,12 +138,12 @@ export class DraftFormField extends Component {
    
   }
 
-  editorStateChanged = (newEditorState: EditorState) => {
+  editorStateChanged = (newEditorState) => {
     DataEntryStore.setDraft("editorState", newEditorState);
     this.passContent();
   };
 
-  handleKeyCommand = (command: string) => {
+  handleKeyCommand = (command) => {
     const newState = RichUtils.handleKeyCommand(
       DataEntryStore.draft.editorState,
       command
@@ -251,8 +235,6 @@ export class DraftFormField extends Component {
 
 
   render() {
-    // console.log(Popover.defaultProps.isOpen);
-    // const togglePopover = () => Popover.openUp;
     const urlButtonDisabled = this.getSelectedText() === "";
     const linkSelected = this.isLinkSelected()
 
@@ -294,8 +276,6 @@ export class DraftFormField extends Component {
               className="DraftButtons"
               style={{ float: "left", paddingTop: 5 }}
             >
-              {/* <Transition.Group animation={"fade up"} duration={150}>
-                {DataEntryStore.draft.visible && ( */}
                   <div>
                     <div className="Draft-Float-Left">
                       {" "}
@@ -327,17 +307,11 @@ export class DraftFormField extends Component {
                       </Button.Group>
                     </div>
                   </div>
-                
-              {/* </Transition.Group> */}
+  
             </div>
           
           </div>
-          <div
-            className="AnswerField"
-            onMouseOver={event => {
-              //   console.log(event.closestElement());
-            }}
-          >
+          <div className="AnswerField" >
             <Editor
               //   onBlur={e => this.passContent()}
             //   readOnly={!DataEntryStore.draft.visible}
@@ -363,26 +337,12 @@ export class DraftFormField extends Component {
           <WordCounter limit={200} /> words
         </div>
         <div style={{ float: "right", paddingTop: 5 }} />
-        {/* <div className="EmojiLicense">
-          Emoji by{" "}
-          <a
-            style={{ color: "rgb(179, 179, 179)" }}
-            href="https://www.emojione.com"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            EmojiOne
-          </a>{" "}
-        </div> */}
-
+        
         <UploadURL
           open={UIStore.modal.uploadURL}
           selection={this.getSelectedText()}
           onSubmit={this.confirmLink}
         />
-
-        
-
 
       </div>
     );
