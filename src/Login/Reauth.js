@@ -40,7 +40,7 @@ class Reauth extends React.Component {
           <div className="field">
             <GoogleLogin
               className="ui small icon primary left labeled button"
-              clientId="679925808292-ubbvg6ffga3paa1ooj1285ap3hljft1d.apps.googleusercontent.com"
+              clientId={process.env.REACT_APP_GMAIL}
               render={renderProps => (
                 <button className="ui small icon primary left labeled button" style={style} onClick={renderProps.onClick} role="button">
                   <i aria-hidden="true" className="google icon"></i>Login with G-Suite

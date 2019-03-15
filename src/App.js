@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-
 import { observer, inject } from "mobx-react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
@@ -9,17 +8,18 @@ import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
-
-import FullStory from "react-fullstory"
+import { loadAdmin } from "./DataExchange/LoadProfile";
 
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
 
   componentDidMount() {
-    const { UserStore, location } = this.props;
-    if(UserStore.isAuthenticated === false && location.pathname !== "/forgot"){
-      this.props.history.push("/login");
+    const { UserStore, UIStore } = this.props;
+    if (!UIStore._adminLoadingComplete) {
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
+      loadAdmin()
     }
   }
 
@@ -27,17 +27,19 @@ class AppRoute extends React.Component {
     const { UserStore, UIStore, location } = this.props;
     const { isAuthenticated } = UserStore;
     const path = location.pathname;
-    const shouldRedirect = (isAuthenticated && (path === "/register" || path === "/login" || path === "/forgot")) ||
-                           (!isAuthenticated && (path.indexOf("/panel") > -1 && path.indexOf("/portal") > -1));
+    const loggedOutRoutes = ['/login', '/register', '/forgot'];
+    const loggedInRoutes = ['/panel', '/portal'];
+    const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/login"
+    let shouldRedirect = false;
 
-    const RouteTraffic = isAuthenticated ? <Redirect push to="/panel" /> : <Redirect push to="/login" />;
+    if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => path.indexOf(route) > -1);
 
     return (
       <div className="App">
         {/* <FullStory org="JJAMV"/> */}
         {UIStore.isScreenLoading && <Spinner />}
-        <div className={UIStore.isScreenLoading? "LoadingDim" : ""}>
-        {shouldRedirect && path !== "/forgot" && <Switch>{RouteTraffic}</Switch>}
+        <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
+        {shouldRedirect && <Switch><Redirect push to={redirect}/></Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
@@ -46,7 +48,6 @@ class AppRoute extends React.Component {
           <Route path="/login" component={Login} />
           <Route path="*" component={TwilightZone} />
         </Switch>
-        {/* <Redirect push to="/panel" /> */}
         </div>
       </div>
     );

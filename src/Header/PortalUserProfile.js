@@ -3,15 +3,19 @@ import { NavLink } from "react-router-dom";
 import { Dropdown, Image } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import "./style.css";
-// import { DataEntryStore } from "../Stores/DataEntryStore";
+import { withRouter } from "react-router-dom";
 import { deleteUser } from "../DataExchange/Fetch"
 
-@inject("UserStore")
+@inject("UserStore", "UIStore")
 @observer
-export class PortalUserProfile extends React.Component {
+class PortalUserProfile extends React.Component {
 
   logout () {
+    const { UserStore, UIStore, history } = this.props
     deleteUser()
+    if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
+    UserStore.isAuthenticated = false;
+    history.push("/login");
   }
 
   render() {
@@ -63,3 +67,5 @@ export class PortalUserProfile extends React.Component {
     );
   }
 }
+
+export default withRouter(PortalUserProfile);

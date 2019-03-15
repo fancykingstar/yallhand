@@ -34,15 +34,6 @@ import { ToastContainer } from "react-toastify";
 )
 @observer
 export class AdminPanel extends React.Component {
-  componentDidMount() {
-    const { UIStore, UserStore } = this.props;
-    if (!UIStore._adminLoadingComplete) {
-      this.props.history.push("/panel/dashboard")
-      UserStore.setPreviewTeam("")
-      UserStore.setPreviewTag("")
-      loadAdmin()
-  }
-}
 
   render() {
     const { UIStore } = this.props;

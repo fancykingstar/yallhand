@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "semantic-ui-react";
-import { PortalUserProfile } from "./PortalUserProfile";
+import PortalUserProfile from "./PortalUserProfile";
 import { withRouter } from "react-router-dom";
 import { UserStore } from "../Stores/UserStore";
 import "./style.css";

@@ -41,7 +41,7 @@ class ProfileInfo extends React.Component {
   }
 
   isInvalidPassword (value) {
-    return !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(String(value)))
+    return !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\.!@#$%^&*])(?=.{8,})/.test(String(value)))
   }
 
   isPasswordNotEqual () {

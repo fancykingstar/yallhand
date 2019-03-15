@@ -1,7 +1,7 @@
 import React from "react"
 import { inject, observer} from "mobx-react"
 import { Icon } from "semantic-ui-react"
-import {PortalUserProfile} from "./PortalUserProfile"
+import PortalUserProfile from "./PortalUserProfile"
 
 export const PortalMobile = inject("UIStore")(observer((props) => {
     const {UIStore} = props

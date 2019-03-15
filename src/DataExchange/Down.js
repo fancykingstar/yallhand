@@ -29,7 +29,7 @@ export const users_and_teams = async (accountID, userID) => {
   UserStore.loadUser(AccountStore._getUser(userID));
   const teams = await apiCall_noBody("teams/" + accountID, "GET");
   TeamStore.loadStructure(teams, AccountStore.allUsers);
-  const tags = await apiCall_noBody("tags/" + accountID, "GET");
+  const tags = await apiCall_noBody(`tags/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
   TeamStore.loadTags(tags, AccountStore.allUsers);
 
   return resp
@@ -64,7 +64,7 @@ export const structure = async (accountID) => {
 }
 
 export const tags = async (accountID) => {
-  const result = await apiCall_noBody("tags/" + accountID, "GET")
+  const result = await apiCall_noBody(`tags/all?filter={"where":{"accountID":"${accountID}"}}`, "GET")
   TeamStore.loadTags(result, AccountStore.allUsers)
 
   return result

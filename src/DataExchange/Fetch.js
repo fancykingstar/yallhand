@@ -1,4 +1,5 @@
 import { UIStore } from "../Stores/UIStore"
+import { loadAdmin } from "./LoadProfile";
 // const api_url = "http://127.0.0.1:3000/";
 const api_url = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://127.0.0.1:3000/"
 // const api_url = "http://ec2-3-86-251-153.compute-1.amazonaws.com/"
@@ -11,6 +12,7 @@ export const getUser = () => {
 
 export const setUser = (user) => {
   localStorage.setItem('user', JSON.stringify(user))
+  loadAdmin()
 }
 
 export const deleteUser = (user) => {
