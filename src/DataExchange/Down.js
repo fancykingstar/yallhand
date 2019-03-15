@@ -52,7 +52,7 @@ export const channels = async (accountID) => {
 
 export const allContent = async (accountID) => 
      await apiCall_noBody("policies/" + accountID, "GET").then((result) => PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
-     .then(()=> apiCall_noBody("announcements/" + accountID, "GET").then((result) => AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)))
+     .then(()=> apiCall_noBody(`announcements/all?filter={"where":{"accountID":"${accountID}"}}`, "GET").then((result) => AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)))
      .then(()=> apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
      .then(()=> apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)) ) )
 
@@ -82,7 +82,7 @@ export const policies = async (accountID) => {
 }
 
 export const announcements = async (accountID) => {
-  const result = await apiCall_noBody("announcements/" + accountID, "GET")
+  const result = await apiCall_noBody(`announcements/all?filter={"where":{"accountID":"${accountID}"}}`, "GET")
   AnnouncementsStore.loadAnnouncements(contentFilter() ? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)
 
   return result
