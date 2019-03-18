@@ -26,9 +26,9 @@ export const users_and_teams = async (accountID, userID) => {
   const resp = await apiCall_noBody("users/" + accountID, "GET");
   // const users = await apiCall_noBody(`users/all?filter={"where":{"teamID":"${resp[0].teamID}"}}`, "GET");
   const users = resp
-  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}"}}`, "GET");
+  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${resp[0].teamID}"}}`, "GET");
   AccountStore.loadUsers([...users, ...inactiveUsers]);
-  DataEntryStore.superAdmin.previewAccount === ""?   UserStore.loadUser(AccountStore._getUser(userID)) : null;
+  DataEntryStore.superAdmin.previewAccount === "" ? UserStore.loadUser(AccountStore._getUser(userID)) : null;
   const teams = await apiCall_noBody("teams/" + accountID, "GET");
   TeamStore.loadStructure(teams, AccountStore.allUsers);
   const tags = await apiCall_noBody(`tags/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");

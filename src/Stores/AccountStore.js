@@ -83,7 +83,7 @@ class Store {
       displayName_full: "Yallhands Admin",
       displayName: "Yallhands",
     }
-    return ID === "*"? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
+    return ID === "*" ? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
   }
 
   _getDisplayName(ID) {

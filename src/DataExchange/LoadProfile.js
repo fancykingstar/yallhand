@@ -20,7 +20,8 @@ export const loadAdmin = (superStatus=false, superUser={}) => {
         deleteUser()
         return
       }
-      const { accountID, userID } = superStatus? superUser : res[0]
+
+      const { accountID, userID } = superStatus ? superUser : res[0]
 
       const account = await load.account(accountID);
       UIStore.set("adminLoadingComplete", "account", true);
