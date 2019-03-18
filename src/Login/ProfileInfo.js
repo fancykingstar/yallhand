@@ -99,7 +99,10 @@ class ProfileInfo extends React.Component {
       delete validateCode.id
       apiCall(`/validations/${id}`, 'PUT', validateCode).then(() => {
         const { history } = this.props
-        if (!googleId) return window.location.reload()
+        if (!googleId) {
+          history.push('/login')
+          return window.location.reload()
+        }
         apiCall('users/login', 'POST', {email: email, password: googleId})
           .then((res) => res.json())
           .then((res) => {
