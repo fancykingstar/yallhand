@@ -53,7 +53,7 @@ export class FeaturedAvatar extends React.Component {
     const preview = this.props.circular !== undefined ?<div className="Avatar-Wrap"> <Image className="Avatar" size="small" src={this.props.defaultImgUrl} /></div>  :  <div className="imgPreview">{imagePreview}</div>
 
     return (
-      <Segment>
+      <Segment inverted={this.props.inverted !== undefined? true: false}>
         <Header>{this.props.label === undefined ? "Featured Image" : this.props.label}</Header>
         <br />
         <Form>

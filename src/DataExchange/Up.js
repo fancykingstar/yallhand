@@ -52,15 +52,36 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
 
 
+
+
+
+
 ///Sentiment
 export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
 
+
+
+
+
 ///History
 export const createHistory = (payload) => {
-    console.log("history", JSON.stringify(payload))
     apiCall("/histories", "POST", payload)
 } 
 
+
+
+///Account
+export const createAccount = (payload) => {
+    return processTemplate(true, "accounts", "POST", payload, "account", 
+    "A new account has been created", 
+    true,{"event": "create", "type":"schedule"}, true
+)
+} 
+export const deleteAccount = (accountID) => {
+    return processTemplate(false, "accounts/" + accountID, "DELETE", {}, "account", 
+    "Selected account deleted 👋", 
+    true,{"event": "delete", "type":"account"})
+}
 
 
 
@@ -291,10 +312,10 @@ export const modifyBundle = (payload, toastEnabled) => {
 )
 }
 
-export const createBundle = (payload) => {
+export const createBundle = (payload, toastEnabled) => {
     return processTemplate(true, "emailbundles", "POST", payload, "bundles", 
         "Your new bundle has been created 🙌", 
-        true,{"event": "create", "type":"bundle"}
+        true,{"event": "create", "type":"bundle"}, toastEnabled
     )
 }
 

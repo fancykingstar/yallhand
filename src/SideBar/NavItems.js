@@ -1,16 +1,17 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom"
-import { NavItem } from "./NavItem";
+import  NavItem  from "./NavItem";
 import "./style.css";
 
-@inject("UIStore")
+@inject("UIStore", "UserStore")
 @observer
 class NavItems extends React.Component {
   componentDidMount() {
     const { UIStore } = this.props;
     const location = this.props.location.pathname
-    if(location.includes("/panel/dashboard")){UIStore.set("sideNav", "activePrimary", "dashboard")}
+    if(location.slice(-6) === "/panel"){UIStore.set("sideNav", "activePrimary", "dashboard")}
+    else if(location.includes("/panel/superadmin")){UIStore.set("sideNav", "activePrimary", "superadmin")}
     else if(location.includes("/panel/teams")){UIStore.set("sideNav", "activePrimary", "teams")}
     else if(location.includes("/panel/faqs")){UIStore.set("sideNav", "activePrimary", "faqs")}
     else if(location.includes("/panel/announcements")){UIStore.set("sideNav", "activePrimary", "announcements")}
@@ -21,11 +22,19 @@ class NavItems extends React.Component {
     UIStore.set("sideNav", "activeChannel", "All")
   }
   render() {
-    const { UIStore } = this.props;
+    const { UIStore, UserStore } = this.props;
+    const superAdmin = UserStore.user.isSuperAdmin === true?   
+    <NavItem
+    id="superadmin"
+    icon="chess queen"
+    label="Super Admin"
+    active={UIStore.sideNav.activePrimary === "superadmin"}
+  /> : null
+
     return (
       <div className="Container">
-
-         <NavItem
+      {superAdmin}
+      <NavItem
           id="dashboard"
           icon="dashboard"
           label="Dashboard"
@@ -82,19 +91,6 @@ class NavItems extends React.Component {
           label="Resources"
           active={UIStore.sideNav.activePrimary === "resources"}
         />
-
-        {/* <NavItem
-          id="staffdirectory"
-          icon="list alternate"
-          label="Staff Directory"
-          active={UIStore.sideNav.activePrimary === "staffdirectory"}
-        /> */}
-        {/* <NavItem
-          id="announcements"
-          icon="check square"
-          label="Surveys and Polls"
-          active={UIStore.sideNav.activePrimary === "announcements"}
-        />*/}
       </div>
     );
   }

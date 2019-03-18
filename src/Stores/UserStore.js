@@ -1,4 +1,5 @@
 import { observable, action } from "mobx";
+import { getDefaultUserImg } from "../SharedCalculations/GetDefaultUserImg"
 import _ from "lodash";
 
 class Store {
@@ -17,9 +18,11 @@ class Store {
   @action
   loadUser(val) {
     return new Promise((resolve, reject) => {
-      this.user = val;
-      _.isEmpty(this.user) ? reject(false) : resolve(true);
-    });
+      let user = Object.assign({}, val)
+      user.img === "" || user.img === undefined ? user.img = getDefaultUserImg(user.userID) : null
+      this.user = user
+      resolve(true)
+    })
   }
 
   setPreviewTeam(val) {

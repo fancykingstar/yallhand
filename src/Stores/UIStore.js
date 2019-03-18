@@ -120,7 +120,8 @@ class Store {
         teamFrame: "onboard",
         resourcesFrame: "URL",
         emailFrame: "queue",
-        analyticsHeader: "announcements"
+        analyticsHeader: "announcements",
+        superAdminFrame: "edit account"
     }
 
     @observable

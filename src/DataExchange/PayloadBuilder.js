@@ -11,12 +11,13 @@ import _ from "lodash";
 const uuidv4 = require('uuid/v4')
 
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
-const userID = () => UserStore.user.userID;
+const userID = () => UserStore.user.isSuperAdmin? "*" : UserStore.user.userID;
 const now = () => Date.now();
 const formatTag = (val) => val === "" ? [] : [val]
 
 const base = () => {return {"accountID": accountID(), "userID": userID(), "updated": now()}}
 
+//Template ONLY
 export const UNTITLED = () => {
   const buildObj = {
   
@@ -79,6 +80,20 @@ export const schedule = (when, task, data) => {
 }
 
 
+///ACCOUNTS (SUPERADMIN ONLY)
+export const account = () => {
+  const buildObj = {
+      "accountID": generateID(),
+      "label": DataEntryStore.superAdmin.accountLabel,
+      "img": DataEntryStore.superAdmin.accountImg,
+      "reviewAlert": DataEntryStore.superAdmin.accountReviewAlert,
+      "created": now(),
+      "timezone": DataEntryStore.superAdmin.accountTimezone,
+      "generalEmail": DataEntryStore.superAdmin.accountEmail,
+      "data": {}
+  };
+  return _.extend({}, base(), buildObj)
+}
 
 
 
@@ -291,6 +306,11 @@ export const fileResourceAssociate = (resourceID, associations) => {
 
 
 ///EMAIL BUNDLES
+export const queueCreate = () => {
+  const buildObj = Object.assign({}, EmailStore.queue)
+  return _.extend({}, base(), buildObj)
+}
+
 export const queueEdit = () => {
   const buildObj = {
     // bundleID: "queue",

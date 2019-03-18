@@ -2,8 +2,9 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import UserCard from "./UserCard";
 import { SortNSearch } from "../SharedUI/SortNSearch"
-import "./style.css";
 import { sortByUTC } from "../SharedCalculations/SortByUTC";
+import { PortalContentNoResults } from "./PortalContentNoResults"
+import "./style.css";
 
 @inject("PoliciesStore", "UIStore")
 @observer
@@ -21,6 +22,9 @@ export class CardFrame extends React.Component {
       <UserCard data={card} key={card.label} img={card.img} />
     ));
 
+    const displayContent = cardData.length > 0?   <div className="CardList" style={{paddingTop: 25}}> {cards} </div>  : <PortalContentNoResults/>
+
+
     return (
       <div style={{marginTop: -35, paddingRight: 15}}>
       <div style={{height: 50}}>
@@ -28,10 +32,8 @@ export class CardFrame extends React.Component {
           dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)} 
           />
       </div>
-       
-    <div className="CardList" style={{paddingTop: 25}}>
-    {cards}
-    </div>
+      {displayContent}
+  
       </div>
 
       
