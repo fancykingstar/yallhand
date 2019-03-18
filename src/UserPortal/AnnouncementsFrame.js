@@ -9,6 +9,7 @@ import { UIStore } from "../Stores/UIStore";
 import { SortNSearch } from "../SharedUI/SortNSearch"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { sortByUTC } from "../SharedCalculations/SortByUTC";
+import { PortalContentNoResults } from "./PortalContentNoResults"
 
 @inject("AnnouncementsStore", "UserStore")
 @observer
@@ -39,6 +40,8 @@ class AnnouncementsFrame extends React.Component {
       </React.Fragment>
     ));
 
+    const displayContent = displayFeed.length > 0?  <Item.Group>{displayFeed}</Item.Group> : <PortalContentNoResults/>
+
     return (
       <div className="Announcements" style={{marginTop: -35, paddingRight: 15}}>
         <SortNSearch 
@@ -46,8 +49,9 @@ class AnnouncementsFrame extends React.Component {
           searchValueChange={val =>  UIStore.set("search", "searchPortalannouncementValue", val)} 
           searchValue={UIStore.search.searchPortalannouncementValue}
           />
-        <Item.Group>{displayFeed}</Item.Group>
+      
         <div style={{paddingTop: 100}}/>
+        {displayContent}
       </div>
     );
   }

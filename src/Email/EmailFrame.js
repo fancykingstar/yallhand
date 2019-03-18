@@ -5,23 +5,31 @@ import { SendEmail } from "./SendEmail";
 import Bundles from "./Bundles";
 import { Automations } from "./Automations";
 import { inject, observer } from "mobx-react";
-import { modifyBundle } from "../DataExchange/Up";
-import { queueEdit } from "../DataExchange/PayloadBuilder";
+import { modifyBundle, createBundle } from "../DataExchange/Up";
+import { queueEdit, queueCreate } from "../DataExchange/PayloadBuilder";
 
-@inject("UIStore", "DataEntryStore")
+@inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
 export class EmailFrame extends React.Component {
   constructor(props) {
     super(props);
-    const { UIStore, DataEntryStore } = this.props;
-    this.updateQueue = (name=null) => {
-      if (UIStore.menuItem.emailFrame === "queue" && name !== "queue") {
+    const { UIStore, DataEntryStore, EmailStore } = this.props;
+    this.updateQueue = () => {
+      if (UIStore.menuItem.emailFrame === "queue" && EmailStore.allBundles.filter(i => i.isQueue).length > 0) {
         modifyBundle(queueEdit(), false).then(() => {
           DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
           DataEntryStore.resetDraft()
         })
-  
       }
+      else {
+        createBundle(queueCreate(), false).then(() => {
+          EmailStore.loadBundles([...EmailStore.allBundles, ...[EmailStore.queue]])
+          DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
+          DataEntryStore.resetDraft()
+        })
+      }
+      DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
+      DataEntryStore.resetDraft()
     }
   }
   componentWillUnmount() {

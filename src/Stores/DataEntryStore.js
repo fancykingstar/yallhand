@@ -24,7 +24,9 @@ class Store {
     tempContent: this.tempContent,
     content: this.content,
     contentmgmt: this.contentmgmt,
-    api: this.api
+    api: this.api,
+    superAdmin: this.superAdmin
+    
   }; 
 
   //SHARED DRAFT JS FIELDS (need to be global and not wrapped in object)
@@ -243,6 +245,25 @@ class Store {
     teams: false,
     tagteamedit: false
   };
+
+  @observable
+  superAdmin = {
+    allAccounts: [],
+    previewAccount: "",
+    accountArmed: false,
+    accountLabel: "",
+    accountTimezone: 0,
+    accountReviewAlert: 0,
+    accountEmail: "",
+    accountImg: "",
+    analyticsLoading: false,
+    analyticsAccount: "",
+    analyticsType: "both",
+    analyticsAction: "all",
+    analyticsSort: "new",
+    analyticsLogs: [],
+    analyticsCurrentDisplay: [],
+  }
 
   @action
   loadObj(obj, key) {

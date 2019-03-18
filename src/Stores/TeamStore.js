@@ -108,6 +108,9 @@ class Store {
     else if(type === "tag" && id === "none"){
       return { 0: "", 1: "", 2: "" }
     }
+    else if(type === "tag" && id === ""){
+      return { 0: "", 1: "", 2: "" }
+    }
     else {
     let currentDepth =
       type === "team"

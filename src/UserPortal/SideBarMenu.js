@@ -61,7 +61,7 @@ class SideBarMenu extends React.Component {
       <div style={{ marginLeft: 15 }}>
         <Button size="mini"
           onClick={e => {
-            this.props.history.push("/panel/dashboard");
+            this.props.history.push("/panel");
             UIStore.set("responsive", "mobileNav", false);
           }} > Return To Admin Panel{" "}
         </Button>
