@@ -33,7 +33,7 @@ class ProfileInfo extends React.Component {
   }
 
   isWeak (value) {
-    return value.toString().length < 3
+    return value.toString().length < 2
   }
 
   isInvalidEmail (value) {
@@ -54,9 +54,9 @@ class ProfileInfo extends React.Component {
 
     new RegExp("/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/")
 
-    if (this.isEmpty(field)) error += `field ${humanReadableType} cannot be empty`
-    else if (this.isWeak(field)) error += `field ${humanReadableType} is to weak`
-    else if (type === 'password' && this.isInvalidPassword(field)) error += `field ${humanReadableType} must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character`
+    if (this.isEmpty(field)) error += `${humanReadableType} cannot be empty`
+    else if (this.isWeak(field)) error += `${humanReadableType} is too short`
+    else if (type === 'password' && this.isInvalidPassword(field)) error += `${humanReadableType} must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character`
     else if (type === 'email' && this.isInvalidEmail(field)) error += `${humanReadableType} is not valid`
     else if (type === 'password_confirm' && this.isPasswordNotEqual(field)) error += `${humanReadableType} is not equal to password`
 
@@ -161,7 +161,7 @@ class ProfileInfo extends React.Component {
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
             </Form>
           </div>
-          {error && <Message  icon="warning"  content={error} negative/>}
+          {error && <div style={{maxWidth: 330, paddingTop: 10}}><Message icon="warning"  content={error} negative/></div>}
         </div>
       </React.Fragment>
     );

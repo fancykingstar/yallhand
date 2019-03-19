@@ -21,7 +21,7 @@ class ProfileLogin extends React.Component {
     apiCall('users/login', 'POST', {email: this.state.email, password: this.state.password})
       .then((res) => res.json())
       .then((res) => {
-        if (res.error) return this.setState({errorMsg: 'Connection error (Email / Password is not good)'})
+        if (res.error) return this.setState({errorMsg: 'Connection error (Email / Password is invalid)'})
         if (res.token) {
           setUser({token: res.token})
           history.push('/panel')
