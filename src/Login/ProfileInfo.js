@@ -25,6 +25,7 @@ class ProfileInfo extends React.Component {
       now: props.item && props.item.now ? props.item.now : false,
       date: props.item && props.item.date ? props.item.date : '',
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
+      img: props.item && props.item.img ? props.item.img : '',
     };
   }
 
@@ -66,7 +67,7 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId, img } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     else if (this.validate('phone', 'phone') !== '') return;
@@ -83,7 +84,7 @@ class ProfileInfo extends React.Component {
       teamID: teamID,
       tags: tags,
       email: email,
-      img: "",
+      img: img,
       phone: phone,
       password: googleId ? googleId : password,
       accountID: accountID,
