@@ -2,7 +2,7 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import { Segment, Grid, Header, Icon, Statistic } from "semantic-ui-react";
 import { Scheduled } from "./Scheduled"
-import { Notifications } from "./Notifications"
+import Notifications from "./Notifications"
 
 
 

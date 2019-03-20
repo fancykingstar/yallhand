@@ -1,22 +1,35 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
+import {withRouter} from "react-router-dom"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { getContentObj } from "../SharedCalculations/GetContentObj"
 import { Table, Header, Button, Segment, Icon } from "semantic-ui-react";
-import { deleteSchedule } from "../DataExchange/Up";
+import { UIStore } from "../Stores/UIStore";
+import {S3Download} from "../DataExchange/S3Download"
+import { clearNotification } from "../DataExchange/Up";
+import { reviewAlertCheck } from "../SharedCalculations/ReviewAlertCheck";
 
 
 @inject("AccountStore")
 @observer
-export class Notifications extends React.Component {
+class Notifications extends React.Component {
 
   render() {
       const {AccountStore} = this.props
 
-      const cancel = (id) => {
-        // deleteSchedule(id)
+      const cancel = (obj) => {
+        clearNotification(obj).then(() => AccountStore.loadReviewQueue(reviewAlertCheck()))
       }
+
+      const downloadFile = (S3Key, label) => {
+        const ext = "." + S3Key.split(".")[1]
+        S3Download("quadrance-files/gramercy", S3Key, label, ext)
+     }
+
+      const pushToLocation = (obj) => {
+        const keys = {"Policy": "/panel/faqs/manage-policy/", "Announcement": "/panel/announcements/manage-announcement/", "File": "/panel/resources", "URL": "/panel/resources"}
+        obj.type === "Policy" || obj.type === "Announcement"? obj.type === "Policy"? this.props.history.push(keys[obj.type] + obj.policyID) : this.props.history.push(keys[obj.type] + obj.announcementID) : null
+        obj.type === "File" || obj.type === "URL"? obj.type === "File"? downloadFile(obj.S3Key.split("gramercy/")[1], obj.label) : window.open(obj.prefix + obj.url)  : null
+        }
 
 
 
@@ -25,8 +38,8 @@ export class Notifications extends React.Component {
         <Table.Cell>{i.label}</Table.Cell>
         <Table.Cell>~ {Math.round(i.daysExpired)} days</Table.Cell>
         <Table.Cell> 
-        <Button basic color="black" onClick={e => cancel()}>View</Button>
-        <Button basic color='red' onClick={e => cancel()}>Cancel</Button>
+        <Button basic color="black" onClick={e => pushToLocation(i)}>View</Button>
+        <Button basic icon='remove' color='red' onClick={e => cancel(i)}/>
         </Table.Cell>
          </Table.Row>
       )
@@ -57,3 +70,4 @@ export class Notifications extends React.Component {
     );
   }
 }
+export default withRouter(Notifications)

@@ -41,13 +41,6 @@ import { ToastContainer } from "react-toastify";
 )
 @observer
 export class AdminPanel extends React.Component {
-  componentDidMount(){
-    const {DataEntryStore} = this.props
-    if(DataEntryStore.superAdmin.previewAccount === ""){
-      // this.props.history.push("/panel/superadmin")
-    }
-  }
-
   render() {
     const { UIStore, UserStore } = this.props;
 

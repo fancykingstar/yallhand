@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {ItsLog} from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
-
 import _ from "lodash";
+
 
 const accountID = () => AccountStore.account.accountID.slice()
 const userID = () => UserStore.user.userID.slice()
@@ -67,6 +67,28 @@ export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payl
 export const createHistory = (payload) => {
     apiCall("/histories", "POST", payload)
 } 
+
+
+
+///Notfications
+export const clearNotification = (payload) => {
+   const id = {"Policy": "policyID", "Announcement": "announcementID", "File": "resourceID", "URL": "resourceID"}[payload.type]
+   const route = {"Policy": "policies/", "Announcement": "announcements/", "File":"fileresources/", "URL": "urls/"}[payload.type]
+   const reloadKey = {"Policy": "policies", "Announcement": "announcements", "File":"files", "URL": "urlResources"}[payload.type]
+   const updateVaris = (varis) => 
+    {
+     let newVaris = varis.slice();
+     newVaris.forEach(i => i.updated = Date.now());
+     return newVaris;
+    }
+   let newPayload = {}
+   newPayload[id] = payload[id]
+   newPayload.accountID = payload.accountID
+   payload.type === "File" || payload.type === "URL"? newPayload.updated = Date.now() : newPayload.variations = updateVaris(payload.variations)
+   return apiCall(route + payload[id], "PATCH", newPayload)
+    .then(() => refresh[reloadKey]())
+}
+
 
 
 
