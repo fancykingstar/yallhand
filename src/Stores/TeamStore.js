@@ -1,4 +1,5 @@
 import { observable, action, computed } from "mobx";
+import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { TeamControl } from "../QuadranceControls";
 
 class Store {
@@ -22,6 +23,7 @@ class Store {
 
   @action
   loadTeamKey() {
+    this.teamKey = {}
     this.structure.forEach(team => (this.teamKey[team.teamID] = team.label));
   }
 
@@ -32,7 +34,7 @@ class Store {
     const depth0s = sortedPath.filter(item => item.depth === 0);
     depth0s.forEach(depth0 => {
       sortedStructure.push({
-        key: depth0.label,
+        key: giveMeKey(),
         value: depth0[id],
         text: depth0.label
       });
@@ -40,11 +42,11 @@ class Store {
       depth1s.forEach(depth1 => {
         let depth2s = sortedPath.filter(item => item.parent === depth1[id]);
         depth2s = depth2s.map(item => ({
-          key: item.label,
+          key: giveMeKey(),
           value: item[id],
           text: "-- " + item.label
         }));
-        const group = [{key: depth1.label, value: depth1[id], text: "- " + depth1.label}, ...depth2s];
+        const group = [{key: giveMeKey(), value: depth1[id], text: "- " + depth1.label}, ...depth2s];
         group.forEach(item => sortedStructure.push(item));
       });
     });
@@ -170,7 +172,7 @@ class Store {
    @computed
    get _getTagsAsEditOptions(){
     let tagOptions = this.tags.map(tag => ({
-      key: tag.tagID,
+      key: tag.tagID + giveMeKey(),
       text: tag.label,
       value: tag.tagID,
       disabled: tag.depth === TeamControl.maxDepth ? true : false
@@ -188,7 +190,7 @@ class Store {
    @computed
    get _getTagsAsOptions(){
     let tagOptions = this.tags.map(tag => ({
-      key: tag.tagID,
+      key: tag.tagID + giveMeKey(),
       text: tag.label,
       value: tag.tagID,
       disabled: tag.depth === TeamControl.maxDepth ? true : false
@@ -206,7 +208,7 @@ class Store {
    @computed
    get _getTeamsAsOptions(){
     return TeamStore.structure.map(team => ({
-      key: team.teamID,
+      key: team.teamID + giveMeKey(),
       text: team.label,
       value: team.teamID,
       disabled: team.depth === TeamControl.maxDepth ? true : false

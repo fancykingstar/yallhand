@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     width: auto;
+    margin-left: -30px;
     /* position: relative; */
     /* height: 100vh; */
     /* overflow-y: scroll; */

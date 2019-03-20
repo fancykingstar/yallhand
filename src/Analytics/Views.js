@@ -111,7 +111,7 @@ export class Views extends React.Component {
                 </Modal>
             }
         
-        const displayResults = uniqueLogs.map(log => 
+        const displayResults = uniqueLogs.filter(log => getLabel(log) !== "obsoleted data").map(log => 
             <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
                 <Table.Cell textAlign="center">{rawlogs.filter(i => i.id === log.id).length}</Table.Cell>

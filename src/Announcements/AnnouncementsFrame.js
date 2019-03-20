@@ -84,7 +84,7 @@ class AnnouncementsFrame extends React.Component {
     ));
 
     return (
-      <div style={{ maxWidth: 800 }}>
+      <div style={{ width: "auto", paddingRight: 15 }}>
         <Header as="h2">
           Annoucements Feed
           <Header.Subheader>
@@ -101,7 +101,7 @@ class AnnouncementsFrame extends React.Component {
         searchValueChange={val => UIStore.set("search", "searchAnnouncements", val)}
         dropdownValueChange={val => UIStore.set("dropdown", "announcementSort", val)}
         />
-        <div style={{paddingTop: 50}}>
+        <div style={UIStore.responsive.isMobile? {paddingTop: 100} : {paddingTop: 50}}>
         <CreateContent mode="announcement"/>
         <Item.Group>{contentFeed}</Item.Group>
         </div>

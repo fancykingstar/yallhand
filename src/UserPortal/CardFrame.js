@@ -26,7 +26,7 @@ export class CardFrame extends React.Component {
 
 
     return (
-      <div style={{marginTop: -35, paddingRight: 15}}>
+      <div style={{marginTop: -35, paddingRight: 15, marginLeft: -10}}>
       <div style={{height: 50}}>
                <SortNSearch 
           dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)} 
