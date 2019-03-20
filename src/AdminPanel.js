@@ -17,6 +17,12 @@ import { EmailFrame } from "./Email/EmailFrame";
 import EditBundle from "./Email/EditBundle";
 import { DashboardFrame } from "./Dashboard/DashboardFrame";
 import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
+import SuperAdminFrame from "./SuperAdmin/SuperAdminFrame"
+import { EditAccounts } from "./SuperAdmin/EditAccounts"
+import { CreateAccounts } from "./SuperAdmin/CreateAccounts"
+import { EditUsers } from "./SuperAdmin/EditUsers"
+import { CreateUsers } from "./SuperAdmin/CreateUsers"
+import { Analytics } from "./SuperAdmin/Analytics"
 
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import { ToastContainer } from "react-toastify";
@@ -31,12 +37,15 @@ import { ToastContainer } from "react-toastify";
   "AccountStore",
   "UIStore",
   "EmailStore",
+  "DataEntryStore"
 )
 @observer
 export class AdminPanel extends React.Component {
-
   render() {
-    const { UIStore } = this.props;
+    const { UIStore, UserStore } = this.props;
+
+    const accountOptions = () => []
+
     const checkMobile = (width) => {
       if(width < 992){
         UIStore.set("responsive", "isMobile", true)
@@ -46,6 +55,9 @@ export class AdminPanel extends React.Component {
           UIStore.set("responsive", "isMobile", false)
         }
     }
+
+    const superAdminPath = UserStore.user !== null && UserStore.user.isSuperAdmin !== undefined && UserStore.user.isSuperAdmin === true? <Route path="/panel/superadmin" component={SuperAdminFrame} exact /> : null
+
 
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
@@ -62,7 +74,8 @@ export class AdminPanel extends React.Component {
           <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
         </div>
         </Transition>
-        <div className="ActionFrame">
+        <div className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
+        
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
@@ -70,7 +83,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
-            <Route path="/panel/dashboard" component={DashboardFrame} />
+            <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
             <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
@@ -78,6 +91,13 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />
             <Route path="/panel/email" component={EmailFrame} />
+            {superAdminPath}
+            <Route path="/panel/superadmin/edit-account" component = {props => <EditAccounts accounts={accountOptions()} {...props}/>} exact/>
+            <Route path="/panel/superadmin/create-account" component={CreateAccounts} exact/>
+            <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
+            <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
+            <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
+
           </Switch>
         </div>
         <ToastContainer />

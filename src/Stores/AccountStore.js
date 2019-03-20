@@ -1,4 +1,5 @@
 import { observable, action, computed } from "mobx";
+import { getDefaultWorkspaceImg } from "../SharedCalculations/GetDefaultWorkspaceImg"
 import _ from "lodash";
 
 class Store {
@@ -10,6 +11,7 @@ class Store {
   @observable allUsers = []
   @observable logs = []
   @observable sentiments = []
+  @observable reviewQueue = []
 
   @action
   set(target, key, val){
@@ -48,7 +50,9 @@ class Store {
 
   loadAccount(account) {
     return new Promise((resolve, reject) => {
-      this.account = account
+      let accountLoad = Object.assign({}, account)
+      accountLoad.img === "" || accountLoad.img === undefined ? accountLoad.img = getDefaultWorkspaceImg(accountLoad.accountID) : null
+      this.account = accountLoad
       _.isEmpty(this.account) ? reject(false) : resolve(true)
     })
   }
@@ -68,6 +72,10 @@ class Store {
     this.sentiments = allSentiments
   }
 
+  loadReviewQueue(all) {
+    this.reviewQueue = all
+  }
+
   _getUsersSelectOptions() {
       return this.allUsers
         .filter(user => user.displayName_full !== "" && user.isActive)
@@ -75,7 +83,12 @@ class Store {
   }
 
   _getUser(ID) {
-    return this.allUsers.filter(user => user.userID === ID)[0]
+    const superadmin = {
+      userID: "*",
+      displayName_full: "Yallhands Admin",
+      displayName: "Yallhands",
+    }
+    return ID === "*" ? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
   }
 
   _getDisplayName(ID) {

@@ -3,8 +3,10 @@ import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore"
 import * as load from "./Down"
 import { apiCall_noBody, deleteUser, getUser } from "../DataExchange/Fetch"
+import { reviewAlertCheck } from "../SharedCalculations/ReviewAlertCheck";
+import { AccountStore } from "../Stores/AccountStore";
 
-export const loadAdmin = () => {
+export const loadAdmin = (superStatus=false, superUser={}) => {
   UIStore.toggleScreenLoading();
 
   if (!getUser()) return UIStore.toggleScreenLoading();
@@ -20,7 +22,8 @@ export const loadAdmin = () => {
         deleteUser()
         return
       }
-      const { accountID, userID } = res[0]
+
+      const { accountID, userID } = superStatus ? superUser : res[0]
 
       const account = await load.account(accountID);
       UIStore.set("adminLoadingComplete", "account", true);
@@ -66,6 +69,8 @@ export const loadAdmin = () => {
 
       const a = await load.sentiments(accountID);
       UIStore.set("adminLoadingComplete", "sentiments", true)
+
+      AccountStore.loadReviewQueue(reviewAlertCheck())
 
       UIStore.toggleScreenLoading()
       if(res[0]) UserStore.isAuthenticated = true;

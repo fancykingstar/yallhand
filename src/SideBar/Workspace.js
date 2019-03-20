@@ -1,14 +1,16 @@
 import React from "react";
+import { inject, observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import "./style.css";
-import { inject, observer } from "mobx-react";
 
-@inject("AccountStore")
+
+@inject("AccountStore", "UserStore")
 @observer
 export class Workspace extends React.Component {
   render() {
-    const { AccountStore } = this.props;
+    const { AccountStore, UserStore } = this.props;
     const styles = {7: {fontSize: "1.8em"}, 14: {fontSize: "1.3em"}, 30: {fontSize: "0.85em"}}
+    
     const getStyle = val => {
       let style = {}
       let found = false
@@ -18,6 +20,7 @@ export class Workspace extends React.Component {
           style = styles[size]
         }
       })
+      UserStore.user.accountID !== AccountStore.account.accountID? style["color"] = "red": null
       return style
     }
     const { account } = AccountStore

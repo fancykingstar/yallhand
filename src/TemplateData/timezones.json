@@ -3,7 +3,6 @@
     "value": -8,
     "abbr": "PST",
     "offset": -8,
-    "isdst": false,
     "text": "(UTC-08:00) Pacific Standard Time (Los Angeles)",
     "utc": [
       "America/Dawson",
@@ -18,7 +17,6 @@
     "value": -6,
     "abbr": "MDT",
     "offset": -6,
-    "isdst": true,
     "text": "(UTC-07:00) Mountain Time (e.g. Denver)",
     "utc": [
       "America/Boise",
@@ -35,7 +33,6 @@
     "value": -5,
     "abbr": "CDT",
     "offset": -5,
-    "isdst": true,
     "text": "(UTC-06:00) Central Time (e.g. Chicago)",
     "utc": [
       "America/Chicago",
@@ -58,7 +55,6 @@
     "value": -4,
     "abbr": "EDT",
     "offset": -4,
-    "isdst": true,
     "text": "(UTC-05:00) Eastern Time (e.g. New York)",
     "utc": [
       "America/Detroit",

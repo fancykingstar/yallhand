@@ -37,6 +37,7 @@
     "react-app-rewire-mobx": "^1.0.8",
     "react-app-rewired": "^1.6.2",
     "react-chartjs-2": "^2.7.4",
+    "react-csv": "^1.1.1",
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.5.2",
     "react-fullstory": "^1.0.3",

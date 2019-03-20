@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {ItsLog} from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
-
 import _ from "lodash";
+
 
 const accountID = () => AccountStore.account.accountID.slice()
 const userID = () => UserStore.user.userID.slice()
@@ -52,15 +52,58 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
 
 
+
+
+
+
 ///Sentiment
 export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
 
+
+
+
+
 ///History
 export const createHistory = (payload) => {
-    console.log("history", JSON.stringify(payload))
     apiCall("/histories", "POST", payload)
 } 
 
+
+
+///Notfications
+export const clearNotification = (payload) => {
+   const id = {"Policy": "policyID", "Announcement": "announcementID", "File": "resourceID", "URL": "resourceID"}[payload.type]
+   const route = {"Policy": "policies/", "Announcement": "announcements/", "File":"fileresources/", "URL": "urls/"}[payload.type]
+   const reloadKey = {"Policy": "policies", "Announcement": "announcements", "File":"files", "URL": "urlResources"}[payload.type]
+   const updateVaris = (varis) => 
+    {
+     let newVaris = varis.slice();
+     newVaris.forEach(i => i.updated = Date.now());
+     return newVaris;
+    }
+   let newPayload = {}
+   newPayload[id] = payload[id]
+   newPayload.accountID = payload.accountID
+   payload.type === "File" || payload.type === "URL"? newPayload.updated = Date.now() : newPayload.variations = updateVaris(payload.variations)
+   return apiCall(route + payload[id], "PATCH", newPayload)
+    .then(() => refresh[reloadKey]())
+}
+
+
+
+
+///Account
+export const createAccount = (payload) => {
+    return processTemplate(true, "accounts", "POST", payload, "account", 
+    "A new account has been created", 
+    true,{"event": "create", "type":"schedule"}, true
+)
+} 
+export const deleteAccount = (accountID) => {
+    return processTemplate(false, "accounts/" + accountID, "DELETE", {}, "account", 
+    "Selected account deleted 👋", 
+    true,{"event": "delete", "type":"account"})
+}
 
 
 
@@ -82,7 +125,7 @@ export const deleteSchedule = (scheduleID) => {
 
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
-    processTemplate(true, "teams", "POST", payload, "teams", 
+    return processTemplate(true, "teams", "POST", payload, "teams", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"team"}
     )
@@ -106,7 +149,7 @@ export const deleteTeam = (teamID) => {
 
 ///TAGS 
 export const createTag = (payload) => {
-    processTemplate(true, "tags", "POST", payload, "tags", 
+    return processTemplate(true, "tags", "POST", payload, "tags", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"tag"}
     )
@@ -291,10 +334,10 @@ export const modifyBundle = (payload, toastEnabled) => {
 )
 }
 
-export const createBundle = (payload) => {
+export const createBundle = (payload, toastEnabled) => {
     return processTemplate(true, "emailbundles", "POST", payload, "bundles", 
         "Your new bundle has been created 🙌", 
-        true,{"event": "create", "type":"bundle"}
+        true,{"event": "create", "type":"bundle"}, toastEnabled
     )
 }
 

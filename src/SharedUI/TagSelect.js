@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 import { Form } from "semantic-ui-react";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("TeamStore")
 @observer
@@ -14,6 +15,7 @@ export class TagSelect extends React.Component {
 
     const tagsElement = [...tagsSelect, ...tags].map((tag, i) => {
       return {
+        key: giveMeKey(),
         id: tag.tagID ? tag.tagID : i,
         text: tag.text ? tag.text : tag.label,
         value: tag.value ? tag.value : tag.tagID,

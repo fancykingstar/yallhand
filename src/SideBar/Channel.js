@@ -5,16 +5,18 @@ import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { modifyChannel, deleteChannel } from "../DataExchange/Up";
 import { channelUpdate } from "../DataExchange/PayloadBuilder";
+import { StdInputValidation} from "../SharedCalculations/StdInputValidation"
 import "./style.css";
 
 export const Channel = inject(
   "UIStore",
   "DataEntryStore",
   "ChannelStore",
-  "PoliciesStore"
+  "PoliciesStore",
+  "AnnouncementsStore"
 )(
   observer(props => {
-    const { UIStore, DataEntryStore, ChannelStore, PoliciesStore } = props;
+    const { UIStore, DataEntryStore, ChannelStore, PoliciesStore, AnnouncementsStore } = props;
     const settingsAvail =
       props.active && UIStore.sideNav.activeChannel !== "All"
         ? { float: "right", opacity: "0.7", marginTop: 5, marginRight: 3 }
@@ -34,6 +36,10 @@ export const Channel = inject(
         DataEntryStore.set("channel", "label", "")
         UIStore.set("modal", "modifyChannel", false)
       })
+    }
+
+    const validateLabel = () => {
+      return StdInputValidation(DataEntryStore.channel.label, ChannelStore.allChannels.map(i => i.label) ).valid;
     }
     const active = props.active ? "ChannelFrame ChannelActive" : "ChannelFrame";
 
@@ -84,6 +90,7 @@ export const Channel = inject(
                 <Form.Group>
                   <Form.Button
                     primary
+                    disabled={!validateLabel()}
                     icon="checkmark"
                     labelPosition="right"
                     content="Update"
@@ -91,8 +98,7 @@ export const Channel = inject(
                   />
                   <ConfirmDelete
                     confirm={e => delChannel()}
-                    // disabled={true}
-                    //  .filter(i => i.chanID === UIStore.sideNav.activeChannel).length > 0}
+                    disabled={[...PoliciesStore.allPolicies, ...AnnouncementsStore.allAnnouncements].filter(i => i.chanID === UIStore.sideNav.activeChannel).length > 0}
                   />
                 </Form.Group>
               </Form>

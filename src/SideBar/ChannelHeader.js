@@ -7,13 +7,14 @@ import { createChannel } from "../DataExchange/Up";
 import { channel } from "../DataExchange/PayloadBuilder";
 import { departments } from "../TemplateData/departments";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import { StdInputValidation } from "../SharedCalculations/StdInputValidation"
 import "./style.css";
 
-@inject("UIStore", "DataEntryStore")
+@inject("UIStore", "DataEntryStore", "ChannelStore")
 @observer
 export class ChannelHeader extends React.Component {
   render() {
-    const { UIStore, DataEntryStore } = this.props;
+    const { UIStore, DataEntryStore, ChannelStore } = this.props;
     const newChannelStatus = FormCharMax(DataEntryStore.channel.label, 24);
     const addChannel = () => {
       createChannel(channel())
@@ -23,6 +24,10 @@ export class ChannelHeader extends React.Component {
     const deptSuggestions = departments.map(dept => (
       <option key={"dept suggestion" + giveMeKey()} value={dept} />
     ));
+
+    const validateLabel = () => {
+      return StdInputValidation(DataEntryStore.channel.label, ChannelStore.allChannels.map(i => i.label) ).valid;
+    }
 
     return (
       <div className="ChannelHeader">
@@ -66,6 +71,7 @@ export class ChannelHeader extends React.Component {
               icon="checkmark"
               labelPosition="right"
               content="Submit"
+              disabled={!validateLabel()}
               onClick={e => addChannel()}
             />
           </Modal.Actions>
