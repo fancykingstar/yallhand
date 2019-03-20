@@ -25,6 +25,7 @@ class ProfileInfo extends React.Component {
       now: props.item && props.item.now ? props.item.now : false,
       date: props.item && props.item.date ? props.item.date : '',
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
+      img: props.item && props.item.img ? props.item.img : '',
     };
   }
 
@@ -66,7 +67,7 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId, img } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     else if (this.validate('phone', 'phone') !== '') return;
@@ -83,7 +84,7 @@ class ProfileInfo extends React.Component {
       teamID: teamID,
       tags: tags,
       email: email,
-      img: "",
+      img: img,
       phone: phone,
       password: googleId ? googleId : password,
       accountID: accountID,
@@ -98,17 +99,12 @@ class ProfileInfo extends React.Component {
       const { id } = validateCode
       delete validateCode.id
       apiCall(`/validations/${id}`, 'PUT', validateCode).then(() => {
-        const { history } = this.props
-        if (!googleId) {
-          history.push('/login')
-          return window.location.reload()
-        }
-        apiCall('users/login', 'POST', {email: email, password: googleId})
+        apiCall('users/login', 'POST', {email: email, password: googleId ? googleId : password})
           .then((res) => res.json())
           .then((res) => {
             if (res.token) {
               setUser({token: res.token})
-              history.push('/panel')
+              this.props.history.push('/panel')
             }
           })
         })
