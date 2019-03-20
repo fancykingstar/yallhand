@@ -6,6 +6,7 @@ import { StdInputValidation } from "../SharedCalculations/StdInputValidation";
 import { EditTeamTag } from "./EditTeamTag";
 import { team } from "../DataExchange/PayloadBuilder"
 import { createTeam } from "../DataExchange/Up";
+import {debounce} from 'lodash'
 import "./style.css";
 
 @inject("TeamStore", "DataEntryStore", "UIStore")
@@ -22,21 +23,19 @@ export class Teams extends React.Component {
     const { UIStore } = this.props;
     const handleAdd = () => { 
       if (!DataEntryStore.teamEditFields.tagsSaveDisabled) {
-        createTeam(team());
+        createTeam(team()).then(() => {document.getElementById('teamInput').value = ""})
+
+       
       }
     };
     const handleEdit = val => {
       DataEntryStore.set("teamEditFields", "selectedTeam", val.teamID);
       DataEntryStore.set("teamEditFields", "_selectedTeamLabel", val.label);
       DataEntryStore.set("teamEditFields", "selectedTeamLabel", val.label);
-      DataEntryStore.set(
-        "teamEditFields",
-        "teamEditDropdownVal",
-        TeamStore._getParent("team", val.teamID)
-      );
+      DataEntryStore.set( "teamEditFields", "teamEditDropdownVal", TeamStore._getParent("team", val.teamID) );
       UIStore.set("modal", "editTeam", true);
     };
-    const handleLabelInput = val => {
+    const handleLabelInput = debounce(val => {
       const validInput = StdInputValidation(
         val,
         TeamStore._getTeamsAsOptions.map(option => option.text)
@@ -48,7 +47,7 @@ export class Teams extends React.Component {
         DataEntryStore.set("teamEditFields", "teamsLabel", val);
         DataEntryStore.set("teamEditFields", "teamsSaveDisabled", true);
       }
-    };
+    }, 500)
     const handleTeamChange = val => {
       DataEntryStore.set("teamEditFields", "teamsDropdown", val);
     };
@@ -76,6 +75,7 @@ export class Teams extends React.Component {
                 error={DataEntryStore.teamEditFields.teamsSaveDisabled}
                 label="Label"
                 onChange={(e, val) => handleLabelInput(val.value)}
+                id="teamInput"
                 placeholder="e.g. New York or Warehouse"
               />
               <Form.Select

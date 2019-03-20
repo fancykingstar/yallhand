@@ -2,10 +2,11 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import { Segment, Grid, Header, Icon, Statistic } from "semantic-ui-react";
 import { Scheduled } from "./Scheduled"
-import { PoliciesStore } from "../Stores/PoliciesStore";
+import { Notifications } from "./Notifications"
 
 
-@inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore")
+
+@inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore",)
 @observer
 export class DashboardFrame extends React.Component {
   componentWillMount() {}
@@ -19,7 +20,7 @@ export class DashboardFrame extends React.Component {
           content="Dashboard"
           subheader="Activity and Information Overview"
         />
-        <Grid columns="three" divided>
+        <Grid columns="three" divided stackable>
          
           <Grid.Row>
             <Grid.Column>
@@ -66,12 +67,7 @@ export class DashboardFrame extends React.Component {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Segment>
-                <Header as="h3">
-                  <Icon name="bell" />
-                  <Header.Content>Notifications</Header.Content>
-                </Header>
-              </Segment>
+              <Notifications/>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>

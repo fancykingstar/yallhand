@@ -11,6 +11,7 @@ class Store {
   @observable allUsers = []
   @observable logs = []
   @observable sentiments = []
+  @observable reviewQueue = []
 
   @action
   set(target, key, val){
@@ -69,6 +70,10 @@ class Store {
 
   loadSentiments(allSentiments) {
     this.sentiments = allSentiments
+  }
+
+  loadReviewQueue(all) {
+    this.reviewQueue = all
   }
 
   _getUsersSelectOptions() {

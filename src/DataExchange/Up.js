@@ -103,7 +103,7 @@ export const deleteSchedule = (scheduleID) => {
 
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
-    processTemplate(true, "teams", "POST", payload, "teams", 
+    return processTemplate(true, "teams", "POST", payload, "teams", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"team"}
     )
@@ -127,7 +127,7 @@ export const deleteTeam = (teamID) => {
 
 ///TAGS 
 export const createTag = (payload) => {
-    processTemplate(true, "tags", "POST", payload, "tags", 
+    return processTemplate(true, "tags", "POST", payload, "tags", 
         "Your new tag has been created 🙌", 
         true,{"event": "create", "type":"tag"}
     )

@@ -66,7 +66,7 @@ constructor(props){
             <Table.Cell>{this.props.accounts.filter(x => x.value === i.accountID)[0].text}</Table.Cell>
             <Table.Cell>{moment(i.updated).format('LLL')}</Table.Cell>
             <Table.Cell>{i.isAction? "Action" : "View"}</Table.Cell>
-            <Table.Cell>{i.data.type + " " + i.data.event}</Table.Cell>
+            <Table.Cell>{i.isAction? i.data.type + " " + i.data.event : `${i.data.type} ${i.data.id}/${i.data.variation}`}</Table.Cell>
         </Table.Row>
         )
     return (

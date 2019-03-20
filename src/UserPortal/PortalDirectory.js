@@ -55,5 +55,9 @@ export const PortalDirectory = () => {
     </Card>
   ));
 
-  return <Card.Group>{users}</Card.Group>;
+  return (
+    <div style={users.length > 0? {paddingBottom: 120} : null }>
+    <Card.Group>{users}</Card.Group>
+    </div>
+  );
 };

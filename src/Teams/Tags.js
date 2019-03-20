@@ -21,11 +21,11 @@ export class Tags extends React.Component {
     const { TeamStore } = this.props;
     const { DataEntryStore } = this.props;
     const { UIStore } = this.props;
-    const { AccountStore } = this.props;
+   
 
     const handleAdd = () => {
       if (!DataEntryStore.teamEditFields.tagsSaveDisabled) {
-        createTag(tag());
+        createTag(tag()).then(() => {document.getElementById('tagInput').value = ""})
       }
     };
     const handleEdit = val => {
@@ -81,6 +81,7 @@ export class Tags extends React.Component {
                 label="Label"
                 error={DataEntryStore.teamEditFields.tagsSaveDisabled}
                 placeholder="e.g. Employee or Manager"
+                id="tagInput"
                 onChange={(e, val) => handleLabelInput(val.value)}
               />
               <Form.Select
