@@ -25,7 +25,10 @@ export class TeamSelect extends React.Component {
           label={label === "" ? "Team" : label}
           style={style}
           options={teamList}
-          onChange={(e, val) => this.props.outputVal(val.value)}
+          onChange={(e, val) => {
+            const text = teamList.filter(t => t.value === val.value)[0].text
+            this.props.outputVal({value: val.value, text: text})
+          }}
           placeholder={placeholder !== undefined ? placeholder : ""} />
       </Fragment>
     )

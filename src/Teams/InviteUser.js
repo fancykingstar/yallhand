@@ -22,6 +22,7 @@ export class InviteUser extends React.Component {
   reset () {
     return {
       teamID: "global",
+      teamName: "global",
       tagID: "none",
       adminConfig: "all",
       adminTeamID: "global",
@@ -38,12 +39,14 @@ export class InviteUser extends React.Component {
 
   getDataNewUser () {
     const { isAdmin } = this.props;
-    const { teamID, tagID, email } = this.state;
+    const { teamID, teamName, tagID, email } = this.state;
     const userData = user()
+
     return {
       invitedBy: userData.invitedBy,
       email: email,
       teamID: teamID,
+      teamName: teamName,
       accountID: userData.accountID,
       tags: tagID === "none" ? [] : [tagID],
       isAdmin: isAdmin
@@ -75,6 +78,7 @@ export class InviteUser extends React.Component {
     let newUser = this.getDataNewUser()
     newUser.now = !later
     if (later) newUser.date = moment(this.state.date).valueOf()
+    console.log(newUser)
     await apiCall('validations', 'POST', newUser).then((res) => res.json()).then((res) => res.error ? this.error(res) : this.success())
   }
 
@@ -92,7 +96,7 @@ export class InviteUser extends React.Component {
           <Form>
             <Form.Group widths="equal">
               <Form.Input fluid label="Email" value={email} placeholder="jane@placethatwework.co" onChange={(e, v) => this.setState({email: v.value})}/>
-              <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e})}/>
+              <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e.value, teamName: e.text})}/>
               <TagSelect label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
             </Form.Group>
             <span>
