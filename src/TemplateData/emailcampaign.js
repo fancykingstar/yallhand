@@ -7,7 +7,13 @@
 //   companyData: AccountStore.account
 
 export const EmailCampaignTemplate = (body, contents, companyData) => {
-    const contentBody = body === ""? "" : `<tr>${body}</tr>`
+    const contentBody = body === ""? "" : `
+    <tr>
+     <td style="padding: 20px; font-family: sans-serif; font-size: 15px; line-height: 20px; color: #555555;">
+        ${body}
+     </td>
+    </tr>
+    `
     const company = companyData.label
     const generalEmail= companyData.generalEmail
     const logo = companyData.img === ""? "" : 
@@ -67,7 +73,7 @@ export const EmailCampaignTemplate = (body, contents, companyData) => {
 	        <!-- Thumbnail Left, Text Right : END -->
             `
     
-    const allContent = contents.map((current, index) => contentBlock(current.label, current.img, "https://www.google.com", index%2 == 0? 'rtl' : 'ltr'))
+    const allContent = contents.map((current, index) => contentBlock(current.label, current.img, `/portal/${current.type === "announcement"? "announcement":"learn-detail"}/${current.id}`, index%2 == 0? 'rtl' : 'ltr'))
 
     
 

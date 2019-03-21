@@ -5,6 +5,7 @@ import { AccountStore } from "../Stores/AccountStore";
 import { PoliciesStore } from "../Stores/PoliciesStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore"
 import { EmailCampaignTemplate } from "../TemplateData/emailcampaign"
+import _ from 'lodash'
 
 const getContentData = (type, id) => {
     if(type === "policy"){
@@ -45,7 +46,7 @@ const getUsersByTeamTag = (teamID, tagID) => {
         const validTag = validUserPath(tagID, tagPath)
         validTeam.status && validTag.status? users.push(user.userID) : null
     })
-    return users
+    return allUsers
 }
 
 
@@ -58,14 +59,17 @@ export const buildEmail = (campaignID) => {
         .map(content => Object.keys(content)[0] === "policyID"?
         getContentData("policy", content.policyID) : getContentData("announcement", content.announcementID)
         )
+        .filter(content => !_.isEmpty(content))
+    console.log("callcontent build", allContent)
     const targetUsers = campaign.targetUsers.length > 0? campaign.targetUsers : getUsersByTeamTag(campaign.teamID, campaign.tags[0])
-    console.log("targetUsers", targetUsers)
     targetUsers.forEach(user => {
-        const userData = Object.assign({}, AccountStore._getUser(user))
+        const userData = Object.assign({}, AccountStore._getUser(user.userID))
         const userTeamPath = TeamStore.previewValidPath(userData.teamID, "team")
-        const userTagPath = userData.tags.length > 0? TeamStore.previewValidPath(userData.tags[0], "tag") : {0: "", 1: "", 2: "" }
+        const userTagPath = userData.tags.length > 0? TeamStore.previewValidPath(userData.tags.length === 0? "none": userData.tags[0], "tag") : {0: "", 1: "", 2: "" }
         const userContentData = validContent(allContent, userTeamPath, userTagPath)
         const userContent = userContentData.map(content => ({
+            type: content.announcementID === undefined? "policy" : "announcement",
+            id: content[content.announcementID === undefined? "policyID":"announcementID"],
             label: content.variations[0].label === "" ? content.label : content.variations[0].label ,
             img: content.img,
             content: content.variations[0].contentHTML
