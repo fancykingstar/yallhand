@@ -4,6 +4,7 @@ import { EmailStore } from "../Stores/EmailStore";
 import { AccountStore } from "../Stores/AccountStore";
 import { PoliciesStore } from "../Stores/PoliciesStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore"
+import { EmailCampaignTemplate } from "../TemplateData/emailcampaign"
 
 const getContentData = (type, id) => {
     if(type === "policy"){
@@ -58,6 +59,7 @@ export const buildEmail = (campaignID) => {
         getContentData("policy", content.policyID) : getContentData("announcement", content.announcementID)
         )
     const targetUsers = campaign.targetUsers.length > 0? campaign.targetUsers : getUsersByTeamTag(campaign.teamID, campaign.tags[0])
+    console.log("targetUsers", targetUsers)
     targetUsers.forEach(user => {
         const userData = Object.assign({}, AccountStore._getUser(user))
         const userTeamPath = TeamStore.previewValidPath(userData.teamID, "team")
@@ -68,53 +70,15 @@ export const buildEmail = (campaignID) => {
             img: content.img,
             content: content.variations[0].contentHTML
         }))
-        console.log(userContent)
         payload.push(
             {
                         email: userData.email,
                         name: userData.displayName,
                         subject: bundle.subject,
-                        body: bundle.bodyContentHTML,
-                        content: userContent,
-                        companyName: AccountStore.account.label,
-                        companyLogo: AccountStore.account.img
+                        content: EmailCampaignTemplate(bundle.bodyContentHTML, userContent, AccountStore.account)
+                
                     }
         )
     })
-    console.log(payload)
-
-    /////ALL USERS NEED TO HAVE A TEAMID populated
-
-    
-    // console.log(JSON.stringify(content))
+    return payload
 }
-
-
-//collect all content...sequenced
-//gather all users
-//create templates
-
-//TeamStore.previewValidPath("team03", "team")
-//{"0":"team01","1":"team07","2":"team03"}
-
-//validContent(allItems, teamPath, tagPath)
-
-//
-
-// [
-//     {
-//         email,
-//         name,
-//         subject,
-//         body,
-//         content: [
-//              {
-//                  label,
-//                  img, 
-//                  content
-//                 }
-//         ],
-//         companyName,
-//         companyLogo
-//     }
-// ]

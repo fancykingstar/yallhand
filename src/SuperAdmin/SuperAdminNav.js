@@ -20,15 +20,19 @@ export class SuperAdminNav extends React.Component {
        options={ [ { "text": "Edit...", "value": "edit account"}, { "text": "Create...", "value": "create account"} ] } 
        onChange={(e, val) => handleItemClick(val.value)}
         />
-
-            
-
         <Menu.Item
           name='analytics'
           onClick={e => handleItemClick("analytics")}
           active={this.state.active === "analytics"}
         >
           Analytics
+        </Menu.Item>
+        <Menu.Item
+          name='test'
+          onClick={e => handleItemClick("test")}
+          active={this.state.active === "test"}
+        >
+          Test Feature
         </Menu.Item>
       </Menu>
 
