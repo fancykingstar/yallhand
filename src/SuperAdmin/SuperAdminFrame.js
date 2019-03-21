@@ -6,6 +6,7 @@ import { CreateAccounts } from "./CreateAccounts"
 import { Analytics } from "./Analytics"
 import { api_get } from "./Down"
 import { SuperAdminNav } from "./SuperAdminNav";
+import { TestFrame } from "./TestFrame"
 import './superadmin.css';
 
 @inject("UIStore", "DataEntryStore")
@@ -27,7 +28,8 @@ class SuperAdminFrame extends Component {
     const route = {
       "analytics": <Analytics accounts={accountOptions()}/>,
       "edit account": <EditAccounts accounts={accountOptions()}/>,
-      "create account": <CreateAccounts/>
+      "create account": <CreateAccounts/>,
+      "test": <TestFrame/>
     }[UIStore.menuItem.superAdminFrame]
 
     return (

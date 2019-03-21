@@ -8,6 +8,9 @@ import { PortalMobile } from "./PortalMobile"
 import  PortalDesktop  from "./PortalDesktop"
 import "./style.css";
 
+import {buildEmail} from "../Scripts/BuildEmail"
+import { EmailStore } from "../Stores/EmailStore";
+
 
 @inject("TeamStore", "UserStore", "UIStore")
 @observer
@@ -45,27 +48,6 @@ class Header extends React.Component {
           {header()}
         </div>
 
-    
-
-
-        {/* <div className="MobileMenu"  onClick={e => UIStore.set( "responsive", "mobileNav", !UIStore.responsive.mobileNav ) } style={!UIStore.responsive.isMobile ? { display: "none" } : null} >
-          <div style={{ float: "left"}}>
-            <Icon
-              name="bars"
-              size="large"
-              style={
-                UIStore.responsive.mobileNav
-                  ? { color: "#2FC7F8" }
-                  : { color: "white" }
-              }
-            />
-          </div>
-          <div > 
-           
-          </div>
-        </div>
-        <PortalUserProfile />
-         */}
       </div>
     );
   }
