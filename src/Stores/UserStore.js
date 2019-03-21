@@ -20,7 +20,7 @@ class Store {
     return new Promise((resolve, reject) => {
       let user = Object.assign({}, val)
       user.img === "" || user.img === undefined ? user.img = getDefaultUserImg(user.userID) : null
-      user.isSuperAdmin = true
+      //user.isSuperAdmin = true
       this.user = user
       resolve(true)
     })
