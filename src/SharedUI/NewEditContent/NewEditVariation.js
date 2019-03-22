@@ -1,106 +1,117 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { VariationConfig } from "./VariationConfig";
+import { createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory } from "../../DataExchange/Up"
+import { content, contentEdit } from "../../DataExchange/PayloadBuilder"
+// import { withRouter } from "react-router-dom";
 import { VariationContent } from "./VariationContent";
+import { VariationConfig } from "./VariationConfig";
 import { PublishControls } from "./PublishControls";
-import holdUnload, { HoldLeave } from "../../SharedUI/ConfirmLeave";
-import {content, contentEdit, history} from "../../DataExchange/PayloadBuilder"
-import {createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory} from "../../DataExchange/Up"
-import {validateURLs} from "./ValidateURLs"
+import { validateURLs } from "./ValidateURLs"
 import _ from "lodash";
 
 @inject("DataEntryStore", "UserStore", "PoliciesStore", "AnnouncementsStore", "UIStore", "ResourcesStore")
 @observer
-export class NewEditVariation extends React.Component {
+class NewEditVariation extends React.Component {
+  
   constructor(props){
     super(props)
     this.mode = this.props.location.pathname.includes("policy") ? "policy" : "announcement"
+    this.state = {
+      announcementID: '',
+      variationID: ''
+    }
   }
+
   componentWillUnmount = () => {
     const { DataEntryStore, UIStore } = this.props;
-    // holdUnload(DataEntryStore.isEntryUpdated);
-      DataEntryStore.reset("content")
-      DataEntryStore.resetDraft()
-      UIStore.reset("content")
-    }
-  componentDidMount() {
-    const { UIStore, PoliciesStore, AnnouncementsStore, DataEntryStore } = this.props;
-    UIStore.set("modal", "uploadAssocEdit", false)
-
-    const load = (vari) => {
-      UIStore.set("content", "variationID", this.props.match.params.id)
-      this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(this.props.match.params.id), this.props.match.params.id)
-        :UIStore.set("content", "announcementID", AnnouncementsStore._getAnnouncementIDfromVariation(this.props.match.params.id), this.props.match.params.id)
-      DataEntryStore.set("content", "label", vari.label)
-      DataEntryStore.set("content", "teamID", vari.teamID)
-      DataEntryStore.set("content", "tagID", vari.tags.length === 0? "none" : vari.tags[0])
-      DataEntryStore.set("content", "stage", vari.stage)
-      DataEntryStore.set("content", "contentRAW", vari.contentRAW)
-      DataEntryStore.set("content", "contentHTML", vari.contentHTML)
-      DataEntryStore.set("content", "isNew", false)
-    }
-
-    if(this.mode === "policy"){
-      if(UIStore.content.variationID === "" || this.props.match.params.id !== UIStore.content.variationID){
-        const vari = PoliciesStore._getVariation(PoliciesStore._getPolicyIDfromVariation(this.props.match.params.id), this.props.match.params.id)
-        if(!_.isEmpty(vari) ){load(vari)}
-        else{this.props.history.push("/panel/faqs")}
-      }
-    }
-    else if(this.mode === "announcement") {
-        if(UIStore.content.announcementID === "" || this.props.match.params.id !== UIStore.content.variationID){
-          const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(this.props.match.params.id), this.props.match.params.id)
-          if(!_.isEmpty(vari)){load(vari)}
-          else{this.props.history.push("/panel/announcements")}
-      }}
+    DataEntryStore.reset("content")
+    DataEntryStore.resetDraft()
+    UIStore.reset("content")
   }
 
-  render() {
-    const { DataEntryStore, UIStore } = this.props;
-    const changeStage = (stage) => {
-      DataEntryStore.set("content", "stage", stage)
-      //History
-      if(stage === "published"){
-        if(DataEntryStore.content.isNew){
-          createHistory(history(this.mode, UIStore.content[this.mode + "ID"], content(this.mode)))
-        }
-        else{
-          createHistory(history(this.mode, UIStore.content[this.mode + "ID"], contentEdit(this.mode)))
-        }
+  componentDidMount() {
+    const { UIStore, PoliciesStore, AnnouncementsStore } = this.props;
+    UIStore.set("modal", "uploadAssocEdit", false)
+    const id = this.props.match.params.id;
+    const { content } = UIStore;
+    const { announcementID, variationID } = content;
+
+    if (this.mode === "policy") {
+      if (variationID === "" || id !== variationID){
+        const vari = PoliciesStore._getVariation(PoliciesStore._getPolicyIDfromVariation(id), id)
+        if (!_.isEmpty(vari) ) this.load(vari)
+        else this.props.history.push("/panel/faqs")
       }
-      //Update any links 
-      validateURLs(this.mode)
-      //Push actual content update
-      if(DataEntryStore.content.isNew){
-        this.mode === "policy"? createPolicy(content(this.mode)): createAnnouncement(content(this.mode))
+    }
+    else if (this.mode === "announcement") {
+      if (announcementID === "" || id !== variationID) {
+        const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
+        if (!_.isEmpty(vari)) this.load(vari)
+        else this.props.history.push("/panel/announcements")
       }
-      else{
-        this.mode === "policy"? modifyPolicy(contentEdit(this.mode)): modifyAnnouncement(contentEdit(this.mode))
-      }
-      DataEntryStore.content.isNew? DataEntryStore.set("content", "isNew", false) : null
+    }
+  }
+
+  load(variation) {
+    const { label, teamID, tags, stage, contentRAW, contentHTML } = variation;
+    const { UIStore, AnnouncementsStore, PoliciesStore, DataEntryStore } = this.props;
+    const { id } = this.props.match.params;
+
+    UIStore.set("content", "variationID", id)
+    this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(id), id) : /*null*/
+      UIStore.set("content", "announcementID", AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
+    DataEntryStore.set("content", "label", label)
+    DataEntryStore.set("content", "teamID", teamID)
+    DataEntryStore.set("content", "tagID", tags.length === 0? "none" : tags[0])
+    DataEntryStore.set("content", "stage", stage)
+    DataEntryStore.set("content", "contentRAW", contentRAW)
+    DataEntryStore.set("content", "contentHTML", contentHTML)
+    DataEntryStore.set("content", "isNew", false)
+  }
+
+  changeStage(stage) {
+    const { AnnouncementsStore, DataEntryStore, UIStore, history } = this.props;
+    const { isNew } = DataEntryStore.content;
+    const { mode } = this;
+    DataEntryStore.set("content", "stage", stage)
+
+    if (stage === "published") {
+      // console.log(isNew ? content(mode) : contentEdit(mode))
+      // const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
+      // createHistory(historyMode)
     }
     
-    const newEditVariation =
-      UIStore.content.variationID === "" ? (
-        <div />
-      ) : (
-        <React.Fragment>
-          <PublishControls
-            stage={DataEntryStore.content.stage}
-            onClick={val => {changeStage(val)}}
-          />
+    validateURLs(mode);
+    if (isNew) {
+      (mode === "policy" ? createPolicy(content(mode)) : createAnnouncement(content(mode))).then(res => {
+        AnnouncementsStore.pushAnnouncements(res);
+        UIStore.set("content", "announcementID", res.announcementID)
+        history.push(`/panel/announcements/manage-announcement/${res.announcementID}`);
+      });
+    }
+    else {
+      mode === "policy" ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode));
+    }
+    if (isNew) DataEntryStore.set("content", "isNew", false)
+  }
+  
+  render() {
+    const { DataEntryStore } = this.props;
+    const { content } = DataEntryStore;
+    const { announcementID, variationID, stage } = content;
+    const { mode } = this;
 
-          <VariationConfig
-            mode={this.mode}
-          />
-          <VariationContent mode={this.mode}/>
-        
-          {/* <HoldLeave
-            value={DataEntryStore.isEntryUpdated}
-          /> */}
-        </React.Fragment>
-      );
-
-    return <div className="PolicyFrame">{newEditVariation}</div>;
+    return (
+      <div className="PolicyFrame">
+        {(variationID !== "" || announcementID !== "") && <React.Fragment>
+          <PublishControls stage={stage} onClick={val => this.changeStage(val)}/>
+          <VariationConfig mode={mode}/>
+          <VariationContent mode={mode}/>
+        </React.Fragment>}
+      </div>
+    );
   }
 }
+
+export default NewEditVariation;
+// export default withRouter(NewEditVariation);

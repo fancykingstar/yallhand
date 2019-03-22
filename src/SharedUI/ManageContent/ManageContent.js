@@ -72,11 +72,7 @@ class ManageContent extends React.Component {
         this.props.match.params.id !== UIStore.content.announcementID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (
-          !_.isEmpty(
-            AnnouncementsStore._getAnnouncement(this.props.match.params.id)
-          )
-        ) {
+        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.id))) {
           UIStore.set("content", "announcementID", this.props.match.params.id);
           const obj = Object.assign(
             {},

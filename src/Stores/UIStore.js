@@ -162,7 +162,7 @@ class Store {
     //previewing in display
     @observable content = {
         policyID: "",
-        announcementID: "",
+        // announcementID: "",
         variationID: "",
         history: []
     }

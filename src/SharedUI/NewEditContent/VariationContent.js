@@ -10,7 +10,8 @@ import _ from "lodash";
 export class VariationContent extends React.Component {
   render() {
     const { DataEntryStore } = this.props;
-    const attachedStyle = DataEntryStore.content.isNew? { paddingTop: 35, maxWidth: 450, pointerEvents: "none" }: { paddingTop: 35, maxWidth: 450 }
+    let attachedStyle = {paddingTop: 35, maxWidth: 450}
+    if (DataEntryStore.content.isNew) attachedStyle.pointerEvents = "none";
 
     return (
       <div>

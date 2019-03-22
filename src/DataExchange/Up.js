@@ -1,9 +1,10 @@
-import {apiCall, apiCall_noBody, apiCall_del} from "./Fetch"
-import {AccountStore} from "../Stores/AccountStore"
-import {UserStore} from "../Stores/UserStore"
+import { apiCall, apiCall_noBody, apiCall_del } from "./Fetch"
+import { UIStore } from "../Stores/UIStore";
+import { AccountStore } from "../Stores/AccountStore"
+import { UserStore } from "../Stores/UserStore"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {ItsLog} from "../DataExchange/PayloadBuilder"
+import { ItsLog } from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
 import _ from "lodash";
 
@@ -12,63 +13,47 @@ const accountID = () => AccountStore.account.accountID.slice()
 const userID = () => UserStore.user.userID.slice()
 
 const refresh = {
-    "schedule": () => reload.scheduled(accountID()),
-    "teams": () => reload.structure(accountID()),
-    "tags": () => reload.tags(accountID()),
-    "users": () => reload.users(accountID(), userID()),
-    "channels": () => reload.channels(accountID()),
-    "urlResources": () => reload.urls(accountID()),
-    "policies": () => reload.policies(accountID()),
-    "announcements": () => reload.announcements(accountID()),
-    "files": () => reload.files(accountID()),
-    "bundles": () => reload.bundles(accountID()),
-    "campaigns": () => reload.campaigns(accountID()),
-    "account": () => reload.account(accountID())
+  schedule: () => reload.scheduled(accountID()),
+  teams: () => reload.structure(accountID()),
+  tags: () => reload.tags(accountID()),
+  users: () => reload.users(accountID(), userID()),
+  channels: () => reload.channels(accountID()),
+  urlResources: () => reload.urls(accountID()),
+  policies: () => reload.policies(accountID()),
+  announcements: () => reload.announcements(accountID()),
+  files: () => reload.files(accountID()),
+  bundles: () => reload.bundles(accountID()),
+  campaigns: () => reload.campaigns(accountID()),
+  account: () => reload.account(accountID())
 }
 
-const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true
-) => {
-    console.log("Payload to LB ", endpoint, meth, JSON.stringify(payload))
-    const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
-    // let spinnerDelay = setTimeout(() => UIStore.toggleScreenLoading(), 200)
+const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+  const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
+  return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
-    return callApi(endpoint, meth, payload).then((result) => {
-        if(result.ok){
-            refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
-            if (key === 'users') reload.users_and_teams(accountID(), userID())
-        } else {
-            toast.error(result.statusText, {hideProgressBar: true})
-        }
-    }).then(() => {
-        // clearTimeout(spinnerDelay)
-        // if(UIStore.isScreenLoading){UIStore.toggleScreenLoading()}
+    callApi(endpoint, meth, payload).then((result) => {
+      if(result.ok){
+        refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
+        if (key === 'users') reload.users_and_teams(accountID(), userID());
+        resolve(result);
+      } else {
+        toast.error(result.statusText, {hideProgressBar: true})
+        reject(result);
+      }
     })
+  })
 }
-
-
-
 
 ///LOGS (event type options: create, update, delete)
 export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
 
-
-
-
-
-
 ///Sentiment
 export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
-
-
-
-
 
 ///History
 export const createHistory = (payload) => {
     apiCall("/histories", "POST", payload)
 } 
-
-
 
 ///Notfications
 export const clearNotification = (payload) => {
@@ -89,9 +74,6 @@ export const clearNotification = (payload) => {
     .then(() => refresh[reloadKey]())
 }
 
-
-
-
 ///Account
 export const createAccount = (payload) => {
     return processTemplate(true, "accounts", "POST", payload, "account", 
@@ -105,8 +87,6 @@ export const deleteAccount = (accountID) => {
     true,{"event": "delete", "type":"account"})
 }
 
-
-
 ///SCHEDULE 
 export const createSchedule = (payload, toastEnabled) => {
     return processTemplate(true, "schedules", "POST", payload, "schedule", 
@@ -114,14 +94,12 @@ export const createSchedule = (payload, toastEnabled) => {
         true,{"event": "create", "type":"schedule"}, toastEnabled
     )
 }
+
 export const deleteSchedule = (scheduleID) => {
     processTemplate(false, "schedules/" + scheduleID, "DELETE", {}, "schedule", 
     "Selected schedule deleted 👋", 
     true,{"event": "delete", "type":"schedule"})
 }
-
-
-
 
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
@@ -144,9 +122,6 @@ export const deleteTeam = (teamID) => {
     true,{"event": "delete", "type":"team"})
 }
 
-
-
-
 ///TAGS 
 export const createTag = (payload) => {
     return processTemplate(true, "tags", "POST", payload, "tags", 
@@ -168,9 +143,6 @@ export const deleteTag = (tagID) => {
     true,{"event": "delete", "type": "tag"})
 }
 
-
-
-
 ///USERS
 export const sendInviteEmail = (data) => {
     const inviteURL = process.env.REACT_APP_INVITE_URL;
@@ -182,6 +154,7 @@ export const sendInviteEmail = (data) => {
           })
     })
 }
+
 export const createUser = (payload, toastEnabled) => {
     return processTemplate(true, "users", "POST", payload, "users", 
     `🎉 ${payload.email} has been invited to Join ✉️`, 
@@ -210,12 +183,6 @@ export const deleteUser = (userID) => {
     true,{"event": "delete", "type": "user"})
 }
 
-
-
-
-
-
-
 ///CHANNEL
 export const createChannel = (payload) => {
     processTemplate(true, "channels", "POST", payload, "channels", 
@@ -237,10 +204,6 @@ export const deleteChannel = (chanID) => {
     true,{"event": "delete", "type": "channel"})
 }
 
-
-
-
-
 ///URL Resources
 export const createUrlResource = (payload) => {
     return processTemplate(true, "urls", "POST", payload, "urlResources", 
@@ -248,21 +211,19 @@ export const createUrlResource = (payload) => {
     true,{"event": "create", "type":"url"}
 )
 }
+
 export const modifyUrlResource = (payload, toast=true) => {
     processTemplate(true, "urls/" + payload.resourceID, "PATCH", payload, "urlResources", 
         "Your URL as been updated 🛠☁️", 
         true,{"event": "update", "type":"url"}, toast
     )
 }
+
 export const deleteUrlResource = (resourceID) => {
     processTemplate(false, "urls/" + resourceID, "DELETE", {}, "urlResources", 
     "Selected URL deleted 👋", 
     true,{"event": "delete", "type":"url"})
 }
-
-
-
-
 
 ///FILE RESOURCES
 export const createFile = (payload) => {
@@ -271,21 +232,19 @@ export const createFile = (payload) => {
         true,{"event": "create", "type":"file"}
     )
 }
+
 export const modifyFile = (payload, toast=true) => {
     processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
         true,{"event": "update", "type":"file"}, toast
     )
 }
+
 export const deleteFileresource = (resourceID) => {
     processTemplate(false, "fileresources/" + resourceID, "DELETE", {}, "files", 
     "Selected file deleted 👋", 
     true,{"event": "delete", "type":"file"}), false
 }
-
-
-
-
 
 ///POLICIES AND ANNOUNCEMENTS (SAME DATA SCHEMA)
 export const createPolicy = (payload) => {
@@ -294,24 +253,36 @@ export const createPolicy = (payload) => {
         true,{"event": "create", "type":"policy"}
     )
 }
+
 export const createAnnouncement = (payload) => {
-    return processTemplate(true, "announcements", "POST", payload, "announcements", 
-        "Your new Announcement has been created 🙌", 
-        true,{"event": "create", "type":"announcement"}
-    )
+  const responseText = "Your new Announcement has been created 🙌";
+  const data = { "event": "create", "type": "announcement" };
+  const type = "announcements";
+  delete payload.announcementID
+  return new Promise((resolve, reject) => {
+    processTemplate(true, type, "POST", payload, type,  responseText,  true, data)
+      .then(res => res.json())
+      .then(res => {
+        UIStore.set("content", "announcementID", res.announcementID);
+        resolve(res);
+      })
+  })
 }
+
 export const modifyPolicy = (payload) => {
-    return processTemplate(true, "policies/" + payload.policyID, "PATCH", payload, "policies", 
+  return processTemplate(true, "policies/" + payload.policyID, "PATCH", payload, "policies", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
-)
+  )
 }
+
 export const modifyAnnouncement = (payload) => {
     return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
 )
 }
+
 export const deletePolicy = (policyID) => {
     return processTemplate(false, "policies/" + policyID, "DELETE", {}, "policies", 
     "Selected policy deleted 👋", 
@@ -323,7 +294,6 @@ export const deleteAnnouncement = (announcementID) => {
     "Selected announcement deleted 👋", 
     true,{"event": "delete", "type":"announcement"}), false
 }
-
 
 ///EMAIL CAMPAIGN --- BUNDLE
 export const modifyBundle = (payload, toastEnabled) => {
@@ -353,6 +323,7 @@ export const createCampaign = (payload, toastEnabled) => {
         true,{"event": "create", "type":"campaign"}, toastEnabled
     )
 }
+
 export const modifyCampaign = (payload) => {
     const msg = payload.completed? "The selected campaign has been discontinued 🛑" :"Your campaign has been updated 🛠"
     return processTemplate(true, "emailcampaigns/" + payload.campaignID, "PATCH", payload, "campaigns", 
@@ -361,10 +332,6 @@ export const modifyCampaign = (payload) => {
 )
 }
 
-
-
-
-
 ///SETTINGS
 export const modifyAccount = (payload) => {
     return processTemplate(true, "accounts/" + payload.accountID, "PATCH", payload, "account", 
@@ -372,13 +339,6 @@ export const modifyAccount = (payload) => {
     true,{"event": "update", "type":"account"}
 )
 }
-
-
-
-
-
-
-
 
 ////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
 

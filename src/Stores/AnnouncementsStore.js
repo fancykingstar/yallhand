@@ -19,6 +19,10 @@ class Store {
   loadUserPortalAnnouncements(val) {
     this.userAvailableAnnouncements = val;
   }
+  pushAnnouncements(val) {
+    this.userAvailableAnnouncements.push(val);
+    this.allAnnouncements.push(val);
+  }
   _getAnnouncement(id){
     if(this.allAnnouncements.filter(annc => annc.announcementID === id).length > 0){
       return Object.assign({}, this.allAnnouncements.filter(annc => annc.announcementID === id)[0])

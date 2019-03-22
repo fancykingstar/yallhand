@@ -7,7 +7,7 @@ import { inject, observer } from "mobx-react";
 import { Switch, Route } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
 import { CardFrame } from "./CardFrame/CardFrame";
-import { NewEditVariation } from "./SharedUI/NewEditContent/NewEditVariation";
+import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
@@ -58,7 +58,6 @@ export class AdminPanel extends React.Component {
 
     const superAdminPath = UserStore.user !== null && UserStore.user.isSuperAdmin !== undefined && UserStore.user.isSuperAdmin === true? <Route path="/panel/superadmin" component={SuperAdminFrame} exact /> : null
 
-
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
     ) : (
@@ -79,7 +78,10 @@ export class AdminPanel extends React.Component {
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
-            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" />} />{" "} />
+            <Route path="/panel/faqs/policy-variation/:id" render={props => {
+              console.log('props', props)
+              return <NewEditVariation {...props} mode="policy" />
+            }} />
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>

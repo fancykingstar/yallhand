@@ -1,6 +1,6 @@
 import React from 'react'
 import {generateID} from "../SharedCalculations/GenerateID"
-import {NewEditVariation} from "../SharedUI/NewEditContent/NewEditVariation"
+import NewEditVariation from "../SharedUI/NewEditContent/NewEditVariation"
 
 
 
