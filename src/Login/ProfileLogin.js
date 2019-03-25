@@ -21,7 +21,10 @@ class ProfileLogin extends React.Component {
     apiCall('users/login', 'POST', {email: this.state.email, password: this.state.password})
       .then((res) => res.json())
       .then((res) => {
-        if (res.error) return this.setState({errorMsg: 'Connection error (Email / Password is invalid)'})
+        if (res.error) {
+          if (res.error.message && res.error.message === 'Denied: unauthorized access') return this.setState({errorMsg: res.error.message})
+          else return this.setState({errorMsg: 'Connection error (Email / Password is not good)'})
+        }
         if (res.token) {
           setUser({token: res.token})
           history.push('/panel')
@@ -40,7 +43,7 @@ class ProfileLogin extends React.Component {
   }
   
   render () {
-    const { successMsg ,errorMsg, email_disable, isForgot } = this.state
+    const { successMsg, errorMsg, email_disable, isForgot } = this.state
     return (
       <React.Fragment>
         <div className="ContainerLogin">
