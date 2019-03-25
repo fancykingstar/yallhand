@@ -1,16 +1,11 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-
 import { AdminDesktop } from "./AdminDesktop"
 import { AdminMobile } from "./AdminMobile"
 import { PortalMobile } from "./PortalMobile"
 import  PortalDesktop  from "./PortalDesktop"
 import "./style.css";
-
-import {buildEmail} from "../Scripts/BuildEmail"
-import { EmailStore } from "../Stores/EmailStore";
-
 
 @inject("TeamStore", "UserStore", "UIStore")
 @observer

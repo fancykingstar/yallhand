@@ -12,7 +12,7 @@ import { DraftFormField } from "../../SharedUI/DraftFormField";
 import { ConfirmDelete } from "../ConfirmDelete";
 import { InfoPopUp } from "../../SharedUI/InfoPopUp";
 import { inject, observer } from "mobx-react";
-import { uploadBundle, mergeBundle, createBundle, modifyBundle } from "../../DataExchange/Up";
+import {  createBundle, modifyBundle } from "../../DataExchange/Up";
 import { bundle, bundleMerged } from "../../DataExchange/PayloadBuilder";
 import _ from "lodash";
 import { flashQueue } from "../../SharedCalculations/FlashQueue";
