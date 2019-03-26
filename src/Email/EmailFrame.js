@@ -8,6 +8,9 @@ import { inject, observer } from "mobx-react";
 import { modifyBundle, createBundle } from "../DataExchange/Up";
 import { queueEdit, queueCreate } from "../DataExchange/PayloadBuilder";
 
+import {EmailPrimary} from "./EmailPrimary" 
+import { SendOptions } from "./SendOptions";
+
 @inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
 export class EmailFrame extends React.Component {
@@ -45,7 +48,8 @@ export class EmailFrame extends React.Component {
     const isVisable = name => {
       return name === UIStore.menuItem.emailFrame ? "Visable" : "Hidden";
     };
-    const menuItems = ["queue", "bundles", "send email", "automations"];
+    const menuItems = ["send email", "saved templates", "automations"];
+    // const menuItems = ["queue", "bundles", "send email", "automations"];
     const handleSearch = val => {
       UIStore.set("search", "searchBundles", val);
     };
@@ -60,22 +64,23 @@ export class EmailFrame extends React.Component {
           searchOutput={handleSearch}
         />
         <div className="TeamActionFrame">
-          <div className={isVisable("queue")}>
-            {" "}
-            <Queue />
-          </div>
+       
           <div className={isVisable("send email")}>
             {" "}
-            <SendEmail />
+            <EmailPrimary/>
           </div>
-          <div className={isVisable("bundles")}>
+      <div className={isVisable("send options")}>
+            {" "}
+            <SendOptions/>
+          </div>
+             {/*  <div className={isVisable("bundles")}>
             {" "}
             <Bundles />
           </div>
           <div className={isVisable("automations")}>
             {" "}
             <Automations />
-          </div>
+          </div> */}
         </div>
       </div>
     );

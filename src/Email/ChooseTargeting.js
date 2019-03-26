@@ -94,31 +94,32 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
         </Form>
       );
     return (
-      <Segment>
+      // <Segment>
         <div style={{ minWidth: 400 }}>
-          <Header>Choose Targeting</Header>
-          <span>
-            Target by{" "}
+          <span style={{fontSize: ".9em"}}>
+          Send Email{" "}
             <Dropdown
               inline
               onChange={(e, val) =>
                 DataEntryStore.set("emailCampaign", "sendTargetType", val.value)
               }
               options={[
-                { text: "Teams", value: "teams" },
-                { text: "Users", value: "users" }
+                { text: "To Everyone", value: "all" },
+                { text: "To Select Teams", value: "teams" },
+                { text: "To Select Users", value: "users" }
               ]}
               value={DataEntryStore.emailCampaign.sendTargetType}
             />
           </span>
 
-          {targetOptions}
+          {DataEntryStore.emailCampaign.sendTargetType === "all"? <div/> : targetOptions}
+
           {/* <p>
             <span>Email Variations Created: </span>
             <span style={{ marginTop: 5, fontStyle: "italic" }}> 3</span>
           </p> */}
         </div>
-      </Segment>
+      // </Segment>
     );
   })
 );

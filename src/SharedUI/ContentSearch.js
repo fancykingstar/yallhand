@@ -96,7 +96,7 @@ export class ContentSearch extends React.Component {
 
     return (
       <div className="ContentSearchFrame">
-        <p style={{ fontWeight: "800", color: "black" }}>Search and Add</p>
+        <p style={{ fontWeight: "800", color: "black" }}>Search and Add Content</p>
         <Search
           className="ContentSearch"
           // fluid

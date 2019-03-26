@@ -202,7 +202,7 @@ class Store {
     selectedUsers: [],
     previewUser: "",
     previewUsers: [],
-    sendTargetType: "teams",
+    sendTargetType: "all",
     sendEmailsConfig: "now",
     sendTriggerEvent: "",
     sendTriggerDelay: 0,

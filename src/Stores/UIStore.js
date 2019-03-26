@@ -119,7 +119,8 @@ class Store {
     menuItem = {
         teamFrame: "onboard",
         resourcesFrame: "URL",
-        emailFrame: "queue",
+        emailFrame: "send email",
+        sendEmailBody: "message",
         analyticsHeader: "announcements",
         superAdminFrame: "edit account"
     }
