@@ -3,7 +3,6 @@ export const validContent = (allItems, teamPath, tagPath) => {
 
   const publishedOnly = (allContent) => {
     let published = []
-    console.log("allcontent", allContent)
     allContent.forEach(content => {
       const avail = content.variations.filter(vari => vari.stage === "published")
       if(avail.length > 0){

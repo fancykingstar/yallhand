@@ -4,12 +4,12 @@ import { Search } from "semantic-ui-react";
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import _ from "lodash";
 
-@inject("UIStore", "ResourcesStore")
+@inject("UIStore")
 @observer
 export class URLsSearch extends React.Component {
   constructor(props) {
     super(props);
-    const { UIStore, ResourcesStore } = this.props;
+    const { UIStore } = this.props;
     this.resetComponent = () => {
       UIStore.set("search", "URLResults", {});
       UIStore.set("search", "URLValue", "");

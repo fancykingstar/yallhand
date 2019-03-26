@@ -249,6 +249,8 @@ class Store {
   @observable
   superAdmin = {
     allAccounts: [],
+    allUsers:[],
+    userSelected: "",
     previewAccount: "",
     accountArmed: false,
     accountLabel: "",
