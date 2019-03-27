@@ -22,7 +22,6 @@ export class FilesSearch extends React.Component {
 
 
     this.resetComponent();
-    console.log('---', ResourcesStore)
     if (UIStore.search.searchFilesData.length === 0) {
       UIStore.set(
         "search",
