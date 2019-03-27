@@ -2,7 +2,6 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory } from "../../DataExchange/Up"
 import { content, contentEdit } from "../../DataExchange/PayloadBuilder"
-// import { withRouter } from "react-router-dom";
 import { VariationContent } from "./VariationContent";
 import { VariationConfig } from "./VariationConfig";
 import { PublishControls } from "./PublishControls";
@@ -26,7 +25,7 @@ class NewEditVariation extends React.Component {
     const { DataEntryStore, UIStore } = this.props;
     DataEntryStore.reset("content")
     DataEntryStore.resetDraft()
-    UIStore.reset("content")
+    // UIStore.reset("content")
   }
 
   componentDidMount() {
@@ -70,7 +69,7 @@ class NewEditVariation extends React.Component {
   }
 
   changeStage(stage) {
-    const { AnnouncementsStore, DataEntryStore, UIStore, history } = this.props;
+    const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
     const { isNew } = DataEntryStore.content;
     const { mode } = this;
     DataEntryStore.set("content", "stage", stage)
@@ -82,16 +81,20 @@ class NewEditVariation extends React.Component {
     }
     
     validateURLs(mode);
+    const isPolicy = mode === "policy";
+    const typeId = `${mode}ID`;
     if (isNew) {
-      (mode === "policy" ? createPolicy(content(mode)) : createAnnouncement(content(mode))).then(res => {
-        AnnouncementsStore.pushAnnouncements(res);
-        UIStore.set("content", "announcementID", res.announcementID)
-        history.push(`/panel/announcements/manage-announcement/${res.announcementID}`);
+      (isPolicy ? createPolicy(content(mode)) : createAnnouncement(content(mode))).then(res => {
+        if (isPolicy) PoliciesStore.pushPolicies(res);
+        else AnnouncementsStore.pushAnnouncements(res);
+        const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
+        const id = res[typeId];
+        UIStore.set("content", typeId, id);
+        // UIStore.set("content", "variationID", id);
+        history.push(`${path}${res[id]}`);
       });
     }
-    else {
-      mode === "policy" ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode));
-    }
+    else isPolicy ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode));
     if (isNew) DataEntryStore.set("content", "isNew", false)
   }
   
@@ -114,4 +117,3 @@ class NewEditVariation extends React.Component {
 }
 
 export default NewEditVariation;
-// export default withRouter(NewEditVariation);

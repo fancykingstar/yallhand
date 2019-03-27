@@ -161,7 +161,7 @@ class Store {
 
     //previewing in display
     @observable content = {
-        policyID: "",
+        // policyID: "",
         // announcementID: "",
         variationID: "",
         history: []
@@ -175,6 +175,7 @@ class Store {
     @action
     set(target, key, val){
         try {
+          // console.log(key, val)
         this.keys[target][key] = val
         }
         catch (error) {

@@ -27,9 +27,7 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
               label={"Limit Access To Teams"}
               placeholder="choose team..."
               value={DataEntryStore.emailCampaign.selectedTeamID}
-              outputVal={val =>
-                DataEntryStore.set("emailCampaign", "selectedTeamID", val)
-              }
+              outputVal={val => DataEntryStore.set("emailCampaign", "selectedTeamID", val.value)}
             />
             <TagSelect
               label={"Limit Access By Tag"}
@@ -56,9 +54,7 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
               placeholder="Select User"
               search
               selection
-              onChange={(e, val) =>
-                DataEntryStore.set("emailCampaign", "selectedUser", val.value)
-              }
+              onChange={(e, val) => DataEntryStore.set("emailCampaign", "selectedUser", val.value)}
               value={DataEntryStore.emailCampaign.selectedUser}
               options={AccountStore._getUsersSelectOptions()}
             />
@@ -101,9 +97,7 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
             Target by{" "}
             <Dropdown
               inline
-              onChange={(e, val) =>
-                DataEntryStore.set("emailCampaign", "sendTargetType", val.value)
-              }
+              onChange={(e, val) =>  DataEntryStore.set("emailCampaign", "sendTargetType", val.value)}
               options={[
                 { text: "Teams", value: "teams" },
                 { text: "Users", value: "users" }

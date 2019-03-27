@@ -248,15 +248,27 @@ export const deleteFileresource = (resourceID) => {
 
 ///POLICIES AND ANNOUNCEMENTS (SAME DATA SCHEMA)
 export const createPolicy = (payload) => {
-    return processTemplate(true, "policies", "POST", payload, "policies", 
-        "Your new FAQ has been created 🙌", 
-        true,{"event": "create", "type":"policy"}
-    )
+  const responseText = "Your new FAQ has been created 🙌";
+  const data = { event: "create", type: "policy"};
+  const type = "policies";
+  delete payload.policyID
+  return new Promise((resolve, reject) => {
+    processTemplate(true, type, "POST", payload, type,  responseText,  true, data)
+      .then(res => res.json())
+      .then(res => {
+        UIStore.set("content", "policyID", res.policyID);
+        resolve(res);
+      })
+  })
+  // return processTemplate(true, "policies", "POST", payload, "policies", 
+  //   "Your new FAQ has been created 🙌", 
+  //   true,{"event": "create", "type":"policy"}
+  // )
 }
 
 export const createAnnouncement = (payload) => {
   const responseText = "Your new Announcement has been created 🙌";
-  const data = { "event": "create", "type": "announcement" };
+  const data = { event: "create", type: "announcement" };
   const type = "announcements";
   delete payload.announcementID
   return new Promise((resolve, reject) => {

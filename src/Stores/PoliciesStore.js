@@ -14,6 +14,10 @@ class Store {
 
   }
 
+  pushPolicies(val) {
+    this.allPolicies.push(val);
+  }
+
   sourcePolicyFriendly(id) {
     let policyFriendly = "";
     const getFriendly = () => {

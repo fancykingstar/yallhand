@@ -23,9 +23,13 @@ export class AnnouncementFilter extends React.Component {
     const counts = () => {
       let anncFilterCountsLocal = { published: 0, drafts: 0, archived: 0 };
       AnnouncementsStore.allAnnouncements.forEach(annc => {
-        let val = anncFilterToStage[annc.state].toLowerCase();
-        let current = val.split("anncfilter")[1];
-        anncFilterCountsLocal[current]++;
+        try {
+          let val = anncFilterToStage[annc.state].toLowerCase();
+          let current = val.split("anncfilter")[1];
+          anncFilterCountsLocal[current]++; 
+        } catch (e) {
+          console.log(e)
+        }
       });
       return anncFilterCountsLocal;
     };

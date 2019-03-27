@@ -17,8 +17,9 @@ export class EmailFrame extends React.Component {
     this.updateQueue = () => {
       if (UIStore.menuItem.emailFrame === "queue" && EmailStore.allBundles.filter(i => i.isQueue).length > 0) {
         modifyBundle(queueEdit(), false).then(() => {
-          DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
-          DataEntryStore.resetDraft()
+          // Something strange here, why it reset the current bundle infos and make it impossible to edit it
+          // DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
+          // DataEntryStore.resetDraft()
         })
       }
       else {
@@ -28,52 +29,45 @@ export class EmailFrame extends React.Component {
           DataEntryStore.resetDraft()
         })
       }
-      DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
-      DataEntryStore.resetDraft()
+      // Something strange here, why it reset the current bundle infos and make it impossible to edit it
+      // DataEntryStore.reset("emailCampaign", {sendEmailsConfig: "now"});
+      // DataEntryStore.resetDraft()
     }
   }
+
   componentWillUnmount() {
     this.updateQueue()
   }
   
   render() {
     const { UIStore } = this.props;
-    const handleItemClick = (e, { name }) => {
-      UIStore.set("menuItem", "emailFrame", name);
-    };
-
-    const isVisable = name => {
-      return name === UIStore.menuItem.emailFrame ? "Visable" : "Hidden";
-    };
+    const { menuItem } = UIStore;
+    const { emailFrame } = menuItem;
+    const handleItemClick = (e, { name }) => UIStore.set("menuItem", "emailFrame", name);
+    const isVisable = name => name === emailFrame ? "Visable" : "Hidden";
+    const handleSearch = val => UIStore.set("search", "searchBundles", val);
     const menuItems = ["queue", "bundles", "send email", "automations"];
-    const handleSearch = val => {
-      UIStore.set("search", "searchBundles", val);
-    };
 
     return (
       <div>
         <SecondaryMenu
           menuItems={menuItems}
-          activeItem={UIStore.menuItem.emailFrame}
+          activeItem={emailFrame}
           handleClick={handleItemClick}
-          useSearch={UIStore.menuItem.emailFrame === "bundles"}
+          useSearch={emailFrame === "bundles"}
           searchOutput={handleSearch}
         />
         <div className="TeamActionFrame">
           <div className={isVisable("queue")}>
-            {" "}
             <Queue />
           </div>
           <div className={isVisable("send email")}>
-            {" "}
             <SendEmail />
           </div>
           <div className={isVisable("bundles")}>
-            {" "}
             <Bundles />
           </div>
           <div className={isVisable("automations")}>
-            {" "}
             <Automations />
           </div>
         </div>
