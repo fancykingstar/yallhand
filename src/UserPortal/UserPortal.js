@@ -11,7 +11,6 @@ import AnnouncementsFrame from "./AnnouncementsFrame";
 import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
-import { loadAdmin } from "../DataExchange/LoadProfile";
 import { Responsive, Transition } from "semantic-ui-react";
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")

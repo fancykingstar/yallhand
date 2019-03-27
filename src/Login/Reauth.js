@@ -46,7 +46,7 @@ class Reauth extends React.Component {
               clientId={process.env.REACT_APP_GMAIL}
               render={renderProps => (
                 <button className="ui small icon primary left labeled button" style={style} onClick={renderProps.onClick} role="button">
-                  <i aria-hidden="true" className="google icon"></i>Login with G-Suite
+                  <i aria-hidden="true" className="google icon"></i>Login with Google
                 </button>
               )}
               onSuccess={(e) => this.responseGoogle(e)}

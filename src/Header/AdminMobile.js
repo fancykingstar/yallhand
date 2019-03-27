@@ -6,13 +6,21 @@ import {Icon} from "semantic-ui-react"
 
 export const AdminMobile = inject("UIStore")(observer((props) => {
     const {UIStore} = props
+
+    const style = () => {
+      let output = {}
+      if(!UIStore.responsive.isMobile){ output.display = "none" }
+      if(UIStore.responsive.mobileNav){output.color = "#2FC7F8"} 
+      else{output.color = "#000000"}
+      return output
+    }
+
     return(
         <div> 
             <div className="Hamburger">
           <Icon
             onClick={e => UIStore.set( "responsive", "mobileNav", !UIStore.responsive.mobileNav ) }
-            style={!UIStore.responsive.isMobile ? { display: "none" } : null }
-            style={ UIStore.responsive.mobileNav ? { color: "#2FC7F8" } : { color: "#000000" } }
+            style={style()}
             name="bars"
             size="large"
 

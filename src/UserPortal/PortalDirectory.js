@@ -7,19 +7,19 @@ export const PortalDirectory = () => {
 
   const cardMeta = (user) => {
     let meta = []
-    user.profile.Department === ""? null : meta.push(<Card.Meta key={giveMeKey()} ><a style={{color: "#17b0e4"}} href={`mailto:${user.email}`}><Icon name="mail"/> {user.email}</a></Card.Meta>)
-    user.profile.Department === ""? null : meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="map marker alternate"/> {user.profile.Location}</Card.Meta>)
-    user.profile.Department === ""? null : meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="phone"/>  {user.profile["Phone or Extension"]}</Card.Meta>)
-    user.profile.Department === ""? null : meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="mobile alternate"/> {user.profile.Mobile}</Card.Meta>)
+    if(user.profile.Department !== "") {meta.push(<Card.Meta key={giveMeKey()} ><a style={{color: "#17b0e4"}} href={`mailto:${user.email}`}><Icon name="mail"/> {user.email}</a></Card.Meta>)}
+    if(user.profile.Department !== "") {meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="map marker alternate"/> {user.profile.Location}</Card.Meta>)}
+    if(user.profile.Department !== "") {meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="phone"/>  {user.profile["Phone or Extension"]}</Card.Meta>)}
+    if(user.profile.Department !== "") {meta.push(<Card.Meta key={giveMeKey()} style={{color: "#000000"}}><Icon name="mobile alternate"/> {user.profile.Mobile}</Card.Meta>)}
     return meta
 }
 
   const socials = (user) => {
       let socials = []
-      user.profile.Twitter === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://twitter.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="twitter"/>Twitter</a></p>)
-      user.profile.Medium === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://medium.com/@${user.profile.Medium}`} target="_blank"><Icon key={giveMeKey()} name="medium"/>Medium</a></p>)
-      user.profile.Github === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://github.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="github"/>Github</a></p>)
-      user.profile.LinkedIn === ""? null : socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://linkedin.com/${user.profile.LinkedIn}`} target="_blank"><Icon key={giveMeKey()} name="linkedin"/>LinkedIn</a></p>)
+      if(user.profile.Twitter !== "") {socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://twitter.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="twitter"/>Twitter</a></p>)}
+      if(user.profile.Medium !== "") {socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://medium.com/@${user.profile.Medium}`} target="_blank"><Icon key={giveMeKey()} name="medium"/>Medium</a></p>)}
+      if(user.profile.Github !== "") {socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://github.com/${user.profile.Twitter}`} target="_blank"><Icon key={giveMeKey()} name="github"/>Github</a></p>)}
+      if(user.profile.LinkedIn !== "") {socials.push(<p key={giveMeKey()}><a style={{color: "#17b0e4"}} href={`https://linkedin.com/${user.profile.LinkedIn}`} target="_blank"><Icon key={giveMeKey()} name="linkedin"/>LinkedIn</a></p>)}
       return socials
     }
 
