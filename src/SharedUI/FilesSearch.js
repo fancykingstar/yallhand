@@ -4,7 +4,7 @@ import { Search, Icon } from "semantic-ui-react";
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import _ from "lodash";
 
-@inject("UIStore")
+@inject("UIStore", "ResourcesStore")
 @observer
 export class FilesSearch extends React.Component {
   constructor(props) {
@@ -22,6 +22,7 @@ export class FilesSearch extends React.Component {
 
 
     this.resetComponent();
+    console.log('---', ResourcesStore)
     if (UIStore.search.searchFilesData.length === 0) {
       UIStore.set(
         "search",
