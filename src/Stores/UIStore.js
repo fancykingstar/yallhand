@@ -13,6 +13,7 @@ class Store {
         "button": this.button,
         "sideNav": this.sideNav,
         "filter": this.filter,
+        "message": this.message,
         "content": this.content,
         "dateTimeSelect": this.dateTimeSelect,
         "responsive": this.responsive,
@@ -121,6 +122,7 @@ class Store {
         resourcesFrame: "URL",
         emailFrame: "send email",
         sendEmailBody: "message",
+        sendEmailOption: "schedule",
         analyticsHeader: "announcements",
         superAdminFrame: "edit account"
     }
@@ -135,6 +137,12 @@ class Store {
         date: "",
         time: "",
 
+    }
+
+    @observable
+    message = {
+        sendNow: "",
+        sendLater: ""
     }
 
     @observable adminLoadingComplete = {

@@ -1,6 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Form, Icon, Button, Checkbox } from "semantic-ui-react";
+import { Segment, Header, Menu, Form, Icon, Button, Checkbox, Message } from "semantic-ui-react";
 import { ChooseTargeting } from "./ChooseTargeting";
 import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 import { ContentSearch } from "../SharedUI/ContentSearch";
@@ -28,21 +28,26 @@ export class EmailPrimary extends React.Component {
   render() {
       const {EmailStore, UIStore, DataEntryStore} = this.props
       
-      const x = DataEntryStore.emailCampaign
-      const y = UIStore.menuItem.sendEmailBody
       const canSubmit = () => {
-        let validations = {subject: false, targets: false, content: false}
-        if(y === "message" && DataEntryStore.draft.draftContentHTML !== "" && DataEntryStore.draft.draftContentHTML === "<p><br></p>"){validations.content = true}
-        // else if(y === "messagecontent" && (DataEntryStore.draft.draftContentHTML !== "" || DataEntryStore.draft.draftContentHTML === "<p><br></p>") && x.sendContent.length > 0){validations.content = true}
-        // else if(y === "content" && x.sendContent.length > 0){validations.content = true}
-        // if(x.sendTargetType === "all" ||  (x.sendTargetType === "users" && x.sendToUsers.length > 0)){validations.targets = true}
-        // if(x.sendSubject !== ""){validations.subject = true}
-        console.log(validations)
+        let validations = {subject: false, targets: false, content: false}        
+        if(UIStore.menuItem.sendEmailBody === "message" && DataEntryStore.draftContentHTML !== "" && DataEntryStore.draftContentHTML !== "<p><br></p>"){validations.content = true}
+        else if(UIStore.menuItem.sendEmailBody=== "messagecontent" && (DataEntryStore.draft.draftContentHTML !== "" || DataEntryStore.draft.draftContentHTML === "<p><br></p>") && DataEntryStore.emailCampaign.sendContent.length > 0){validations.content = true}
+        else if(UIStore.menuItem.sendEmailBody=== "content" && DataEntryStore.emailCampaign.sendContent.length > 0){validations.content = true}
+        if(DataEntryStore.emailCampaign.sendTargetType === "all" || DataEntryStore.emailCampaign.sendTargetType === "teams" ||  (DataEntryStore.emailCampaign.sendTargetType === "users" && DataEntryStore.emailCampaign.sendToUsers.length > 0)){validations.targets = true}
+        if(DataEntryStore.emailCampaign.sendSubject !== ""){validations.subject = true}
+        //Messages
+        if(!validations.content){UIStore.set("message", "sendNow", "Whoops, please make sure you added the appropriate message or content")}
+        else if(!validations.targets){UIStore.set("message", "sendNow", "Whoops, please add recipients to send this to")}
+        else if(!validations.subject){UIStore.set("message", "sendNow", "All emails need a subject, can you please add one?")}
+        else { UIStore.set("message", "sendNow", "") }
         return !Object.values(validations).includes(false)
       }
 
-      const bundlePopulated =
-      DataEntryStore.emailCampaign.sendContent.length === 0;
+      const sendNow = () => {
+        if(canSubmit()) {console.log("send email now")}
+      }
+
+      const bundlePopulated = DataEntryStore.emailCampaign.sendContent.length === 0;
 
       const updateSelectedContent = (item) => {
         if(item.type === "policy") {
@@ -88,7 +93,6 @@ export class EmailPrimary extends React.Component {
           )
         );
       };
-      console.log(canSubmit())
     return (
       <div style={{maxWidth: 650}}>
           <Header as="h2">
@@ -146,21 +150,14 @@ export class EmailPrimary extends React.Component {
          
         <br/>
         <div style={DataEntryStore.emailCampaign.loadedTemplateSubject !== DataEntryStore.emailCampaign.sendSubject? {paddingBottom: 5}:{display: "none"}}  > <Checkbox checked={DataEntryStore.emailCampaign.sendSaveTemplate}  onClick={(e, data) => DataEntryStore.set("emailCampaign", "sendSaveTemplate", data.checked)} label="Use as template in the future"/> </div>
-      
-        <Button icon primary labelPosition="left"
-          disabled={!canSubmit()}
-            // onClick={e => {
-            //   createCampaign(emailCampaign(true)).then(() => UIStore.set("menuItem", "emailFrame", "outbound"))
-            // }}
-          >
-          
-            <Icon name="send" /> Send Now
-          </Button>
+        <Button icon primary labelPosition="left" onClick={e => sendNow()} > <Icon name="send"/> Send Now </Button>
           <Button 
-          disabled={!canSubmit()}
-          onClick={e => UIStore.set("menuItem", "emailFrame", "send options")} > Preview & Options... </Button>
+          onClick={e => {if(canSubmit()) UIStore.set("menuItem", "emailFrame", "send options")}} > Preview & Options... </Button>
           <div style={UIStore.responsive.isMobile? {paddingTop: 10}: {float: "right"}}> 
           <Button onClick={e => this.resetEmail()}> Clear All </Button> </div>
+          <Message error hidden={UIStore.message.sendNow === ""}>
+            {UIStore.message.sendNow}
+          </Message>
         </Segment>
         <br/>
 

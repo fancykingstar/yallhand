@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Segment, Header, Icon, Form, Checkbox, Menu, Button } from "semantic-ui-react";
+import { Segment, Header, Icon, Form, Checkbox, Menu, Button, Message } from "semantic-ui-react";
 import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 
@@ -14,6 +14,19 @@ export class SendOptions extends React.Component {
     const createCampaign = () => {};
     const emailCampaign = {};
 
+    const sendLater = () => {
+      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? console.log("schedule email later") : console.log("start automation")
+    }
+
+    const canSubmit = () => {
+      let validations = {datetime: false}        
+      if(UIStore.menuItem.sendEmailOption !== "schedule" ||  DataEntryStore.emailCampaign.sendNext !== 0){validations.datetime = true}
+      //Messages
+      if(!validations.datetime){UIStore.set("message", "sendLater", "Whoops, please make sure you add a date")}
+      else { UIStore.set("message", "sendLater", "") }
+      return !Object.values(validations).includes(false)
+    }
+
     const addUser = (user, allUsers, key) => {
       if (validateAdd(user, allUsers) !== null) {
         let newArry = DataEntryStore.emailCampaign.previewUsers;
@@ -22,7 +35,7 @@ export class SendOptions extends React.Component {
       }
     };
 
-    const displaySendOption = DataEntryStore.emailCampaign.sendOption === "schedule"? 
+    const displaySendOption = UIStore.menuItem.sendEmailOption === "schedule"? 
     <React.Fragment>
        <Form>
               <Form.Group>
@@ -131,16 +144,16 @@ export class SendOptions extends React.Component {
           <Menu vertical={UIStore.responsive.isMobile} compact size="tiny">
             <Menu.Item
               as="a"
-              active={DataEntryStore.emailCampaign.sendOption === "schedule"}
-              onClick={e => DataEntryStore.set("emailCampaign", "sendOption", "schedule")}
+              active={UIStore.menuItem.sendEmailOption === "schedule"}
+              onClick={e => UIStore.set("menuItem", "sendEmailOption", "schedule")}
             >
               {" "}
               Schedule To Send Later
             </Menu.Item>
             <Menu.Item
               as="a"
-              active={DataEntryStore.emailCampaign.sendOption === "automate"}
-              onClick={e => DataEntryStore.set("emailCampaign", "sendOption", "automate")} >
+              active={UIStore.menuItem.sendEmailOption === "automate"}
+              onClick={e => UIStore.set("menuItem", "sendEmailOption", "automate")}>
               {" "}
               Onboard/Offboard Automations{" "}
             </Menu.Item>
@@ -151,20 +164,15 @@ export class SendOptions extends React.Component {
             <Button
               icon
               primary
-              disabled={
-                DataEntryStore.emailCampaign.sendAutomationEvent === "" &&
-                DataEntryStore.emailCampaign.sendNext === 0
-              }
               labelPosition="left"
-              onClick={e => {
-                createCampaign(emailCampaign()).then(
-                  UIStore.set("menuItem", "emailFrame", "outbound")
-                );
-              }}
+              onClick={e => sendLater()}
             >
               <Icon name="send" /> Send Later
             </Button>
           </div>
+          <Message error hidden={UIStore.message.sendLater === ""}>
+            {UIStore.message.sendLater}
+          </Message>
         </Segment>
         <br />
       </div>
