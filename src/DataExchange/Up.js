@@ -377,8 +377,18 @@ export const deactivateUser = (val) => {
     setTimeout(() => {console.log("user deactivated", val)}, 1000)
 }
 
-export const sendEmailPreview = (val) => {
-    setTimeout(() => {console.log("Preview Sent", val)}, 1000)
+
+export const sendEmailPreview = async (val) => {
+  console.log(val)
+  const previewValues = {
+    isSendNow: true,
+    archiveAfter: true,
+    completed: false,
+  };
+
+  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json()).then(res => {
+    console.log(res)
+  })
 }
 
 // export const sendEmailNow = (val) => {
