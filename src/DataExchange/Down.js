@@ -17,7 +17,7 @@ const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag
 
 export const account = async (accountID) => {
   const result = await apiCall_noBody("accounts/" + accountID, "GET")
-  AccountStore.loadAccount(result.length>0? result[0]: {accountID: "*", img: ""})
+  // AccountStore.loadAccount(result.length>0? result[0]: {accountID: "*", img: ""})
 
   return result
 }

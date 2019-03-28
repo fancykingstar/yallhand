@@ -4,7 +4,7 @@ import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import Header from "./Header/Header";
 import { Responsive, Transition } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
 import { CardFrame } from "./CardFrame/CardFrame";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
@@ -78,10 +78,7 @@ export class AdminPanel extends React.Component {
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
-            <Route path="/panel/faqs/policy-variation/:id" render={props => {
-              console.log('props', props)
-              return <NewEditVariation {...props} mode="policy" />
-            }} />
+            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/>
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
@@ -99,6 +96,9 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
             <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
             <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
+            <Route path="/panel/*">
+                <Redirect push to="/panel"/>
+           </Route>
 
           </Switch>
         </div>

@@ -181,35 +181,59 @@ class Store {
 
   @observable emailCampaign = {
     //queue
-    queueID: "",
-    queue: [],
-    queueLabel: "",
-    queueSubject: "",
-    queueSaveSelect: "",
+
+    // queueID: "",
+    // queue: [],
+    // queueLabel: "",
+    // queueSubject: "",
+    // queueSaveSelect: "",
+
     //bundle
-    editBundleID: "",
-    editBundleStage: "",
-    editBundleLabel: "",
-    editBundleSubject: "",
-    editBundleContentRAW: {},
-    editBundleSaveSelect: "",
-    editBundleBundle: [],
+    // editBundleID: "",
+    // editBundleStage: "",
+    // editBundleLabel: "",
+    // editBundleSubject: "",
+    // editBundleContentRAW: {},
+    // editBundleSaveSelect: "",
+    // editBundleBundle: [],
+
     //send email
-    selectedContentBundle: "",
-    selectedTeamID: "",
-    selectedTag: "",
-    selectedUser: "",
-    selectedUsers: [],
+    // selectedContentBundle: "",
+    // selectedTeamID: "",
+    // selectedTag: "",
+
+    // selectedUser: "",
+    // selectedUsers: [],
+    // previewUser: "",
+    // previewUsers: [],
+   
+    // sendEmailsConfig: "now",
+  
+
+    // archiveAfter: false,
+    // sendChooseDate: "",
+    // sendChooseTime: "",
+    //REVISED!!!!!!
+    //Send Email
+    sendTargetType: "all",
+    sendToUsers: [],
+    sentToTeamID: "global",
+    sentToTagID: "none",
+    sendContent: [],
+    sendSubject: "",
+    sendSaveTemplate: false,
+    loadedTemplateSubject: "",
+    //Send Options
     previewUser: "",
     previewUsers: [],
-    sendTargetType: "all",
-    sendEmailsConfig: "now",
-    sendTriggerEvent: "",
-    sendTriggerDelay: 0,
-    sendNext: 0, 
-    archiveAfter: false,
-    sendChooseDate: "",
-    sendChooseTime: ""
+    sendOption: "schedule",
+    sendNext: 0,
+    sendAutomationEvent: "firstLogin",
+    sendAutomationDelay: 0,
+    
+
+
+
   }
 
   @observable baseSettings = {

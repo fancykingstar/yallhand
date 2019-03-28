@@ -1,18 +1,20 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Dropdown, Segment, Form } from "semantic-ui-react";
+import { Dropdown, Form } from "semantic-ui-react";
 import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 
-export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
-  observer(props => {
-    const { DataEntryStore, AccountStore } = props;
+@inject("DataEntryStore", "AccountStore")
+@observer
+export class ChooseTargeting extends React.Component {
+  render(){
+    const { DataEntryStore, AccountStore } = this.props;
 
     const addUser = (user, allUsers, key) => {
       if (
         validateAdd(user, allUsers) !== null) {
-        let newArry = DataEntryStore.emailCampaign.selectedUsers;
+        let newArry = DataEntryStore.emailCampaign.sendToUsers;
         newArry.push(DataEntryStore.emailCampaign.selectedUser);
         DataEntryStore.set("emailCampaign", key, newArry);
       }
@@ -26,26 +28,20 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
             <TeamSelect
               label={"Limit Access To Teams"}
               placeholder="choose team..."
-              value={DataEntryStore.emailCampaign.selectedTeamID}
+              defaultVal="global"
               outputVal={val =>
-                DataEntryStore.set("emailCampaign", "selectedTeamID", val)
+                DataEntryStore.set("emailCampaign", "sendToTeamID", val.value)
               }
             />
             <TagSelect
               label={"Limit Access By Tag"}
               placeholder="choose tag..."
-              value={DataEntryStore.emailCampaign.selectedTag}
+              defaultVal={[]}
               outputVal={val =>
-                DataEntryStore.set("emailCampaign", "selectedTag", val)
+                DataEntryStore.set("emailCampaign", "sendToTagID", val.value)
               }
             />
           </Form.Group>
-          {/* <p>
-            <span>Targeting: </span>
-            <span style={{ fontStyle: "italic" }}>
-              <a href="">42 users</a>
-            </span>
-          </p> */}
         </Form>
       ) : (
         <Form
@@ -66,8 +62,8 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
               onClick={e =>
                 addUser(
                   DataEntryStore.emailCampaign.selectedUser,
-                  DataEntryStore.emailCampaign.selectedUsers,
-                  "selectedUsers"
+                  DataEntryStore.emailCampaign.sendToUsers,
+                  "sendToUsers"
                 )
               }
             >
@@ -76,25 +72,24 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
           </Form.Group>
           <div style={{ marginTop: 20, paddingBottom: 20 }}>
             <LabelGroup
-              currentArray={DataEntryStore.emailCampaign.selectedUsers}
+              currentArray={DataEntryStore.emailCampaign.sendToUsers}
               onRemove={val =>
                 DataEntryStore.set(
                   "emailCampaign",
-                  "selectedUsers",
+                  "sendToUsers",
                   labelsOneRemoved(
                     val,
-                    DataEntryStore.emailCampaign.selectedUsers
+                    DataEntryStore.emailCampaign.sendToUsers
                   )
                 )
               }
-              labelprop={"displayName"}
+              labelprop={"displayName_full"}
               displayFilter={val => AccountStore._getUser(val)}
             />
           </div>
         </Form>
       );
     return (
-      // <Segment>
         <div style={{ minWidth: 400 }}>
           <span style={{fontSize: ".9em"}}>
           Send Email{" "}
@@ -105,7 +100,7 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
               }
               options={[
                 { text: "To Everyone", value: "all" },
-                { text: "To Select Teams", value: "teams" },
+                { text: "To Selected Teams/Tags", value: "teams" },
                 { text: "To Select Users", value: "users" }
               ]}
               value={DataEntryStore.emailCampaign.sendTargetType}
@@ -113,13 +108,9 @@ export const ChooseTargeting = inject("DataEntryStore", "AccountStore")(
           </span>
 
           {DataEntryStore.emailCampaign.sendTargetType === "all"? <div/> : targetOptions}
-
-          {/* <p>
-            <span>Email Variations Created: </span>
-            <span style={{ marginTop: 5, fontStyle: "italic" }}> 3</span>
-          </p> */}
         </div>
-      // </Segment>
     );
-  })
-);
+
+  }
+}
+
