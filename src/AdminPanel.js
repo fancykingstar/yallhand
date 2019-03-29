@@ -14,7 +14,6 @@ import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
-import EditBundle from "./Email/EditBundle";
 import { DashboardFrame } from "./Dashboard/DashboardFrame";
 import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import SuperAdminFrame from "./SuperAdmin/SuperAdminFrame"
@@ -24,21 +23,10 @@ import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 
-import { loadAdmin } from "./DataExchange/LoadProfile";
+
 import { ToastContainer } from "react-toastify";
 
-@inject(
-  "ChannelStore",
-  "PoliciesStore",
-  "ResourcesStore",
-  "TeamStore",
-  "UserStore",
-  "AnnouncementsStore",
-  "AccountStore",
-  "UIStore",
-  "EmailStore",
-  "DataEntryStore"
-)
+@inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
   render() {
@@ -86,7 +74,6 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
             <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
-            <Route path="/panel/email/edit-bundle" component={EditBundle} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />
             <Route path="/panel/email" component={EmailFrame} />

@@ -4,7 +4,6 @@ import { PoliciesStore } from "../Stores/PoliciesStore";
 import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore";
 import { TeamStore } from "../Stores/TeamStore"
-import { EmailStore } from "../Stores/EmailStore"
 import { generateID } from "../SharedCalculations/GenerateID"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import _ from "lodash";
@@ -13,7 +12,7 @@ const uuidv4 = require('uuid/v4')
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
 const userID = () => UserStore.user.isSuperAdmin? "*" : UserStore.user.userID;
 const now = () => Date.now();
-const formatTag = (val) => val === "" ? [] : [val]
+const formatTag = (val) => val === "" || val === "none" ? [] : [val]
 
 const base = () => {return {"accountID": accountID(), "userID": userID(), "updated": now()}}
 
@@ -302,79 +301,6 @@ export const fileResourceAssociate = (resourceID, associations) => {
 }
 
 
-
-
-
-///EMAIL BUNDLES
-export const queueCreate = () => {
-  const buildObj = Object.assign({}, EmailStore.queue)
-  return _.extend({}, base(), buildObj)
-}
-
-export const queueEdit = () => {
-  const buildObj = {
-    // bundleID: "queue",
-    bundleID: DataEntryStore.emailCampaign.queueID,
-    bundle: DataEntryStore.emailCampaign.queue,
-    isQueue: true,
-    label: DataEntryStore.emailCampaign.queueLabel,
-    subject: DataEntryStore.emailCampaign.queueSubject,
-    body: DataEntryStore.draft,
-    bodyContentHTML: DataEntryStore.draftContentHTML,
-    bodyContentRAW: DataEntryStore.draftContentRAW
-  };
-  return _.extend({}, base(), buildObj)
-}
-
-export const bundle = (queue=false) => {
-  const buildObj = {
-    // bundleID: queue? "queue" : generateID(),
-    bundleID: generateID(),
-    isQueue: queue? true : false,
-    bundle: DataEntryStore.emailCampaign.queue,
-    label: DataEntryStore.emailCampaign.queueLabel,
-    subject: DataEntryStore.emailCampaign.queueSubject,
-    body: DataEntryStore.draft,
-    bodyContentHTML: DataEntryStore.draftContentHTML,
-    bodyContentRAW: DataEntryStore.draftContentRAW,
-    stage: "active",
-    lastUsed: 0
-  }
-  return _.extend({}, base(), buildObj)
-}
-
-export const bundleEdit = () => {
-  const buildObj = {
-      bundleID: DataEntryStore.emailCampaign.editBundleID,
-      bundle: DataEntryStore.emailCampaign.editBundleBundle,
-      label: DataEntryStore.emailCampaign.editBundleLabel,
-      subject: DataEntryStore.emailCampaign.editBundleSubject,
-      body: DataEntryStore.draft,
-      bodyContentHTML: DataEntryStore.draftContentHTML,
-      bodyContentRAW: DataEntryStore.draftContentRAW,
-      stage: DataEntryStore.emailCampaign.editBundleStage,
-  }
-  return _.extend({}, base(), buildObj)
-}
-
-
-export const bundleMerged = (targetBundle) => {
-  let currentQueue = DataEntryStore.emailCampaign.queue
-  let target =  targetBundle.bundle
-  currentQueue = currentQueue.filter(content => !EmailStore._doesBundleContain(Object.values(content)[0], targetBundle.bundleID))
-  const newBundle = [...currentQueue, ...target]
-  const buildObj = {
-    bundleID: targetBundle.bundleID,
-    bundle: newBundle,
-  }
-  return _.extend({}, base(), buildObj)
-  
-}
-
-
-
-
-
 ///EMAIL CAMPAIGN
 export const emailPreview = () => {
   const buildObj = {
@@ -390,35 +316,31 @@ export const emailPreview = () => {
   return buildObj
 };
 
-export const emailCampaign = (completed=false) => {
-    const trigger = DataEntryStore.emailCampaign.sendEmailsConfig === "trigger" ? 
-    {"event": DataEntryStore.emailCampaign.sendTriggerEvent, "delay": DataEntryStore.emailCampaign.sendTriggerDelay}
-    : {} 
+export const emailCampaign = (isSendNow, isScheduled) => {
+    const eventTrigger = UIStore.menuItem.sendEmailOption === "automate" ? {"event": DataEntryStore.emailCampaign.sendAutomationEvent, "delay": DataEntryStore.emailCampaign.sendAutomationDelay} : {} 
     const buildObj = {
-      //general
-      accountID: accountID(),
-      campaignID: generateID(), //generated every time even if bundle is reused
-      updated: now(),
-      userID:  userID(),
       //content
-      bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
-      //targets
-      teamID: DataEntryStore.emailCampaign.selectedTeamID,
-      tags: formatTag(DataEntryStore.emailCampaign.selectedTag),
-      targetUsers: DataEntryStore.emailCampaign.selectedUsers,
+      draftContentRAW: UIStore.menuItem.sendEmailBody.includes("message")? DataEntryStore.draftContentRAW : {},
+      draftContentHTML:  UIStore.menuItem.sendEmailBody.includes("message")? DataEntryStore.draftContentHTML: "",
+      subject: DataEntryStore.emailCampaign.sendSubject,
+      content: UIStore.menuItem.sendEmailBody.includes("content")? DataEntryStore.emailCampaign.sendContent : [],
+      //recipiants
+      recipientType: DataEntryStore.emailCampaign.sendTargetType,
+      teamID: DataEntryStore.emailCampaign.sendToTeamID,
+      tags: formatTag(DataEntryStore.emailCampaign.sendToTagID),
+      targetUsers: DataEntryStore.emailCampaign.sendToUsers,
       //config
-      isSendNow: DataEntryStore.emailCampaign.sendEmailsConfig === "now",
-      isScheduled: DataEntryStore.emailCampaign.sendEmailsConfig === "schedule" || DataEntryStore.emailCampaign.sendEmailsConfig === "recur",
-      isRecurring: DataEntryStore.emailCampaign.sendEmailsConfig === "recur" || DataEntryStore.emailCampaign.sendEmailsConfig === "trigger",
-      isTriggered: DataEntryStore.emailCampaign.sendEmailsConfig === "trigger",
-      archiveAfter: DataEntryStore.emailCampaign.archiveAfter,
-      completed: completed,
-      //trigger
-      eventTrigger: trigger, 
+      isSendNow,
+      isScheduled,
+      isTriggered: isSendNow === false && isScheduled === false,
+      isTemplate: DataEntryStore.emailCampaign.sendSaveTemplate,
+      completed: false,
+      //trigger 
+      eventTrigger,
       //schedule
       sendNext: DataEntryStore.emailCampaign.sendNext, 
     };
-    return buildObj
+    return _.extend({}, base(), buildObj)
   };
 
   export const emailCampaignEdit = (patchObj) => {

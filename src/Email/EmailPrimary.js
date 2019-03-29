@@ -7,8 +7,11 @@ import { ContentSearch } from "../SharedUI/ContentSearch";
 import { DraftFormField } from "../SharedUI/DraftFormField";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 import { flashDraft } from "../SharedCalculations/FlashDraft"
-import _ from "lodash";
 
+import { emailCampaign } from "../DataExchange/PayloadBuilder"
+import { createCampaign } from "../DataExchange/Up"
+import _ from "lodash";
+ 
 
 @inject("EmailStore", "UIStore", "DataEntryStore")
 @observer
@@ -17,7 +20,7 @@ export class EmailPrimary extends React.Component {
     super(props)
     const {DataEntryStore} = this.props
     this.resetEmail = () => {
-      DataEntryStore.reset("emailCampaign",{sendTargetType: "all", sentToTeamID: "global", sentToTagID: "none", sendOption: "schedule",sendAutomationEvent: "firstLogin"})
+      DataEntryStore.reset("emailCampaign",{sendTargetType: "all", sendToTeamID: "global", sendToTagID: "none", sendOption: "schedule",sendAutomationEvent: "firstLogin"})
       flashDraft()
     }
   }
@@ -44,7 +47,7 @@ export class EmailPrimary extends React.Component {
       }
 
       const sendNow = () => {
-        if(canSubmit()) {console.log("send email now")}
+        if(canSubmit()) {createCampaign(emailCampaign(true, false))}
       }
 
       const bundlePopulated = DataEntryStore.emailCampaign.sendContent.length === 0;

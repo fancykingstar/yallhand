@@ -1,30 +1,32 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { EmailStore } from "../../Stores/EmailStore";
 import { Segment, Form, Header } from "semantic-ui-react";
 import { toast } from 'react-toastify';
-import { modifyBundle } from "../../DataExchange/Up"
+// import { modifyBundle } from "../../DataExchange/Up"
+import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "./style.css";
 import _ from "lodash";
-import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
   observer(props => {
   const {DataEntryStore, UIStore, EmailStore} = props
 
-  const bundleBuildOption = EmailStore.allBundles
-    .filter(bundle => bundle.bundleID !== "queue")
-    .map(bundle => ({
-      key: giveMeKey(),
-      text: "Add to" + bundle.label,
-      value: bundle.bundleID,
-      icon: "plus"
-    }));
-  bundleBuildOption.unshift({
-    text: "Add to queue",
-    icon: "plus",
-    value: EmailStore.queue.bundleID
-  });
+  const modifyBundle = () => {}
+  const bundleBuildOption = []
+
+  // const bundleBuildOption = EmailStore.allBundles
+  //   .filter(bundle => bundle.bundleID !== "queue")
+  //   .map(bundle => ({
+  //     key: giveMeKey(),
+  //     text: "Add to" + bundle.label,
+  //     value: bundle.bundleID,
+  //     icon: "plus"
+  //   }));
+  // bundleBuildOption.unshift({
+  //   text: "Add to queue",
+  //   icon: "plus",
+  //   value: EmailStore.queue.bundleID
+  // });
 
   const handleSelect = (val) => {
     DataEntryStore.set("contentmgmt", "bundle", val)

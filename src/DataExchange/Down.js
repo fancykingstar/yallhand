@@ -17,8 +17,7 @@ const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag
 
 export const account = async (accountID) => {
   const result = await apiCall_noBody("accounts/" + accountID, "GET")
-  // AccountStore.loadAccount(result.length>0? result[0]: {accountID: "*", img: ""})
-
+  AccountStore.loadAccount(result.length>0? result[0]: {accountID: "*", img: ""})
   return result
 }
 
@@ -112,17 +111,6 @@ export const logs = async (accountID) => {
 export const sentiments = async (accountID) => {
   const result = await apiCall_noBody("sentiments/" + accountID, "GET")
   AccountStore.loadSentiments(result)
-
-  return result
-}
-
-export const bundles = async (accountID) => {
-  const result = await apiCall_noBody("emailbundles/" + accountID, "GET")
-  try {
-    EmailStore.loadBundles(result)
-  } catch(e) {
-    console.log(e)
-  }
 
   return result
 }

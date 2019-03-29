@@ -46,7 +46,7 @@ class PrimaryLogins extends React.Component {
             {stages[stage]}
           </div>
           {stage === 'reauth' && <span className="btn inviteCode" onClick={e => this.setState({stage: 'register'})} style={style}>
-            Did your organizaiton send you an invite code?
+            Did your organization send you an invite code?
           </span>}
           {stage === 'register' && <span className="btn inviteCode" onClick={e => this.setState({stage: 'reauth'})} style={style}>
             Already have an account?

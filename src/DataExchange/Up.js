@@ -22,7 +22,6 @@ const refresh = {
   policies: () => reload.policies(accountID()),
   announcements: () => reload.announcements(accountID()),
   files: () => reload.files(accountID()),
-  bundles: () => reload.bundles(accountID()),
   campaigns: () => reload.campaigns(accountID()),
   account: () => reload.account(accountID())
 }
@@ -295,28 +294,7 @@ export const deleteAnnouncement = (announcementID) => {
     true,{"event": "delete", "type":"announcement"}), false
 }
 
-///EMAIL CAMPAIGN --- BUNDLE
-export const modifyBundle = (payload, toastEnabled) => {
-    const msg = payload.isQueue? "Your email queue has been updated ✉️🛠" : "Your email bundle has been updated ✉️🛠"
-    return processTemplate(true, "emailbundles/" + payload.bundleID, "PATCH", payload, "bundles", 
-    msg,
-    true,{"event": "update", "type":"bundle"}, toastEnabled
-)
-}
-
-export const createBundle = (payload, toastEnabled) => {
-    return processTemplate(true, "emailbundles", "POST", payload, "bundles", 
-        "Your new bundle has been created 🙌", 
-        true,{"event": "create", "type":"bundle"}, toastEnabled
-    )
-}
-
-export const deleteBundle = (bundleID) => {
-    return processTemplate(false, "emailbundles/" + bundleID, "DELETE", {}, "bundles", 
-    "Selected bundle deleted 👋", 
-    true,{"event": "delete", "type":"bundle"})
-}
-
+///EMAIL CAMPAIGN 
 export const createCampaign = (payload, toastEnabled) => {
     return processTemplate(true, "emailcampaigns", "POST", payload, "campaigns", 
         payload.isTriggered ? "Your email trigger is set and sending will be automated to eligible users 🤖✉️"   :`Your campaign is being built and will send momentarily 🚀✉️` , 
@@ -342,25 +320,6 @@ export const modifyAccount = (payload) => {
 
 ////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
 
-
-// export const modifyQueue = (val) => {
-//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-// }
-
-
-// export const modifyBaseSettings = (val) => {
-//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-// }
-
-
-// export const deleteBaseAccount = (val) => {
-//     setTimeout(() => {console.log("account queued for deletion", val)}, 1000)
-// }
-
-// export const modifyUserSettings = (val) => {
-//     setTimeout(() => {console.log("User settings modified", val)}, 1000)
-// }
-
 export const deactivateUser = (val) => {
     setTimeout(() => {console.log("user deactivated", val)}, 1000)
 }
@@ -369,12 +328,5 @@ export const sendEmailPreview = (val) => {
     setTimeout(() => {console.log("Preview Sent", val)}, 1000)
 }
 
-// export const sendEmailNow = (val) => {
-//     setTimeout(() => {
-//         console.log("Preview Sent", val)
-//         return new Promise((resolve, reject) => {
-//             resolve(true)
-//     }, 3000)
-//     })
-// }
+
 

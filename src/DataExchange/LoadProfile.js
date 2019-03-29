@@ -55,9 +55,6 @@ export const loadAdmin = (superStatus=false, superUser={}) => {
       const urls = await load.urls(accountID);
       UIStore.set("adminLoadingComplete", "urls", true)
 
-      const bundles = await load.bundles(accountID);
-      UIStore.set("adminLoadingComplete", "bundles", true)
-
       const campaigns = await load.campaigns(accountID);
       UIStore.set("adminLoadingComplete", "campaigns", true)
 

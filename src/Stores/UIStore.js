@@ -156,7 +156,6 @@ class Store {
         structure: false,
         tags: false,
         announcements: false,
-        bundles: false,
         campaigns: false,
         scheduled: false,
         logs: false,

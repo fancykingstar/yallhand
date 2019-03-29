@@ -8,9 +8,6 @@ import { PortalMobile } from "./PortalMobile"
 import  PortalDesktop  from "./PortalDesktop"
 import "./style.css";
 
-import {buildEmail} from "../Scripts/BuildEmail"
-import { EmailStore } from "../Stores/EmailStore";
-
 
 @inject("TeamStore", "UserStore", "UIStore")
 @observer

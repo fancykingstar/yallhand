@@ -59,8 +59,8 @@ export class Register extends React.Component {
               className="ui small icon primary left labeled button"
               clientId={process.env.REACT_APP_GMAIL}
               render={renderProps => (
-                <button className="ui small icon primary left labeled button" style={style} onClick={renderProps.onClick} role="button">
-                  <i aria-hidden="true" className="google icon"></i>Register with G-Suite
+                <button disabled={this.state.code.length < 4} className="ui small icon primary left labeled button" style={style} onClick={renderProps.onClick} role="button">
+                  <i aria-hidden="true" className="google icon"></i>Register using Google
                 </button>
               )}
               onSuccess={(e) => this.responseGoogle(e)}
@@ -68,7 +68,7 @@ export class Register extends React.Component {
               buttonText="Login">
             </GoogleLogin>
           </div>
-          <Form.Button primary icon labelPosition="left" size="small" style={style} onClick={e => this.next('profileinfo')}>
+          <Form.Button disabled={this.state.code.length < 4} primary icon labelPosition="left" size="small" style={style} onClick={e => this.next('profileinfo')}>
             <Icon name={"mail"}/>{"Register with Email"}
           </Form.Button>
           {error && <span className="error">{error}</span>}

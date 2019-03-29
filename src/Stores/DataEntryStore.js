@@ -183,8 +183,8 @@ class Store {
     //Send Email
     sendTargetType: "all",
     sendToUsers: [],
-    sentToTeamID: "global",
-    sentToTagID: "none",
+    sendToTeamID: "global",
+    sendToTagID: "none",
     sendContent: [],
     sendSubject: "",
     sendSaveTemplate: false,

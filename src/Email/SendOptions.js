@@ -4,6 +4,9 @@ import { Segment, Header, Icon, Form, Checkbox, Menu, Button, Message } from "se
 import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 
+import { emailCampaign } from "../DataExchange/PayloadBuilder";
+import { createCampaign } from "../DataExchange/Up"
+
 @inject("UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class SendOptions extends React.Component {
@@ -11,11 +14,9 @@ export class SendOptions extends React.Component {
     const { UIStore, DataEntryStore, AccountStore } = this.props;
 
     const sendPreview = () => {};
-    const createCampaign = () => {};
-    const emailCampaign = {};
-
+  
     const sendLater = () => {
-      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? console.log("schedule email later") : console.log("start automation")
+      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? createCampaign(emailCampaign(false, true)) : createCampaign(emailCampaign(false, false))
     }
 
     const canSubmit = () => {

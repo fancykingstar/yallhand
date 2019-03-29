@@ -2,12 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Dropdown, Image } from "semantic-ui-react";
 import { inject, observer} from "mobx-react"
-import "./style.css";
-// import { DataEntryStore } from "../Stores/DataEntryStore";
 import { deleteUser } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
+import "./style.css";
 
-@observer
 @inject("UserStore", "UIStore")
 @observer
 class UserProfile extends React.Component {
@@ -17,7 +15,7 @@ class UserProfile extends React.Component {
     deleteUser()
     if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
     UserStore.isAuthenticated = false;
-    this.props.history.push("/login");
+    this.props.history.push("/");
   }
 
   render() {
