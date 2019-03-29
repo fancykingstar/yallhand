@@ -51,7 +51,7 @@ class Store {
     label: "",
     variationID: "",
     img: "",
-    bundle: "",
+    campaign: "",
     keywordInput: "",
     keywords: [],
     reviewAlert: 0,
@@ -60,6 +60,7 @@ class Store {
     eventDateTime: "",
     settingsLabel: "",
     settingsChannel: "",
+    everPublished: ""
   }
 
   @observable teamEditFields = {
@@ -180,6 +181,9 @@ class Store {
   }
 
   @observable emailCampaign = {
+    //temp draft storage
+    draftRAW: {},
+    draftHTML: "",
     //Send Email
     sendTargetType: "all",
     sendToUsers: [],

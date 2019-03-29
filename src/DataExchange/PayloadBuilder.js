@@ -29,7 +29,6 @@ export const UNTITLED = () => {
 export const ItsLog = (action, data) => {
   //action (true/false (view only)) data = {"event":, "type":,} or {"location": "location label"}
   let buildObj = {
-    logID: uuidv4(),
     isAction: action,
     data: data
   }
@@ -379,7 +378,6 @@ export const emailCampaign = (isSendNow, isScheduled) => {
         }
       ]      
     };
-    buildObj[type + "ID"] = UIStore.content[type + "ID"]
 
     return buildObj
   }

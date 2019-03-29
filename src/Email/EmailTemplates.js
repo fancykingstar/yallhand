@@ -1,16 +1,40 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import {Dropdown, Label, Divider, Button} from "semantic-ui-react"
+import {Dropdown, Divider, Button} from "semantic-ui-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import {sortByUTC} from "../SharedCalculations/SortByUTC"
 import {getContentObj} from "../SharedCalculations/GetContentObj"
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import { modifyCampaign } from "../DataExchange/Up";
+import { EditorState, convertFromRaw } from "draft-js";
 
-@inject("UIStore", "EmailStore")
+@inject("UIStore", "EmailStore", "DataEntryStore")
 @observer
 export class EmailTemplates extends React.Component {
     render(){
-        const {UIStore, EmailStore} = this.props
-        const templates = EmailStore.allCampaigns.filter(x => x.isTemplate).map(x => 
+        const {UIStore, EmailStore, DataEntryStore} = this.props
+
+        const loadTemplate = (obj) => {
+            DataEntryStore.reset("emailCampaign",{sendTargetType: "all", sendToTeamID: "global", sendToTagID: "none", sendOption: "schedule",sendAutomationEvent: "firstLogin"})
+            DataEntryStore.set("emailCampaign", "sendContent", obj.content)
+            DataEntryStore.set("emailCampaign", "loadedTemplateSubject", obj.subject)
+            DataEntryStore.set("emailCampaign", "sendSubject", obj.subject)
+            DataEntryStore.set("emailCampaign", "draftRAW", obj.draftContentRAW)
+            DataEntryStore.set("emailCampaign", "draftHTML", obj.draftContentHTML)
+            const body = obj.content.length > 0 && obj.draftContentHTML !== ""? "messagecontent": obj.content.length > 0? "content": "message"
+            UIStore.set("menuItem", "sendEmailBody", body)
+            const contentState = convertFromRaw(obj.draftContentRAW);
+            DataEntryStore.setDraft( "editorState", EditorState.createWithContent(contentState) );
+            UIStore.set("menuItem", "emailFrame", "send email")
+        } 
+
+        const deleteTemplate = (payload) => {
+            modifyCampaign(payload)
+        }
+
+        const templates = sortByUTC(EmailStore.allCampaigns, UIStore.dropdown.emailTemplateSort).filter(x => x.isTemplate).map(x => 
             <React.Fragment>
+                <div key={"email template"+giveMeKey()}>
                 <div style={{marginBottom: 0, paddingBototm: 0}}><h3>{x.subject}</h3></div>
                 <div style={{marginTop: 0, paddingTop: 0}}><span style={{fontSize: ".8em", fontWeight: 800}}> {UTCtoFriendly(x.updated)} </span></div>
                 
@@ -23,16 +47,17 @@ export class EmailTemplates extends React.Component {
 
            
                 <div style={{paddingTop: 10, paddingBottom: 0}}>
-                    <Button primary size="mini" basic>Use This Template</Button> <Button size="mini" negative basic>Delete</Button>
+                    <Button primary onClick={e => loadTemplate(x)} size="mini" basic>Use This Template</Button> <Button onClick={e=> deleteTemplate({campaignID: x.campaignID, isTemplate: false})} size="mini" negative basic>Delete</Button>
                 </div>
                 <Divider />
+                </div>
             </React.Fragment>
             )
         return(
             <div>
                   <div style={{height: 20, width: "100%"}}>
                     <div style={{float: "right", paddingRight: 25}}> 
-                        <span> Sort by{' '} <Dropdown inline options={[{text: "Newest", value: "new"}, {text: "Oldest", value: "old"}]} defaultValue={"new"} onChange= {(e, {value}) => UIStore.set("dropdown", "policySort", value)} /> </span>
+                        <span> Sort by{' '} <Dropdown inline options={[{text: "Newest", value: "Newest"}, {text: "Oldest", value: "Oldest"}]} defaultValue={"Newest"} onChange= {(e, {value}) => UIStore.set("dropdown", "emailTemplateSort", value)} /> </span>
                     </div>
                   </div>
                 {templates}

@@ -51,7 +51,8 @@ class Store {
         uploadConfig: "content",
         bundles: "active",
         portalannouncementSort: "Newest",
-        portalPolicySort: "Newest"
+        portalPolicySort: "Newest",
+        emailTemplateSort: "Newest"
     }
     @observable
     modal = {

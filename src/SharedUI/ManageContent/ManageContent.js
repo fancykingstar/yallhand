@@ -55,6 +55,7 @@ class ManageContent extends React.Component {
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
           DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
+          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
           
         } else {
           this.props.history.push("/panel/faqs");
@@ -90,6 +91,7 @@ class ManageContent extends React.Component {
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert)
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
           DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
+          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
         } else {
           this.props.history.push("/panel/announcements");
         }
@@ -246,9 +248,11 @@ class ManageContent extends React.Component {
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
                   output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
                 />
+
+                {DataEntryStore.contentmgmt.everPublished?
                 <AddToEmail 
                   mode={this.mode}
-                  />
+                  />: null}
       
                 <Keywords mode={this.mode} />
                 <ReviewAlerts

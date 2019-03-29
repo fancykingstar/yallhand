@@ -83,26 +83,16 @@ class Store {
       }) 
     }
 
-    // _getBundle(id){
-    //   return this.allBundles.filter(bundle => bundle.bundleID === id)[0]
-    // }
     _getCampaign(id){
       return this.allCampaigns.filter(campaign => campaign.campaignID === id)[0]
     }
 
-    // _doesBundleContain(id, bundleID){
-    //   const collection = this._getBundle(bundleID).bundle
-    //   const allIDs = []
-    //   collection.forEach(content => allIDs.push(Object.values(content)[0]))
-    //   return allIDs.includes(id)
-    // }
-
-
-    // @computed
-    // get _activeBundles() {
-    //   return this.allBundles.filter(bundle => bundle.stage === "active" && bundle.bundleID !== "queue")
-    // }
-
+    _doesCampaignContain(id, campaignID, anotherCollection=null){
+      const collection = campaignID !== "new" ? this._getCampaign(campaignID).content : anotherCollection
+      const allIDs = []
+      collection.forEach(content => allIDs.push(Object.values(content)[0]))
+      return allIDs.includes(id)
+    }
   
 
 

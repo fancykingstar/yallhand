@@ -10,10 +10,11 @@ import { flashDraft } from "../SharedCalculations/FlashDraft"
 
 import { emailCampaign } from "../DataExchange/PayloadBuilder"
 import { createCampaign } from "../DataExchange/Up"
+import { EditorState, convertFromRaw } from "draft-js";
 import _ from "lodash";
  
 
-@inject("EmailStore", "UIStore", "DataEntryStore")
+@inject("UIStore", "DataEntryStore")
 @observer
 export class EmailPrimary extends React.Component {
   constructor(props){
@@ -27,9 +28,20 @@ export class EmailPrimary extends React.Component {
   componentDidMount() {
     const {DataEntryStore, UIStore} = this.props
     if(DataEntryStore.emailCampaign.sendContent.lengh > 0 && UIStore.menuItem.sendEmailBody === "message"){UIStore.set("menuItem", "sendEmailBody", "messagecontent")}
+    if(DataEntryStore.emailCampaign.draftHTML !== ""){
+      const contentState = convertFromRaw(DataEntryStore.emailCampaign.draftRAW);
+      DataEntryStore.setDraft( "editorState", EditorState.createWithContent(contentState) );
+    }
+  }
+  componentWillUnmount(){
+    const {DataEntryStore} = this.props
+    if(DataEntryStore.draftContentHTML !== "" && DataEntryStore.draftContentHTML !== "<p><br></p>"){
+      DataEntryStore.set("emailCampaign", "draftRAW", DataEntryStore.draftContentRAW)
+      DataEntryStore.set("emailCampaign", "draftHTML", DataEntryStore.draftContentHTML)
+    }
   }
   render() {
-      const {EmailStore, UIStore, DataEntryStore} = this.props
+      const {UIStore, DataEntryStore} = this.props
       
       const canSubmit = () => {
         let validations = {subject: false, targets: false, content: false}        
@@ -126,9 +138,7 @@ export class EmailPrimary extends React.Component {
           <div style={UIStore.menuItem.sendEmailBody === "content"? {display: "none"}:{display:"contents"} }>
           <div style={{ maxWidth: 520, paddingTop: 20, paddingBottom: 20 }}>        <div>
             <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Message</span>
-                <DraftFormField 
-                  loadContent={_.isEmpty(EmailStore.queue.bodyContentRAW)? null : EmailStore.queue.bodyContentRAW}
-                />
+                <DraftFormField loadContent={null} />
             </div></div>
           </div>
           <div style={UIStore.menuItem.sendEmailBody === "message"? {display: "none"}:{display:"contents"} }>
