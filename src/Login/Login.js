@@ -47,7 +47,7 @@ class Login extends React.Component {
       "register": <PrimaryLogins stage="register" code={item.code} next={(...args) => this.next(...args)}/>,
       "profileinfo": <ProfileInfo gmail={false} item={item}/>,
       "profileinfoGmail": <ProfileInfo gmail={true} item={item}/>,
-      "login": <ProfileLogin gmail={false}/>,
+      "login": <ProfileLogin gmail={false} backHome={() => this.setState({view: "reauth"})}/>,
     }
 
     return (

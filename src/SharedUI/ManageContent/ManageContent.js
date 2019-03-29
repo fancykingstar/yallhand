@@ -25,11 +25,10 @@ class ManageContent extends React.Component {
   constructor(props) {
     super(props);
     const {UIStore} = this.props
-    console.log(this.props.location.pathname)
     this.mode = this.props.location.pathname.includes("policy")
       ? "policy"
       : "announcement";
-        // UIStore.reset("content")
+        UIStore.reset("content")
   }
   componentWillUnmount() {
     const {DataEntryStore} = this.props
@@ -39,40 +38,70 @@ class ManageContent extends React.Component {
 
   componentDidMount() {
     const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, EmailStore } = this.props;
-    const { content } = UIStore;
-    const { announcementID, policyID } = content;
-    const { id } = this.props.match.params;
-
-    const setDataEntryStore = (toggleVariation, obj, bundle) => {
-      UIStore.set( "content", "variationID", toggleVariation);
-      DataEntryStore.set("contentmgmt", "label", obj.label);
-      DataEntryStore.set("contentmgmt", "img", obj.img);
-      DataEntryStore.set("contentmgmt", "bundle", bundle);
-      DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
-      DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
-      DataEntryStore.set("contentmgmt", "settingsLabel", obj.label);
-      DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID);
-    };
-
     if (this.mode === "policy") {
-      if (policyID === "" || id !== policyID || DataEntryStore._isReset("contentmgmt")) {
-        if (!_.isEmpty(PoliciesStore._getPolicy(id))) {
-          UIStore.set("content", "policyID", id);
-          const obj = Object.assign({}, PoliciesStore._getPolicy(policyID));
-          setDataEntryStore(PoliciesStore._toggleGlobalVariation(obj.policyID), obj, EmailStore.queue.bundleID);
+      if (
+        UIStore.content.policyID === "" ||
+        this.props.match.params.id !== UIStore.content.policyID ||
+        DataEntryStore._isReset("contentmgmt")
+      ) {
+        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.id))) {
+          UIStore.set("content", "policyID", this.props.match.params.id);
+          const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
+          UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
+          DataEntryStore.set("contentmgmt", "label", obj.label);
+          DataEntryStore.set("contentmgmt", "img", obj.img);
+          DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
+          DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
+          DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
+          DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
+          DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
+          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
+          
+        } else {
+          this.props.history.push("/panel/faqs");
         }
-        else this.props.history.push("/panel/faqs");
       }
-      UIStore.set("content", "variationID", PoliciesStore._toggleGlobalVariation(policyID));
+
+      UIStore.set(
+        "content",
+        "variationID",
+        PoliciesStore._toggleGlobalVariation(UIStore.content.policyID)
+      );
     } else if (this.mode === "announcement") {
-      if (announcementID === "" || id !== announcementID || DataEntryStore._isReset("contentmgmt")) {
-        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(id))) {
-          UIStore.set("content", "announcementID", id);
-          const obj = Object.assign({}, AnnouncementsStore._getAnnouncement(announcementID));
-          setDataEntryStore(AnnouncementsStore._toggleGlobalVariation(obj.announcementID), obj, "queue");
+      if (
+        UIStore.content.announcementID === "" ||
+        this.props.match.params.id !== UIStore.content.announcementID ||
+        DataEntryStore._isReset("contentmgmt")
+      ) {
+        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.id))) {
+          UIStore.set("content", "announcementID", this.props.match.params.id);
+          const obj = Object.assign(
+            {},
+            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
+          );
+          UIStore.set(
+            "content",
+            "variationID",
+            AnnouncementsStore._toggleGlobalVariation(obj.announcementID)
+          );
+          DataEntryStore.set("contentmgmt", "label", obj.label);
+          DataEntryStore.set("contentmgmt", "img", obj.img);
+          DataEntryStore.set("contentmgmt", "bundle", "queue");
+          DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
+          DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert)
+          DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
+          DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
+          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
+        } else {
+          this.props.history.push("/panel/announcements");
         }
-        else this.props.history.push("/panel/announcements");
-        UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(announcementID));
+        UIStore.set(
+          "content",
+          "variationID",
+          AnnouncementsStore._toggleGlobalVariation(
+            UIStore.content.announcementID
+          )
+        );
       }
     }
   }
@@ -219,9 +248,11 @@ class ManageContent extends React.Component {
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
                   output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
                 />
+
+                {DataEntryStore.contentmgmt.everPublished?
                 <AddToEmail 
                   mode={this.mode}
-                  />
+                  />: null}
       
                 <Keywords mode={this.mode} />
                 <ReviewAlerts

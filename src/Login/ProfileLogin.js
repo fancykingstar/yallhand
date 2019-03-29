@@ -1,5 +1,5 @@
 import React from "react";
-import { Message, Form, Divider, Header } from "semantic-ui-react";
+import { Message, Form, Divider, Header, Icon } from "semantic-ui-react";
 import { apiCall, setUser } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom";
 
@@ -44,12 +44,13 @@ class ProfileLogin extends React.Component {
   
   render () {
     const { successMsg, errorMsg, email_disable, isForgot } = this.state
+    
     return (
       <React.Fragment>
         <div className="ContainerLogin">
           <div className="Login">
             <Header as="h2">
-              {isForgot ? 'Forgot password' : 'Connect to your account'}
+              {isForgot ? 'Forgot your password' : 'Connect to your account'}
             </Header>
             <Divider />
             <Form>
@@ -58,8 +59,13 @@ class ProfileLogin extends React.Component {
               <Form.Button primary onClick={() => isForgot ? this.sendForgotMail() : this.login()}>Continue</Form.Button>
             </Form>
             <br/>
-            <div className="switch-forgot" onClick={(e) => this.setState({isForgot: !isForgot})}>
-              {!isForgot ? 'Forgot password' : 'Login'}
+            <div style={{paddingBottom: 10}}>
+            <div style={{float: "left"}}className="switch-forgot" onClick={(e) => this.setState({isForgot: !isForgot})}>
+              {!isForgot ? 'Forgot password' : null}
+            </div>
+            <div style={{float: "right"}}>
+              <Icon name="home" size="small" onClick={e => this.props.backHome()}/>
+            </div>
             </div>
           </div>
           {errorMsg && <Message icon="warning" content={errorMsg} negative/>}

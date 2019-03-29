@@ -17,7 +17,7 @@ export class Automations extends React.Component {
       .filter(camp => camp.isTriggered && camp.completed === false)
       .map(camp => (
         <Table.Row key={"camp" + giveMeKey()}>
-          <Table.Cell>{EmailStore._getBundle(camp.bundleID).label}</Table.Cell>
+          <Table.Cell>{EmailStore._getCampaign(camp.campaignID).subject}</Table.Cell>
           <Table.Cell>{camp.isTriggered ? "live" : "error"}</Table.Cell>
           <Table.Cell>{UTCtoFriendly(camp.updated)}</Table.Cell>
           <Table.Cell>
@@ -40,7 +40,7 @@ export class Automations extends React.Component {
         <Table padded="very" basic="very">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Bundles</Table.HeaderCell>
+              <Table.HeaderCell>Email Subject</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
               <Table.HeaderCell>Online On</Table.HeaderCell>
               <Table.HeaderCell>Targets</Table.HeaderCell>

@@ -1,13 +1,12 @@
 import { observable, action, computed } from "mobx";
-import {bundle} from "../DataExchange/PayloadBuilder"
 import _ from "lodash";
 class Store {
       ///This type of referencing only works using OBJECTS, not primitives
       keys = {
         queue: this.queue
     }
-    @observable
-    allBundles = []
+    // @observable
+    // allBundles = []
 
     @observable
     allCampaigns = []
@@ -70,17 +69,12 @@ class Store {
     
       }
 
-    loadBundles(allBundles) {
-      return new Promise((resolve, reject) => {
-        const queue = allBundles.filter(bundle => bundle.isQueue)
-        if(queue.length === 1) {this.queue = queue[0]}
-        else{
-          this.queue = bundle(true)
-        }
-        this.allBundles = allBundles
-          resolve(true)
-      }) 
-    }
+    // loadBundles(allBundles) {
+    //   return new Promise((resolve, reject) => {
+    //     this.allBundles = allBundles
+    //       resolve(true)
+    //   }) 
+    // }
 
     loadCampaigns(allCampaigns) {
       return new Promise((resolve, reject) => {
@@ -89,26 +83,16 @@ class Store {
       }) 
     }
 
-    _getBundle(id){
-      return this.allBundles.filter(bundle => bundle.bundleID === id)[0]
-    }
     _getCampaign(id){
       return this.allCampaigns.filter(campaign => campaign.campaignID === id)[0]
     }
 
-    _doesBundleContain(id, bundleID){
-      const collection = this._getBundle(bundleID).bundle
+    _doesCampaignContain(id, campaignID, anotherCollection=null){
+      const collection = campaignID !== "new" ? this._getCampaign(campaignID).content : anotherCollection
       const allIDs = []
       collection.forEach(content => allIDs.push(Object.values(content)[0]))
       return allIDs.includes(id)
     }
-
-
-    @computed
-    get _activeBundles() {
-      return this.allBundles.filter(bundle => bundle.stage === "active" && bundle.bundleID !== "queue")
-    }
-
   
 
 

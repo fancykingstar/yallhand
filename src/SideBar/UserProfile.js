@@ -15,7 +15,7 @@ class UserProfile extends React.Component {
     deleteUser()
     if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
     UserStore.isAuthenticated = false;
-    this.props.history.push("/login");
+    this.props.history.push("/");
   }
 
   render() {

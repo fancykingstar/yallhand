@@ -1,15 +1,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import "./style.css";
-import {inject, observer} from "mobx-react"
 import { apiCall } from "../DataExchange/Fetch"
 import { QLogo } from "../Assets/Graphics/QLogo";
 import { Divider, Grid, Message } from "semantic-ui-react";
 import { Form, Icon  } from "semantic-ui-react"
 import "./style.css";
 
-// @inject("UIStore")
-// @observer
+
 class Forgot extends React.Component {
   constructor(props) {
     super(props);

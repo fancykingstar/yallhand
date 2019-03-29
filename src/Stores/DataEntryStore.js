@@ -51,7 +51,7 @@ class Store {
     label: "",
     variationID: "",
     img: "",
-    bundle: "",
+    campaign: "",
     keywordInput: "",
     keywords: [],
     reviewAlert: 0,
@@ -60,6 +60,7 @@ class Store {
     eventDateTime: "",
     settingsLabel: "",
     settingsChannel: "",
+    everPublished: ""
   }
 
   @observable teamEditFields = {
@@ -180,36 +181,24 @@ class Store {
   }
 
   @observable emailCampaign = {
-    //queue
-    queueID: "",
-    queue: [],
-    queueLabel: "",
-    queueSubject: "",
-    queueSaveSelect: "",
-    //bundle
-    editBundleID: "",
-    editBundleStage: "",
-    editBundleLabel: "",
-    editBundleSubject: "",
-    editBundleContentRAW: {},
-    editBundleSaveSelect: "",
-    editBundleBundle: [],
-    //send email
-    selectedContentBundle: "",
-    selectedTeamID: "",
-    selectedTag: "",
-    selectedUser: "",
-    selectedUsers: [],
+    //temp draft storage
+    draftRAW: {},
+    draftHTML: "",
+    //Send Email
+    sendTargetType: "all",
+    sendToUsers: [],
+    sendToTeamID: "global",
+    sendToTagID: "none",
+    sendContent: [],
+    sendSubject: "",
+    sendSaveTemplate: false,
+    loadedTemplateSubject: "",
+    //Send Options
     previewUser: "",
     previewUsers: [],
-    sendTargetType: "teams",
-    sendEmailsConfig: "now",
-    sendTriggerEvent: "",
-    sendTriggerDelay: 0,
-    sendNext: 0, 
-    archiveAfter: false,
-    sendChooseDate: "",
-    sendChooseTime: ""
+    sendNext: 0,
+    sendAutomationEvent: "firstLogin",
+    sendAutomationDelay: 0,
   }
 
   @observable baseSettings = {

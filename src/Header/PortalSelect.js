@@ -35,7 +35,7 @@ export class PortalSelect extends React.Component {
       
     return(
       <div style={{zIndex: "10"}}>
-        <Dropdown text='Employee Portal' pointing className='link item' direction="left">
+        <Dropdown text='User Portal View' pointing className='link item' direction="left">
         <Dropdown.Menu>
         {portalPreview}
         </Dropdown.Menu>

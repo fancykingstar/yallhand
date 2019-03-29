@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import Header from "../Header/Header";
 import SearchFrame from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
@@ -56,6 +56,9 @@ class UserPortal extends React.Component {
               <Route path="/portal/announcement/:id" render={props => <ContentDetail {...props} mode="announcement" />} exact />
               <Route path="/portal/learn" component={CardFrame} exact />
               <Route path="/portal/learn-detail/:id" render={props => <ContentDetail {...props} mode="policy" />} exact />
+              <Route path="/portal/*">
+                <Redirect push to="/panel"/>
+              </Route>
             </Switch>
           </div>
           <Header />

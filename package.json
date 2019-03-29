@@ -28,6 +28,7 @@
     "fs": "0.0.1-security",
     "js-base64": "^2.5.1",
     "mobx-react": "^5.2.8",
+    "mobx-react-devtools": "^6.1.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "multiparty": "^4.2.1",

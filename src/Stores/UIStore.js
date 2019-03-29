@@ -13,6 +13,7 @@ class Store {
         "button": this.button,
         "sideNav": this.sideNav,
         "filter": this.filter,
+        "message": this.message,
         "content": this.content,
         "dateTimeSelect": this.dateTimeSelect,
         "responsive": this.responsive,
@@ -50,7 +51,8 @@ class Store {
         uploadConfig: "content",
         bundles: "active",
         portalannouncementSort: "Newest",
-        portalPolicySort: "Newest"
+        portalPolicySort: "Newest",
+        emailTemplateSort: "Newest"
     }
     @observable
     modal = {
@@ -119,7 +121,9 @@ class Store {
     menuItem = {
         teamFrame: "onboard",
         resourcesFrame: "URL",
-        emailFrame: "queue",
+        emailFrame: "send email",
+        sendEmailBody: "message",
+        sendEmailOption: "schedule",
         analyticsHeader: "announcements",
         superAdminFrame: "edit account"
     }
@@ -136,6 +140,12 @@ class Store {
 
     }
 
+    @observable
+    message = {
+        sendNow: "",
+        sendLater: ""
+    }
+
     @observable adminLoadingComplete = {
         account: false,
         users: false,
@@ -147,7 +157,6 @@ class Store {
         structure: false,
         tags: false,
         announcements: false,
-        bundles: false,
         campaigns: false,
         scheduled: false,
         logs: false,
