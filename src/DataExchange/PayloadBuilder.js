@@ -302,11 +302,13 @@ export const fileResourceAssociate = (resourceID, associations) => {
 
 ///EMAIL CAMPAIGN
 export const emailPreview = () => {
+  let tags = formatTag(DataEntryStore.emailCampaign.selectedTag);
+  if (JSON.stringify(tags) === "[null]") tags = [];
   const buildObj = {
     accountID: accountID(),
     bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
     teamID: DataEntryStore.emailCampaign.selectedTeamID,
-    tags: formatTag(DataEntryStore.emailCampaign.selectedTag),
+    tags: tags,
     targetUsers: DataEntryStore.emailCampaign.selectedUsers,
     previewUsers: DataEntryStore.emailCampaign.previewUsers,
     updated: now(),
