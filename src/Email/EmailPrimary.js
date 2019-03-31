@@ -4,6 +4,7 @@ import { Segment, Header, Menu, Form, Icon, Button, Checkbox, Message } from "se
 import { ChooseTargeting } from "./ChooseTargeting";
 import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 import { ContentSearch } from "../SharedUI/ContentSearch";
+import { FeaturedImage } from "../SharedUI/ManageContent/FeaturedImage"
 import { DraftFormField } from "../SharedUI/DraftFormField";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 import { flashDraft } from "../SharedCalculations/FlashDraft"
@@ -160,6 +161,10 @@ export class EmailPrimary extends React.Component {
 
           </div>
         </div>
+        <div style={{paddingTop: 10}}>
+          <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Featured Image (optional)</span>
+           <FeaturedImage maxWidth={600} compact defaultImgUrl={DataEntryStore.emailCampaign.img} output={val => DataEntryStore.set("emailCampaign", "img", val)}/>
+          </div>
          
         <br/>
         <div style={DataEntryStore.emailCampaign.loadedTemplateSubject !== DataEntryStore.emailCampaign.sendSubject? {paddingBottom: 5}:{display: "none"}}  > <Checkbox checked={DataEntryStore.emailCampaign.sendSaveTemplate}  onClick={(e, data) => DataEntryStore.set("emailCampaign", "sendSaveTemplate", data.checked)} label="Use as template in the future"/> </div>

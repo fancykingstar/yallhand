@@ -8,12 +8,11 @@ import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 export class TagSelect extends React.Component {
   render() {
     const { TeamStore, defaultVal, placeholder, value } = this.props;
-    const { tagsSelect, tags } = TeamStore;
     const style = { minWidth: 200 };
     const label = this.props.label === "" ? "Tag" : this.props.label
     const val = value !== undefined ? {value: value} : {defaultValue: defaultVal === undefined ? null : defaultVal.length === 0 ? "none": defaultVal[0]}
 
-    const tagsElement = [...tagsSelect, ...tags].map((tag, i) => {
+    const tagsElement = TeamStore.tagsSelect.map((tag, i) => {
       return {
         key: giveMeKey(),
         id: tag.tagID ? tag.tagID : i,

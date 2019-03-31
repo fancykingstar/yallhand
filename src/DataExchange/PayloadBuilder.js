@@ -4,10 +4,9 @@ import { PoliciesStore } from "../Stores/PoliciesStore";
 import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore";
 import { TeamStore } from "../Stores/TeamStore"
-import { generateID } from "../SharedCalculations/GenerateID"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import _ from "lodash";
-const uuidv4 = require('uuid/v4')
+
 
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
 const userID = () => UserStore.user.isSuperAdmin? "*" : UserStore.user.userID;
@@ -38,7 +37,6 @@ export const ItsLog = (action, data) => {
 //
 export const history = (type, id, data) => {
   const buildObj = {
-    historyID: uuidv4(),
     accountID: accountID(),
     updated: now(),
     type,
@@ -53,7 +51,6 @@ export const history = (type, id, data) => {
 ///SENTIMENT
 export const sentiment = (sentiment, type, ID, variationID=null) => {
   const buildObj = {
-    sentimentID: uuidv4(),
     type,
     ID, 
     variationID,
@@ -68,7 +65,6 @@ export const sentiment = (sentiment, type, ID, variationID=null) => {
 ///SCHEDULE
 export const schedule = (when, task, data) => {
   const buildObj = {
-    scheduleID: uuidv4(),
     when,
     executed: false,
     task,
@@ -81,7 +77,6 @@ export const schedule = (when, task, data) => {
 ///ACCOUNTS (SUPERADMIN ONLY)
 export const account = () => {
   const buildObj = {
-      "accountID": generateID(),
       "label": DataEntryStore.superAdmin.accountLabel,
       "img": DataEntryStore.superAdmin.accountImg,
       "reviewAlert": DataEntryStore.superAdmin.accountReviewAlert,
@@ -98,7 +93,6 @@ export const account = () => {
 ///TEAMS (STRUCTURE)
 export const team = () => {
   const buildObj = {
-    teamID: generateID(),
     label: DataEntryStore.teamEditFields.teamsLabel,
     parent: DataEntryStore.teamEditFields.teamsDropdown,
     depth:
@@ -126,7 +120,6 @@ export const teamUpdate = () => {
 export const tag = () => {
   const buildObj = {
     accountID: AccountStore.account.accountID,
-    tagID: generateID(),
     label: DataEntryStore.teamEditFields.tagsLabel,
     parent: DataEntryStore.teamEditFields.tagsDropdown,
     depth:
@@ -159,7 +152,6 @@ export const user = () => {
   const x = DataEntryStore.onOffBoarding
   const isAdmin = x.adminEmail !== ""
   const buildObj = {
-      "userID": generateID(),
       "accountID": accountID(),
       "invitedBy": userID(),
       "isActive": true,
@@ -192,17 +184,6 @@ export const userUpdate = () => {
       key === "tagID"? buildObj["tags"] = [x[key]] : buildObj[key] = x[key]
     }} )
   buildObj.isAdmin = x.isAdmin
-  // const buildObj = {userID: x.userEdit.userID,adminLimits: {}};
-  // if(x.adminChannels.length > 0){buildObj.adminLimits.channels = x.adminChannels}
-  // if(x.adminTeams.length > 0){buildObj.adminLimits.teams = x.adminTeams}
-  // if(x.adminTags.length > 0){buildObj.adminLimits.tags = x.adminTags}
-  // if(x.adminConfig === "all"){buildObj.adminLimits = {}}
-  // if(x.displayName_full !== ""){buildObj.displayName_full = x.displayName_full}
-  // if(x.displayName !== ""){buildObj.displayName_full = x.displayName}
-  // if(x.email !== ""){buildObj.email = x.email}
-  // if(x.isAdmin !== x.userEdit.isAdmin){buildObj.isAdmin = x.isAdmin}
-  // if(x.teamID !== ""){buildObj.teamID = x.teamID}
-  // if(x.tagID !== ""){buildObj.tags = [x.tagID]}
   return _.extend({}, {"accountID": accountID(), "userID": userID()}, buildObj)
 }
 
@@ -213,7 +194,6 @@ export const userUpdate = () => {
 ///CHANNELS
 export const channel = () => {
   const buildObj = {
-    "chanID": generateID(),
     "label": DataEntryStore.channel.label
   }
   return _.extend({}, base(), buildObj)
@@ -234,7 +214,6 @@ export const channelUpdate = () => {
 ///URL RESOURCES
 export const urlResource = (obj, id=null) => {
   const buildObj = {
-  "resourceID": id === null? generateID() : obj.resourceID,
   "associations": obj.associations,
   "label": obj.label,
   "url": obj.url,
@@ -242,6 +221,7 @@ export const urlResource = (obj, id=null) => {
   "teamID": obj.teamID,
   "tags": obj.tagID === "none" ? [] : [obj.tagID],
   };
+  if(id !== null){buildObj.resourceID = obj.resourceID}
   return _.extend({}, base(), buildObj)
 }
 
@@ -258,7 +238,6 @@ export const urlResourceAssociate = (resourceID, associations) => {
 ///FILE RESOURCES
 export const fileResource = (assoc=null) => {
   const buildObj = {
-  resourceID: generateID(),
   associations: DataEntryStore.fileForUpload.associations,
   label: DataEntryStore.fileForUpload.label,
   S3Key: DataEntryStore.fileForUpload.S3Key,

@@ -53,15 +53,12 @@ const getUsersByTeamTag = (teamID, tagID) => {
 export const buildEmail = (campaignID) => {
     const payload = []
     const campaign = EmailStore._getCampaign(campaignID)
-    const bundle = EmailStore._getBundle(campaign.bundleID)
-    const allContentIDs = EmailStore._getBundle(EmailStore._getCampaign(campaignID).bundleID).bundle
-    const allContent = allContentIDs
+    const allContent = campaign.content
         .map(content => Object.keys(content)[0] === "policyID"?
         getContentData("policy", content.policyID) : getContentData("announcement", content.announcementID)
         )
         .filter(content => !_.isEmpty(content))
-    console.log("callcontent build", allContent)
-    const targetUsers = campaign.targetUsers.length > 0? campaign.targetUsers : getUsersByTeamTag(campaign.teamID, campaign.tags[0])
+    const targetUsers = {"all": getUsersByTeamTag("global", "none"), "teams": getUsersByTeamTag(campaign.teamID, campaign.tags.length === 0? "none" : campaign.tags[0]), "users": campaign.targetUsers}[campaign.recipientType]
     targetUsers.forEach(user => {
         const userData = Object.assign({}, AccountStore._getUser(user.userID))
         const userTeamPath = TeamStore.previewValidPath(userData.teamID, "team")
@@ -75,12 +72,11 @@ export const buildEmail = (campaignID) => {
             content: content.variations[0].contentHTML
         }))
         payload.push(
-            {
+                    {
                         email: userData.email,
                         name: userData.displayName,
-                        subject: bundle.subject,
-                        content: EmailCampaignTemplate(bundle.bodyContentHTML, userContent, AccountStore.account)
-                
+                        subject: campaign.subject,
+                        content: EmailCampaignTemplate(campaign.bodyContentHTML, userContent, AccountStore.account, campaign.img)
                     }
         )
     })

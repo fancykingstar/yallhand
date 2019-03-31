@@ -40,14 +40,14 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
         reject(result);
       }
     })
-  })
+  }) 
 }
 
 ///LOGS (event type options: create, update, delete)
 export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
 
 ///Sentiment
-export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
+export const createSentiment = (payload) => apiCall("/sentiments", "POST", payload) 
 
 ///History
 export const createHistory = (payload) => {

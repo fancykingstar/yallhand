@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory } from "../../DataExchange/Up"
-import { content, contentEdit } from "../../DataExchange/PayloadBuilder"
+import { content, contentEdit, history } from "../../DataExchange/PayloadBuilder"
 import { VariationContent } from "./VariationContent";
 import { VariationConfig } from "./VariationConfig";
 import { PublishControls } from "./PublishControls";
@@ -75,9 +75,8 @@ class NewEditVariation extends React.Component {
     DataEntryStore.set("content", "stage", stage)
 
     if (stage === "published") {
-      // console.log(isNew ? content(mode) : contentEdit(mode))
-      // const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
-      // createHistory(historyMode)
+      const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
+      createHistory(historyMode)
     }
     
     validateURLs(mode);

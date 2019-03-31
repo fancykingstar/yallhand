@@ -60,12 +60,13 @@ export class ContentDetail extends React.Component {
                 <Container>
                 {content.img.length !== 0 ?  <Image rounded size="large" src={content.img}/> : null}
                     <Header
-                    as="h2"
+                    as="h1"
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
-    
+                  <div style={{fontSize:"1.4em"}}>
                   <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/>
+                  </div>
                   </Container>
                 <br/>
                 <Grid>
