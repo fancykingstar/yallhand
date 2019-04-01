@@ -143,7 +143,8 @@ class Store {
     @observable
     message = {
         sendNow: "",
-        sendLater: ""
+        sendLater: "",
+        featuredImage: "",
     }
 
     @observable adminLoadingComplete = {

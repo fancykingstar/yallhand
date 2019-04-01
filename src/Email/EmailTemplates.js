@@ -33,8 +33,8 @@ export class EmailTemplates extends React.Component {
         }
 
         const templates = sortByUTC(EmailStore.allCampaigns, UIStore.dropdown.emailTemplateSort).filter(x => x.isTemplate).map(x => 
-            <React.Fragment>
-                <div key={"email template"+giveMeKey()}>
+            <React.Fragment key={"email template"+giveMeKey()}>
+                <div >
                 <div style={{marginBottom: 0, paddingBototm: 0}}><h3>{x.subject}</h3></div>
                 <div style={{marginTop: 0, paddingTop: 0}}><span style={{fontSize: ".8em", fontWeight: 800}}> {UTCtoFriendly(x.updated)} </span></div>
                 
@@ -42,7 +42,7 @@ export class EmailTemplates extends React.Component {
                     <span dangerouslySetInnerHTML={{ __html: x.draftContentHTML }} />
                 </div>
                 <div style={x.content.length === 0? {display: "none"} : {paddingTop: 10}}>
-                    <span style={{fontWeight: 800, fontSize: ".8em"}}>Selected Content: {x.content.map(y => <a href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
+                    <span style={{fontWeight: 800, fontSize: ".8em"}}>Selected Content: {x.content.map(y => <a key={"template link" + giveMeKey()} href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
                 </div>
 
            

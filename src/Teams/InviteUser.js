@@ -78,7 +78,7 @@ export class InviteUser extends React.Component {
     let newUser = this.getDataNewUser()
     newUser.now = !later
     if (later) newUser.date = moment(this.state.date).valueOf()
-    console.log(newUser)
+    // console.log(newUser)
     await apiCall('validations', 'POST', newUser).then((res) => res.json()).then((res) => res.error ? this.error(res) : this.success())
   }
 
@@ -100,7 +100,7 @@ export class InviteUser extends React.Component {
               <TagSelect label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
             </Form.Group>
             <span>
-              start user
+              start user{" "}
               <Dropdown onChange={(e, v) => this.setState({dropdown: v.value})} options={dropDownText} value={dropdown} inline />
             </span>
             <div style={{paddingTop: 10}}>

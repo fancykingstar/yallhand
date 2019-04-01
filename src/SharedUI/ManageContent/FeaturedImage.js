@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Segment, Image, Form, Header } from "semantic-ui-react";
+import { Segment, Form, Header, Message } from "semantic-ui-react";
 import {S3Upload} from "../../DataExchange/S3Upload"
 import {GenerateFileName} from "../../SharedCalculations/GenerateFileName"
 import {modifyAnnouncement, modifyPolicy} from "../../DataExchange/Up"
@@ -8,12 +8,15 @@ import {featuredImgEdit} from "../../DataExchange/PayloadBuilder"
 import "./style.css";
 
  
-@inject("DataEntryStore", "AccountStore")
+@inject("DataEntryStore", "AccountStore", "UIStore")
 @observer
 export class FeaturedImage extends React.Component {
+  componentWillMount(){
+  const {UIStore} = this.props
+  UIStore.set("message", "featuredImage", "")
+  }
   render() {
-    const { AccountStore } = this.props
-    const { DataEntryStore } = this.props;
+    const { AccountStore, DataEntryStore, UIStore } = this.props
     let imagePreview = this.props.defaultImgUrl ? (
       <img alt="featured visual" src={this.props.defaultImgUrl} />
     ) : (
@@ -37,6 +40,7 @@ export class FeaturedImage extends React.Component {
 
     const handleImageChange = e => {
       e.preventDefault();
+      const maxWidth = this.props.maxWidth
       let file = e.target.files[0];
       let fileType = /image.*/;
       if (!file.type.match(fileType)) {
@@ -45,16 +49,36 @@ export class FeaturedImage extends React.Component {
         alert("File type not supported");
       } else {
         let reader = new FileReader();
-        reader.onloadend = () => {
-          DataEntryStore.set("featuredImage", "file", file);
-          DataEntryStore.set("featuredImage", "url", reader.result);
-          DataEntryStore.set("featuredImage", "filename", file.name)
-        };
+        reader.onload = e => {
+          const img = new Image();      
+          img.src = e.target.result;
+          img.onload = function () {
+             const h = this.width;
+             const w = this.height;
+          if(maxWidth === undefined){
+            DataEntryStore.set("featuredImage", "file", file);
+            DataEntryStore.set("featuredImage", "url", reader.result);
+            DataEntryStore.set("featuredImage", "filename", file.name)
+            UIStore.set("message", "featuredImage", "")
+          }
+          else{
+            if(w >= maxWidth){
+              DataEntryStore.set("featuredImage", "file", file);
+              DataEntryStore.set("featuredImage", "url", reader.result);
+              DataEntryStore.set("featuredImage", "filename", file.name)
+              UIStore.set("message", "featuredImage", "")
+            }
+            else{
+              UIStore.set("message", "featuredImage", `Sorry, this image needs to be at least ${maxWidth} px wide`)
+
+            }
+          }   
+          }}
         reader.readAsDataURL(file);
       }
     };
 
-    const preview = this.props.circular !== undefined ?<div className="Avatar-Wrap"> <Image className="Avatar" size="small" src={this.props.defaultImgUrl} /></div>  :  <div className="imgPreview">{imagePreview}</div>
+    const preview = this.props.circular !== undefined ?<div className="Avatar-Wrap"> <img className="Avatar" size="small" src={this.props.defaultImgUrl} /></div>  :  <div className="imgPreview">{imagePreview}</div>
 
     return (
       <Segment>
@@ -70,7 +94,7 @@ export class FeaturedImage extends React.Component {
             />
             <Form.Button
               primary
-              disabled={DataEntryStore.featuredImage.file === ""}
+              disabled={DataEntryStore.featuredImage.file === "" || UIStore.message.featuredImage !== ""}
               onClick={e => handleSubmit(e)}
             >
               Upload Image
@@ -81,7 +105,7 @@ export class FeaturedImage extends React.Component {
               Get Image
           </Button> */}
        {preview}
-     
+      <Message hidden={UIStore.message.featuredImage === ""} error>{UIStore.message.featuredImage}</Message>
       </Segment>
     );
   }

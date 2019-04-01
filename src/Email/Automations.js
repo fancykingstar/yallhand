@@ -34,10 +34,10 @@ export class Automations extends React.Component {
         </Table.Row>
       ));
 
-    return (
-      <div className="Segment">
-        <Header as="h2" content="Email Automations" />
-        <Table padded="very" basic="very">
+    const displayAutomations = EmailStore.allCampaigns .filter(camp => camp.isTriggered && camp.completed === false)?
+    <h5 style={{ fontStyle: "italic" }}>
+    No onboard/offboard automations are active
+  </h5> :   <Table padded="very" basic="very">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Email Subject</Table.HeaderCell>
@@ -54,6 +54,12 @@ export class Automations extends React.Component {
 
           <Table.Body>{outbounds}</Table.Body>
         </Table>
+
+
+    return (
+      <div className="Segment">
+        <Header as="h2" content="Email Automations" />
+      {displayAutomations}
       </div>
     );
   }

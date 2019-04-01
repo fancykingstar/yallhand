@@ -7,7 +7,6 @@ import { PortalMobile } from "./PortalMobile"
 import  PortalDesktop  from "./PortalDesktop"
 import "./style.css";
 
-
 @inject("TeamStore", "UserStore", "UIStore")
 @observer
 class Header extends React.Component {
@@ -34,7 +33,6 @@ class Header extends React.Component {
       else if(this.mode === "portal" && UIStore.responsive.isMobile === false){return <PortalDesktop/>}
       else if(this.mode === "portal" && UIStore.responsive.isMobile){return <PortalMobile/>}
     }
-
 
     return (
       <div className={
