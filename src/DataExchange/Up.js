@@ -345,9 +345,9 @@ export const sendEmailPreview = async (val) => {
     completed: false,
   };
 
-  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json()).then(res => {
-    console.log(res)
-  })
+  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
+    .then(res => toast.success('Preview email has been send', {hideProgressBar: true}))
+    .catch(e => toast.error('Preview email has not been send', {hideProgressBar: true}))
 }
 
 
