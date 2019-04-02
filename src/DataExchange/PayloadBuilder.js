@@ -283,6 +283,7 @@ export const fileResourceAssociate = (resourceID, associations) => {
 export const emailPreview = () => {
   let tags = formatTag(DataEntryStore.emailCampaign.selectedTag);
   if (JSON.stringify(tags) === "[null]") tags = [];
+  console.log(DataEntryStore)
   const buildObj = {
     accountID: accountID(),
     bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
@@ -291,7 +292,11 @@ export const emailPreview = () => {
     targetUsers: DataEntryStore.emailCampaign.selectedUsers,
     previewUsers: DataEntryStore.emailCampaign.previewUsers,
     updated: now(),
-    userID:  userID()
+    userID:  userID(),
+    subject: DataEntryStore.emailCampaign.sendSubject,
+    content: DataEntryStore.emailCampaign.sendContent,
+    draftContentHTML: DataEntryStore.draftContentHTML,
+    draftContentRAW: DataEntryStore.draftContentRAW,
   };
   return buildObj
 };

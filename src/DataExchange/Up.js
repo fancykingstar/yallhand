@@ -339,7 +339,6 @@ export const deactivateUser = (val) => {
 
 
 export const sendEmailPreview = async (val) => {
-  // console.log(val)
   const previewValues = {
     isSendNow: true,
     completed: false,
