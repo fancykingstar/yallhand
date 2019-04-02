@@ -75,8 +75,8 @@ class NewEditVariation extends React.Component {
     DataEntryStore.set("content", "stage", stage)
 
     if (stage === "published") {
-      const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
-      createHistory(historyMode)
+      // const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
+      // createHistory(historyMode)
     }
     
     validateURLs(mode);

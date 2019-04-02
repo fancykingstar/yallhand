@@ -61,7 +61,6 @@ class ManageContent extends React.Component {
           this.props.history.push("/panel/faqs");
         }
       }
-
       UIStore.set(
         "content",
         "variationID",
