@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Segment, Form, Button, Message, Item } from "semantic-ui-react";
+import { Header, Segment, Form, Button, Message } from "semantic-ui-react";
 import { FeaturedAvatar } from "../SharedUI/ManageContent/FeaturedAvatar"
 import { periods } from "../TemplateData/periods"
 import { FormCharMax } from "../SharedValidations/FormCharMax";
@@ -8,6 +8,7 @@ import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
 import { baseSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyAccount } from "../DataExchange/Up"
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 
 @inject("AccountStore", "DataEntryStore")
@@ -117,9 +118,9 @@ export class BaseSettings extends React.Component {
           }}
         />
         
-        <Segment disabled>
+        <Segment>
           <Header>Billing & Payments</Header>
-          <Item>Disabled</Item>
+          <span style={{fontWeight: 800}}>Free Trial Until: </span><span>{AccountStore.account.data.trialExp === undefined? "No Date Entered" : UTCtoFriendly(AccountStore.account.data.trialExp)}</span>
         </Segment>
         <Segment >
           <div style={{height: 50}}>  

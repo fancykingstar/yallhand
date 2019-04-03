@@ -90,7 +90,7 @@ class NewEditVariation extends React.Component {
         const id = res[typeId];
         UIStore.set("content", typeId, id);
         // UIStore.set("content", "variationID", id);
-        history.push(`${path}${res[id]}`);
+        // history.push(`${path}${res[id]}`);
       });
     }
     else isPolicy ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode));

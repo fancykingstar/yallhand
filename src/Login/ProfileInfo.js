@@ -157,7 +157,7 @@ class ProfileInfo extends React.Component {
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
             </Form>
           </div>
-          {error && <div style={{maxWidth: 330, paddingTop: 10}}><Message icon="warning"  content={error} negative/></div>}
+          {error && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning"  content={error} negative/></div>}
         </div>
       </React.Fragment>
     );

@@ -7,7 +7,7 @@ import {Views} from "./Views"
 export class AnalyticsFrame extends React.Component {
   render() {
     return (
-      <div style={{overflowY: "auto"}}>
+      <div style={{overflowY: "auto", paddingBottom: 50}}>
         <Header
           as="h2"
           content="Analytics"

@@ -51,7 +51,7 @@ class PrimaryLogins extends React.Component {
           {stage === 'register' && <span className="btn inviteCode" onClick={e => this.setState({stage: 'reauth'})} style={style}>
             Already have an account?
           </span>}
-          {errorMsg && <Message icon="warning" content={errorMsg} negative/>}
+          {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
         </div>
       </React.Fragment>
     );

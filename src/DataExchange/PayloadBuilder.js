@@ -85,7 +85,7 @@ export const account = () => {
       "generalEmail": DataEntryStore.superAdmin.accountEmail,
       "data": {}
   };
-  return _.extend({}, base(), buildObj)
+  return _.extend({}, {"userID": userID(), "updated": now()}, buildObj)
 }
 
 

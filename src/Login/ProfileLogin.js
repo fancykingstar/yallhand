@@ -68,8 +68,8 @@ class ProfileLogin extends React.Component {
             </div>
             </div>
           </div>
-          {errorMsg && <Message icon="warning" content={errorMsg} negative/>}
-          {successMsg && <Message icon="info" content={successMsg} positive/>}
+          {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
+          {successMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="info" content={successMsg} positive/></div>}
         </div>
       </React.Fragment>
     );
