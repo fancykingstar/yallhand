@@ -27,6 +27,7 @@ class ProfileInfo extends React.Component {
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
       img: props.item && props.item.img ? props.item.img : '',
     };
+    console.log(this.state)
   }
 
   isEmpty (value) {
@@ -67,7 +68,7 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tags, email, phone, password, accountID, now, date, googleId, img } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tag, email, phone, password, accountID, now, date, googleId, img } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     else if (this.validate('phone', 'phone') !== '') return;
@@ -82,7 +83,7 @@ class ProfileInfo extends React.Component {
       displayName: username,
       isAdmin: isAdmin,
       teamID: teamID,
-      tags: tags,
+      tags: tag,
       email: email,
       img: img,
       phone: phone,

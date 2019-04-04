@@ -12,10 +12,16 @@ import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
 import { Responsive, Transition } from "semantic-ui-react";
+import {apiCall_pixel} from "../DataExchange/Fetch"
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
 class UserPortal extends React.Component {
+
+  componentWillMount() {
+    const { location } = this.props;
+    if (location.search && location.search.indexOf('data=') > -1) apiCall_pixel(`1x1pixel.gif${location.search}`);
+  }
 
   render() {
     const { UIStore } = this.props;
