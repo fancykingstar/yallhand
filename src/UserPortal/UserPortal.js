@@ -12,10 +12,17 @@ import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
 import { Responsive, Transition } from "semantic-ui-react";
+import { loadAdmin } from "../DataExchange/LoadProfile";
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
 class UserPortal extends React.Component {
+  componentDidMount() {
+    const { UserStore } = this.props;
+    if (UserStore.previewTeam !== "") {
+      loadAdmin()
+    }
+  }
 
   render() {
     const { UIStore } = this.props;

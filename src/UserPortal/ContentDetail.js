@@ -65,7 +65,8 @@ export class ContentDetail extends React.Component {
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
                   <div style={{fontSize:"1.4em"}}>
-                  <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/>
+                  {/* <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/> */}
+                  <span dangerouslySetInnerHTML={{ __html: content.variations[0].contentHTML }} />
                   </div>
                   </Container>
                 <br/>
