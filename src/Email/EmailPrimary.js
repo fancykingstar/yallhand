@@ -139,7 +139,7 @@ export class EmailPrimary extends React.Component {
           <div style={UIStore.menuItem.sendEmailBody === "content"? {display: "none"}:{display:"contents"} }>
           <div style={{ maxWidth: 520, paddingTop: 20, paddingBottom: 20 }}>        <div>
             <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Message</span>
-                <DraftFormField loadContent={null} />
+            <div style={{paddingTop: 3}}> <DraftFormField loadContent={null} border /></div>
             </div></div>
           </div>
           <div style={UIStore.menuItem.sendEmailBody === "message"? {display: "none"}:{display:"contents"} }>
@@ -148,7 +148,7 @@ export class EmailPrimary extends React.Component {
 
           {bundlePopulated ? (
           <h5 style={{ fontStyle: "italic" }}>
-            No content added (yet)...
+            {/* No content added (yet)... */}
           </h5>
         ) : (
           <BundleContent
@@ -162,7 +162,7 @@ export class EmailPrimary extends React.Component {
           </div>
         </div>
         <div style={{paddingTop: 10}}>
-          <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Featured Image (optional)</span>
+          <span style={{fontWeight: 800, fontSize: ".9em", paddingBottom: 0}}>Custom Featured Image (optional)</span>
            <FeaturedImage maxWidth={600} compact defaultImgUrl={DataEntryStore.emailCampaign.img} output={val => DataEntryStore.set("emailCampaign", "img", val)}/>
           </div>
 

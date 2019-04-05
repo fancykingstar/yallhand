@@ -27,6 +27,7 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+    console.log(JSON.stringify(payload))
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
@@ -44,7 +45,9 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 }
 
 ///LOGS (event type options: create, update, delete)
-export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
+export const log = (payload) => {
+    apiCall("itslogs", "POST", payload)
+} 
 
 ///Sentiment
 export const createSentiment = (payload) => apiCall("/sentiments", "POST", payload) 

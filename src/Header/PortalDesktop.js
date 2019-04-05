@@ -1,18 +1,24 @@
 import React from "react";
+import {inject, observer} from "mobx-react"
 import { Button } from "semantic-ui-react";
 import PortalUserProfile from "./PortalUserProfile";
 import { withRouter } from "react-router-dom";
-import { UserStore } from "../Stores/UserStore";
 import "./style.css";
 
 
 
-const PortalDesktop = props => {
+
+const PortalDesktop = inject("UIStore", "UserStore")(observer((props) => {
+  const {UIStore, UserStore} = props
+  const backToAdmin = () => {
+    UIStore.reset("adminLoadingComplete")
+    props.history.push("/panel")
+  }
   const portalReturn = !UserStore.user.isAdmin ? (
     <div />
   ) : (
     <div style={{ float: "right", paddingRight: 15, paddingTop: 6 }}>
-      <Button size="mini" onClick={e => props.history.push("/panel")}>
+      <Button size="mini" onClick={e => backToAdmin()}>
         {" "} Admin Panel{" "}
       </Button>
     </div>
@@ -24,5 +30,6 @@ const PortalDesktop = props => {
       {portalReturn}
     </div>
   );
-};
+}))
 export default withRouter(PortalDesktop);
+ 

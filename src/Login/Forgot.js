@@ -90,7 +90,7 @@ class Forgot extends React.Component {
                 <Icon name={"mail"}/>{"Verify your email"}
               </Form.Button>
             </div>
-            {errorMsg && <Message icon="warning" content={errorMsg} negative/>}
+            {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
           </div>
         </React.Fragment>
       </div>
