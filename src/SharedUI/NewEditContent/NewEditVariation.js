@@ -25,47 +25,47 @@ class NewEditVariation extends React.Component {
     const { DataEntryStore, UIStore } = this.props;
     DataEntryStore.reset("content")
     DataEntryStore.resetDraft()
-    // UIStore.reset("content")
   }
 
   componentDidMount() {
-    const { UIStore, PoliciesStore, AnnouncementsStore } = this.props;
+    const { UIStore, PoliciesStore, AnnouncementsStore, DataEntryStore } = this.props;
     UIStore.set("modal", "uploadAssocEdit", false)
     const id = this.props.match.params.id;
     const { content } = UIStore;
     const { announcementID, variationID } = content;
 
+    const load = async (variation) => {
+      const { label, teamID, tags, stage, contentRAW, contentHTML } = variation;
+      // const { UIStore, AnnouncementsStore, PoliciesStore, DataEntryStore } = this.props;
+      const { id } = this.props.match.params;
+  
+      UIStore.set("content", "variationID", id)
+      await this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(id), id) : /*null*/
+        UIStore.set("content", "announcementID", AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
+      DataEntryStore.set("content", "label", label)
+      DataEntryStore.set("content", "teamID", teamID)
+      DataEntryStore.set("content", "tagID", tags.length === 0? "none" : tags[0])
+      DataEntryStore.set("content", "stage", stage)
+      DataEntryStore.set("content", "contentRAW", contentRAW)
+      DataEntryStore.set("content", "contentHTML", contentHTML)
+      DataEntryStore.set("content", "isNew", false)
+
+    }
+
     if (this.mode === "policy") {
       if (variationID === "" || id !== variationID){
         const vari = PoliciesStore._getVariation(PoliciesStore._getPolicyIDfromVariation(id), id)
-        if (!_.isEmpty(vari) ) this.load(vari)
+        if (!_.isEmpty(vari) ) load(vari)
         else this.props.history.push("/panel/faqs")
       }
     }
     else if (this.mode === "announcement") {
       if (announcementID === "" || id !== variationID) {
         const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
-        if (!_.isEmpty(vari)) this.load(vari)
+        if (!_.isEmpty(vari)) load(vari)
         else this.props.history.push("/panel/announcements")
       }
     }
-  }
-
-  load(variation) {
-    const { label, teamID, tags, stage, contentRAW, contentHTML } = variation;
-    const { UIStore, AnnouncementsStore, PoliciesStore, DataEntryStore } = this.props;
-    const { id } = this.props.match.params;
-
-    UIStore.set("content", "variationID", id)
-    this.mode === "policy" ? UIStore.set("content", "policyID", PoliciesStore._getPolicyIDfromVariation(id), id) : /*null*/
-      UIStore.set("content", "announcementID", AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
-    DataEntryStore.set("content", "label", label)
-    DataEntryStore.set("content", "teamID", teamID)
-    DataEntryStore.set("content", "tagID", tags.length === 0? "none" : tags[0])
-    DataEntryStore.set("content", "stage", stage)
-    DataEntryStore.set("content", "contentRAW", contentRAW)
-    DataEntryStore.set("content", "contentHTML", contentHTML)
-    DataEntryStore.set("content", "isNew", false)
   }
 
   changeStage(stage) {
@@ -79,7 +79,7 @@ class NewEditVariation extends React.Component {
       // createHistory(historyMode)
     }
     
-    validateURLs(mode);
+    // validateURLs(mode);
     const isPolicy = mode === "policy";
     const typeId = `${mode}ID`;
     if (isNew) {
@@ -102,13 +102,12 @@ class NewEditVariation extends React.Component {
     const { content } = DataEntryStore;
     const { announcementID, variationID, stage } = content;
     const { mode } = this;
-
     return (
-      <div className="PolicyFrame">
-        {(variationID !== "" || announcementID !== "") && <React.Fragment>
+      <div style={{overflow: "auto"}}>
+        {(variationID !== "" || announcementID !== "" || DataEntryStore.content.isNew) && <React.Fragment>
           <PublishControls stage={stage} onClick={val => this.changeStage(val)}/>
           <VariationConfig mode={mode}/>
-          <VariationContent mode={mode}/>
+         {DataEntryStore.content.contentRAW === undefined? <div/> : <VariationContent mode={mode}/>}
         </React.Fragment>}
       </div>
     );

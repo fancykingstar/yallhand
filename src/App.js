@@ -10,6 +10,7 @@ import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import DevTools from 'mobx-react-devtools'
 
+
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
@@ -21,6 +22,7 @@ class AppRoute extends React.Component {
       UserStore.setPreviewTag("")
       loadAdmin()
     }
+    
   }
 
   render() {
