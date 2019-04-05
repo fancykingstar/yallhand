@@ -57,7 +57,8 @@ export class Files extends React.Component {
     UIStore.set("modal", "uploadAssocEdit", false)
   }
 
-  const getIcon = (filetype) => {return FileTypeIcons[filetype] }
+  const getIcon = (filetype) => FileTypeIcons[filetype] === undefined? FileTypeIcons["default"] : FileTypeIcons[filetype]  
+ 
   
   const addFile = (val) => {
     createFile(fileResource())
@@ -93,11 +94,11 @@ export class Files extends React.Component {
   const resfiles = filteredDisplay().map(resfile => (
       <Table.Row key={"files" + giveMeKey()}>
         <Table.Cell>
-          <Icon name={getIcon(resfile.type)} />
+          <Icon color="blue" name={getIcon(resfile.url.slice(-3))} />
           <Item style={{cursor: "pointer"}} as="a" onClick={e => downloadFile(resfile.S3Key.split("gramercy/")[1], resfile.label)}>{resfile.label}</Item>
        
         </Table.Cell>
-        <Table.Cell >{resfile.size}</Table.Cell>
+        <Table.Cell >{resfile.type}</Table.Cell>
         <Table.Cell >{UTCtoFriendly(resfile.updated)}</Table.Cell>
         <Table.Cell >
         <AssociationSummary data={resfile}/>
@@ -132,7 +133,7 @@ export class Files extends React.Component {
           <Table.Header>
             <Table.Row>
             <Table.HeaderCell>Label</Table.HeaderCell>
-            <Table.HeaderCell>Size</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell >Last Updated</Table.HeaderCell>
               <Table.HeaderCell>Currently Associated With</Table.HeaderCell>
               <Table.HeaderCell/>

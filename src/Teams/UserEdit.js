@@ -7,7 +7,6 @@ import { AdminEdit } from "./AdminEdit";
 import { modifyUser} from "../DataExchange/Up"
 import { Offboard } from "./Offboard"
 import { userUpdate } from "../DataExchange/PayloadBuilder"
-import _ from "lodash";
 
 @inject("DataEntryStore")
 @observer
@@ -16,8 +15,8 @@ export class UserEdit extends React.Component {
     const { DataEntryStore } = this.props;
     const defaultValues = val =>
         DataEntryStore.userEditFields.userEdit[val];
-    const adminSettings =
-      DataEntryStore.userEditFields.isAdmin === false ? null : <AdminEdit />;
+    // const adminSettings =
+    //   DataEntryStore.userEditFields.isAdmin === false ? null : <AdminEdit />;
     const handleInput = (e, val, type) => {
       DataEntryStore.userEditFields[type] = val.value;}
     const handleCancel = () => {

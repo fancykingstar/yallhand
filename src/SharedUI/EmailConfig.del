@@ -6,20 +6,21 @@ import {
   Segment,
   Select,
   Button,
-  Header
+  Header,
+  Menu
 } from "semantic-ui-react";
-import { DraftFormField } from "../../SharedUI/DraftFormField";
-import { ConfirmDelete } from "../ConfirmDelete";
-import { InfoPopUp } from "../../SharedUI/InfoPopUp";
+import { DraftFormField } from "./DraftFormField";
+// import { ConfirmDelete } from "../ConfirmDelete";
+import { InfoPopUp } from "./InfoPopUp";
 import { inject, observer } from "mobx-react";
-import { uploadBundle, mergeBundle, createBundle, modifyBundle } from "../../DataExchange/Up";
-import { bundle, bundleMerged } from "../../DataExchange/PayloadBuilder";
+import { uploadBundle, mergeBundle, createBundle, modifyBundle } from "../DataExchange/Up";
+import { bundle, bundleMerged } from "../DataExchange/PayloadBuilder";
 import _ from "lodash";
-import { flashQueue } from "../../SharedCalculations/FlashQueue";
+import { flashQueue } from "../SharedCalculations/FlashQueue";
 
 @inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
-export class BundleConfig extends React.Component {
+export class EmailConfig extends React.Component {
   render() {
     const { UIStore, DataEntryStore, EmailStore } = this.props;
 
@@ -62,7 +63,8 @@ export class BundleConfig extends React.Component {
 
     return (
       <React.Fragment>
-        <div
+     
+        {/* <div
           style={
             DataEntryStore.emailCampaign.queueSaveSelect !== "queue"
               ? { pointerEvents: "none" }
@@ -71,10 +73,10 @@ export class BundleConfig extends React.Component {
         >
           <Segment disabled={DataEntryStore.emailCampaign.queueSaveSelect !== "queue"
               ? true
-              : false}>
-            <Header>Design Email Properties</Header>
+              : false}> */}
+            {/* <Header>Design Email Properties</Header> */}
             <Form style={{ marginTop: 5 }}>
-              <Form.Input
+              {/* <Form.Input
                 label={
                   <span>
                     Label (Optional)
@@ -85,7 +87,7 @@ export class BundleConfig extends React.Component {
                 onChange={(e, val) =>
                   DataEntryStore.set("emailCampaign", "queueLabel", val.value)
                 }
-              />
+              /> */}
               <Form.Input
                 label="Email Subject (Required)"
                 value={DataEntryStore.emailCampaign.queueSubject}
@@ -94,8 +96,10 @@ export class BundleConfig extends React.Component {
                 }
               />
             </Form>
+            <br/>
+   
 
-            <Accordion>
+            {/* <Accordion>
               <Accordion.Title
                 active={UIStore.accordion.bundleConfig}
                 onClick={e => handleAccClick(e)}
@@ -103,44 +107,22 @@ export class BundleConfig extends React.Component {
                 <Icon name="dropdown" />
                 Intro Body (Optional)
               </Accordion.Title>
-              <Accordion.Content active={UIStore.accordion.bundleConfig}>
-                <DraftFormField
+              <Accordion.Content active={UIStore.accordion.bundleConfig}>*/}
+            <div style={{paddingTop: 20}}>
+            <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Message</span>
+                <DraftFormField 
                   loadContent={_.isEmpty(EmailStore.queue.bodyContentRAW)? null : EmailStore.queue.bodyContentRAW}
                 />
-              </Accordion.Content>
-            </Accordion>
+            </div>
+          
+              {/* </Accordion.Content>
+            </Accordion> */}
             <br />
-          </Segment>
-        </div>
+          {/* </Segment>
+        </div> */}
 
-        <Segment>
-          <Header>Save This Queue</Header>
-          <p style={{ fontWeight: 800, marginBottom: 5 }}>From Queue Items</p>
-          <Form style={{ marginLeft: 7 }}>
-            <Form.Group>
-              <Select
-                fluid
-                selection
-                value={DataEntryStore.emailCampaign.queueSaveSelect}
-                onChange={(e, val) => handleSelect(val.value)}
-                options={bundleBuildOption}
-              />
-
-              <Button
-                disabled={
-                DataEntryStore.emailCampaign.queueSaveSelect !== "queue" ? false :
-                DataEntryStore.emailCampaign.queueSubject === ""  
-                }
-                primary
-                style={{ marginLeft: 10 }}
-                onClick={e => saveQueue(e)}
-              >
-                Save
-              </Button>
-            </Form.Group>
-          </Form>
-        </Segment>
-        <Segment>
+       
+        {/* <Segment>
           <div style={{ height: 30 }}>
             {" "}
             <ConfirmDelete
@@ -149,7 +131,7 @@ export class BundleConfig extends React.Component {
               confirm={e =>  flashQueue()}               
               />
           </div>
-        </Segment>
+        </Segment> */}
         <br />
       </React.Fragment>
     );

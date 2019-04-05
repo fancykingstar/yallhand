@@ -13,6 +13,7 @@ export class DateTimeSelect extends React.Component {
     const {UIStore} = this.props
     UIStore.set("dateTimeSelect", "date", "")
     UIStore.set("dateTimeSelect", "time", "00:00")
+    this.props.value(0)
   }
 
   render() {

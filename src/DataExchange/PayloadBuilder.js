@@ -4,16 +4,14 @@ import { PoliciesStore } from "../Stores/PoliciesStore";
 import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore";
 import { TeamStore } from "../Stores/TeamStore"
-import { EmailStore } from "../Stores/EmailStore"
-import { generateID } from "../SharedCalculations/GenerateID"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import _ from "lodash";
-const uuidv4 = require('uuid/v4')
+
 
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
 const userID = () => UserStore.user.isSuperAdmin? "*" : UserStore.user.userID;
 const now = () => Date.now();
-const formatTag = (val) => val === "" ? [] : [val]
+const formatTag = (val) => val === "" || val === "none" ? [] : [val]
 
 const base = () => {return {"accountID": accountID(), "userID": userID(), "updated": now()}}
 
@@ -30,7 +28,6 @@ export const UNTITLED = () => {
 export const ItsLog = (action, data) => {
   //action (true/false (view only)) data = {"event":, "type":,} or {"location": "location label"}
   let buildObj = {
-    logID: uuidv4(),
     isAction: action,
     data: data
   }
@@ -40,7 +37,6 @@ export const ItsLog = (action, data) => {
 //
 export const history = (type, id, data) => {
   const buildObj = {
-    historyID: uuidv4(),
     accountID: accountID(),
     updated: now(),
     type,
@@ -55,7 +51,6 @@ export const history = (type, id, data) => {
 ///SENTIMENT
 export const sentiment = (sentiment, type, ID, variationID=null) => {
   const buildObj = {
-    sentimentID: uuidv4(),
     type,
     ID, 
     variationID,
@@ -70,7 +65,6 @@ export const sentiment = (sentiment, type, ID, variationID=null) => {
 ///SCHEDULE
 export const schedule = (when, task, data) => {
   const buildObj = {
-    scheduleID: uuidv4(),
     when,
     executed: false,
     task,
@@ -83,7 +77,6 @@ export const schedule = (when, task, data) => {
 ///ACCOUNTS (SUPERADMIN ONLY)
 export const account = () => {
   const buildObj = {
-      "accountID": generateID(),
       "label": DataEntryStore.superAdmin.accountLabel,
       "img": DataEntryStore.superAdmin.accountImg,
       "reviewAlert": DataEntryStore.superAdmin.accountReviewAlert,
@@ -92,7 +85,7 @@ export const account = () => {
       "generalEmail": DataEntryStore.superAdmin.accountEmail,
       "data": {}
   };
-  return _.extend({}, base(), buildObj)
+  return _.extend({}, {"userID": userID(), "updated": now()}, buildObj)
 }
 
 
@@ -100,7 +93,6 @@ export const account = () => {
 ///TEAMS (STRUCTURE)
 export const team = () => {
   const buildObj = {
-    teamID: generateID(),
     label: DataEntryStore.teamEditFields.teamsLabel,
     parent: DataEntryStore.teamEditFields.teamsDropdown,
     depth:
@@ -128,7 +120,6 @@ export const teamUpdate = () => {
 export const tag = () => {
   const buildObj = {
     accountID: AccountStore.account.accountID,
-    tagID: generateID(),
     label: DataEntryStore.teamEditFields.tagsLabel,
     parent: DataEntryStore.teamEditFields.tagsDropdown,
     depth:
@@ -161,7 +152,6 @@ export const user = () => {
   const x = DataEntryStore.onOffBoarding
   const isAdmin = x.adminEmail !== ""
   const buildObj = {
-      "userID": generateID(),
       "accountID": accountID(),
       "invitedBy": userID(),
       "isActive": true,
@@ -194,17 +184,6 @@ export const userUpdate = () => {
       key === "tagID"? buildObj["tags"] = [x[key]] : buildObj[key] = x[key]
     }} )
   buildObj.isAdmin = x.isAdmin
-  // const buildObj = {userID: x.userEdit.userID,adminLimits: {}};
-  // if(x.adminChannels.length > 0){buildObj.adminLimits.channels = x.adminChannels}
-  // if(x.adminTeams.length > 0){buildObj.adminLimits.teams = x.adminTeams}
-  // if(x.adminTags.length > 0){buildObj.adminLimits.tags = x.adminTags}
-  // if(x.adminConfig === "all"){buildObj.adminLimits = {}}
-  // if(x.displayName_full !== ""){buildObj.displayName_full = x.displayName_full}
-  // if(x.displayName !== ""){buildObj.displayName_full = x.displayName}
-  // if(x.email !== ""){buildObj.email = x.email}
-  // if(x.isAdmin !== x.userEdit.isAdmin){buildObj.isAdmin = x.isAdmin}
-  // if(x.teamID !== ""){buildObj.teamID = x.teamID}
-  // if(x.tagID !== ""){buildObj.tags = [x.tagID]}
   return _.extend({}, {"accountID": accountID(), "userID": userID()}, buildObj)
 }
 
@@ -215,7 +194,6 @@ export const userUpdate = () => {
 ///CHANNELS
 export const channel = () => {
   const buildObj = {
-    "chanID": generateID(),
     "label": DataEntryStore.channel.label
   }
   return _.extend({}, base(), buildObj)
@@ -236,7 +214,6 @@ export const channelUpdate = () => {
 ///URL RESOURCES
 export const urlResource = (obj, id=null) => {
   const buildObj = {
-  "resourceID": id === null? generateID() : obj.resourceID,
   "associations": obj.associations,
   "label": obj.label,
   "url": obj.url,
@@ -244,6 +221,7 @@ export const urlResource = (obj, id=null) => {
   "teamID": obj.teamID,
   "tags": obj.tagID === "none" ? [] : [obj.tagID],
   };
+  if(id !== null){buildObj.resourceID = obj.resourceID}
   return _.extend({}, base(), buildObj)
 }
 
@@ -260,7 +238,6 @@ export const urlResourceAssociate = (resourceID, associations) => {
 ///FILE RESOURCES
 export const fileResource = (assoc=null) => {
   const buildObj = {
-  resourceID: generateID(),
   associations: DataEntryStore.fileForUpload.associations,
   label: DataEntryStore.fileForUpload.label,
   S3Key: DataEntryStore.fileForUpload.S3Key,
@@ -302,123 +279,54 @@ export const fileResourceAssociate = (resourceID, associations) => {
 }
 
 
-
-
-
-///EMAIL BUNDLES
-export const queueCreate = () => {
-  const buildObj = Object.assign({}, EmailStore.queue)
-  return _.extend({}, base(), buildObj)
-}
-
-export const queueEdit = () => {
-  const buildObj = {
-    // bundleID: "queue",
-    bundleID: DataEntryStore.emailCampaign.queueID,
-    bundle: DataEntryStore.emailCampaign.queue,
-    isQueue: true,
-    label: DataEntryStore.emailCampaign.queueLabel,
-    subject: DataEntryStore.emailCampaign.queueSubject,
-    body: DataEntryStore.draft,
-    bodyContentHTML: DataEntryStore.draftContentHTML,
-    bodyContentRAW: DataEntryStore.draftContentRAW
-  };
-  return _.extend({}, base(), buildObj)
-}
-
-export const bundle = (queue=false) => {
-  const buildObj = {
-    // bundleID: queue? "queue" : generateID(),
-    bundleID: generateID(),
-    isQueue: queue? true : false,
-    bundle: DataEntryStore.emailCampaign.queue,
-    label: DataEntryStore.emailCampaign.queueLabel,
-    subject: DataEntryStore.emailCampaign.queueSubject,
-    body: DataEntryStore.draft,
-    bodyContentHTML: DataEntryStore.draftContentHTML,
-    bodyContentRAW: DataEntryStore.draftContentRAW,
-    stage: "active",
-    lastUsed: 0
-  }
-  return _.extend({}, base(), buildObj)
-}
-
-export const bundleEdit = () => {
-  const buildObj = {
-      bundleID: DataEntryStore.emailCampaign.editBundleID,
-      bundle: DataEntryStore.emailCampaign.editBundleBundle,
-      label: DataEntryStore.emailCampaign.editBundleLabel,
-      subject: DataEntryStore.emailCampaign.editBundleSubject,
-      body: DataEntryStore.draft,
-      bodyContentHTML: DataEntryStore.draftContentHTML,
-      bodyContentRAW: DataEntryStore.draftContentRAW,
-      stage: DataEntryStore.emailCampaign.editBundleStage,
-  }
-  return _.extend({}, base(), buildObj)
-}
-
-
-export const bundleMerged = (targetBundle) => {
-  let currentQueue = DataEntryStore.emailCampaign.queue
-  let target =  targetBundle.bundle
-  currentQueue = currentQueue.filter(content => !EmailStore._doesBundleContain(Object.values(content)[0], targetBundle.bundleID))
-  const newBundle = [...currentQueue, ...target]
-  const buildObj = {
-    bundleID: targetBundle.bundleID,
-    bundle: newBundle,
-  }
-  return _.extend({}, base(), buildObj)
-  
-}
-
-
-
-
-
 ///EMAIL CAMPAIGN
 export const emailPreview = () => {
+  let tags = formatTag(DataEntryStore.emailCampaign.sendToTagID);
+  if (JSON.stringify(tags) === "[null]") tags = [];
   const buildObj = {
     accountID: accountID(),
     bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
-    teamID: DataEntryStore.emailCampaign.selectedTeamID,
-    tags: formatTag(DataEntryStore.emailCampaign.selectedTag),
+    teamID: DataEntryStore.emailCampaign.sendToTeamID,
+    tags: tags,
     targetUsers: DataEntryStore.emailCampaign.selectedUsers,
     previewUsers: DataEntryStore.emailCampaign.previewUsers,
     updated: now(),
-    userID:  userID()
+    userID: userID(),
+    subject: DataEntryStore.emailCampaign.sendSubject,
+    content: DataEntryStore.emailCampaign.sendContent,
+    draftContentHTML: DataEntryStore.draftContentHTML,
+    draftContentRAW: DataEntryStore.draftContentRAW,
   };
   return buildObj
 };
 
-export const emailCampaign = (completed=false) => {
-    const trigger = DataEntryStore.emailCampaign.sendEmailsConfig === "trigger" ? 
-    {"event": DataEntryStore.emailCampaign.sendTriggerEvent, "delay": DataEntryStore.emailCampaign.sendTriggerDelay}
-    : {} 
+export const emailCampaign = (isSendNow, isScheduled) => {
+    const eventTrigger = UIStore.menuItem.sendEmailOption === "automate" ? {"event": DataEntryStore.emailCampaign.sendAutomationEvent, "delay": DataEntryStore.emailCampaign.sendAutomationDelay} : {} 
+    let tags = formatTag(DataEntryStore.emailCampaign.sendToTagID);
+    if (JSON.stringify(tags) === "[null]") tags = [];
     const buildObj = {
-      //general
-      accountID: accountID(),
-      campaignID: generateID(), //generated every time even if bundle is reused
-      updated: now(),
-      userID:  userID(),
       //content
-      bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
-      //targets
-      teamID: DataEntryStore.emailCampaign.selectedTeamID,
-      tags: formatTag(DataEntryStore.emailCampaign.selectedTag),
-      targetUsers: DataEntryStore.emailCampaign.selectedUsers,
+      draftContentRAW: UIStore.menuItem.sendEmailBody.includes("message")? DataEntryStore.draftContentRAW : {},
+      draftContentHTML:  UIStore.menuItem.sendEmailBody.includes("message")? DataEntryStore.draftContentHTML: "",
+      subject: DataEntryStore.emailCampaign.sendSubject,
+      content: UIStore.menuItem.sendEmailBody.includes("content")? DataEntryStore.emailCampaign.sendContent : [],
+      //recipiants
+      recipientType: DataEntryStore.emailCampaign.sendTargetType,
+      teamID: DataEntryStore.emailCampaign.sendToTeamID,
+      tags: tags,
+      targetUsers: DataEntryStore.emailCampaign.sendToUsers,
       //config
-      isSendNow: DataEntryStore.emailCampaign.sendEmailsConfig === "now",
-      isScheduled: DataEntryStore.emailCampaign.sendEmailsConfig === "schedule" || DataEntryStore.emailCampaign.sendEmailsConfig === "recur",
-      isRecurring: DataEntryStore.emailCampaign.sendEmailsConfig === "recur" || DataEntryStore.emailCampaign.sendEmailsConfig === "trigger",
-      isTriggered: DataEntryStore.emailCampaign.sendEmailsConfig === "trigger",
-      archiveAfter: DataEntryStore.emailCampaign.archiveAfter,
-      completed: completed,
-      //trigger
-      eventTrigger: trigger, 
+      isSendNow,
+      isScheduled,
+      isTriggered: isSendNow === false && isScheduled === false,
+      isTemplate: DataEntryStore.emailCampaign.sendSaveTemplate,
+      completed: false,
+      //trigger 
+      eventTrigger,
       //schedule
       sendNext: DataEntryStore.emailCampaign.sendNext, 
     };
-    return buildObj
+    return _.extend({}, base(), buildObj)
   };
 
   export const emailCampaignEdit = (patchObj) => {
@@ -436,6 +344,7 @@ export const emailCampaign = (completed=false) => {
   ///POLICIES (FAQs) & ANNOUNCEMENT
   export const content = (type) => {
     const buildObj = {
+      teamID: DataEntryStore.content.teamID,
       chanID: UIStore.sideNav.activeChannel,
       label: DataEntryStore.contentmgmt.label,
       img: "",
@@ -457,7 +366,6 @@ export const emailCampaign = (completed=false) => {
         }
       ]      
     };
-    buildObj[type + "ID"] = UIStore.content[type + "ID"]
 
     return buildObj
   }

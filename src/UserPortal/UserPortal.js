@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Switch, Route, withRouter } from "react-router-dom";
+import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import Header from "../Header/Header";
 import SearchFrame from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
@@ -11,12 +11,24 @@ import AnnouncementsFrame from "./AnnouncementsFrame";
 import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
-import { loadAdmin } from "../DataExchange/LoadProfile";
 import { Responsive, Transition } from "semantic-ui-react";
+import { loadAdmin } from "../DataExchange/LoadProfile";
+import {apiCall_pixel} from "../DataExchange/Fetch"
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
 class UserPortal extends React.Component {
+  componentDidMount() {
+    const { UserStore } = this.props;
+    if (UserStore.previewTeam !== "") {
+      loadAdmin()
+    }
+  }
+
+  componentWillMount() {
+    const { location } = this.props;
+    if (location.search && location.search.indexOf('data=') > -1) apiCall_pixel(`1x1pixel.gif${location.search}`);
+  }
 
   render() {
     const { UIStore } = this.props;
@@ -57,6 +69,9 @@ class UserPortal extends React.Component {
               <Route path="/portal/announcement/:id" render={props => <ContentDetail {...props} mode="announcement" />} exact />
               <Route path="/portal/learn" component={CardFrame} exact />
               <Route path="/portal/learn-detail/:id" render={props => <ContentDetail {...props} mode="policy" />} exact />
+              <Route path="/portal/*">
+                <Redirect push to="/panel"/>
+              </Route>
             </Switch>
           </div>
           <Header />

@@ -1,15 +1,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import "./style.css";
-import {inject, observer} from "mobx-react"
 import { apiCall } from "../DataExchange/Fetch"
 import { QLogo } from "../Assets/Graphics/QLogo";
 import { Divider, Grid, Message } from "semantic-ui-react";
 import { Form, Icon  } from "semantic-ui-react"
 import "./style.css";
 
-// @inject("UIStore")
-// @observer
+
 class Forgot extends React.Component {
   constructor(props) {
     super(props);
@@ -93,7 +90,7 @@ class Forgot extends React.Component {
                 <Icon name={"mail"}/>{"Verify your email"}
               </Form.Button>
             </div>
-            {errorMsg && <Message icon="warning" content={errorMsg} negative/>}
+            {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
           </div>
         </React.Fragment>
       </div>

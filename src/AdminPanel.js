@@ -4,17 +4,16 @@ import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import Header from "./Header/Header";
 import { Responsive, Transition } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
 import { CardFrame } from "./CardFrame/CardFrame";
-import { NewEditVariation } from "./SharedUI/NewEditContent/NewEditVariation";
+import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
-import EditBundle from "./Email/EditBundle";
 import { DashboardFrame } from "./Dashboard/DashboardFrame";
 import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import SuperAdminFrame from "./SuperAdmin/SuperAdminFrame"
@@ -23,24 +22,22 @@ import { CreateAccounts } from "./SuperAdmin/CreateAccounts"
 import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
-
 import { loadAdmin } from "./DataExchange/LoadProfile";
+
+
 import { ToastContainer } from "react-toastify";
 
-@inject(
-  "ChannelStore",
-  "PoliciesStore",
-  "ResourcesStore",
-  "TeamStore",
-  "UserStore",
-  "AnnouncementsStore",
-  "AccountStore",
-  "UIStore",
-  "EmailStore",
-  "DataEntryStore"
-)
+@inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
+  componentDidMount() {
+    const { UserStore, UIStore } = this.props;
+    if (!UIStore._adminLoadingComplete) {
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
+      loadAdmin()
+    }
+  }
   render() {
     const { UIStore, UserStore } = this.props;
 
@@ -57,7 +54,6 @@ export class AdminPanel extends React.Component {
     }
 
     const superAdminPath = UserStore.user !== null && UserStore.user.isSuperAdmin !== undefined && UserStore.user.isSuperAdmin === true? <Route path="/panel/superadmin" component={SuperAdminFrame} exact /> : null
-
 
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
@@ -79,7 +75,7 @@ export class AdminPanel extends React.Component {
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
-            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" />} />{" "} />
+            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/>
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
@@ -87,7 +83,6 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
             <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
-            <Route path="/panel/email/edit-bundle" component={EditBundle} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />
             <Route path="/panel/email" component={EmailFrame} />
@@ -97,6 +92,9 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
             <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
             <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
+            <Route path="/panel/*">
+                <Redirect push to="/panel"/>
+           </Route>
 
           </Switch>
         </div>

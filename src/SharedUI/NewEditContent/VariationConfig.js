@@ -20,13 +20,6 @@ export class VariationConfig extends React.Component {
   render() {
     const { DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
 
-    const teamChange = (val) => {
-      DataEntryStore.set("content", "teamID", val)
-    }
-    const tagChange = (val) => {
-      DataEntryStore.set("content", "tagID", val)
-    }
-
     const obj = Object.assign({}, this.props.mode === "policy" ? 
       PoliciesStore._getPolicy(UIStore.content.policyID)
       : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
@@ -73,12 +66,12 @@ export class VariationConfig extends React.Component {
             <TeamSelect
                 label="Choose Team:"
                 value={DataEntryStore.content.teamID}
-                outputVal={val => teamChange(val)}
+                outputVal={e => DataEntryStore.set("content", "teamID", e.value)}
               />
               <TagSelect
                 label="Choose Tag (optional):"
                 value={DataEntryStore.content.tagID}
-                outputVal={val => tagChange(val)}
+                outputVal={e => DataEntryStore.set("content", "tagID", e)}
               />
     
             </Form.Group>

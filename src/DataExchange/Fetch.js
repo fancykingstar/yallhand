@@ -1,8 +1,8 @@
 import { UIStore } from "../Stores/UIStore"
 import { loadAdmin } from "./LoadProfile";
-// const api_url = "http://127.0.0.1:3000/";
 const api_url = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : "http://127.0.0.1:3000/"
-// const api_url = "https://api.quadrance.fabtesting.com/"
+
+
 
 export const getUser = () => {
   let user = localStorage.getItem('user')
@@ -61,5 +61,15 @@ export const apiCall_del = async (endpoint, meth) => {
     cache: "no-cache",
     credentials: "same-origin",
     headers: headers
+  })
+};
+
+export const apiCall_pixel = async (endpoint) => {
+  return fetch(api_url + endpoint, {
+    method: 'GET',
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: getHeaders()
   })
 };

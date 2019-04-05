@@ -22,9 +22,13 @@ export class CardFilter extends React.Component {
     const counts = () => {
       let cardFilterCountsLocal = { published: 0, drafts: 0, archived: 0 };
       PoliciesStore.allPolicies.forEach(policy => {
-        let val = cardFilterToStage[policy.state].toLowerCase();
-        let current = val.split("cardfilter")[1];
-        cardFilterCountsLocal[current]++;
+        try {
+          let val = cardFilterToStage[policy.state].toLowerCase();
+          let current = val.split("cardfilter")[1];
+          cardFilterCountsLocal[current]++;
+        } catch (e) {
+          console.log(e)
+        }
       });
       return cardFilterCountsLocal;
     };

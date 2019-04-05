@@ -8,6 +8,7 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 export const FeedItem = inject("AccountStore")(observer((props) => {
     const {AccountStore} = props
+    if(!props.data.admins) return <div/>
     const adminsList = props.data.admins.length > 3 ? adminsAbrev(props.data.admins) : props.data.admins
     const adminLabels = adminsList.map(admin => <Label key={AccountStore._getDisplayName(admin)} color='blue' horizontal>{AccountStore._getDisplayName(admin)}</Label> )   
 

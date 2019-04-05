@@ -1,9 +1,10 @@
-import {apiCall, apiCall_noBody, apiCall_del} from "./Fetch"
-import {AccountStore} from "../Stores/AccountStore"
-import {UserStore} from "../Stores/UserStore"
+import { apiCall, apiCall_noBody, apiCall_del } from "./Fetch"
+import { UIStore } from "../Stores/UIStore";
+import { AccountStore } from "../Stores/AccountStore"
+import { UserStore } from "../Stores/UserStore"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {ItsLog} from "../DataExchange/PayloadBuilder"
+import { ItsLog } from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
 import _ from "lodash";
 
@@ -12,63 +13,49 @@ const accountID = () => AccountStore.account.accountID.slice()
 const userID = () => UserStore.user.userID.slice()
 
 const refresh = {
-    "schedule": () => reload.scheduled(accountID()),
-    "teams": () => reload.structure(accountID()),
-    "tags": () => reload.tags(accountID()),
-    "users": () => reload.users(accountID(), userID()),
-    "channels": () => reload.channels(accountID()),
-    "urlResources": () => reload.urls(accountID()),
-    "policies": () => reload.policies(accountID()),
-    "announcements": () => reload.announcements(accountID()),
-    "files": () => reload.files(accountID()),
-    "bundles": () => reload.bundles(accountID()),
-    "campaigns": () => reload.campaigns(accountID()),
-    "account": () => reload.account(accountID())
+  schedule: () => reload.scheduled(accountID()),
+  teams: () => reload.structure(accountID()),
+  tags: () => reload.tags(accountID()),
+  users: () => reload.users(accountID(), userID()),
+  channels: () => reload.channels(accountID()),
+  urlResources: () => reload.urls(accountID()),
+  policies: () => reload.policies(accountID()),
+  announcements: () => reload.announcements(accountID()),
+  files: () => reload.files(accountID()),
+  campaigns: () => reload.campaigns(accountID()),
+  account: () => reload.account(accountID())
 }
 
-const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true
-) => {
-    console.log("Payload to LB ", endpoint, meth, JSON.stringify(payload))
-    const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
-    // let spinnerDelay = setTimeout(() => UIStore.toggleScreenLoading(), 200)
+const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+    console.log(JSON.stringify(payload))
+  const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
+  return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
-    return callApi(endpoint, meth, payload).then((result) => {
-        if(result.ok){
-            refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
-            if (key === 'users') reload.users_and_teams(accountID(), userID())
-        } else {
-            toast.error(result.statusText, {hideProgressBar: true})
-        }
-    }).then(() => {
-        // clearTimeout(spinnerDelay)
-        // if(UIStore.isScreenLoading){UIStore.toggleScreenLoading()}
+    callApi(endpoint, meth, payload).then((result) => {
+      if(result.ok){
+        refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
+        if (key === 'users') reload.users_and_teams(accountID(), userID());
+        resolve(result);
+      } else {
+        toast.error(result.statusText, {hideProgressBar: true})
+        reject(result);
+      }
     })
+  }) 
 }
-
-
-
 
 ///LOGS (event type options: create, update, delete)
-export const log = (payload) => {apiCall("itslogs", "POST", payload)} 
-
-
-
-
-
+export const log = (payload) => {
+    apiCall("itslogs", "POST", payload)
+} 
 
 ///Sentiment
-export const createSentiment = (payload) => {apiCall("/sentiments", "POST", payload)} 
-
-
-
-
+export const createSentiment = (payload) => apiCall("/sentiments", "POST", payload) 
 
 ///History
 export const createHistory = (payload) => {
     apiCall("/histories", "POST", payload)
 } 
-
-
 
 ///Notfications
 export const clearNotification = (payload) => {
@@ -89,9 +76,6 @@ export const clearNotification = (payload) => {
     .then(() => refresh[reloadKey]())
 }
 
-
-
-
 ///Account
 export const createAccount = (payload) => {
     return processTemplate(true, "accounts", "POST", payload, "account", 
@@ -105,8 +89,6 @@ export const deleteAccount = (accountID) => {
     true,{"event": "delete", "type":"account"})
 }
 
-
-
 ///SCHEDULE 
 export const createSchedule = (payload, toastEnabled) => {
     return processTemplate(true, "schedules", "POST", payload, "schedule", 
@@ -114,14 +96,12 @@ export const createSchedule = (payload, toastEnabled) => {
         true,{"event": "create", "type":"schedule"}, toastEnabled
     )
 }
+
 export const deleteSchedule = (scheduleID) => {
     processTemplate(false, "schedules/" + scheduleID, "DELETE", {}, "schedule", 
     "Selected schedule deleted 👋", 
     true,{"event": "delete", "type":"schedule"})
 }
-
-
-
 
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
@@ -144,9 +124,6 @@ export const deleteTeam = (teamID) => {
     true,{"event": "delete", "type":"team"})
 }
 
-
-
-
 ///TAGS 
 export const createTag = (payload) => {
     return processTemplate(true, "tags", "POST", payload, "tags", 
@@ -168,9 +145,6 @@ export const deleteTag = (tagID) => {
     true,{"event": "delete", "type": "tag"})
 }
 
-
-
-
 ///USERS
 export const sendInviteEmail = (data) => {
     const inviteURL = process.env.REACT_APP_INVITE_URL;
@@ -182,6 +156,7 @@ export const sendInviteEmail = (data) => {
           })
     })
 }
+
 export const createUser = (payload, toastEnabled) => {
     return processTemplate(true, "users", "POST", payload, "users", 
     `🎉 ${payload.email} has been invited to Join ✉️`, 
@@ -210,12 +185,6 @@ export const deleteUser = (userID) => {
     true,{"event": "delete", "type": "user"})
 }
 
-
-
-
-
-
-
 ///CHANNEL
 export const createChannel = (payload) => {
     processTemplate(true, "channels", "POST", payload, "channels", 
@@ -237,10 +206,6 @@ export const deleteChannel = (chanID) => {
     true,{"event": "delete", "type": "channel"})
 }
 
-
-
-
-
 ///URL Resources
 export const createUrlResource = (payload) => {
     return processTemplate(true, "urls", "POST", payload, "urlResources", 
@@ -248,21 +213,19 @@ export const createUrlResource = (payload) => {
     true,{"event": "create", "type":"url"}
 )
 }
+
 export const modifyUrlResource = (payload, toast=true) => {
     processTemplate(true, "urls/" + payload.resourceID, "PATCH", payload, "urlResources", 
         "Your URL as been updated 🛠☁️", 
         true,{"event": "update", "type":"url"}, toast
     )
 }
+
 export const deleteUrlResource = (resourceID) => {
     processTemplate(false, "urls/" + resourceID, "DELETE", {}, "urlResources", 
     "Selected URL deleted 👋", 
     true,{"event": "delete", "type":"url"})
 }
-
-
-
-
 
 ///FILE RESOURCES
 export const createFile = (payload) => {
@@ -271,47 +234,69 @@ export const createFile = (payload) => {
         true,{"event": "create", "type":"file"}
     )
 }
+
 export const modifyFile = (payload, toast=true) => {
     processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
         true,{"event": "update", "type":"file"}, toast
     )
 }
+
 export const deleteFileresource = (resourceID) => {
     processTemplate(false, "fileresources/" + resourceID, "DELETE", {}, "files", 
     "Selected file deleted 👋", 
     true,{"event": "delete", "type":"file"}), false
 }
 
-
-
-
-
 ///POLICIES AND ANNOUNCEMENTS (SAME DATA SCHEMA)
 export const createPolicy = (payload) => {
-    return processTemplate(true, "policies", "POST", payload, "policies", 
-        "Your new FAQ has been created 🙌", 
-        true,{"event": "create", "type":"policy"}
-    )
+  const responseText = "Your new FAQ has been created 🙌";
+  const data = { event: "create", type: "policy"};
+  const type = "policies";
+  delete payload.policyID
+  return new Promise((resolve, reject) => {
+    processTemplate(true, type, "POST", payload, type,  responseText,  true, data)
+      .then(res => res.json())
+      .then(res => {
+        UIStore.set("content", "policyID", res.policyID);
+        resolve(res);
+      })
+  })
+  // return processTemplate(true, "policies", "POST", payload, "policies", 
+  //   "Your new FAQ has been created 🙌", 
+  //   true,{"event": "create", "type":"policy"}
+  // )
 }
+
 export const createAnnouncement = (payload) => {
-    return processTemplate(true, "announcements", "POST", payload, "announcements", 
-        "Your new Announcement has been created 🙌", 
-        true,{"event": "create", "type":"announcement"}
-    )
+  const responseText = "Your new Announcement has been created 🙌";
+  const data = { event: "create", type: "announcement" };
+  const type = "announcements";
+  delete payload.announcementID
+  return new Promise((resolve, reject) => {
+    processTemplate(true, type, "POST", payload, type,  responseText,  true, data)
+      .then(res => res.json())
+      .then(res => {
+        UIStore.set("content", "announcementID", res.announcementID);
+        resolve(res);
+      })
+  })
 }
+
 export const modifyPolicy = (payload) => {
-    return processTemplate(true, "policies/" + payload.policyID, "PATCH", payload, "policies", 
+  return processTemplate(true, "policies/" + payload.policyID, "PATCH", payload, "policies", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
-)
+  )
 }
+
 export const modifyAnnouncement = (payload) => {
     return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
     true,{"event": "update", "type":"policy"}
 )
 }
+
 export const deletePolicy = (policyID) => {
     return processTemplate(false, "policies/" + policyID, "DELETE", {}, "policies", 
     "Selected policy deleted 👋", 
@@ -324,46 +309,22 @@ export const deleteAnnouncement = (announcementID) => {
     true,{"event": "delete", "type":"announcement"}), false
 }
 
-
-///EMAIL CAMPAIGN --- BUNDLE
-export const modifyBundle = (payload, toastEnabled) => {
-    const msg = payload.isQueue? "Your email queue has been updated ✉️🛠" : "Your email bundle has been updated ✉️🛠"
-    return processTemplate(true, "emailbundles/" + payload.bundleID, "PATCH", payload, "bundles", 
-    msg,
-    true,{"event": "update", "type":"bundle"}, toastEnabled
-)
-}
-
-export const createBundle = (payload, toastEnabled) => {
-    return processTemplate(true, "emailbundles", "POST", payload, "bundles", 
-        "Your new bundle has been created 🙌", 
-        true,{"event": "create", "type":"bundle"}, toastEnabled
-    )
-}
-
-export const deleteBundle = (bundleID) => {
-    return processTemplate(false, "emailbundles/" + bundleID, "DELETE", {}, "bundles", 
-    "Selected bundle deleted 👋", 
-    true,{"event": "delete", "type":"bundle"})
-}
-
+///EMAIL CAMPAIGN 
 export const createCampaign = (payload, toastEnabled) => {
     return processTemplate(true, "emailcampaigns", "POST", payload, "campaigns", 
         payload.isTriggered ? "Your email trigger is set and sending will be automated to eligible users 🤖✉️"   :`Your campaign is being built and will send momentarily 🚀✉️` , 
         true,{"event": "create", "type":"campaign"}, toastEnabled
     )
 }
+
 export const modifyCampaign = (payload) => {
-    const msg = payload.completed? "The selected campaign has been discontinued 🛑" :"Your campaign has been updated 🛠"
+    let msg = payload.completed? "The selected campaign has been discontinued 🛑" :"Your campaign has been updated 🛠"
+    if(Object.keys(payload).length < 3 && payload.isTemplate === false){msg = "Template removed."}
     return processTemplate(true, "emailcampaigns/" + payload.campaignID, "PATCH", payload, "campaigns", 
     msg,
     true,{"event": "update", "type":"campaign"}
 )
 }
-
-
-
-
 
 ///SETTINGS
 export const modifyAccount = (payload) => {
@@ -373,48 +334,23 @@ export const modifyAccount = (payload) => {
 )
 }
 
-
-
-
-
-
-
-
 ////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
-
-
-// export const modifyQueue = (val) => {
-//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-// }
-
-
-// export const modifyBaseSettings = (val) => {
-//     setTimeout(() => {console.log("Base settings modified", val)}, 1000)
-// }
-
-
-// export const deleteBaseAccount = (val) => {
-//     setTimeout(() => {console.log("account queued for deletion", val)}, 1000)
-// }
-
-// export const modifyUserSettings = (val) => {
-//     setTimeout(() => {console.log("User settings modified", val)}, 1000)
-// }
 
 export const deactivateUser = (val) => {
     setTimeout(() => {console.log("user deactivated", val)}, 1000)
 }
 
-export const sendEmailPreview = (val) => {
-    setTimeout(() => {console.log("Preview Sent", val)}, 1000)
+
+export const sendEmailPreview = async (val) => {
+  const previewValues = {
+    isSendNow: true,
+    completed: false,
+  };
+
+  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
+    .then(res => toast.success('Preview email has been send', {hideProgressBar: true}))
+    .catch(e => toast.error('Preview email has not been send', {hideProgressBar: true}))
 }
 
-// export const sendEmailNow = (val) => {
-//     setTimeout(() => {
-//         console.log("Preview Sent", val)
-//         return new Promise((resolve, reject) => {
-//             resolve(true)
-//     }, 3000)
-//     })
-// }
+
 

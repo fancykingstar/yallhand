@@ -1,16 +1,13 @@
 import React from "react";
-import {inject, observer} from "mobx-react"
 import {Header, Segment, Icon} from "semantic-ui-react"
 import { Completed } from "./Completed"
 import {Views} from "./Views"
 
-@inject("UIStore")
-@observer
+
 export class AnalyticsFrame extends React.Component {
   render() {
-    const { UIStore } = this.props;
     return (
-      <div style={{overflowY: "auto"}}>
+      <div style={{overflowY: "auto", paddingBottom: 50}}>
         <Header
           as="h2"
           content="Analytics"

@@ -9,7 +9,7 @@ import _ from "lodash";
 export class FilesSearch extends React.Component {
   constructor(props) {
     super(props);
-    const { UIStore, ResourcesStore } = this.props;
+    const { UIStore } = this.props;
     this.resetComponent = () => {
       UIStore.set("search", "fileResults", {});
       UIStore.set("search", "fileValue", "");

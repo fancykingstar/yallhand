@@ -6,9 +6,10 @@ import { AdminPanel } from "./AdminPanel";
 import UserPortal from "./UserPortal/UserPortal";
 import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
-import { TwilightZone } from "./MiscPages/404";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
+import DevTools from 'mobx-react-devtools'
+
 
 @inject("UIStore", "UserStore")
 @observer
@@ -21,21 +22,23 @@ class AppRoute extends React.Component {
       UserStore.setPreviewTag("")
       loadAdmin()
     }
+    
   }
 
   render() {
     const { UserStore, UIStore, location } = this.props;
     const { isAuthenticated } = UserStore;
     const path = location.pathname;
-    const loggedOutRoutes = ['/login', '/register', '/forgot'];
+    const loggedOutRoutes = ['/', '/register', '/forgot'];
     const loggedInRoutes = ['/panel', '/portal'];
-    const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/login"
+    const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"
     let shouldRedirect = false;
-
-    if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => path.indexOf(route) > -1);
+    
+    if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1);
 
     return (
       <div className="App">
+      <DevTools />
         {/* <FullStory org="JJAMV"/> */}
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
@@ -45,8 +48,8 @@ class AppRoute extends React.Component {
           <Route path="/portal" component={UserPortal} />
           <Route path="/register" component={Login} />
           <Route path="/forgot" component={Forgot} />
-          <Route path="/login" component={Login} />
-          <Route path="*" component={TwilightZone} />
+          <Route path="/" component={Login} exact />
+          <Route path="*"> <Redirect push to={redirect}/> </Route>
         </Switch>
         </div>
       </div>
@@ -54,6 +57,6 @@ class AppRoute extends React.Component {
   }
 }
 
-// export default App;
+
 const App = withRouter(AppRoute);
 export default App;

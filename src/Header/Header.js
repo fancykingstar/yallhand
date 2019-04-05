@@ -1,13 +1,11 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-
 import { AdminDesktop } from "./AdminDesktop"
 import { AdminMobile } from "./AdminMobile"
 import { PortalMobile } from "./PortalMobile"
 import  PortalDesktop  from "./PortalDesktop"
 import "./style.css";
-
 
 @inject("TeamStore", "UserStore", "UIStore")
 @observer
@@ -36,7 +34,6 @@ class Header extends React.Component {
       else if(this.mode === "portal" && UIStore.responsive.isMobile){return <PortalMobile/>}
     }
 
-
     return (
       <div className={
         this.mode === "panel" ? 
@@ -45,27 +42,6 @@ class Header extends React.Component {
           {header()}
         </div>
 
-    
-
-
-        {/* <div className="MobileMenu"  onClick={e => UIStore.set( "responsive", "mobileNav", !UIStore.responsive.mobileNav ) } style={!UIStore.responsive.isMobile ? { display: "none" } : null} >
-          <div style={{ float: "left"}}>
-            <Icon
-              name="bars"
-              size="large"
-              style={
-                UIStore.responsive.mobileNav
-                  ? { color: "#2FC7F8" }
-                  : { color: "white" }
-              }
-            />
-          </div>
-          <div > 
-           
-          </div>
-        </div>
-        <PortalUserProfile />
-         */}
       </div>
     );
   }

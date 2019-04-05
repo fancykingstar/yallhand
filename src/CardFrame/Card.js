@@ -10,6 +10,7 @@ import { UIStore } from '../Stores/UIStore';
 const Card = inject("DataEntryStore", "PoliciesStore", "AccountStore")(observer((props) => {
         const {DataEntryStore} = props
         const {PoliciesStore} = props
+        if(!props.data.admins) return <div/>
         const adminsList = props.data.admins.length > 3 ? adminsAbrev(props.data.admins) : props.data.admins
         const adminLabels = adminsList.map(admin => <Label 
             key={AccountStore._getDisplayName(admin)} color='blue' horizontal

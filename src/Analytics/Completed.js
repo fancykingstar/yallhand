@@ -13,7 +13,7 @@ export class Completed extends React.Component {
         .filter(camp => camp.completed)
          .map(camp => 
       <Table.Row key={"camp" + giveMeKey()}>
-      <Table.Cell>{EmailStore._getBundle(camp.bundleID).label}</Table.Cell>
+      <Table.Cell>{EmailStore._getCampaign(camp.campaignID).subject}</Table.Cell>
       <Table.Cell>{camp.targetUsers.length > 0? "Target Users: " : "selected teams"}</Table.Cell>
       <Table.Cell>{UTCtoFriendly(camp.updated)}</Table.Cell>
       <Table.Cell></Table.Cell>

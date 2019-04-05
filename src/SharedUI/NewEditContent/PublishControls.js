@@ -1,7 +1,7 @@
 import React from "react";
-import "../style.css";
 import { Menu, Icon } from "semantic-ui-react";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
+import "../style.css";
 
 export class PublishControls extends React.Component {
   clickActions = {
@@ -14,6 +14,7 @@ export class PublishControls extends React.Component {
   }
   handleItemClick = (e, { name }) => this.props.onClick(this.clickActions[name]);
   render() {
+    const { stage } = this.props;
     const actionOptions = {
       draft: ["draft", "published", "archived"],
       published: ["update", "unpublish", "archived"],
@@ -38,18 +39,14 @@ export class PublishControls extends React.Component {
       restore: "Restore"
     };
 
-    const currentControls = actionOptions[this.props.stage].map(opt => (
-      <Menu.Item key={"pubctrl" + giveMeKey()} name={opt} onClick={this.handleItemClick}>
-        <Icon name={iconKey[opt]} size="small" />
-        {displayText[opt]}
-      </Menu.Item>
-    ));
-
     return (
       <div id="PubControls">
         <Menu compact icon="labeled" vertical size="mini" inverted>
-          <Menu.Item style={{color: "#2fc7f8"}}>Currently: {this.props.stage.charAt(0).toUpperCase() + this.props.stage.substring(1)}</Menu.Item>
-          {currentControls}
+          <Menu.Item style={{color: "#2fc7f8"}}>Currently: {stage.charAt(0).toUpperCase() + stage.substring(1)}</Menu.Item>
+          {actionOptions[stage].map(opt => <Menu.Item key={"pubctrl" + giveMeKey()} name={opt} onClick={this.handleItemClick}>
+            <Icon name={iconKey[opt]} size="small" />
+            {displayText[opt]}
+          </Menu.Item>)}
         </Menu>
       </div>
     );

@@ -39,13 +39,13 @@ export class UploadConfig extends React.Component {
             label={"Limit Access To Teams"}
             placeholder="choose team..."
             value={DataEntryStore[key].teamID}
-            outputVal={val => DataEntryStore.set(key, "teamID", val)}
+            outputVal={val => DataEntryStore.set(key, "teamID", val.value)}
           />
           <TagSelect
             label={"Limit Access By Tag"}
             placeholder="choose tag..."
             value={DataEntryStore[key].tagID}
-            outputVal={val => DataEntryStore.set(key, "tagID", val)}
+            outputVal={val => DataEntryStore.set(key, "tagID", val.value)}
           />
           </Form.Group>
         </React.Fragment>

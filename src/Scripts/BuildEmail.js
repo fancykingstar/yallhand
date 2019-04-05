@@ -4,6 +4,8 @@ import { EmailStore } from "../Stores/EmailStore";
 import { AccountStore } from "../Stores/AccountStore";
 import { PoliciesStore } from "../Stores/PoliciesStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore"
+import { EmailCampaignTemplate } from "../TemplateData/emailcampaign"
+import _ from 'lodash'
 
 const getContentData = (type, id) => {
     if(type === "policy"){
@@ -44,77 +46,39 @@ const getUsersByTeamTag = (teamID, tagID) => {
         const validTag = validUserPath(tagID, tagPath)
         validTeam.status && validTag.status? users.push(user.userID) : null
     })
-    return users
+    return allUsers
 }
 
 
 export const buildEmail = (campaignID) => {
     const payload = []
     const campaign = EmailStore._getCampaign(campaignID)
-    const bundle = EmailStore._getBundle(campaign.bundleID)
-    const allContentIDs = EmailStore._getBundle(EmailStore._getCampaign(campaignID).bundleID).bundle
-    const allContent = allContentIDs
+    const allContent = campaign.content
         .map(content => Object.keys(content)[0] === "policyID"?
         getContentData("policy", content.policyID) : getContentData("announcement", content.announcementID)
         )
-    const targetUsers = campaign.targetUsers.length > 0? campaign.targetUsers : getUsersByTeamTag(campaign.teamID, campaign.tags[0])
+        .filter(content => !_.isEmpty(content))
+    const targetUsers = {"all": getUsersByTeamTag("global", "none"), "teams": getUsersByTeamTag(campaign.teamID, campaign.tags.length === 0? "none" : campaign.tags[0]), "users": campaign.targetUsers}[campaign.recipientType]
     targetUsers.forEach(user => {
-        const userData = Object.assign({}, AccountStore._getUser(user))
+        const userData = Object.assign({}, AccountStore._getUser(user.userID))
         const userTeamPath = TeamStore.previewValidPath(userData.teamID, "team")
-        const userTagPath = userData.tags.length > 0? TeamStore.previewValidPath(userData.tags[0], "tag") : {0: "", 1: "", 2: "" }
+        const userTagPath = userData.tags.length > 0? TeamStore.previewValidPath(userData.tags.length === 0? "none": userData.tags[0], "tag") : {0: "", 1: "", 2: "" }
         const userContentData = validContent(allContent, userTeamPath, userTagPath)
         const userContent = userContentData.map(content => ({
+            type: content.announcementID === undefined? "policy" : "announcement",
+            id: content[content.announcementID === undefined? "policyID":"announcementID"],
             label: content.variations[0].label === "" ? content.label : content.variations[0].label ,
             img: content.img,
             content: content.variations[0].contentHTML
         }))
-        console.log(userContent)
         payload.push(
-            {
+                    {
                         email: userData.email,
                         name: userData.displayName,
-                        subject: bundle.subject,
-                        body: bundle.bodyContentHTML,
-                        content: userContent,
-                        companyName: AccountStore.account.label,
-                        companyLogo: AccountStore.account.img
+                        subject: campaign.subject,
+                        content: EmailCampaignTemplate(campaign.bodyContentHTML, userContent, AccountStore.account, campaign.img)
                     }
         )
     })
-    console.log(payload)
-
-    /////ALL USERS NEED TO HAVE A TEAMID populated
-
-    
-    // console.log(JSON.stringify(content))
+    return payload
 }
-
-
-//collect all content...sequenced
-//gather all users
-//create templates
-
-//TeamStore.previewValidPath("team03", "team")
-//{"0":"team01","1":"team07","2":"team03"}
-
-//validContent(allItems, teamPath, tagPath)
-
-//
-
-// [
-//     {
-//         email,
-//         name,
-//         subject,
-//         body,
-//         content: [
-//              {
-//                  label,
-//                  img, 
-//                  content
-//                 }
-//         ],
-//         companyName,
-//         companyLogo
-//     }
-// ]

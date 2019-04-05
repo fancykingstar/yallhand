@@ -8,9 +8,16 @@ import _ from "lodash";
 @inject("DataEntryStore")
 @observer
 export class VariationContent extends React.Component {
+
   render() {
     const { DataEntryStore } = this.props;
-    const attachedStyle = DataEntryStore.content.isNew? { paddingTop: 35, maxWidth: 450, pointerEvents: "none" }: { paddingTop: 35, maxWidth: 450 }
+    let attachedStyle = {paddingTop: 35, maxWidth: 450}
+    if (DataEntryStore.content.isNew) attachedStyle.pointerEvents = "none";
+
+    const attachFiles = DataEntryStore.content.isNew? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
+    :  <Segment disabled={DataEntryStore.content.isNew}>
+    <AttachedFiles mode={this.props.mode}  />
+  </Segment>
 
     return (
       <div>
@@ -20,9 +27,7 @@ export class VariationContent extends React.Component {
         />
 
         <div className="AMenu" style={attachedStyle}>
-          <Segment disabled={DataEntryStore.content.isNew}>
-            <AttachedFiles mode={this.props.mode}  />
-          </Segment>
+          {attachFiles}
           <br/>
         </div>
       </div>
