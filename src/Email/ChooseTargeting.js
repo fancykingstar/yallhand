@@ -38,7 +38,7 @@ export class ChooseTargeting extends React.Component {
               placeholder="choose tag..."
               defaultVal={[]}
               outputVal={val =>
-                DataEntryStore.set("emailCampaign", "sendToTagID", val.value)
+                DataEntryStore.set("emailCampaign", "sendToTagID", val)
               }
             />
           </Form.Group>

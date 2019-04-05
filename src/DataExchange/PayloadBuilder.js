@@ -281,17 +281,17 @@ export const fileResourceAssociate = (resourceID, associations) => {
 
 ///EMAIL CAMPAIGN
 export const emailPreview = () => {
-  let tags = formatTag(DataEntryStore.emailCampaign.selectedTag);
+  let tags = formatTag(DataEntryStore.emailCampaign.sendToTagID);
   if (JSON.stringify(tags) === "[null]") tags = [];
   const buildObj = {
     accountID: accountID(),
     bundleID: DataEntryStore.emailCampaign.selectedContentBundle,
-    teamID: DataEntryStore.emailCampaign.selectedTeamID,
+    teamID: DataEntryStore.emailCampaign.sendToTeamID,
     tags: tags,
     targetUsers: DataEntryStore.emailCampaign.selectedUsers,
     previewUsers: DataEntryStore.emailCampaign.previewUsers,
     updated: now(),
-    userID:  userID(),
+    userID: userID(),
     subject: DataEntryStore.emailCampaign.sendSubject,
     content: DataEntryStore.emailCampaign.sendContent,
     draftContentHTML: DataEntryStore.draftContentHTML,
@@ -302,7 +302,7 @@ export const emailPreview = () => {
 
 export const emailCampaign = (isSendNow, isScheduled) => {
     const eventTrigger = UIStore.menuItem.sendEmailOption === "automate" ? {"event": DataEntryStore.emailCampaign.sendAutomationEvent, "delay": DataEntryStore.emailCampaign.sendAutomationDelay} : {} 
-    let tags = formatTag(DataEntryStore.emailCampaign.selectedTag);
+    let tags = formatTag(DataEntryStore.emailCampaign.sendToTagID);
     if (JSON.stringify(tags) === "[null]") tags = [];
     const buildObj = {
       //content
@@ -326,7 +326,6 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       //schedule
       sendNext: DataEntryStore.emailCampaign.sendNext, 
     };
-    console.log('buildObj', buildObj)
     return _.extend({}, base(), buildObj)
   };
 
