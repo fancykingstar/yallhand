@@ -302,7 +302,7 @@ export const emailPreview = () => {
 
 export const emailCampaign = (isSendNow, isScheduled) => {
     const eventTrigger = UIStore.menuItem.sendEmailOption === "automate" ? {"event": DataEntryStore.emailCampaign.sendAutomationEvent, "delay": DataEntryStore.emailCampaign.sendAutomationDelay} : {} 
-    let tags = formatTag(DataEntryStore.emailCampaign.selectedTag);
+    let tags = formatTag(DataEntryStore.emailCampaign.sendToTagID);
     if (JSON.stringify(tags) === "[null]") tags = [];
     const buildObj = {
       //content
