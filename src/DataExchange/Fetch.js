@@ -63,3 +63,13 @@ export const apiCall_del = async (endpoint, meth) => {
     headers: headers
   })
 };
+
+export const apiCall_pixel = async (endpoint) => {
+  return fetch(api_url + endpoint, {
+    method: 'GET',
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: getHeaders()
+  })
+};

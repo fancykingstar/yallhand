@@ -33,7 +33,7 @@ class AppRoute extends React.Component {
     const loggedInRoutes = ['/panel', '/portal'];
     const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"
     let shouldRedirect = false;
-
+    
     if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1);
 
     return (
