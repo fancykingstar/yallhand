@@ -22,6 +22,7 @@ import { CreateAccounts } from "./SuperAdmin/CreateAccounts"
 import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
+import { loadAdmin } from "./DataExchange/LoadProfile";
 
 
 import { ToastContainer } from "react-toastify";
@@ -29,6 +30,14 @@ import { ToastContainer } from "react-toastify";
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
+  componentDidMount() {
+    const { UserStore, UIStore } = this.props;
+    if (!UIStore._adminLoadingComplete) {
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
+      loadAdmin()
+    }
+  }
   render() {
     const { UIStore, UserStore } = this.props;
 
