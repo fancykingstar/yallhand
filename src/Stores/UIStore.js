@@ -17,7 +17,8 @@ class Store {
         "content": this.content,
         "dateTimeSelect": this.dateTimeSelect,
         "responsive": this.responsive,
-        "portal": this.portal
+        "portal": this.portal,
+        "ask": this.ask
     } 
 
     @observable filter = {
@@ -52,7 +53,7 @@ class Store {
         bundles: "active",
         portalannouncementSort: "Newest",
         portalPolicySort: "Newest",
-        emailTemplateSort: "Newest"
+        emailTemplateSort: "Newest",
     }
     @observable
     modal = {
@@ -68,7 +69,8 @@ class Store {
         createContent: false,
         createChannel: false,
         modifyChannel: false,
-        historyView: false
+        historyView: false,
+        askQuestion: false
     }
 
     @observable
@@ -180,6 +182,11 @@ class Store {
     @observable portal = {
         sentimentComplete: false,
         sentimentAvailable: []
+    }
+
+    @observable ask = {
+        content: {},
+        type: "general"
     }
 
     @action

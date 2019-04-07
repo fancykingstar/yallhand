@@ -1,6 +1,6 @@
 import React from "react"
 import { inject, observer } from "mobx-react";
-import {  Header, Container, Image, Icon, Grid, Item } from 'semantic-ui-react'
+import {  Header, Container, Image, Icon, Grid, Item, Button } from 'semantic-ui-react'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
@@ -54,11 +54,16 @@ export class ContentDetail extends React.Component {
             variationID={content.variations[0].variationID}
             />
 
+        const handleClick = () => {
+                //   log(ItsLog(true,{"event": "click", "type":"ask"}))
+                UIStore.set("modal", "askQuestion", false) 
+    }
+
         return(
             <div className="Content">
             <BackButton/>
-                <Container>
-                {content.img.length !== 0 ?  <Image rounded size="large" src={content.img}/> : null}
+                <Container textAlign="center">
+                {content.img.length !== 0 ?  <Image centered rounded size="large" src={content.img}/> : null}
                     <Header
                     as="h1"
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
@@ -70,6 +75,7 @@ export class ContentDetail extends React.Component {
                   </div>
                   </Container>
                 <br/>
+                <Container textAlign="center">
                 <Grid>
                     {displayFiles.length === 0? null : 
                     <Grid.Row columns={1}>
@@ -83,10 +89,18 @@ export class ContentDetail extends React.Component {
                             {displaySentiment}
                         </Grid.Column>
                         <Grid.Column>
-                            <AskAQuestion content={content}/>
+                        <Button basic 
+                        onClick={e => {
+                        handleClick()
+                        UIStore.set("modal", "askQuestion", true) 
+                        UIStore.set("ask", "type", "specific")
+                        UIStore.set("ask", "content", content)
+                    }}
+                    >Ask A Question...</Button>
                             </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                </Container>
                 <div style={{paddingBottom: 120}}/>
                    
                 </div>

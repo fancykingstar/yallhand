@@ -1,4 +1,7 @@
-
+.PortalSideNav ::placeholder {
+    color: #019ee172 !important;
+    font-size: 1.3em;
+  }
 
 .SearchFrame {
     position: sticky;
@@ -8,13 +11,13 @@
     width: 100%;
     text-align: center;
     z-index: 0;
-    background: linear-gradient(
+    /* background: linear-gradient(
       90deg,
       rgba(255, 255, 255, 1) 0%,
       rgba(233, 47, 150, 0.87) 0%,
       rgba(0, 212, 255, 1) 53%
     );
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
 }
 
 .PortalContainerNavMobile {
@@ -66,12 +69,12 @@
     padding-top: 4px;
 }
 
-.SideBarFrame {
-    background-color: #F9F9F9;
+.SideBarFrame { 
     width: 245px;
     float: left;
     height: 100vh;
     position: relative;   
+    background-color: #efefef;
 }
 
 .WorkspaceNamePortal {
@@ -122,7 +125,7 @@
 
 .PortalSideNav {
     padding-left: 3px;
-    background-color: #F9F9F9;
+    background-color: #efefef;
 }
 
 .Content{

@@ -1,6 +1,6 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Item, Icon, Label} from "semantic-ui-react";
+import { Item, Icon, Label, Divider} from "semantic-ui-react";
 import {adminsAbrev} from "../SharedCalculations/AdminsAbbrev"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
@@ -13,7 +13,8 @@ export const FeedItem = inject("AccountStore")(observer((props) => {
     const adminLabels = adminsList.map(admin => <Label key={AccountStore._getDisplayName(admin)} color='blue' horizontal>{AccountStore._getDisplayName(admin)}</Label> )   
 
     return(
-    <Item style={{paddingBottom: 25}} onClick={e => props.clicked(props.data.announcementID)}>
+    <React.Fragment>
+    <Item style={{paddingBottom: 5}} onClick={e => props.clicked(props.data.announcementID)}>
       <Item.Content>
         <Item.Header as='a'>{props.data.label}</Item.Header>
         <Item.Meta>Updated: {UTCtoFriendly(props.data.updated)} <Icon name="check circle" color='green'/></Item.Meta>
@@ -31,6 +32,9 @@ export const FeedItem = inject("AccountStore")(observer((props) => {
         {/* <Button icon='write' size="small"/><Button size="small" icon='minus circle' /> */}
      
       </Item.Content>
-    </Item>)
+    </Item>
+    <Divider/>
+    </React.Fragment>
+    )
 
 }))

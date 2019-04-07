@@ -84,7 +84,7 @@ class AnnouncementsFrame extends React.Component {
     ));
 
     return (
-      <div style={{ width: "auto", paddingRight: 15 }}>
+      <div style={{ width: "auto", paddingRight: 15, paddingBottom: 30 }}>
         <Header as="h2">
           Annoucements Feed
           <Header.Subheader>

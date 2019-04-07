@@ -57,7 +57,7 @@ export class Automations extends React.Component {
 
 
     return (
-      <div className="Segment">
+      <div>
         <Header as="h2" content="Email Automations" />
       {displayAutomations}
       </div>
