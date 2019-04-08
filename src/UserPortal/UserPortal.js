@@ -14,6 +14,7 @@ import { CardFrame } from "./CardFrame";
 import { Responsive, Transition } from "semantic-ui-react";
 import { loadAdmin } from "../DataExchange/LoadProfile";
 import {apiCall_pixel} from "../DataExchange/Fetch"
+import { AskAQuestion } from "./AskAQuestion"
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
@@ -45,6 +46,7 @@ class UserPortal extends React.Component {
       <div />
     ) : (
       <React.Fragment>
+                <AskAQuestion />
         <div className="SideAndAction">
           <Responsive
             {...Responsive.onlyComputer}

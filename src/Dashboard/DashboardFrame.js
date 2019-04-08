@@ -72,9 +72,7 @@ export class DashboardFrame extends React.Component {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-              <Segment>
                 <Scheduled/>
-              </Segment>
             </Grid.Column>
           </Grid.Row>
         </Grid>

@@ -14,7 +14,6 @@ export class DraftFormField extends React.Component {
         const { DataEntryStore } = this.props;
         this.getLoadOrNew = () => {
             if (this.props.loadContent === null || this.props.loadContent === undefined) {
-                console.log("no content to load")
                 DataEntryStore.setDraft(
                   "editorState",
                   EditorState.createEmpty()
@@ -47,13 +46,14 @@ export class DraftFormField extends React.Component {
             DataEntryStore.toggleDraftContentHTML(htmlOutput);
           };
           
+        const toolbarConfig = this.props.minimal === undefined? {options: ['inline', 'list', 'link', 'emoji', 'remove', 'history'], inline: {options: ['bold', 'italic', 'underline', 'strikethrough']}} : {options: ['emoji', 'link']}
         
         return (
                 <div style={this.props.border !== undefined? {border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10, marginRight: 20}: null}>
                 <Editor
                 editorState={DataEntryStore.draft.editorState}
                 onEditorStateChange={editorStateChanged}
-                toolbar={{options: ['inline', 'list', 'link', 'emoji', 'remove', 'history'], inline: {options: ['bold', 'italic', 'underline', 'strikethrough'],}}}
+                toolbar={toolbarConfig}
                 editorStyle={{backgroundColor: "#ffffff", maxWidth: 900, borderRadius: 5, paddingLeft: 5, paddingRight: 5, minHeight: 200, margin: 0}}   
                 toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}     
                         

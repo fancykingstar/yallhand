@@ -1,6 +1,6 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import {Dropdown, Divider, Button} from "semantic-ui-react"
+import {Dropdown, Divider, Button, Header} from "semantic-ui-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {sortByUTC} from "../SharedCalculations/SortByUTC"
 import {getContentObj} from "../SharedCalculations/GetContentObj"
@@ -44,7 +44,7 @@ export class EmailTemplates extends React.Component {
                 <div style={x.content.length === 0? {display: "none"} : {paddingTop: 10}}>
                     <span style={{fontWeight: 800, fontSize: ".8em"}}>Selected Content: {x.content.map(y => <a key={"template link" + giveMeKey()} href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
                 </div>
-
+ 
            
                 <div style={{paddingTop: 10, paddingBottom: 0}}>
                     <Button primary onClick={e => loadTemplate(x)} size="mini" basic>Use This Template</Button> <Button onClick={e=> deleteTemplate({campaignID: x.campaignID, isTemplate: false})} size="mini" negative basic>Delete</Button>
@@ -55,6 +55,8 @@ export class EmailTemplates extends React.Component {
             )
         return(
             <div>
+                  <Header as="h2" content="Email Templates" />
+                  {EmailStore.allCampaigns.filter(x => x.isTemplate).length === 0 ? <h5 style={{ fontStyle: "italic" }}> You do not have any current templates </h5> : <div/>}
                   <div style={{height: 20, width: "100%"}}>
                     <div style={{float: "right", paddingRight: 25}}> 
                         <span> Sort by{' '} <Dropdown inline options={[{text: "Newest", value: "Newest"}, {text: "Oldest", value: "Oldest"}]} defaultValue={"Newest"} onChange= {(e, {value}) => UIStore.set("dropdown", "emailTemplateSort", value)} /> </span>

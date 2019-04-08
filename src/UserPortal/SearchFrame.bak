@@ -36,32 +36,31 @@ class SearchFrame extends React.Component {
 
 
   return (
-    // <div className="SearchFrame">
-    //   <div className="SearchControls">
+    <div className="SearchFrame">
+      <div className="SearchControls">
 
       <Form onSubmit={() => this.props.history.push("/portal/search")}>
       <Form.Input 
-       
         value={UIStore.search.portalSearchValue}
         onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)} 
         fluid icon 
         placeholder="Search...">
-          <input  style={{background: "transparent", border: "none"}} />
-          <Icon style={{color:"#00a3e0"}} name="search" />
+          <input />
+          <Icon name="search" />
         </Form.Input>
       </Form>
    
-    //   </div>
-    //   <div className="LoginQuadrance">
-    //   <p style={{fontSize: ".2em", opacity: "0.8", marginBottom: 0}}>powered by</p>
-    //       <div style={{ float: "left", opacity: "0.5", marginTop: -4, paddingRight: 4 }}>
-    //         {" "}
-    //         <QLogo fill="#FFFFFF" style="" width="16px" height="20px" />{" "}
-    //       </div>
-    //       <div style={{ float: "right", lineHeight: "15px", fontSize: ".5em" }}> yallhands</div>
-    //     </div>
+      </div>
+      <div className="LoginQuadrance">
+      <p style={{fontSize: ".2em", opacity: "0.8", marginBottom: 0}}>powered by</p>
+          <div style={{ float: "left", opacity: "0.5", marginTop: -4, paddingRight: 4 }}>
+            {" "}
+            <QLogo fill="#FFFFFF" style="" width="16px" height="20px" />{" "}
+          </div>
+          <div style={{ float: "right", lineHeight: "15px", fontSize: ".5em" }}> yallhands</div>
+        </div>
   
-    // </div>
+    </div>
   );
 }}
 

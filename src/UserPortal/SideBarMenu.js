@@ -3,9 +3,10 @@ import { Menu, Icon, Form, Transition, Button } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import  SearchFrame  from "./SearchFrame"
 import "./style.css";
 
-@inject("ChannelStore", "UIStore", "UserStore")
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore")
 @observer
 class SideBarMenu extends React.Component {
   componentDidMount() {
@@ -30,7 +31,7 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore, UserStore } = this.props;
+    const { ChannelStore, UIStore, UserStore, DataEntryStore } = this.props;
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item
         name={channel.label} style={ UIStore.sideNav.activeChannel === channel.chanID
@@ -68,20 +69,27 @@ class SideBarMenu extends React.Component {
       </div>
      : <div/>
 
+     const handleClick = () => {
+      //   log(ItsLog(true,{"event": "click", "type":"ask"}))
+      UIStore.set("modal", "askQuestion", true) 
+    }
+
     return (
       <div className="PortalSideNav" onClick={e => resetSearch()}>
-        <Menu compact vertical secondary borderless={true}>
+             <SearchFrame/>
+        <Menu vertical secondary borderless={true}>
+   
           <Menu.Item>
-            <Menu.Header>
-              <Icon name="feed" />
+            <Menu.Header style={{fontSize: "1.3em"}}>
+              {/* <Icon name="feed" /> */}
               Feed
             </Menu.Header>
             <Menu.Menu>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "announcements"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "announcements");
@@ -92,8 +100,8 @@ class SideBarMenu extends React.Component {
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "policies"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "policies");
@@ -106,8 +114,8 @@ class SideBarMenu extends React.Component {
           </Menu.Item>
 
           <Menu.Item>
-            <Menu.Header>
-              <Icon name="cubes" />
+            <Menu.Header style={{fontSize: "1.3em"}}>
+              {/* <Icon name="cubes" /> */}
               Resources
             </Menu.Header>
 
@@ -115,21 +123,21 @@ class SideBarMenu extends React.Component {
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "resources"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "resources");
                   this.props.history.push("/portal/resources");
                 }}
               >
-                Files and URLs
+                Files
               </Menu.Item>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "directory"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "directory");
@@ -138,7 +146,45 @@ class SideBarMenu extends React.Component {
                 name="Staff Directory"
               />
             </Menu.Menu>
+            </Menu.Item>
+
+          
+            <Menu.Item>
+            <Menu.Header style={{fontSize: "1.3em"}}>
+              {/* <Icon name="feed" /> */}
+              Contact
+            </Menu.Header>
+            <Menu.Menu>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "ask"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "ask");
+                  DataEntryStore.set("ask", "type", "general")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >Ask Anything</Menu.Item>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "report"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "report");
+                  DataEntryStore.set("ask", "type", "anonymous")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >
+                Report Anonymously
+              </Menu.Item>
+            </Menu.Menu>
           </Menu.Item>
+
+          
 
           <Transition
             animation={"fade"}
@@ -149,33 +195,20 @@ class SideBarMenu extends React.Component {
             duration={250}
           >
             <Menu.Item>
-              <Menu.Header>Channels</Menu.Header>
-              <Menu.Menu>{channelList}</Menu.Menu>
+              <Menu.Header style={{fontSize: "1.3em"}}>Channels</Menu.Header>
+              <Menu.Menu style={{paddingLeft:4}}>{channelList}</Menu.Menu>
             </Menu.Item>
           </Transition>
+          
 
-          {this.props.mobile ? (
-            <Menu.Item>
-              <Form
-                onSubmit={e => {
-                  this.props.history.push("/portal/search");
-                  UIStore.set("responsive", "mobileNav", false);
-                }}
-              >
-                <Form.Input
-                  className="icon"
-                  value={UIStore.search.portalSearchValue}
-                  onChange={(e, val) =>
-                    UIStore.set("search", "portalSearchValue", val.value)
-                  }
-                  icon="search"
-                  placeholder="Search..."
-                />
-              </Form>
-            </Menu.Item>
-          ) : (
+          {/* {this.props.mobile ? ( */}
+            {/* <Menu.Item>
+              <SearchFrame/>
+            </Menu.Item> */}
+          {/* )  */}
+          {/* : (
             <div />
-          )}
+          )} */}
         </Menu>
         {portalReturn}
       </div>

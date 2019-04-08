@@ -151,7 +151,7 @@ class PortalSearchResults extends React.Component {
 
     const resources = [...filteredFiles(), ...filteredURLs()].length === 0? null : 
     <React.Fragment>
-    <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Files & URLs</Header>
+    <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Files</Header>
     <Item.Group divided>
         {resourceResults([...filteredURLs(), ...filteredFiles()])}
     </Item.Group>

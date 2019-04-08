@@ -52,7 +52,7 @@ class Store {
         bundles: "active",
         portalannouncementSort: "Newest",
         portalPolicySort: "Newest",
-        emailTemplateSort: "Newest"
+        emailTemplateSort: "Newest",
     }
     @observable
     modal = {
@@ -68,7 +68,8 @@ class Store {
         createContent: false,
         createChannel: false,
         modifyChannel: false,
-        historyView: false
+        historyView: false,
+        askQuestion: false
     }
 
     @observable
@@ -181,6 +182,7 @@ class Store {
         sentimentComplete: false,
         sentimentAvailable: []
     }
+
 
     @action
     set(target, key, val){
