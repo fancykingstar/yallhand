@@ -3,8 +3,17 @@
     font-size: .8em;
 }
 
-.AnswerField {
+.Wrapped button{
+    font-family: Lato; 
+    border-radius: 5px;
+}
 
+.Wrapped input{
+    font-family: Lato; 
+    border-radius: 5px;
+}
+
+.AnswerField {
     background-color: #FFFFFF;
     padding: 5px;
     font-weight: 400;
@@ -17,7 +26,6 @@
     -webkit-border-radius: 5px 5px 5px 5px; 
     -moz-border-radius: 5px 5px 5px 5px; 
     border-radius: 5px 5px 5px 5px; 
-
     display: inline-block;
 }
 
@@ -116,6 +124,14 @@
     min-height: 1em  !important;
     vertical-align: baseline  !important;
     border: none  !important;
+}
+
+#openLinkInNewWindow {
+    display: none;
+}
+
+.rdw-link-modal-target-option {
+    display: none;
 }
 
 .FixButtonGroup {

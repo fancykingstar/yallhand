@@ -65,7 +65,7 @@ class CreateContent extends React.Component {
 
     return (
       <div>
-        {displayCard()}
+        {this.props.invisible === undefined? displayCard(): <div/>}
         <div>
           <Modal
             open={UIStore.modal.createContent}

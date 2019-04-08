@@ -51,6 +51,7 @@ export class DraftFormField extends React.Component {
         return (
                 <div style={this.props.border !== undefined? {border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10, marginRight: 20}: null}>
                 <Editor
+                wrapperClassName="Wrapped"
                 editorState={DataEntryStore.draft.editorState}
                 onEditorStateChange={editorStateChanged}
                 toolbar={toolbarConfig}
