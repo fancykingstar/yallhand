@@ -24,9 +24,6 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 
-
-import { ToastContainer } from "react-toastify";
-
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
@@ -98,7 +95,6 @@ export class AdminPanel extends React.Component {
 
           </Switch>
         </div>
-        <ToastContainer />
         <Header />
       </div>
     );

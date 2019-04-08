@@ -57,6 +57,17 @@ export const createHistory = (payload) => {
     apiCall("/histories", "POST", payload)
 } 
 
+///Send Query
+export const sendQuery = (payload) => {
+    apiCall("/users/send-query", "POST", payload).then((result) => {
+        if(result.ok){
+            toast.success("Your message has been sent! ✉️", {hideProgressBar: true})
+          } else {
+            toast.error(result.statusText, {hideProgressBar: true})
+          }
+    })
+} 
+
 ///Notfications
 export const clearNotification = (payload) => {
    const id = {"Policy": "policyID", "Announcement": "announcementID", "File": "resourceID", "URL": "resourceID"}[payload.type]

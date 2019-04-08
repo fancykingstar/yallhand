@@ -4,10 +4,9 @@ import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import  SearchFrame  from "./SearchFrame"
-import { AskAQuestion } from "./AskAQuestion"
 import "./style.css";
 
-@inject("ChannelStore", "UIStore", "UserStore")
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore")
 @observer
 class SideBarMenu extends React.Component {
   componentDidMount() {
@@ -32,7 +31,7 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore, UserStore } = this.props;
+    const { ChannelStore, UIStore, UserStore, DataEntryStore } = this.props;
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item
         name={channel.label} style={ UIStore.sideNav.activeChannel === channel.chanID
@@ -164,7 +163,7 @@ class SideBarMenu extends React.Component {
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "ask");
-                  UIStore.set("ask", "type", "general")
+                  DataEntryStore.set("ask", "type", "general")
                   UIStore.set("modal", "askQuestion", true);
                 }}
               >Ask Anything</Menu.Item>
@@ -176,7 +175,7 @@ class SideBarMenu extends React.Component {
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "report");
-                  UIStore.set("ask", "type", "anonymous")
+                  DataEntryStore.set("ask", "type", "anonymous")
                   UIStore.set("modal", "askQuestion", true);
                 }}
               >
@@ -212,7 +211,6 @@ class SideBarMenu extends React.Component {
           )} */}
         </Menu>
         {portalReturn}
-        <AskAQuestion />
       </div>
     );
   }

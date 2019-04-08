@@ -13,7 +13,7 @@ import BackButton from "../SharedUI/BackButton"
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 import "./style.css"
 
-@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore")
+@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore", "DataEntryStore")
 @observer
 export class ContentDetail extends React.Component {
 
@@ -31,7 +31,7 @@ export class ContentDetail extends React.Component {
     }
 
     render() {
-        const {AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore} = this.props
+        const {AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, DataEntryStore} = this.props
         
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
@@ -93,8 +93,8 @@ export class ContentDetail extends React.Component {
                         onClick={e => {
                         handleClick()
                         UIStore.set("modal", "askQuestion", true) 
-                        UIStore.set("ask", "type", "specific")
-                        UIStore.set("ask", "content", content)
+                        DataEntryStore.set("ask", "type", "specific")
+                        DataEntryStore.set("ask", "content", content)
                     }}
                     >Ask A Question...</Button>
                             </Grid.Column>

@@ -17,8 +17,7 @@ class Store {
         "content": this.content,
         "dateTimeSelect": this.dateTimeSelect,
         "responsive": this.responsive,
-        "portal": this.portal,
-        "ask": this.ask
+        "portal": this.portal
     } 
 
     @observable filter = {
@@ -184,10 +183,6 @@ class Store {
         sentimentAvailable: []
     }
 
-    @observable ask = {
-        content: {},
-        type: "general"
-    }
 
     @action
     set(target, key, val){

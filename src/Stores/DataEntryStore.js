@@ -25,7 +25,8 @@ class Store {
     content: this.content,
     contentmgmt: this.contentmgmt,
     api: this.api,
-    superAdmin: this.superAdmin
+    superAdmin: this.superAdmin,
+    ask: this.ask
     
   }; 
 
@@ -234,6 +235,11 @@ class Store {
     teams: false,
     tagteamedit: false
   };
+
+  @observable ask = {
+    content: {},
+    type: "general"
+  }
 
   @observable
   superAdmin = {
