@@ -9,7 +9,7 @@ export const UserWorkspace = props => {
         <div
           className={props.mobile? "WorkspacePortalLogoSm" : "WorkspacePortalLogoLrg"}
           style={{ backgroundImage: `url(${AccountStore.account.img})` }} />
-        <div className="WorkspaceNamePortal" style={{color: "#000000"}}>{AccountStore.account.label}</div>
+        <div className="WorkspaceNamePortal" style={{color: "#FFFFFF"}}>{AccountStore.account.label}</div>
 
     </div>
   );

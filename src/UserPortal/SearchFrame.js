@@ -41,13 +41,12 @@ class SearchFrame extends React.Component {
 
       <Form onSubmit={() => this.props.history.push("/portal/search")}>
       <Form.Input 
-       
         value={UIStore.search.portalSearchValue}
         onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)} 
         fluid icon 
         placeholder="Search...">
-          <input  style={{background: "transparent", border: "none"}} />
-          <Icon style={{color:"#00a3e0"}} name="search" />
+          <input  style={{background: "transparent", border: "none", color: "#FFFFFF"}} />
+          <Icon style={{color:"#2dbffe"}} name="search" />
         </Form.Input>
       </Form>
    

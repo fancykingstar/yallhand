@@ -133,8 +133,9 @@ class DashboardFrame extends React.Component {
         <Icon name="calendar alternate outline" color="blue"/>
         Last{" "}
       <Dropdown 
-        options={[{"text": "30 days", "value": "30"},{"text": "60 days", "value": "60"},{"text": "90 days", "value": "90"}]} 
-        value="30" />
+        options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
+        onChange={(e, val) => UIStore.set("dropdown", "dashboardOverview", val.value)}
+        value={UIStore.dropdown.dashboardOverview} />
         <span style={{paddingLeft: 20}}>Or choose a date range</span>
         </div>
       
@@ -158,17 +159,19 @@ class DashboardFrame extends React.Component {
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
                 <h4>All Email Campaigns</h4>
-                <div style={{marginTop: "auto"}}>
+                <div style={{marginTop: "auto", minHeight:240, position: "relative"}}>
+                <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
                 <Statistic.Group widths={1}>
                 <Statistic>
                   <Statistic.Value><CountUp duration={1} decimals={1} end={AnnouncementsStore.allAnnouncements.length} />%</Statistic.Value>
-                  <Statistic.Label>Open Rate</Statistic.Label>
+                  <Statistic.Label>Open Rate <Icon name="arrow up" color="blue"/>+1%</Statistic.Label>
                 </Statistic>
-                <Statistic>
+                <Statistic style={{paddingTop: 10}}>
                   <Statistic.Value><CountUp duration={1} decimals={1} end={PoliciesStore.allPolicies.length} />%</Statistic.Value>
-                  <Statistic.Label>Click Rate</Statistic.Label>
+                  <Statistic.Label>Click Rate <Icon name="arrow up" color="blue"/>+1%</Statistic.Label>
                 </Statistic>
               </Statistic.Group>
+              </div>
                 </div>
                 
               </Segment>
@@ -198,16 +201,7 @@ class DashboardFrame extends React.Component {
               
              
                 </Grid>
-                {/* <Statistic.Group widths={2}>
-                <Statistic>
-                  <Statistic.Value></Statistic.Value>
-                  <Statistic.Label>Participation</Statistic.Label>
-                </Statistic>
-                <Statistic>
-                  <Statistic.Value>{AccountStore.allUsers.length}</Statistic.Value>
-                  <Statistic.Label>Av. Monthly Views</Statistic.Label>
-                </Statistic>
-              </Statistic.Group> */}
+               
               </Segment>
             </Grid.Column>
             <Grid.Column>
@@ -227,18 +221,24 @@ class DashboardFrame extends React.Component {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-            
                 </div>
+                <div style={{height: 220, position: "relative"}}>
+                <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
                 <Doughnut 
                  data={doughnutData}
                  options={{legend: false}}
                 />
+                </div>
+               
                 <Statistic.Group widths={1}>
                 <Statistic>
                   <Statistic.Label>22 TOTAL</Statistic.Label>
                 </Statistic>
                 </Statistic.Group>
+                </div>
               </Segment>
+
+
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>

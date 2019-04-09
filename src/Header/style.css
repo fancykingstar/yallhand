@@ -11,9 +11,10 @@
 }
 
 .PortalHeader {
+    color: #000000;
     width: 100vw;
     height: 40px;
-    background-color:#545454;
+    background-color:#FFFFFF;
     border-color: #000000;
     border-style: solid;
     border-width: 0px 0px 1px;

@@ -1,5 +1,5 @@
 .PortalSideNav ::placeholder {
-    color: #019ee172 !important;
+    color: #2dbffe !important;
     font-size: 1.3em;
   }
 
@@ -74,7 +74,8 @@
     float: left;
     height: 100vh;
     position: relative;   
-    background-color: #efefef;
+    background-color: #4f4f4f;
+    border-right: 2px solid #00a3e0;
 }
 
 .WorkspaceNamePortal {
@@ -94,7 +95,7 @@
     width: 60px;
     border: solid;
     border-width: 2px;
-    border-color: #bdbdbd;
+    border-color: #2dbffe;
     -webkit-border-radius: 10%;
     -moz-border-radius: 10%;
     border-radius: 10%;
@@ -125,7 +126,7 @@
 
 .PortalSideNav {
     padding-left: 3px;
-    background-color: #efefef;
+    background-color: #4f4f4f;
 }
 
 .Content{

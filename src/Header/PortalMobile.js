@@ -9,7 +9,7 @@ export const PortalMobile = inject("UIStore")(observer((props) => {
     let output = {}
     if(!UIStore.responsive.isMobile){ output.display = "none" }
     if(UIStore.responsive.mobileNav){output.color = "#2FC7F8"} 
-    else{output.color = "#FFFFFF"}
+    else{output.color = "#000000"}
     return output
   }
 
