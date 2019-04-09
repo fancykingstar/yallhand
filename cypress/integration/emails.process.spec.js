@@ -39,6 +39,12 @@ context('Actions', () => {
         sendEmail(defaultSubject, 'test 12', 2, ['Faq tag 1'], ['Announcement Mtl 1'],null, null, ['fabrice mtl'], null);
     });
 
+    /**
+     * Log user
+     *
+     * @param username
+     * @param password
+     */
     function login(username, password) {
         cy.get('.inviteCode').click();
         cy.get('.form button').eq(1).click();
@@ -51,6 +57,17 @@ context('Actions', () => {
         cy.wait(1000);
     }
 
+    /**
+     * @param subject       Email subject
+     * @param body          Email body
+     * @param contentType   Type of content (1="Custom Message Only", 2="Custom Message + Selected Content", 3="Selected Content Only")
+     * @param faqs          Array of FAQs name (need contentType 2 or 3)
+     * @param announcements Array of announcements name  (need contentType 2 or 3)
+     * @param team          Team name
+     * @param tag           Tag name
+     * @param users         Array of users who will receive email
+     * @param usersPreview  Array of users who will receive preview email
+     */
     function sendEmail(subject, body, contentType, faqs, announcements, team, tag, users, usersPreview) {
         let subjectInput = 0;
 
@@ -165,11 +182,17 @@ context('Actions', () => {
         clearAll();
     }
 
+    /**
+     * Clear form
+     */
     function clearAll() {
         cy.wait(1000);
         cy.contains(' Clear All ').click();
     }
 
+    /**
+     * Back to send email first page
+     */
     function backSendEmail() {
         cy.wait(1000);
         cy.get('.left').eq(1).click();
