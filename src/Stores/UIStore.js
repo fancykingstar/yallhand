@@ -182,7 +182,8 @@ class Store {
 
     @observable portal = {
         sentimentComplete: false,
-        sentimentAvailable: []
+        sentimentAvailable: [],
+        viewedContent: []
     }
 
 

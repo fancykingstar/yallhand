@@ -61,7 +61,7 @@ export const loadAdmin = (superStatus=false, superUser={}) => {
       const scheduled = await load.scheduled(accountID);
       UIStore.set("adminLoadingComplete", "scheduled", true)
 
-      const logs = await load.logs(accountID);
+      const logs = await load.logs(accountID, userID);
       UIStore.set("adminLoadingComplete", "logs", true)
 
       const a = await load.sentiments(accountID);

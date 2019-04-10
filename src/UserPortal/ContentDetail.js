@@ -28,6 +28,10 @@ export class ContentDetail extends React.Component {
         apiCall_noBody(`sentiments/usersentiment/${UserStore.user.userID}/${this.props.mode === "policy"? content.policyID : content.announcementID}/${this.props.mode === "policy"? "policyID":"announcementID"}`, "GET")
             .then(result => UIStore.set("portal", "sentimentAvailable", result))
             
+        if(UIStore.portal.viewedContent.includes(content[this.props.mode + "ID"]) === false){
+            UIStore.set("portal", "viewedContent", [...UIStore.portal.viewedContent, content[this.props.mode + "ID"]])
+            console.log(UIStore.portal.viewedContent.length)
+        }
     }
 
     render() {
