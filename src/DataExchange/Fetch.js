@@ -18,6 +18,7 @@ export const setUser = (user) => {
 export const deleteUser = (user) => {
   UIStore.toggleScreenLoading()
   localStorage.removeItem('user')
+  window.location.href = '/'
 
 }
 

@@ -8,9 +8,11 @@ import { AccountStore } from "../Stores/AccountStore"
 import { EmailStore } from "../Stores/EmailStore"
 import { ScheduleStore } from "../Stores/ScheduleStore"
 import { DataEntryStore } from "../Stores/DataEntryStore"
+import { UIStore } from "../Stores/UIStore";
 import { validContent} from "../SharedCalculations/ValidContent"
 import { validResources } from "../SharedCalculations/ValidResource"
 import {apiCall_noBody} from "./Fetch"
+
 
 //get team, tag, channel limits
 const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag !== ""
@@ -101,9 +103,12 @@ export const files = async (accountID) => {
   return result
 }
 
-export const logs = async (accountID) => {
-  const result = await apiCall_noBody("itslogs/" + accountID, "GET")
+export const logs = async (accountID, userID) => {
+  const result = contentFilter()? await apiCall_noBody("itslogs/views/uniquebyuser/" + userID, "GET") :  await apiCall_noBody("itslogs/" + accountID, "GET")
   AccountStore.loadLogs(result.filter(log => !log.isAction))
+  if(contentFilter()){
+    UIStore.set("portal", "viewedContent", result.map(i => i.contentID))
+  }
 
   return result
 }

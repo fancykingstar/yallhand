@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Icon, Form, Transition, Button } from "semantic-ui-react";
+import { Menu, Icon, Label, Transition, Button } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
@@ -7,7 +7,7 @@ import  SearchFrame  from "./SearchFrame"
 
 import "./style.css";
 
-@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore")
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore", "AccountStore", "PoliciesStore", "AnnouncementsStore")
 @observer
 class SideBarMenu extends React.Component {
   componentDidMount() {
@@ -32,7 +32,11 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore, UserStore, DataEntryStore } = this.props;
+    const { ChannelStore, UIStore, UserStore, DataEntryStore, AccountStore, PoliciesStore, AnnouncementsStore } = this.props;
+
+    const nonviewedPolicies = PoliciesStore.allPolicies.filter(i => UIStore.portal.viewedContent.includes(i.policyID) === false )
+    const nonviewedAnnouncements = AnnouncementsStore.allAnnouncements.filter(i => UIStore.portal.viewedContent.includes(i.announcementID) === false )
+
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item
         name={channel.label} style={ UIStore.sideNav.activeChannel === channel.chanID
@@ -98,8 +102,11 @@ class SideBarMenu extends React.Component {
                   UIStore.set("sideNav", "activePrimary", "announcements");
                   this.props.history.push("/portal");
                 }}
-                name="Announcements"
-              />
+              >
+              Announcements
+              {nonviewedAnnouncements.length === 0? null : <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedAnnouncements.length)}</Label></div>}
+
+              </Menu.Item>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "policies"
@@ -110,8 +117,9 @@ class SideBarMenu extends React.Component {
                   UIStore.set("sideNav", "activePrimary", "policies");
                   this.props.history.push("/portal/learn");
                 }}
-              >
+              >               
                 FAQs
+                {nonviewedPolicies.length === 0? null :  <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedPolicies.length)}</Label></div>}
               </Menu.Item>
             </Menu.Menu>
           </Menu.Item>

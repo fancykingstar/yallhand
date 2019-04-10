@@ -2,7 +2,7 @@ import React from "react";
 import "./style.css";
 
 import { inject, observer } from "mobx-react";
-import { Item, Header, Container, Divider } from "semantic-ui-react";
+import { Item, Header, Label, Divider } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import { withRouter } from "react-router-dom";
 import { UIStore } from "../Stores/UIStore";
@@ -30,11 +30,11 @@ class AnnouncementsFrame extends React.Component {
       <React.Fragment key={"portalannouncement" + giveMeKey()}>
         <Item  onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}}>
         {news.img !== ""?  <Item.Image style={{paddingRight: 20}} size="medium" src={news.img} /> : null }
-        <Header
-              as="h2"
-              content={news.variations[0].label === ""? news.label : news.variations[0].label}
-              subheader={UTCtoFriendly(news.updated)}
-            />
+        <Header as="h2" >
+            {news.variations[0].label === ""? news.label : news.variations[0].label}
+            <Header.Subheader>{UTCtoFriendly(news.updated)}</Header.Subheader>
+            {UIStore.portal.viewedContent.includes(news.announcementID) === false? <Label as='a' size="mini" color='red'> Unread </Label> : null}
+        </Header>            
       </Item>
       <Divider/>
       </React.Fragment>

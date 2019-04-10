@@ -14,7 +14,7 @@ export class Automations extends React.Component {
     const { EmailStore } = this.props;
 
     const outbounds = EmailStore.allCampaigns
-      .filter(camp => camp.isTriggered && camp.completed === false)
+     .filter(camp => camp.isTriggered && !camp.completed)
       .map(camp => (
         <Table.Row key={"camp" + giveMeKey()}>
           <Table.Cell>{EmailStore._getCampaign(camp.campaignID).subject}</Table.Cell>
@@ -34,10 +34,8 @@ export class Automations extends React.Component {
         </Table.Row>
       ));
 
-    const displayAutomations = EmailStore.allCampaigns .filter(camp => camp.isTriggered && camp.completed === false)?
-    <h5 style={{ fontStyle: "italic" }}>
-    No onboard/offboard automations are active
-  </h5> :   <Table padded="very" basic="very">
+    const displayAutomations = EmailStore.allCampaigns.filter(camp => camp.isTriggered && !camp.completed)?
+ <Table padded="very" basic="very">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Email Subject</Table.HeaderCell>
@@ -53,7 +51,10 @@ export class Automations extends React.Component {
           </Table.Header>
 
           <Table.Body>{outbounds}</Table.Body>
-        </Table>
+        </Table>:
+            <h5 style={{ fontStyle: "italic" }}>
+            No onboard/offboard automations are active
+          </h5> 
 
 
     return (
