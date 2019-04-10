@@ -4,6 +4,7 @@ import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import  SearchFrame  from "./SearchFrame"
+
 import "./style.css";
 
 @inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore")
@@ -77,12 +78,14 @@ class SideBarMenu extends React.Component {
     return (
       <div className="PortalSideNav" onClick={e => resetSearch()}>
              <SearchFrame/>
-        <Menu vertical secondary borderless={true}>
+        <Menu inverted vertical secondary borderless={true}>
    
           <Menu.Item>
-            <Menu.Header style={{fontSize: "1.3em"}}>
-              {/* <Icon name="feed" /> */}
-              Feed
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Feed{" "}
+            <Icon style={{color: "#FFFFFF"}} name="newspaper outline" />
+          
+             
             </Menu.Header>
             <Menu.Menu>
               <Menu.Item
@@ -114,9 +117,10 @@ class SideBarMenu extends React.Component {
           </Menu.Item>
 
           <Menu.Item>
-            <Menu.Header style={{fontSize: "1.3em"}}>
-              {/* <Icon name="cubes" /> */}
-              Resources
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Resources{" "}
+            <Icon style={{color: "#FFFFFF"}} name="cubes" />
+        
             </Menu.Header>
 
             <Menu.Menu>
@@ -150,9 +154,10 @@ class SideBarMenu extends React.Component {
 
           
             <Menu.Item>
-            <Menu.Header style={{fontSize: "1.3em"}}>
-              {/* <Icon name="feed" /> */}
-              Contact
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Contact{" "}
+            <Icon style={{color: "#FFFFFF"}} name="chat" />
+          
             </Menu.Header>
             <Menu.Menu>
               <Menu.Item
@@ -195,7 +200,7 @@ class SideBarMenu extends React.Component {
             duration={250}
           >
             <Menu.Item>
-              <Menu.Header style={{fontSize: "1.3em"}}>Channels</Menu.Header>
+              <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>Channels</Menu.Header>
               <Menu.Menu style={{paddingLeft:4}}>{channelList}</Menu.Menu>
             </Menu.Item>
           </Transition>

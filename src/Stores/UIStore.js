@@ -53,6 +53,7 @@ class Store {
         portalannouncementSort: "Newest",
         portalPolicySort: "Newest",
         emailTemplateSort: "Newest",
+        dashboardOverview: 30,
     }
     @observable
     modal = {
@@ -138,7 +139,8 @@ class Store {
     dateTimeSelect = {
         date: "",
         time: "",
-
+        DashboardStart: "",
+        DashboardEnd: ""
     }
 
     @observable

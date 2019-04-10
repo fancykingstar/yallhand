@@ -14,7 +14,7 @@ import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
-import { DashboardFrame } from "./Dashboard/DashboardFrame";
+import  DashboardFrame  from "./Dashboard/DashboardFrame";
 import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import SuperAdminFrame from "./SuperAdmin/SuperAdminFrame"
 import { EditAccounts } from "./SuperAdmin/EditAccounts"

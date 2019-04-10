@@ -17,6 +17,12 @@ export class AskAQuestion extends React.Component {
     UIStore.set("modal", "askQuestion", false) 
     }
 
+    const closeModal = () => {
+        DataEntryStore.reset("ask", {type: "general"})
+        DataEntryStore.resetDraft()
+        UIStore.set("modal", "askQuestion", false)
+    }
+
     const header =  {"anonymous": "Make an anonymous tip or suggestion", "general": "Ask a general question", "specific": "Ask a question"}[DataEntryStore.ask.type]   
 
     const send = () => {
@@ -35,7 +41,7 @@ export class AskAQuestion extends React.Component {
     return(
         <div style={{paddingTop: 10, position: "absolute"}}>
 
-        <Modal open={UIStore.modal.askQuestion} onClose={() => UIStore.set("modal", "askQuestion", false) }>
+        <Modal open={UIStore.modal.askQuestion} onClose={() => closeModal() }>
             <Modal.Header>{header}</Modal.Header>
             <Modal.Content image>
            
