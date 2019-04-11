@@ -46,6 +46,7 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 
 ///LOGS (event type options: create, update, delete)
 export const log = (payload) => {
+    console.log(payload)
     apiCall("itslogs", "POST", payload)
 } 
 

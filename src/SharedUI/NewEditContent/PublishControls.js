@@ -1,8 +1,11 @@
 import React from "react";
+import {inject, observer} from "mobx-react"
 import { Menu, Icon } from "semantic-ui-react";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "../style.css";
 
+@inject("UIStore")
+@observer
 export class PublishControls extends React.Component {
   clickActions = {
     "draft":"draft",
@@ -14,7 +17,7 @@ export class PublishControls extends React.Component {
   }
   handleItemClick = (e, { name }) => this.props.onClick(this.clickActions[name]);
   render() {
-    const { stage } = this.props;
+    const { stage, UIStore } = this.props;
     const actionOptions = {
       draft: ["draft", "published", "archived"],
       published: ["update", "unpublish", "archived"],
@@ -40,8 +43,8 @@ export class PublishControls extends React.Component {
     };
 
     return (
-      <div id="PubControls">
-        <Menu compact icon="labeled" vertical size="mini" inverted>
+      <div className={UIStore.responsive.isMobile? "PubControlsH" : "PubControlsV"}>
+        <Menu compact icon="labeled" vertical={UIStore.responsive.isMobile? false : true} size="mini" inverted>
           <Menu.Item style={{color: "#2fc7f8"}}>Currently: {stage.charAt(0).toUpperCase() + stage.substring(1)}</Menu.Item>
           {actionOptions[stage].map(opt => <Menu.Item key={"pubctrl" + giveMeKey()} name={opt} onClick={this.handleItemClick}>
             <Icon name={iconKey[opt]} size="small" />

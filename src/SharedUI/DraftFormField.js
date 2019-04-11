@@ -22,6 +22,9 @@ export class DraftFormField extends React.Component {
               } else {
                 const contentState = convertFromRaw(this.props.loadContent);
                 DataEntryStore.setDraft( "editorState", EditorState.createWithContent(contentState) );
+                DataEntryStore.toggleDraftContentRAW(convertToRaw(contentState));
+                const htmlOutput = stateToHTML(contentState)
+                DataEntryStore.toggleDraftContentHTML(htmlOutput);
                
               }
         }
@@ -29,11 +32,11 @@ export class DraftFormField extends React.Component {
         this.onChange = editorState => DataEntryStore.setDraft("editorState", editorState);
       }
     componentDidMount() {
+      const {DataEntryStore} = this.props
         this.getLoadOrNew()
     }
     render(){
         const {DataEntryStore} = this.props
-
         const editorStateChanged = (newEditorState) => {
             DataEntryStore.setDraft("editorState", newEditorState);
             passContent();

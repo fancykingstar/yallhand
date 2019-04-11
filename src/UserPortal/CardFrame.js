@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import UserCard from "./UserCard";
-import { SortNSearch } from "../SharedUI/SortNSearch"
+import { Sort } from "../SharedUI/Sort"
 import { sortByUTC } from "../SharedCalculations/SortByUTC";
 import { PortalContentNoResults } from "./PortalContentNoResults"
 import "./style.css";
@@ -26,12 +26,10 @@ export class CardFrame extends React.Component {
 
 
     return (
-      <div style={{marginTop: -35, paddingRight: 15, marginLeft: -10}}>
-      <div style={{height: 50}}>
-               <SortNSearch 
-          dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)} 
+      <div>
+            <Sort
+          dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)}  
           />
-      </div>
       {displayContent}
   
       </div>

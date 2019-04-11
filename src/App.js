@@ -10,7 +10,7 @@ import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import DevTools from 'mobx-react-devtools'
 
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 
 
 @inject("UIStore", "UserStore")
@@ -54,7 +54,12 @@ class AppRoute extends React.Component {
           <Route path="*"> <Redirect push to={redirect}/> </Route>
         </Switch>
         </div>
-        <ToastContainer />
+        <ToastContainer 
+        className="toast-container"
+        toastClassName='toast-style'
+        position="top-center"
+        transition={Slide}
+        />
       </div>
     );
   }

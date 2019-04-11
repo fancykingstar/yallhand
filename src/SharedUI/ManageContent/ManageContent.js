@@ -277,7 +277,7 @@ class ManageContent extends React.Component {
 
     }
 
-    return <div style={{ maxWidth: 700 }}>{manageContent()}</div>;
+    return <div style={{ maxWidth: 700 }}>{UIStore.content.variationID === ""? <div/> : manageContent()}</div>;
   }
 }
 export default withRouter(ManageContent);

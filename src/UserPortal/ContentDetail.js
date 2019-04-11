@@ -23,14 +23,18 @@ export class ContentDetail extends React.Component {
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
         UIStore.set("portal", "sentimentComplete", false)
-        log(ItsLog(false, {"type": this.props.mode, "id": this.props.match.params.id, "variation": content.variations[0].variationID}))
+        
+        // if(!UserStore.user.isAdmin){ 
+            log(ItsLog(false, {"content": this.props.mode, "contentID": this.props.match.params.id, "variationID": content.variations[0].variationID})) 
+        // }
+        
+        
     
         apiCall_noBody(`sentiments/usersentiment/${UserStore.user.userID}/${this.props.mode === "policy"? content.policyID : content.announcementID}/${this.props.mode === "policy"? "policyID":"announcementID"}`, "GET")
             .then(result => UIStore.set("portal", "sentimentAvailable", result))
             
         if(UIStore.portal.viewedContent.includes(content[this.props.mode + "ID"]) === false){
             UIStore.set("portal", "viewedContent", [...UIStore.portal.viewedContent, content[this.props.mode + "ID"]])
-            console.log(UIStore.portal.viewedContent.length)
         }
     }
 
@@ -59,7 +63,7 @@ export class ContentDetail extends React.Component {
             />
 
         const handleClick = () => {
-                //   log(ItsLog(true,{"event": "click", "type":"ask"}))
+                log(ItsLog(true,{"event": "click", "type":"ask"}))
                 UIStore.set("modal", "askQuestion", false) 
     }
 

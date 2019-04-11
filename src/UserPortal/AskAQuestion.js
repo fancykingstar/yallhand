@@ -13,7 +13,7 @@ export class AskAQuestion extends React.Component {
     render(){
     const { UIStore, DataEntryStore, UserStore, AccountStore } = this.props
     const handleClick = () => {
-    //   log(ItsLog(true,{"event": "click", "type":"ask"}))
+      log(ItsLog(true,{"event": "click", "type":"ask"}))
     UIStore.set("modal", "askQuestion", false) 
     }
 

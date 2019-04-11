@@ -35,7 +35,7 @@ class NewEditVariation extends React.Component {
     const { announcementID, variationID } = content;
 
     const load = async (variation) => {
-      const { label, teamID, tags, stage, contentRAW, contentHTML } = variation;
+      const { label, teamID, tags, stage, contentRAW, contentHTML, variationID } = variation;
       // const { UIStore, AnnouncementsStore, PoliciesStore, DataEntryStore } = this.props;
       const { id } = this.props.match.params;
   
@@ -49,6 +49,7 @@ class NewEditVariation extends React.Component {
       DataEntryStore.set("content", "contentRAW", contentRAW)
       DataEntryStore.set("content", "contentHTML", contentHTML)
       DataEntryStore.set("content", "isNew", false)
+      DataEntryStore.set("content", "variationID", variationID)
 
     }
 
@@ -81,20 +82,24 @@ class NewEditVariation extends React.Component {
     
     // validateURLs(mode);
     const isPolicy = mode === "policy";
+    const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
     const typeId = `${mode}ID`;
     if (isNew) {
       (isPolicy ? createPolicy(content(mode)) : createAnnouncement(content(mode))).then(res => {
         if (isPolicy) PoliciesStore.pushPolicies(res);
         else AnnouncementsStore.pushAnnouncements(res);
-        const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
         const id = res[typeId];
         UIStore.set("content", typeId, id);
-        // UIStore.set("content", "variationID", id);
-        // history.push(`${path}${res[id]}`);
+        
+        history.push(`${path}${res[id]}`);
       });
     }
-    else isPolicy ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode));
-    if (isNew) DataEntryStore.set("content", "isNew", false)
+    else 
+    isPolicy ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode)).then(res => {
+      if (isNew) DataEntryStore.set("content", "isNew", false)
+      history.push(`${path}${UIStore.content[mode + "ID"]}`);
+    });
+ 
   }
   
   render() {
@@ -103,7 +108,7 @@ class NewEditVariation extends React.Component {
     const { announcementID, variationID, stage } = content;
     const { mode } = this;
     return (
-      <div style={{overflow: "auto"}}>
+      <div style={{overflowY: "auto", overflowX: "hidden"}}>
         {(variationID !== "" || announcementID !== "" || DataEntryStore.content.isNew) && <React.Fragment>
           <PublishControls stage={stage} onClick={val => this.changeStage(val)}/>
           <VariationConfig mode={mode}/>
