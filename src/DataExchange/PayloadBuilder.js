@@ -29,8 +29,8 @@ export const ItsLog = (action, data) => {
   //action (true/false (view only)) data = {"event":, "type":,} or {"location": "location label"}
   let buildObj = {
     isAction: action,
-    data: data
   }
+  buildObj = _.extend(data, buildObj)
   return _.extend({}, base(), buildObj)
 }
 

@@ -54,6 +54,7 @@ class Store {
         portalPolicySort: "Newest",
         emailTemplateSort: "Newest",
         dashboardOverview: 30,
+        altLabel: false
     }
     @observable
     modal = {
@@ -174,8 +175,8 @@ class Store {
 
     //previewing in display
     @observable content = {
-        // policyID: "",
-        // announcementID: "",
+        policyID: "",
+        announcementID: "",
         variationID: "",
         history: []
     }

@@ -104,9 +104,13 @@ export const files = async (accountID) => {
 }
 
 export const logs = async (accountID, userID) => {
-  const result = contentFilter()? await apiCall_noBody("itslogs/views/uniquebyuser/" + userID, "GET") :  await apiCall_noBody("itslogs/" + accountID, "GET")
+  // const result = contentFilter()? await apiCall_noBody("itslogs/views/uniquebyuser/" + userID, "GET") :  await apiCall_noBody("itslogs/" + accountID, "GET")
+  console.log(userID)
+  const result =  await apiCall_noBody("itslogs/views/uniquebyuser/" + userID, "GET") 
+  console.log(result)
   AccountStore.loadLogs(result.filter(log => !log.isAction))
   if(contentFilter()){
+    console.log(result)
     UIStore.set("portal", "viewedContent", result.map(i => i.contentID))
   }
 

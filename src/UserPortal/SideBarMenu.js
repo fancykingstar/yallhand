@@ -4,10 +4,12 @@ import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import  SearchFrame  from "./SearchFrame"
+import {ItsLog} from "../DataExchange/PayloadBuilder"
+import { log } from "../DataExchange/Up"
 
 import "./style.css";
 
-@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore", "AccountStore", "PoliciesStore", "AnnouncementsStore")
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore", "PoliciesStore", "AnnouncementsStore")
 @observer
 class SideBarMenu extends React.Component {
   componentDidMount() {
@@ -32,7 +34,7 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore, UserStore, DataEntryStore, AccountStore, PoliciesStore, AnnouncementsStore } = this.props;
+    const { ChannelStore, UIStore, UserStore, DataEntryStore, PoliciesStore, AnnouncementsStore } = this.props;
 
     const nonviewedPolicies = PoliciesStore.allPolicies.filter(i => UIStore.portal.viewedContent.includes(i.policyID) === false )
     const nonviewedAnnouncements = AnnouncementsStore.allAnnouncements.filter(i => UIStore.portal.viewedContent.includes(i.announcementID) === false )
@@ -75,7 +77,7 @@ class SideBarMenu extends React.Component {
      : <div/>
 
      const handleClick = () => {
-      //   log(ItsLog(true,{"event": "click", "type":"ask"}))
+        log(ItsLog(true,{"event": "click", "type":"ask"}))
       UIStore.set("modal", "askQuestion", true) 
     }
 

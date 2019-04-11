@@ -17,7 +17,7 @@ export const FeedItem = inject("AccountStore")(observer((props) => {
     <Item style={{paddingBottom: 5}} onClick={e => props.clicked(props.data.announcementID)}>
       <Item.Content>
         <Item.Header as='a'>{props.data.label}</Item.Header>
-        <Item.Meta>Updated: {UTCtoFriendly(props.data.updated)} <Icon name="check circle" color='green'/></Item.Meta>
+        <Item.Meta>Updated: {UTCtoFriendly(props.data.updated)}</Item.Meta>
         <Item.Meta>
 
         </Item.Meta>
