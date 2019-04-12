@@ -1,14 +1,15 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
-import { Item, Button, Header } from "semantic-ui-react";
+import { Item, Header} from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import { FeedItem } from "./FeedItem";
 import { sortByUTC } from "../SharedCalculations/SortByUTC"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import CreateContent from "../SharedUI/ManageContent/CreateContent"
-import { SortNSearch } from "../SharedUI/SortNSearch";
-import { AnnouncementFilter } from "./AnnouncementFilter";
+import { Sort } from "../SharedUI/Sort";
+import { SearchBox } from "../SharedUI/SearchBox"
+import { ContentFilter } from "../SharedUI/ContentFilter";
 import "./style.css";
 
 
@@ -31,7 +32,6 @@ class AnnouncementsFrame extends React.Component {
     const { AnnouncementsStore,UIStore, DataEntryStore } = this.props;
 
     const handleClick = val => {
-      // AnnouncementsStore.toggleAnnouncementID(val);
       UIStore.set("content", "announcementID", val)
       const announcement = Object.assign({}, AnnouncementsStore._getAnnouncement(val))
       UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(announcement.announcementID))
@@ -79,29 +79,32 @@ class AnnouncementsFrame extends React.Component {
         : filteredByStatus().filter(
             announcement => announcement.chanID === UIStore.sideNav.activeChannel
           );
-    const contentFeed = sortByUTC(filteredBySearch(), UIStore.dropdown.announcementSort).map(announcement => (
+    const contentFeed = sortByUTC(filteredBySearch(), UIStore.dropdown.announcementSort)
+      .map(announcement => (
       <FeedItem key={"announcement" + giveMeKey()} data={announcement} clicked={handleClick} />
     ));
-
+    
     return (
       <div style={{ width: "auto", paddingRight: 15, paddingBottom: 30 }}>
-        <Header as="h2">
+        <Header as="h2"
+        style={{padding: 0, margin: 0}}
+        >
           Annoucements Feed
           <Header.Subheader>
             Post relevant content for news and other updates
           </Header.Subheader>
         </Header>
-        <div style={{width: '100%', height: 50}}>
-        <AnnouncementFilter />
+        <div style={{width: "100%", paddingTop: 10, paddingBottom: 10, display: "flex", flexWrap: "wrap"}}>
+            <div style={{flex: 1, verticalAlign: "top", minWidth: 300, minHeight: 30, width: 120}}>  <Sort dropdownValueChange={val => UIStore.set("dropdown", "announcementSort", val)}/></div>
+            <div style={{flex: 2, verticalAlign: "top", minWidth: 300, paddingTop: 0, paddingBottom: 5, minHeight: 30,}}> <ContentFilter mode="announcement" /> </div>
+            <div style={{flex: 1, verticalAlign: "top", minWidth: 300, minHeight: 30, contentAlign: "right",}}> <SearchBox value={UIStore.search.searchAnnouncements} output={val => UIStore.set("search", "searchAnnouncements", val)} /></div>
         </div>
-        
+  
       
-        <SortNSearch useSearch
-        searchValue={UIStore.search.searchAnnouncements}
-        searchValueChange={val => UIStore.set("search", "searchAnnouncements", val)}
-        dropdownValueChange={val => UIStore.set("dropdown", "announcementSort", val)}
-        />
-        <div style={UIStore.responsive.isMobile? {paddingTop: 100} : {paddingTop: 50}}>
+        
+        <div style={UIStore.responsive.isMobile? {paddingTop: 100} : {paddingTop: 20}}>
+        {/* <div style={{marginRight: 10}}>
+        </div> */}
         <CreateContent mode="announcement"/>
         <Item.Group>{contentFeed}</Item.Group>
         </div>

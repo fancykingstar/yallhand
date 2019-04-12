@@ -76,9 +76,10 @@ class DashboardFrame extends React.Component {
     const createcontent = this.state.createContent === "announcement"? <div id="create annc"><CreateContent invisible mode="announcement"/></div> : <CreateContent invisible mode="policy"/>
 
     return (
-      <div style={{ paddingRight: 10, overflow: "auto" }}>
+      <div style={{ paddingRight: 10 }}>
         {createcontent}
         <Header
+          style={{padding: 0, margin: 0}}
           as="h2"
           content="Dashboard"
           subheader="Activities and Information Overview"

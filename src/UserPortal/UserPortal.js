@@ -77,9 +77,7 @@ class UserPortal extends React.Component {
             </Switch>
           </div>
           <Header />
-          {UIStore.responsive.isMobile ? <div /> : <SearchFrame />}
         </div>
-        }
       </React.Fragment>
     );
 

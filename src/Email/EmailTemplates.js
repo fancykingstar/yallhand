@@ -55,7 +55,9 @@ export class EmailTemplates extends React.Component {
             )
         return(
             <div>
-                  <Header as="h2" content="Email Templates" />
+                  <Header as="h2" content="Email Templates"
+                  style={{padding: 0, margin: 0}}
+                  />
                   {EmailStore.allCampaigns.filter(x => x.isTemplate).length === 0 ? <h5 style={{ fontStyle: "italic" }}> You do not have any current templates </h5> : <div/>}
                   <div style={{height: 20, width: "100%"}}>
                     <div style={{float: "right", paddingRight: 25}}> 

@@ -26,7 +26,7 @@ export class CardFrame extends React.Component {
 
 
     return (
-      <div>
+      <div style={{paddingBottom: 5}}>
             <Sort
           dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)}  
           />

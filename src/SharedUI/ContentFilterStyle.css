@@ -1,0 +1,32 @@
+.CardFilterContainer {
+    height: 30px;
+    /* margin-left: 15px; */
+    margin-right: 25px;
+    width: auto;
+    float: left;
+    /* z-index: 2; */
+}
+
+.Disabled {
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+}
+
+.CardFilter {
+    float: left;
+    height: 30px;
+    /* width: auto; */
+    /* line-height: 50px; */
+}
+
+.CardFilterBadge {
+    float: right;
+    /* margin-top: 16px; */
+    margin-left: 15px;
+    padding: 1px 14px 1px 14px;
+    color: #ffffff;
+    background-color: #2FC7F8;
+    -webkit-border-radius: 17px;
+    -moz-border-radius: 17p; 
+    border-radius: 17px;
+}

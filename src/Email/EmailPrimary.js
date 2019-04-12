@@ -111,7 +111,9 @@ export class EmailPrimary extends React.Component {
       };
     return (
       <div style={{maxWidth: 650}}>
-          <Header as="h2">
+          <Header as="h2"
+          style={{padding: 0, margin: 0}}
+          >
           Send Email
           <Header.Subheader>
             Configure and send emails to your employees

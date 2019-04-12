@@ -1,6 +1,5 @@
 body {
   /* color: rgb(51, 51, 51);  */
-  overflow: hidden;
   font-family: 'Nunito', sans-serif; 
 }
 
@@ -27,11 +26,12 @@ h1 h2 h3 h4 h5 span {
 }
 
 .ActionFrame {
-  width: auto;
+  /* width: auto; */
   padding-top: 50px;
   padding-left: 15px;
+  padding-bottom: 5px;
   margin-bottom: 0px;
-  min-height: 700px;
+  /* min-height: 700px; */
   height: 100%;
   background-color: #F9F9F9; 
   overflow-y: auto;
