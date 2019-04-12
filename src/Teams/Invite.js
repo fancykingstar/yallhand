@@ -3,7 +3,7 @@ import { InviteUser } from './InviteUser'
 
 export const Invite = () => {
     return(
-    <div style={{overflowY: "auto"}}>
+    <div>
     <InviteUser isAdmin={false}/>
     <InviteUser isAdmin={true}/>
     </div>)

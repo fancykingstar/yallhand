@@ -59,7 +59,9 @@ export class Automations extends React.Component {
 
     return (
       <div>
-        <Header as="h2" content="Email Automations" />
+        <Header as="h2" content="Email Automations"
+        style={{padding: 0, margin: 0}}
+        />
       {displayAutomations}
       </div>
     );

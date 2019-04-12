@@ -72,7 +72,7 @@
 .SideBarFrame { 
     width: 245px;
     float: left;
-    height: 100vh;
+    /* height: 100vh; */
     position: relative;   
     background-color: #4f4f4f;
     border-right: 2px solid #00a3e0;

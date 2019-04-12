@@ -9,6 +9,7 @@ export class AnalyticsFrame extends React.Component {
     return (
       <div style={{overflowY: "auto", paddingBottom: 50}}>
         <Header
+        style={{padding: 0, margin: 0}}
           as="h2"
           content="Analytics"
           subheader="Check performance of content"

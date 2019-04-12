@@ -4,6 +4,7 @@ import Card from './Card'
 import CreateContent from "../SharedUI/ManageContent/CreateContent"
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import './style.css'
+import { giveMeKey } from '../SharedCalculations/GiveMeKey';
 
 @inject("PoliciesStore", "UIStore")
 @observer
@@ -66,8 +67,9 @@ export class CardList extends React.Component {
           sorted
           .sort((a, b) => a["updated"] - b["updated"]);        
         }
-      
-        const cards = filteredBySearch().map(card => <Card data={card} key={card.label} img={card.img}/>)
+
+        const cards = filteredBySearch().map(card => <Card data={card} key={giveMeKey()} img={card.img}/>)
+
         const createcard = PoliciesStore.allPolicies.length === 0 && UIStore.isScreenLoading === true ? <div></div> : <CreateContent mode="policy"/>
         
         return(

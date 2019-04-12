@@ -215,15 +215,6 @@ class SideBarMenu extends React.Component {
             </Menu.Item>
           </Transition>
           
-
-          {/* {this.props.mobile ? ( */}
-            {/* <Menu.Item>
-              <SearchFrame/>
-            </Menu.Item> */}
-          {/* )  */}
-          {/* : (
-            <div />
-          )} */}
         </Menu>
         {portalReturn}
       </div>
