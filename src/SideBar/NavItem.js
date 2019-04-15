@@ -16,6 +16,7 @@ class NavItem extends React.Component {
     const handleClick = (id) => {
       id === "dashboard"? this.props.history.push("/panel") : this.props.history.push("/panel/" + this.props.id)
       UIStore.set("sideNav", "activePrimary", this.props.id)
+      document.getElementById('ActionFrame').scrollTop = 0;
     }
     
     return (

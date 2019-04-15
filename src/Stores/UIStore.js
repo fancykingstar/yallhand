@@ -91,6 +91,7 @@ class Store {
         URLResults: {},
         URLValue: "",
         fileSearchLoading: false,
+        analyticsSearchValue: "",
         searchUsers: "",
         searchUsersData: [],
         searchUrls: "",
@@ -122,13 +123,14 @@ class Store {
 
     @observable
     menuItem = {
+        analyticsFrame: "email campaigns",
         teamFrame: "onboard",
         resourcesFrame: "URL",
         emailFrame: "send email",
         sendEmailBody: "message",
         sendEmailOption: "schedule",
         analyticsHeader: "announcements",
-        superAdminFrame: "edit account"
+        superAdminFrame: "edit account",
     }
 
     @observable

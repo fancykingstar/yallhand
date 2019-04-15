@@ -1,28 +1,35 @@
 import React from "react";
-import {Header, Segment, Icon} from "semantic-ui-react"
-import { Completed } from "./Completed"
-import {Views} from "./Views"
+import { inject, observer } from "mobx-react";
+import {Header, Segment, Icon } from "semantic-ui-react"
+import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
+import { CampaignAnalytics } from "./CampaignAnalytics"
+import { PortalViews} from "./PortalViews"
 
-
+@inject("UIStore", "DataEntryStore", "EmailStore")
+@observer
 export class AnalyticsFrame extends React.Component {
   render() {
+    const { UIStore } = this.props;
+    const handleItemClick = (e, { name }) => {
+      UIStore.set("menuItem", "analyticsFrame", name);
+    };
+
+    const isVisable = name => {
+      return name === UIStore.menuItem.analyticsFrame ? "Visable" : "Hidden";
+    };
+    const menuItems = ["email campaigns", "user portal"];
     return (
-      <div style={{overflowY: "auto", paddingBottom: 50}}>
-        <Header
-        style={{padding: 0, margin: 0}}
-          as="h2"
-          content="Analytics"
-          subheader="Check performance of content"
+      <div>
+        <SecondaryMenu
+          menuItems={menuItems}
+          activeItem={UIStore.menuItem.analyticsFrame}
+          handleClick={handleItemClick}
         />
-        <br />
-        <Segment style={{marginRight: 50}}>
-        <Header as="h3"> <Icon name="mail" />Email Campaigns</Header>
-        <Completed />
-        </Segment>
-        <br/>
-         <Views/>
-        
+        <div className="TeamActionFrame">
+          <div className={isVisable("email campaigns")}> {" "}  <CampaignAnalytics /></div>
+          <div className={isVisable("user portal")}> {" "}  <PortalViews/> </div>
+        </div>
       </div>
     );
   }
-}
+} 

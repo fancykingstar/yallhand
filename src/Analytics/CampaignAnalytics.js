@@ -6,7 +6,7 @@ import { Table, Header, Button, Checkbox} from "semantic-ui-react";
 
 @inject("EmailStore")
 @observer
-export class Completed extends React.Component {
+export class CampaignAnalytics extends React.Component {
   render() {
     const {EmailStore} = this.props
     const outbounds = EmailStore.allCampaigns
@@ -26,10 +26,10 @@ export class Completed extends React.Component {
     )
 
     return (
-      <div className="Segment">
+      <div>
         <Header
           as="h2"
-          content="Outbound"
+          content="Email Campaign Performance"
         />
           <Table padded="very" basic="very">
             <Table.Header>

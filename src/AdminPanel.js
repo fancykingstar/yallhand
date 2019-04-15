@@ -67,7 +67,7 @@ export class AdminPanel extends React.Component {
           <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
         </div>
         </Transition>
-        <div className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
+        <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
         
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />

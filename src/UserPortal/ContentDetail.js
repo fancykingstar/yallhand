@@ -25,7 +25,7 @@ export class ContentDetail extends React.Component {
         UIStore.set("portal", "sentimentComplete", false)
         
         // if(!UserStore.user.isAdmin){ 
-            log(ItsLog(false, {"content": this.props.mode, "contentID": this.props.match.params.id, "variationID": content.variations[0].variationID})) 
+            log(ItsLog(false, {"type": this.props.mode, "contentID": this.props.match.params.id, "variationID": content.variations[0].variationID})) 
         // }
         
         
