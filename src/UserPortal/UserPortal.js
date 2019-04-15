@@ -60,7 +60,7 @@ class UserPortal extends React.Component {
               <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
             </div>
           </Transition>
-          <div className="ActionFrame">
+          <div id="ActionFrame" className="ActionFrame">
             {/* {UIStore.search.portalSearchValue !== "" && UIStore.search.portalDisplayResults? (<PortalSearch />) : ( */}
             <Switch location={this.props.location}>
               <Route path="/portal" component={AnnouncementsFrame} exact />

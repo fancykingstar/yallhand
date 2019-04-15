@@ -9,9 +9,9 @@ export const Sentiment = inject("UIStore", "AccountStore", "UserStore")(observer
 
     const handleClick = (val) => {
         UIStore.set("portal", "sentimentComplete", true)
-        if(!UserStore.user.isAdmin){
+        // if(!UserStore.user.isAdmin){
             createSentiment( sentiment(val, props.type, props.ID, props.variationID) ).then(r =>  r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
-        }
+        // }
 
     }
 

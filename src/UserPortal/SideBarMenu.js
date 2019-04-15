@@ -103,6 +103,7 @@ class SideBarMenu extends React.Component {
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "announcements");
                   this.props.history.push("/portal");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
               >
               Announcements
@@ -118,6 +119,7 @@ class SideBarMenu extends React.Component {
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "policies");
                   this.props.history.push("/portal/learn");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
               >               
                 FAQs
@@ -143,6 +145,7 @@ class SideBarMenu extends React.Component {
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "resources");
                   this.props.history.push("/portal/resources");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
               >
                 Files
@@ -156,6 +159,7 @@ class SideBarMenu extends React.Component {
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "directory");
                   this.props.history.push("/portal/directory");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
                 name="Staff Directory"
               />

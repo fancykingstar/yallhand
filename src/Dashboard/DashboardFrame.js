@@ -6,17 +6,29 @@ import { Scheduled } from "./Scheduled"
 import Notifications from "./Notifications"
 import { Line, Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
-import "./style.css"
+import {apiCall} from "../DataExchange/Fetch";
 import CreateContent from "../SharedUI/ManageContent/CreateContent";
-
+import moment from "moment"
+import _ from "lodash";
+import "./style.css";
 
 @inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore", "UIStore")
 @observer
 class DashboardFrame extends React.Component {
   constructor(props){
-    super(props)
-    this.state = {createContent: "announcement"}
+    super(props);
+    this.state = {createContent: "announcement"};
+    const {AccountStore} = this.props;
+    this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now()) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
+      .then(result => result.json().then(data => {
+          data.total_views.forEach(i => i.updated = moment().startOf(i.updated).valueOf())
+          AccountStore.loadDashboardData(data)
+      }));
   }
+  componentDidMount(){
+    this.getData()
+  }
+
   render() {
     const {AccountStore, AnnouncementsStore, PoliciesStore, TeamStore, EmailStore, UIStore} = this.props
 
@@ -54,6 +66,19 @@ class DashboardFrame extends React.Component {
       ]
   };
 
+  const getLabel = (data) => {
+    let label = ""
+   try {
+   if(data.type === "announcement"){label = AnnouncementsStore._getAnnouncement(data.contentID).label}
+   else if(data.type === "policy"){label = PoliciesStore._getPolicy(data.contentID).label}
+   }
+   catch(error) {
+       label = ""
+   }
+//    else {return "No label available"}
+   return label === "" || label === undefined? "obsoleted data" : label
+}
+
     const data =  {
       labels: ['1', '2', '3', '4', '5', '6'],
       datasets: [{
@@ -66,7 +91,7 @@ class DashboardFrame extends React.Component {
       {
         label: 'Portal Views',
         fill: false,
-        data: [6, 13, 2, 2, 5, 8],
+        data: _.uniqBy(AccountStore.dashboardData.total_views, 'updated').map(i => ({x: i.updated, y: AccountStore.dashboardData.total_views.filter(x => x.updated === i.updated).length})),
         borderColor: 'rgba(11, 205, 253, 1)',
         borderWidth: 2
     },
@@ -74,6 +99,30 @@ class DashboardFrame extends React.Component {
   }
 
     const createcontent = this.state.createContent === "announcement"? <div id="create annc"><CreateContent invisible mode="announcement"/></div> : <CreateContent invisible mode="policy"/>
+    const sentimentPercentage = (sentiment) => {
+      if(AccountStore.dashboardData.length === 0){return 0}
+      const total = AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]  
+      return Math.round(AccountStore.dashboardData.sentiment_total[sentiment] / total * 100)
+    }
+    const topContent = 
+      _.sortBy( 
+        _.uniqBy(AccountStore.dashboardData.total_views, "contentID")
+        .map(i => ({contentID: i.contentID, type: i.type, total: AccountStore.dashboardData.total_views.filter(x => x.contentID === i.contentID).length}))
+        , "total").reverse().slice(0, 5).map(content => 
+                <Grid.Row>
+                  <Grid.Column width={13}> <p>{getLabel(content)}</p> </Grid.Column>
+                  <Grid.Column> <h4><CountUp duration={1} decimals={0} end={content.total} /></h4> </Grid.Column>
+                </Grid.Row>
+        )
+                
+
+
+  console.log(
+    _.uniqBy(AccountStore.dashboardData.total_views, 'updated')
+    .map(i => ({x: i.updated, y: AccountStore.dashboardData.total_views
+      .filter(x => x.updated === i.updated).length
+    }))
+  );
 
     return (
       <div style={{ paddingRight: 10 }}>
@@ -181,22 +230,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
                 <Grid divided>
-                <Grid.Row>
-                  <Grid.Column width={13}> <p>Content title 1 is very cool</p> </Grid.Column>
-                  <Grid.Column> <h4><CountUp duration={1} decimals={0} end={421} /></h4> </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Column width={13}> <p>Content title 2 is even more very cool</p> </Grid.Column>
-                  <Grid.Column><h4><CountUp duration={1} decimals={0} end={311} /></h4></Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Column width={13}> <p>Content title 3 is super long and also very cool</p> </Grid.Column>
-                  <Grid.Column><h4><CountUp duration={1} decimals={0} end={211} /></h4></Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Column width={13}> <p>Content title 2 is even more very cool</p> </Grid.Column>
-                  <Grid.Column><h4><CountUp duration={1} decimals={0} end={311} /></h4></Grid.Column>
-                </Grid.Row>
+                {topContent}
           
              
               
@@ -212,13 +246,13 @@ class DashboardFrame extends React.Component {
                 <Grid columns="equal">
                   <Grid.Row>
                     <Grid.Column>
-                      <Icon style={{color:"#FF6384"}} name="smile outline"/>20% 
+                      <Icon style={{color:"#FF6384"}} name="smile outline"/>{sentimentPercentage(2)}% 
                     </Grid.Column>
                     <Grid.Column>
-                    <Icon style={{color:'#0BCDFD'}} name="meh outline"/>30% 
+                    <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{sentimentPercentage(1)}% 
                     </Grid.Column>
                     <Grid.Column>
-                    <Icon style={{color:'#B908FA'}} name="frown outline"/>50%
+                    <Icon style={{color:'#B908FA'}} name="frown outline"/>{sentimentPercentage(0)}% 
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -233,7 +267,7 @@ class DashboardFrame extends React.Component {
                
                 <Statistic.Group widths={1}>
                 <Statistic>
-                  <Statistic.Label>22 TOTAL</Statistic.Label>
+                  <Statistic.Label>{AccountStore.dashboardData.length === 0? 0 : AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]} TOTAL</Statistic.Label>
                 </Statistic>
                 </Statistic.Group>
                 </div>
