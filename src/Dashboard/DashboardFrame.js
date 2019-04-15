@@ -21,7 +21,6 @@ class DashboardFrame extends React.Component {
     const {AccountStore} = this.props;
     this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now()) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
       .then(result => result.json().then(data => {
-          data.total_views.forEach(i => i.updated = moment().startOf(i.updated).valueOf())
           AccountStore.loadDashboardData(data)
       }));
   }
@@ -57,13 +56,7 @@ class DashboardFrame extends React.Component {
           data: [10, 20, 30],
           backgroundColor: ["#FF6384", "#0BCDFD","#B908FA"]
       }],
-  
-      // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: [
-          'Red',
-          'Yellow',
-          'Blue'
-      ]
+
   };
 
   const getLabel = (data) => {
@@ -79,19 +72,22 @@ class DashboardFrame extends React.Component {
    return label === "" || label === undefined? "obsoleted data" : label
 }
 
-    const data =  {
-      labels: ['1', '2', '3', '4', '5', '6'],
-      datasets: [{
+    const data =  
+    {
+      
+      labels: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => i.date_friendly),
+      datasets: [
+        {
           label: 'Email opens',
           fill: false,
-          data: [12, 19, 3, 5, 2, 3],
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: Math.floor(Math.random() * Math.floor(6))})),
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 2
       },
       {
         label: 'Portal Views',
         fill: false,
-        data: _.uniqBy(AccountStore.dashboardData.total_views, 'updated').map(i => ({x: i.updated, y: AccountStore.dashboardData.total_views.filter(x => x.updated === i.updated).length})),
+        data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.count})),
         borderColor: 'rgba(11, 205, 253, 1)',
         borderWidth: 2
     },
@@ -114,15 +110,6 @@ class DashboardFrame extends React.Component {
                   <Grid.Column> <h4><CountUp duration={1} decimals={0} end={content.total} /></h4> </Grid.Column>
                 </Grid.Row>
         )
-                
-
-
-  console.log(
-    _.uniqBy(AccountStore.dashboardData.total_views, 'updated')
-    .map(i => ({x: i.updated, y: AccountStore.dashboardData.total_views
-      .filter(x => x.updated === i.updated).length
-    }))
-  );
 
     return (
       <div style={{ paddingRight: 10 }}>
@@ -196,7 +183,7 @@ class DashboardFrame extends React.Component {
         data={data}
         width={100}
         height={50}
-        options={{ maintainAspectRatio: false, legend: false}}
+        options={{ maintainAspectRatio: false, legend: false, scales:{xAxes:[{display: false}] }}}
       />
         </div>
         </Segment>
