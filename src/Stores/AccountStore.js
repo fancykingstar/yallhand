@@ -10,6 +10,8 @@ class Store {
   @observable account = {}
   @observable allUsers = []
   @observable logs = []
+  @observable analyticData = []
+  @observable dashboardData = []
   @observable sentiments = []
   @observable reviewQueue = []
 
@@ -64,9 +66,9 @@ class Store {
     })
   }
 
-  loadLogs(allLogs) {
-    this.logs = allLogs
-  }
+  loadLogs(allLogs) { this.logs = allLogs }
+  loadAnalyticData(allLogs) { this.analyticData = allLogs }
+  loadDashboardData(allLogs) { this.dashboardData = allLogs }
 
   loadSentiments(allSentiments) {
     this.sentiments = allSentiments

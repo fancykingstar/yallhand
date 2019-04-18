@@ -4,12 +4,15 @@ import { Button, Icon, Transition } from "semantic-ui-react"
 import { sentiment } from "../DataExchange/PayloadBuilder"
 import { createSentiment } from "../DataExchange/Up"
  
-export const Sentiment = inject("UIStore", "AccountStore")(observer((props) => {
-    const {UIStore, AccountStore} = props
+export const Sentiment = inject("UIStore", "AccountStore", "UserStore")(observer((props) => {
+    const {UIStore, AccountStore, UserStore} = props
 
     const handleClick = (val) => {
         UIStore.set("portal", "sentimentComplete", true)
-        createSentiment( sentiment(val, props.type, props.ID, props.variationID) ).then(r =>  r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
+        // if(!UserStore.user.isAdmin){
+            createSentiment( sentiment(val, props.type, props.ID, props.variationID) ).then(r =>  r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
+        // }
+
     }
 
 

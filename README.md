@@ -47,6 +47,8 @@ Copy `.env.dist` and rename if `.env` then add your environnement variables
 ```
 # Url => Used by email template to redirect back to the right url
 URL=http://localhost:3000
+# Cron time config, exemple: Every hour + 1 minutes
+CRON_TIME=1 0 * * * *
 ```
 
 ## Launch

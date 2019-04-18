@@ -52,7 +52,9 @@ class Store {
         bundles: "active",
         portalannouncementSort: "Newest",
         portalPolicySort: "Newest",
-        emailTemplateSort: "Newest"
+        emailTemplateSort: "Newest",
+        dashboardOverview: 30,
+        altLabel: false
     }
     @observable
     modal = {
@@ -68,7 +70,8 @@ class Store {
         createContent: false,
         createChannel: false,
         modifyChannel: false,
-        historyView: false
+        historyView: false,
+        askQuestion: false
     }
 
     @observable
@@ -88,6 +91,7 @@ class Store {
         URLResults: {},
         URLValue: "",
         fileSearchLoading: false,
+        analyticsSearchValue: "",
         searchUsers: "",
         searchUsersData: [],
         searchUrls: "",
@@ -119,13 +123,14 @@ class Store {
 
     @observable
     menuItem = {
+        analyticsFrame: "email campaigns",
         teamFrame: "onboard",
         resourcesFrame: "URL",
         emailFrame: "send email",
         sendEmailBody: "message",
         sendEmailOption: "schedule",
         analyticsHeader: "announcements",
-        superAdminFrame: "edit account"
+        superAdminFrame: "edit account",
     }
 
     @observable
@@ -137,7 +142,8 @@ class Store {
     dateTimeSelect = {
         date: "",
         time: "",
-
+        DashboardStart: "",
+        DashboardEnd: ""
     }
 
     @observable
@@ -171,16 +177,18 @@ class Store {
 
     //previewing in display
     @observable content = {
-        // policyID: "",
-        // announcementID: "",
+        policyID: "",
+        announcementID: "",
         variationID: "",
         history: []
     }
 
     @observable portal = {
         sentimentComplete: false,
-        sentimentAvailable: []
+        sentimentAvailable: [],
+        viewedContent: []
     }
+
 
     @action
     set(target, key, val){

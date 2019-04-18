@@ -3,7 +3,7 @@ import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { getContentObj } from "../SharedCalculations/GetContentObj"
-import { Table, Header, Button, Checkbox, Icon, Confirm } from "semantic-ui-react";
+import { Table, Header, Button, Segment, Icon } from "semantic-ui-react";
 import { deleteSchedule } from "../DataExchange/Up";
 
 @inject("ScheduleStore")
@@ -26,8 +26,10 @@ export class Scheduled extends React.Component {
         </Table.Cell>
          </Table.Row>
       )
-      const display = ScheduleStore.allScheduled.length === 0 ? <h5 style={{ fontStyle: "italic" }}>The schedule is empty.</h5> 
+      const display = ScheduleStore.allScheduled.length === 0 ? <div/> 
       :  
+      <Segment>
+        <Header as="h3"> <Icon name="hourglass two" />Scheduled</Header>
         <Table padded="very" basic="very">
         <Table.Header>
           <Table.Row>
@@ -42,12 +44,8 @@ export class Scheduled extends React.Component {
             {scheduled} 
         </Table.Body>
       </Table>
+      </Segment>
   
-    return (
-        <React.Fragment>
-        <Header as="h3"> <Icon name="hourglass two" />Scheduled</Header>
-        {display}
-        </React.Fragment>
-    );
+    return ( <React.Fragment>  {display} </React.Fragment> );
   }
 }

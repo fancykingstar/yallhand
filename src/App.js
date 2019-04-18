@@ -10,6 +10,8 @@ import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import DevTools from 'mobx-react-devtools'
 
+import { ToastContainer, Slide } from "react-toastify";
+
 
 @inject("UIStore", "UserStore")
 @observer
@@ -22,6 +24,7 @@ class AppRoute extends React.Component {
       UserStore.setPreviewTag("")
       loadAdmin()
     }
+    if (!UserStore.isAuthenticated) this.props.history.push('/')
     
   }
 
@@ -52,6 +55,12 @@ class AppRoute extends React.Component {
           <Route path="*"> <Redirect push to={redirect}/> </Route>
         </Switch>
         </div>
+        <ToastContainer 
+        className="toast-container"
+        toastClassName='toast-style'
+        position="top-center"
+        transition={Slide}
+        />
       </div>
     );
   }

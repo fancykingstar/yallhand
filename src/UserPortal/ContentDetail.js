@@ -1,6 +1,6 @@
 import React from "react"
 import { inject, observer } from "mobx-react";
-import {  Header, Container, Image, Icon, Grid, Item } from 'semantic-ui-react'
+import {  Header, Container, Image, Icon, Grid, Item, Button } from 'semantic-ui-react'
 import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
 import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
@@ -13,7 +13,7 @@ import BackButton from "../SharedUI/BackButton"
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
 import "./style.css"
 
-@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore")
+@inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore", "DataEntryStore")
 @observer
 export class ContentDetail extends React.Component {
 
@@ -23,15 +23,23 @@ export class ContentDetail extends React.Component {
         : PoliciesStore._getPolicy(this.props.match.params.id)
 
         UIStore.set("portal", "sentimentComplete", false)
-        log(ItsLog(false, {"type": this.props.mode, "id": this.props.match.params.id, "variation": content.variations[0].variationID}))
+        
+        // if(!UserStore.user.isAdmin){ 
+            log(ItsLog(false, {"type": this.props.mode, "contentID": this.props.match.params.id, "variationID": content.variations[0].variationID})) 
+        // }
+        
+        
     
         apiCall_noBody(`sentiments/usersentiment/${UserStore.user.userID}/${this.props.mode === "policy"? content.policyID : content.announcementID}/${this.props.mode === "policy"? "policyID":"announcementID"}`, "GET")
             .then(result => UIStore.set("portal", "sentimentAvailable", result))
             
+        if(UIStore.portal.viewedContent.includes(content[this.props.mode + "ID"]) === false){
+            UIStore.set("portal", "viewedContent", [...UIStore.portal.viewedContent, content[this.props.mode + "ID"]])
+        }
     }
 
     render() {
-        const {AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore} = this.props
+        const {AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, DataEntryStore} = this.props
         
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
@@ -54,11 +62,16 @@ export class ContentDetail extends React.Component {
             variationID={content.variations[0].variationID}
             />
 
+        const handleClick = () => {
+                log(ItsLog(true,{"event": "click", "type":"ask"}))
+                UIStore.set("modal", "askQuestion", false) 
+    }
+
         return(
             <div className="Content">
             <BackButton/>
-                <Container>
-                {content.img.length !== 0 ?  <Image rounded size="large" src={content.img}/> : null}
+                <Container textAlign="center">
+                {content.img.length !== 0 ?  <Image centered rounded size="large" src={content.img}/> : null}
                     <Header
                     as="h1"
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
@@ -70,6 +83,7 @@ export class ContentDetail extends React.Component {
                   </div>
                   </Container>
                 <br/>
+                <Container textAlign="center">
                 <Grid>
                     {displayFiles.length === 0? null : 
                     <Grid.Row columns={1}>
@@ -83,10 +97,18 @@ export class ContentDetail extends React.Component {
                             {displaySentiment}
                         </Grid.Column>
                         <Grid.Column>
-                            <AskAQuestion content={content}/>
+                        <Button basic 
+                        onClick={e => {
+                        handleClick()
+                        UIStore.set("modal", "askQuestion", true) 
+                        DataEntryStore.set("ask", "type", "specific")
+                        DataEntryStore.set("ask", "content", content)
+                    }}
+                    >Ask A Question...</Button>
                             </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                </Container>
                 <div style={{paddingBottom: 120}}/>
                    
                 </div>

@@ -53,7 +53,7 @@ class PortalUserProfile extends React.Component {
           </Dropdown>
         </div>
         <div className="UserName">
-          <div style={{ color: "#FFFFFF", display: "inline" }}>
+          <div style={{ color: "#000000", display: "inline" }}>
             <Image
               bordered
               style={{ marginTop: -5, float: "left" }}

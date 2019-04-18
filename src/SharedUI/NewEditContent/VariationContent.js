@@ -5,12 +5,12 @@ import { AttachedFiles } from "./AttachedFiles";
 import { DraftFormField } from "../../SharedUI/DraftFormField";
 import _ from "lodash";
 
-@inject("DataEntryStore")
+@inject("DataEntryStore", "UIStore")
 @observer
 export class VariationContent extends React.Component {
 
   render() {
-    const { DataEntryStore } = this.props;
+    const { DataEntryStore, UIStore } = this.props;
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
     if (DataEntryStore.content.isNew) attachedStyle.pointerEvents = "none";
 
@@ -20,7 +20,7 @@ export class VariationContent extends React.Component {
   </Segment>
 
     return (
-      <div>
+      <div style={UIStore.responsive.isMobile? null : {marginRight: 150}}>
         <DraftFormField
           includeURL={true}
           loadContent={DataEntryStore.content.contentRAW}

@@ -11,12 +11,12 @@ import {
 import { DatePicker } from "../SharedUI/DatePicker";
 import { offBoardUser, createSchedule, deleteUser } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
+import { apiCall } from "../DataExchange/Fetch"
 import moment from "moment"
 
 export const Offboard = inject("UIStore", "DataEntryStore")(
   observer(props => {
-    const { UIStore } = props;
-    const { DataEntryStore } = props;
+    const { UIStore, DataEntryStore } = props;
 
     const handleOpen = () => {
       DataEntryStore.set("onOffBoarding", "offBoardingDate", "");
@@ -35,6 +35,7 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
     }
 
     const offboardLater = () => {
+        apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
         createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": DataEntryStore.userEditFields.userEdit.userID}))
         .then(() => {
           handleClose() 

@@ -14,7 +14,7 @@ import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
-import { DashboardFrame } from "./Dashboard/DashboardFrame";
+import  DashboardFrame  from "./Dashboard/DashboardFrame";
 import { AnalyticsFrame } from "./Analytics/AnalyticsFrame"
 import SuperAdminFrame from "./SuperAdmin/SuperAdminFrame"
 import { EditAccounts } from "./SuperAdmin/EditAccounts"
@@ -23,9 +23,6 @@ import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
-
-
-import { ToastContainer } from "react-toastify";
 
 @inject( "UserStore", "UIStore", )
 @observer
@@ -70,7 +67,7 @@ export class AdminPanel extends React.Component {
           <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
         </div>
         </Transition>
-        <div className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
+        <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
         
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
@@ -98,7 +95,6 @@ export class AdminPanel extends React.Component {
 
           </Switch>
         </div>
-        <ToastContainer />
         <Header />
       </div>
     );

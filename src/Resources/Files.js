@@ -114,10 +114,11 @@ export class Files extends React.Component {
  
       <div className="LinkTable">
            <Header
+      style={{padding: 0, margin: 0}}
       as="h2"
       content="Manage Files"
       subheader="Manage files and control access across your teams"
-    />
+    /><br/>
 
        <UploadFile
           open={UIStore.modal.uploadFile}

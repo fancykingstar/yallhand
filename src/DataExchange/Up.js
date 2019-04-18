@@ -46,6 +46,7 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
 
 ///LOGS (event type options: create, update, delete)
 export const log = (payload) => {
+    console.log(payload)
     apiCall("itslogs", "POST", payload)
 } 
 
@@ -55,6 +56,17 @@ export const createSentiment = (payload) => apiCall("/sentiments", "POST", paylo
 ///History
 export const createHistory = (payload) => {
     apiCall("/histories", "POST", payload)
+} 
+
+///Send Query
+export const sendQuery = (payload) => {
+    apiCall("/users/send-query", "POST", payload).then((result) => {
+        if(result.ok){
+            toast.success("Your message has been sent! ✉️", {hideProgressBar: true})
+          } else {
+            toast.error(result.statusText, {hideProgressBar: true})
+          }
+    })
 } 
 
 ///Notfications

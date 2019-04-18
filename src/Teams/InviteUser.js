@@ -88,10 +88,10 @@ export class InviteUser extends React.Component {
     const { isAdmin } = this.props;
 
     return (
-      <div className="Segment" style={{ position: "relative" }}>
+      <div className="Segment">
         {isAdmin ?
-          <Header as="h2" content="Onboard Admin Collaborators" subheader="Send invite to admin to generate and manage information"/> :
-          <Header as="h2" content="Onboard Users" subheader="Send invite for new user to join organization"/>}
+          <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Admin Collaborators" subheader="Send invite to admin to generate and manage information"/> :
+          <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Users" subheader="Send invite for new user to join organization"/>}
         <Segment>
           <Form>
             <Form.Group widths="equal">

@@ -9,7 +9,7 @@ export const SideBarPortal = (props) => {
   return (
     <div className="SideBarFrame">
             <UserWorkspace mobile={props.mobile}/>
-            <Divider style={{marginTop: 3, marginBottom: 3}}/>
+            <Divider inverted style={{marginTop: 3, marginBottom: 3}}/>
             <SideBarMenu mobile={props.mobile}/>
     </div>
   );

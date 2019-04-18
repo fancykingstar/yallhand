@@ -13,7 +13,7 @@ export class PubControls extends React.Component {
  
   render() {
     return (
-      <div id="PubControls">
+      <div>
         <Menu compact icon="labeled" vertical size="mini" inverted>
           <Menu.Item name="draft" onClick={this.handleItemClick}>
             <Icon name="keyboard" size="small" />

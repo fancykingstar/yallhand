@@ -14,6 +14,7 @@ import { CardFrame } from "./CardFrame";
 import { Responsive, Transition } from "semantic-ui-react";
 import { loadAdmin } from "../DataExchange/LoadProfile";
 import {apiCall_pixel} from "../DataExchange/Fetch"
+import { AskAQuestion } from "./AskAQuestion"
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
@@ -45,6 +46,7 @@ class UserPortal extends React.Component {
       <div />
     ) : (
       <React.Fragment>
+                <AskAQuestion />
         <div className="SideAndAction">
           <Responsive
             {...Responsive.onlyComputer}
@@ -58,7 +60,7 @@ class UserPortal extends React.Component {
               <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
             </div>
           </Transition>
-          <div className="ActionFrame">
+          <div id="ActionFrame" className="ActionFrame">
             {/* {UIStore.search.portalSearchValue !== "" && UIStore.search.portalDisplayResults? (<PortalSearch />) : ( */}
             <Switch location={this.props.location}>
               <Route path="/portal" component={AnnouncementsFrame} exact />
@@ -75,9 +77,7 @@ class UserPortal extends React.Component {
             </Switch>
           </div>
           <Header />
-          {UIStore.responsive.isMobile ? <div /> : <SearchFrame />}
         </div>
-        }
       </React.Fragment>
     );
 

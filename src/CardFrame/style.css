@@ -3,6 +3,7 @@
     grid-template-columns: repeat(3, 1fr);
     width: auto;
     margin-left: -30px;
+    padding-bottom: 10px;
     /* position: relative; */
     /* height: 100vh; */
     /* overflow-y: scroll; */
@@ -23,7 +24,7 @@
     cursor: default;
 }
 
-.CardFilterContainer {
+/* .CardFilterContainer {
     height: 50px;
     margin-left: 35px;
     margin-right: 30px;
@@ -54,7 +55,7 @@
     -webkit-border-radius: 17px;
     -moz-border-radius: 17p; 
     border-radius: 17px;
-}
+} */
 
 .CardSort {
     color: #656565;
@@ -74,7 +75,7 @@
     grid-gap: 25px;
     grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
     height: 100%; 
-    min-height: 700px;
+    /* min-height: 700px; */
     /* width: 100%; */
 }
 
@@ -86,9 +87,9 @@
     -webkit-border-radius: 17px 17px 17px 17px;
     -moz-border-radius: 17px 17px 17px 17px;
     border-radius: 17px 17px 17px 17px;
-    -webkit-box-shadow: 0px 0px 2px 0px #545454;
-    -moz-box-shadow:    0px 0px 2px 0px #545454;
-    box-shadow:         0px 0px 2px 0px #545454;
+    -webkit-box-shadow: 0px 0px 4px 0px #545454;
+    -moz-box-shadow:    0px 0px 4px 0px #545454;
+    box-shadow:         0px 0px 4px 0px #545454;
     position: relative;
   
 }

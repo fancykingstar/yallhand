@@ -13,7 +13,7 @@ import { emailCampaign } from "../DataExchange/PayloadBuilder"
 import { createCampaign } from "../DataExchange/Up"
 import { EditorState, convertFromRaw } from "draft-js";
 import _ from "lodash";
- 
+
 
 @inject("UIStore", "DataEntryStore")
 @observer
@@ -43,9 +43,9 @@ export class EmailPrimary extends React.Component {
   }
   render() {
       const {UIStore, DataEntryStore} = this.props
-      
+
       const canSubmit = () => {
-        let validations = {subject: false, targets: false, content: false}        
+        let validations = {subject: false, targets: false, content: false}
         if(UIStore.menuItem.sendEmailBody === "message" && DataEntryStore.draftContentHTML !== "" && DataEntryStore.draftContentHTML !== "<p><br></p>"){validations.content = true}
         else if(UIStore.menuItem.sendEmailBody=== "messagecontent" && (DataEntryStore.draft.draftContentHTML !== "" || DataEntryStore.draft.draftContentHTML === "<p><br></p>") && DataEntryStore.emailCampaign.sendContent.length > 0){validations.content = true}
         else if(UIStore.menuItem.sendEmailBody=== "content" && DataEntryStore.emailCampaign.sendContent.length > 0){validations.content = true}
@@ -111,7 +111,9 @@ export class EmailPrimary extends React.Component {
       };
     return (
       <div style={{maxWidth: 650}}>
-          <Header as="h2">
+          <Header as="h2"
+          style={{padding: 0, margin: 0}}
+          >
           Send Email
           <Header.Subheader>
             Configure and send emails to your employees
@@ -129,13 +131,13 @@ export class EmailPrimary extends React.Component {
               />
             </Form>
           </div>
-          <span style={{fontWeight: 800, fontSize: ".9em"}}>What should the email body contain?</span><br/>
+          <span style={{fontWeight: 800, fontSize: ".9em"}}>What should the email body contain?</span>
             <Menu vertical={UIStore.responsive.isMobile} compact size="tiny">
             <Menu.Item as='a' active={UIStore.menuItem.sendEmailBody === "message"} onClick={e => UIStore.set("menuItem", "sendEmailBody", "message")}> Custom Message Only </Menu.Item>
             <Menu.Item as='a' active={UIStore.menuItem.sendEmailBody === "messagecontent"} onClick={e => UIStore.set("menuItem", "sendEmailBody", "messagecontent")}> Custom Message + Selected Content </Menu.Item>
             <Menu.Item as='a' active={UIStore.menuItem.sendEmailBody === "content"} onClick={e => UIStore.set("menuItem", "sendEmailBody", "content")}> Selected Content Only </Menu.Item>
           </Menu>
-          
+
           <div style={UIStore.menuItem.sendEmailBody === "content"? {display: "none"}:{display:"contents"} }>
           <div style={{ maxWidth: 520, paddingTop: 20, paddingBottom: 20 }}>        <div>
             <span style={{fontWeight: 800, fontSize: ".9em"}}>Custom Message</span>
@@ -144,8 +146,8 @@ export class EmailPrimary extends React.Component {
           </div>
           <div style={UIStore.menuItem.sendEmailBody === "message"? {display: "none"}:{display:"contents"} }>
            <div style={{paddingTop: 25}}> <ContentSearch output={res => updateSelectedContent(res)}/> </div>
-          <div style={{ maxWidth: 500, paddingTop: 5 }}>    
-          
+          <div style={{ maxWidth: 500, paddingTop: 5 }}>
+
           {bundlePopulated ? (
           <h5 style={{ fontStyle: "italic" }}>
             {/* No content added (yet)... */}
@@ -165,13 +167,13 @@ export class EmailPrimary extends React.Component {
           <span style={{fontWeight: 800, fontSize: ".9em", paddingBottom: 0}}>Custom Featured Image (optional)</span>
            <FeaturedImage maxWidth={600} compact defaultImgUrl={DataEntryStore.emailCampaign.img} output={val => DataEntryStore.set("emailCampaign", "img", val)}/>
           </div>
-         
+
         <br/>
         <div style={DataEntryStore.emailCampaign.loadedTemplateSubject !== DataEntryStore.emailCampaign.sendSubject? {paddingBottom: 5}:{display: "none"}}  > <Checkbox checked={DataEntryStore.emailCampaign.sendSaveTemplate}  onClick={(e, data) => DataEntryStore.set("emailCampaign", "sendSaveTemplate", data.checked)} label="Use as template in the future"/> </div>
         <Button icon primary labelPosition="left" onClick={e => sendNow()} > <Icon name="send"/> Send Now </Button>
-          <Button 
+          <Button
           onClick={e => {if(canSubmit()) UIStore.set("menuItem", "emailFrame", "send options")}} > Preview & Options... </Button>
-          <div style={UIStore.responsive.isMobile? {paddingTop: 10}: {float: "right"}}> 
+          <div style={UIStore.responsive.isMobile? {paddingTop: 10}: {float: "right"}}>
           <Button onClick={e => this.resetEmail()}> Clear All </Button> </div>
           <Message error hidden={UIStore.message.sendNow === ""}>
             {UIStore.message.sendNow}

@@ -1,11 +1,15 @@
 import React from "react";
-import { Menu, Icon, Form, Transition, Button } from "semantic-ui-react";
+import { Menu, Icon, Label, Transition, Button } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import  SearchFrame  from "./SearchFrame"
+import {ItsLog} from "../DataExchange/PayloadBuilder"
+import { log } from "../DataExchange/Up"
+
 import "./style.css";
 
-@inject("ChannelStore", "UIStore", "UserStore")
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore", "PoliciesStore", "AnnouncementsStore")
 @observer
 class SideBarMenu extends React.Component {
   componentDidMount() {
@@ -30,7 +34,11 @@ class SideBarMenu extends React.Component {
   }
 
   render() {
-    const { ChannelStore, UIStore, UserStore } = this.props;
+    const { ChannelStore, UIStore, UserStore, DataEntryStore, PoliciesStore, AnnouncementsStore } = this.props;
+
+    const nonviewedPolicies = PoliciesStore.allPolicies.filter(i => UIStore.portal.viewedContent.includes(i.policyID) === false )
+    const nonviewedAnnouncements = AnnouncementsStore.allAnnouncements.filter(i => UIStore.portal.viewedContent.includes(i.announcementID) === false )
+
     const channelList = ChannelStore.allChannels.map(channel => (
       <Menu.Item
         name={channel.label} style={ UIStore.sideNav.activeChannel === channel.chanID
@@ -68,77 +76,134 @@ class SideBarMenu extends React.Component {
       </div>
      : <div/>
 
+     const handleClick = () => {
+        log(ItsLog(true,{"event": "click", "type":"ask"}))
+      UIStore.set("modal", "askQuestion", true) 
+    }
+
     return (
       <div className="PortalSideNav" onClick={e => resetSearch()}>
-        <Menu compact vertical secondary borderless={true}>
+             <SearchFrame/>
+        <Menu inverted vertical secondary borderless={true}>
+   
           <Menu.Item>
-            <Menu.Header>
-              <Icon name="feed" />
-              Feed
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Feed{" "}
+            <Icon style={{color: "#FFFFFF"}} name="newspaper outline" />
+          
+             
             </Menu.Header>
             <Menu.Menu>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "announcements"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "announcements");
                   this.props.history.push("/portal");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
-                name="Announcements"
-              />
+              >
+              Announcements
+              {nonviewedAnnouncements.length === 0? null : <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedAnnouncements.length)}</Label></div>}
+
+              </Menu.Item>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "policies"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "policies");
                   this.props.history.push("/portal/learn");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
-              >
+              >               
                 FAQs
+                {nonviewedPolicies.length === 0? null :  <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedPolicies.length)}</Label></div>}
               </Menu.Item>
             </Menu.Menu>
           </Menu.Item>
 
           <Menu.Item>
-            <Menu.Header>
-              <Icon name="cubes" />
-              Resources
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Resources{" "}
+            <Icon style={{color: "#FFFFFF"}} name="cubes" />
+        
             </Menu.Header>
 
             <Menu.Menu>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "resources"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "resources");
                   this.props.history.push("/portal/resources");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
               >
-                Files and URLs
+                Files
               </Menu.Item>
               <Menu.Item
                 style={
                   UIStore.sideNav.activePrimary === "directory"
-                    ? { backgroundColor: "#17b0e4", color: "#FFFFFF" }
-                    : null
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
                 }
                 onClick={e => {
                   UIStore.set("sideNav", "activePrimary", "directory");
                   this.props.history.push("/portal/directory");
+                  document.getElementById('ActionFrame').scrollTop = 0;
                 }}
                 name="Staff Directory"
               />
             </Menu.Menu>
+            </Menu.Item>
+
+          
+            <Menu.Item>
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Contact{" "}
+            <Icon style={{color: "#FFFFFF"}} name="chat" />
+          
+            </Menu.Header>
+            <Menu.Menu>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "ask"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "ask");
+                  DataEntryStore.set("ask", "type", "general")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >Ask Anything</Menu.Item>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "report"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "report");
+                  DataEntryStore.set("ask", "type", "anonymous")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >
+                Report Anonymously
+              </Menu.Item>
+            </Menu.Menu>
           </Menu.Item>
+
+          
 
           <Transition
             animation={"fade"}
@@ -149,33 +214,11 @@ class SideBarMenu extends React.Component {
             duration={250}
           >
             <Menu.Item>
-              <Menu.Header>Channels</Menu.Header>
-              <Menu.Menu>{channelList}</Menu.Menu>
+              <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>Channels</Menu.Header>
+              <Menu.Menu style={{paddingLeft:4}}>{channelList}</Menu.Menu>
             </Menu.Item>
           </Transition>
-
-          {this.props.mobile ? (
-            <Menu.Item>
-              <Form
-                onSubmit={e => {
-                  this.props.history.push("/portal/search");
-                  UIStore.set("responsive", "mobileNav", false);
-                }}
-              >
-                <Form.Input
-                  className="icon"
-                  value={UIStore.search.portalSearchValue}
-                  onChange={(e, val) =>
-                    UIStore.set("search", "portalSearchValue", val.value)
-                  }
-                  icon="search"
-                  placeholder="Search..."
-                />
-              </Form>
-            </Menu.Item>
-          ) : (
-            <div />
-          )}
+          
         </Menu>
         {portalReturn}
       </div>

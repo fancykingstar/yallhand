@@ -151,7 +151,7 @@ class PortalSearchResults extends React.Component {
 
     const resources = [...filteredFiles(), ...filteredURLs()].length === 0? null : 
     <React.Fragment>
-    <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Files & URLs</Header>
+    <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Files</Header>
     <Item.Group divided>
         {resourceResults([...filteredURLs(), ...filteredFiles()])}
     </Item.Group>
@@ -178,13 +178,7 @@ class PortalSearchResults extends React.Component {
     {content}
     {resources}
     {people}
-    <div  style={{paddingTop: 15}} >
-    <Button basic onClick={e => {
-        UIStore.set("search", "portalSearchValue", "")
-        this.props.history.push("/portal")
-    }} >Clear Results</Button>
-    </div>
-    
+  
     </div>   
     :
     <PortalSearchLogo />
@@ -193,6 +187,12 @@ class PortalSearchResults extends React.Component {
 
         <div style={{width: "100%", height: "100%", position: "absolute", overflowY: "scroll"}}> 
         {isSearchResults}
+        <div  style={{paddingTop: 15}} >
+    <Button basic onClick={e => {
+        UIStore.set("search", "portalSearchValue", "")
+        this.props.history.push("/portal")
+    }} >Clear Results</Button>
+    </div>
       </div>
 
  
