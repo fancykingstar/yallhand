@@ -29,6 +29,7 @@ export class VariationConfig extends React.Component {
      const vari = DataEntryStore.content
 
      const validConfig = () => {
+       if (!obj.variations) return;
       let invalidConfigs = obj.variations
       .slice()
       .filter(i => i.variationID !== vari.variationID )
