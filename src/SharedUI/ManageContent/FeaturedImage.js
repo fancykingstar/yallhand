@@ -28,12 +28,12 @@ export class FeaturedImage extends React.Component {
       .then(result =>
         {
             if(result !== null){
-                this.props.mode === "policy"?  DataEntryStore.set("contentmgmt", "img", result.Location) 
-                : DataEntryStore.set("contentmgmt", "img", result.Location)
+              this.props.mode === "policy"?  DataEntryStore.set("contentmgmt", "img", result.Location) 
+              : DataEntryStore.set("contentmgmt", "img", result.Location)
             }
         }
       ).then(()=> {
-        this.props.mode === "policy"? modifyPolicy(featuredImgEdit("policy")) : modifyAnnouncement(featuredImgEdit("announcement"))
+        if(this.props.mode) this.props.mode === "policy"? modifyPolicy(featuredImgEdit("policy")) : modifyAnnouncement(featuredImgEdit("announcement"))
       })
     };
 

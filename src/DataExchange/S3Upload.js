@@ -20,14 +20,14 @@ export const S3Upload = (ACL = "public-read", bucket, filename, file) => {
     }
     else {
       uploadObj.ACL = "public-read"
-      console.log(uploadObj)
+      // console.log(uploadObj)
     }
     s3.upload(uploadObj, function(err, data) {
       if (err) {
-        console.log("error", err)
+        // console.log("error", err)
         reject(null);
       }
-      console.log("data", data)
+      // console.log("data", data)
       resolve(data);
     });
   });
