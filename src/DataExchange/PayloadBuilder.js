@@ -296,6 +296,7 @@ export const emailPreview = () => {
     content: DataEntryStore.emailCampaign.sendContent,
     draftContentHTML: DataEntryStore.draftContentHTML,
     draftContentRAW: DataEntryStore.draftContentRAW,
+    img: DataEntryStore.contentmgmt && DataEntryStore.contentmgmt.img ? DataEntryStore.contentmgmt.img : ''
   };
   return buildObj
 };
@@ -324,7 +325,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       //trigger 
       eventTrigger,
       //schedule
-      sendNext: DataEntryStore.emailCampaign.sendNext, 
+      sendNext: DataEntryStore.emailCampaign.sendNext,
+      img: DataEntryStore.contentmgmt && DataEntryStore.contentmgmt.img ? DataEntryStore.contentmgmt.img : ''
     };
     return _.extend({}, base(), buildObj)
   };
