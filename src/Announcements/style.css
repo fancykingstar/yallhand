@@ -1,0 +1,28 @@
+.CreatePost {
+    /* position: relative; */
+    color: rgb(45, 45, 45);
+    width: 319px;
+    height: 150px;
+    border: dashed;
+    padding: 10px;
+    background-color: #EEEEEE;
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: relative;
+}
+.PubControlsV{
+    position: fixed;
+    z-index: 6;
+    bottom: 40%; 
+    right: 10px;
+  }
+
+
+.PubControlsH{
+    position: fixed;
+    bottom: 0;
+    z-index: 6;
+    margin-left: 0%;
+    background-color: orange;
+}

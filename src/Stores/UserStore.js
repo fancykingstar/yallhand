@@ -1,47 +1,46 @@
 import { observable, action } from "mobx";
+import { getDefaultUserImg } from "../SharedCalculations/GetDefaultUserImg"
+import _ from "lodash";
 
 class Store {
-    @observable
-    isAuthenticated = true;
+  @observable
+  isAuthenticated = false;
 
-    @observable
-    account = []
+  @observable
+  user = null;
 
-    @observable
-    previewTeam = 'team01'
+  ///Persists between Admin and User Portal
+  @observable previewTeam = "";
+  @observable previewTeamPath = "";
+  @observable previewTag = "";
+  @observable previewTagPath = "";
 
-    @observable
-    previewTeamPath = ''
+  @action
+  loadUser(val) {
+    return new Promise((resolve, reject) => {
+      let user = Object.assign({}, val)
+      user.img === "" || user.img === undefined ? user.img = getDefaultUserImg(user.userID) : null
+      //user.isSuperAdmin = true
+      this.user = user
+      resolve(true)
+    })
+  }
 
-    @observable
-    previewTag = ''
+  setPreviewTeam(val) {
+    this.previewTeam = val;
+  }
 
-    @observable
-    previewTagPath = ''
+  setPreviewTag(val) {
+    this.previewTag = val;
+  }
 
-    @action
-    loadAccount() {
-    const accountData = require("../MockData/Account.json");
-    this.account = accountData}
+  setPreviewTeamPath(val) {
+    this.previewTeamPath = val;
+  }
 
-    @action
-    setPreviewTeam(val) {
-        this.previewTeam = val
-    }
-
-    setPreviewTag(val) {
-        this.previewTag = val
-    }
-
-    setPreviewTeamPath(val) {
-        this.previewTeamPath = val
-    }
-
-    setPreviewTagPath(val) {
-        this.previewTagPath = val
-    }
-
-   
+  setPreviewTagPath(val) {
+    this.previewTagPath = val;
+  }
 }
 
-export const UserStore = new Store()
+export const UserStore = new Store();

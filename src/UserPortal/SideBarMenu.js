@@ -1,94 +1,228 @@
-import React from "react"
-import {Menu} from "semantic-ui-react"
-import {inject, observer} from "mobx-react"
-import {NavLink, withRouter} from "react-router-dom"
+import React from "react";
+import { Menu, Icon, Label, Transition, Button } from "semantic-ui-react";
+import { inject, observer } from "mobx-react";
+import { withRouter } from "react-router-dom";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import  SearchFrame  from "./SearchFrame"
+import {ItsLog} from "../DataExchange/PayloadBuilder"
+import { log } from "../DataExchange/Up"
 
-@inject("SideBarStore")
+import "./style.css";
+
+@inject("ChannelStore", "UIStore", "UserStore", "DataEntryStore", "PoliciesStore", "AnnouncementsStore")
 @observer
 class SideBarMenu extends React.Component {
-    componentDidMount() {
-      const {SideBarStore} = this.props
-        SideBarStore.loadChannels()
+  componentDidMount() {
+    const { UIStore } = this.props;
+    const location = this.props.location.pathname;
+    if (location.includes("portal/learn-detail/")) {
+      UIStore.set("sideNav", "activePrimary", "policies");
+    } else if (location.includes("/portal/learn")) {
+      UIStore.set("sideNav", "activePrimary", "policies");
+    } else if (location.includes("/portal/announcement/")) {
+      UIStore.set("sideNav", "activePrimary", "announcements");
+    } else if (location.includes("/portal/resources")) {
+      UIStore.set("sideNav", "activePrimary", "resources");
+    } else if (location.includes("/portal/directory")) {
+      UIStore.set("sideNav", "activePrimary", "directory");
+    } else if (location.includes("/portal/search")) {
+      UIStore.set("sideNav", "activePrimary", "");
+    } else {
+      UIStore.set("sideNav", "activePrimary", "announcements");
+    }
+    UIStore.set("sideNav", "activeChannel", "All");
+  }
 
+  render() {
+    const { ChannelStore, UIStore, UserStore, DataEntryStore, PoliciesStore, AnnouncementsStore } = this.props;
+
+    const nonviewedPolicies = PoliciesStore.allPolicies.filter(i => UIStore.portal.viewedContent.includes(i.policyID) === false )
+    const nonviewedAnnouncements = AnnouncementsStore.allAnnouncements.filter(i => UIStore.portal.viewedContent.includes(i.announcementID) === false )
+
+    const channelList = ChannelStore.allChannels.map(channel => (
+      <Menu.Item
+        name={channel.label} style={ UIStore.sideNav.activeChannel === channel.chanID
+            ? { color: "#17b0e4" } : null }
+        key={"portalmenu" + giveMeKey()}
+        onClick={e => {
+          UIStore.set("sideNav", "activeChannel", channel.chanID);
+        }}
+      />
+    ));
+
+    channelList.unshift(
+      <Menu.Item
+        name={"All"}
+        key={"portalmenu" + giveMeKey()}
+        style={ UIStore.sideNav.activeChannel === "All" ? { color: "#17b0e4" } : null }
+        onClick={e => UIStore.set("sideNav", "activeChannel", "All")}
+      />
+    );
+
+    const resetSearch = () => {
+      if (UIStore.search.portalSearchValue !== "") {
+        UIStore.set("search", "portalSearchValue", "");
+      }
+    };
+
+    const portalReturn = this.props.mobile && UserStore.user.isAdmin ? 
+      <div style={{ marginLeft: 15 }}>
+        <Button size="mini"
+          onClick={e => {
+            this.props.history.push("/panel");
+            UIStore.set("responsive", "mobileNav", false);
+          }} > Return To Admin Panel{" "}
+        </Button>
+      </div>
+     : <div/>
+
+     const handleClick = () => {
+        log(ItsLog(true,{"event": "click", "type":"ask"}))
+      UIStore.set("modal", "askQuestion", true) 
     }
 
-    render() {
-        const handleClick = (e) => {
-          SideBarStore.makeActive(e)
-          this.props.history.push('/portal/learn')
+    return (
+      <div className="PortalSideNav" onClick={e => resetSearch()}>
+             <SearchFrame/>
+        <Menu inverted vertical secondary borderless={true}>
+   
+          <Menu.Item>
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Feed{" "}
+            <Icon style={{color: "#FFFFFF"}} name="newspaper outline" />
+          
+             
+            </Menu.Header>
+            <Menu.Menu>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "announcements"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "announcements");
+                  this.props.history.push("/portal");
+                  document.getElementById('ActionFrame').scrollTop = 0;
+                }}
+              >
+              Announcements
+              {nonviewedAnnouncements.length === 0? null : <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedAnnouncements.length)}</Label></div>}
 
-        }
-        const {SideBarStore} = this.props
-        const channelList = SideBarStore.displayTitles.map(channel => (
-            <Menu.Item
-              name={channel}
-              id={channel}
-              onClick={e => handleClick(e)}
-            />
-        ))
-        return(
- 
-            <Menu vertical>
-        <Menu.Item>
-          <Menu.Header>Feed</Menu.Header>
-    
-          <Menu.Menu>
-          <Menu.Item disabled>Recent</Menu.Item>
-            <NavLink to="/portal" style={{color: "rgb(45, 45, 45)"}}>
-            <Menu.Item
-              name='Annoucements'
-            /></NavLink>
-       
-           {/* <Menu.Item disabled>Surveys</Menu.Item> */}
-          </Menu.Menu>
-        </Menu.Item>
-
-        <Menu.Item>
-          {/* <NavLink to="/portal/learn" style={{color: "rgb(45, 45, 45)"}}> */}
-          <Menu.Header>Learn</Menu.Header>
-          {/* </NavLink> */}
-          <Menu.Menu>
-            {channelList}
+              </Menu.Item>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "policies"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "policies");
+                  this.props.history.push("/portal/learn");
+                  document.getElementById('ActionFrame').scrollTop = 0;
+                }}
+              >               
+                FAQs
+                {nonviewedPolicies.length === 0? null :  <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedPolicies.length)}</Label></div>}
+              </Menu.Item>
             </Menu.Menu>
-        </Menu.Item>
+          </Menu.Item>
 
-        <Menu.Item>
-          <Menu.Header>Resources</Menu.Header>
+          <Menu.Item>
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Resources{" "}
+            <Icon style={{color: "#FFFFFF"}} name="cubes" />
+        
+            </Menu.Header>
 
-          <Menu.Menu>
-            <Menu.Item
-              name='common'
-            //   active={activeItem === 'shared'}
-            //   onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name='recently used'
-            //   active={activeItem === 'dedicated'}
-            //   onClick={this.handleItemClick}
-            />
-          </Menu.Menu>
-        </Menu.Item>
+            <Menu.Menu>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "resources"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "resources");
+                  this.props.history.push("/portal/resources");
+                  document.getElementById('ActionFrame').scrollTop = 0;
+                }}
+              >
+                Files
+              </Menu.Item>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "directory"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "directory");
+                  this.props.history.push("/portal/directory");
+                  document.getElementById('ActionFrame').scrollTop = 0;
+                }}
+                name="Staff Directory"
+              />
+            </Menu.Menu>
+            </Menu.Item>
 
-        <Menu.Item>
-          <Menu.Header>Support</Menu.Header>
+          
+            <Menu.Item>
+            <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
+            Contact{" "}
+            <Icon style={{color: "#FFFFFF"}} name="chat" />
+          
+            </Menu.Header>
+            <Menu.Menu>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "ask"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "ask");
+                  DataEntryStore.set("ask", "type", "general")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >Ask Anything</Menu.Item>
+              <Menu.Item
+                style={
+                  UIStore.sideNav.activePrimary === "report"
+                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "report");
+                  DataEntryStore.set("ask", "type", "anonymous")
+                  UIStore.set("modal", "askQuestion", true);
+                }}
+              >
+                Report Anonymously
+              </Menu.Item>
+            </Menu.Menu>
+          </Menu.Item>
 
-          <Menu.Menu>
-            {/* <Menu.Item  disabled name='email' >
-              Directory
-            </Menu.Item> */}
-            {/* <Menu.Item  disabled name='email' >
-              Get Assistance
-            </Menu.Item> */}
+          
 
-            
-          </Menu.Menu>
-        </Menu.Item>
-      </Menu>
-
-        )
-    }
+          <Transition
+            animation={"fade"}
+            visible={
+              UIStore.sideNav.activePrimary === "announcements" ||
+              UIStore.sideNav.activePrimary === "policies"
+            }
+            duration={250}
+          >
+            <Menu.Item>
+              <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>Channels</Menu.Header>
+              <Menu.Menu style={{paddingLeft:4}}>{channelList}</Menu.Menu>
+            </Menu.Item>
+          </Transition>
+          
+        </Menu>
+        {portalReturn}
+      </div>
+    );
+  }
 }
-export default withRouter(SideBarMenu)
-
-
-
+export default withRouter(SideBarMenu);

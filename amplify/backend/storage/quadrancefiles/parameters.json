@@ -1,0 +1,9 @@
+{
+    "bucketName": "quadrance-files",
+    "authPolicyName": "s3_amplify_12f9b8dd",
+    "unauthPolicyName": "s3_amplify_12f9b8dd",
+    "authRoleName": "aubrybeta-20190110153405-authRole",
+    "unauthRoleName": "aubrybeta-20190110153405-unauthRole",
+    "authPermissions": "rw",
+    "unauthPermissions": ""
+}

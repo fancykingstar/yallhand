@@ -1,132 +1,71 @@
-import React, { Component } from "react";
-import Editor from "draft-js-plugins-editor";
-import createEmojiPlugin from "draft-js-emoji-plugin";
-import { Button, Icon } from "semantic-ui-react";
-import { EditorState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
-import "draft-js-emoji-plugin/lib/plugin.css";
-import "draft-js/dist/Draft.css";
-import 'draft-js-linkify-plugin/lib/plugin.css';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import 'draft-js-counter-plugin/lib/plugin.css';
-import createCounterPlugin from 'draft-js-counter-plugin';
+import React from "react"
 import {inject, observer} from "mobx-react"
-import { DataEntryStore } from "../Stores/DataEntryStore";
 
-
-const counterPlugin = createCounterPlugin();
-const { WordCounter } = counterPlugin;
-const emojiPlugin = createEmojiPlugin();
-const linkifyPlugin = createLinkifyPlugin();
-const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
-const plugins = [emojiPlugin, linkifyPlugin, counterPlugin];
-
+import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, RichUtils, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
+import {stateToHTML} from 'draft-js-export-html';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 @inject("DataEntryStore")
 @observer
-export class DraftFormField extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { editorState: EditorState.createEmpty() };
-    this.onChange = editorState => this.setState({ editorState });
-  }
-
-   editorStateChanged = (newEditorState: EditorState) =>
-     this.setState({ editorState: newEditorState });
-
-   handleKeyCommand = (command: string) => {
-     const newState = RichUtils.handleKeyCommand(
-       this.state.editorState,
-       command
-     );
-     if (newState) {
-       this.editorStateChanged(newState);
-       return "handled";
-     }
-     return "not-handled";
-   };
-
-   passContent = () => {
-
-    const contentState = this.state.editorState.getCurrentContent();
-    DataEntryStore.toggleDraftContent(convertToRaw(contentState))
-    // this.props.updateContent(convertToRaw(contentState))
-    
-    
-   }
-
-   _onBoldClick() {
-     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
-   }
-   _onUlineClick() {
-     this.onChange(
-       RichUtils.toggleInlineStyle(this.state.editorState, "UNDERLINE")
-     );
-   }
-   _onItalicClick() {
-     this.onChange(
-       RichUtils.toggleInlineStyle(this.state.editorState, "ITALIC")
-     );
-   }
-   _onUlClick() {
-     this.onChange(
-       RichUtils.toggleBlockType(this.state.editorState, "unordered-list-item")
-     );
-   }
-   _onOlClick() {
-     this.onChange(
-       RichUtils.toggleBlockType(this.state.editorState, "ordered-list-item")
-     );
-   }
-   componentDidMount() {
-    if (this.props.loadContent !== null) {
-      const contentState = convertFromRaw(this.props.loadContent);
-      this.setState({
-        editorState: EditorState.createWithContent(contentState)
-      });
+export class DraftFormField extends React.Component {
+    constructor(props) {
+        super(props);
+        const { DataEntryStore } = this.props;
+        this.getLoadOrNew = () => {
+            if (this.props.loadContent === null || this.props.loadContent === undefined) {
+                DataEntryStore.setDraft(
+                  "editorState",
+                  EditorState.createEmpty()
+                );
+           
+              } else {
+                const contentState = convertFromRaw(this.props.loadContent);
+                DataEntryStore.setDraft( "editorState", EditorState.createWithContent(contentState) );
+                DataEntryStore.toggleDraftContentRAW(convertToRaw(contentState));
+                const htmlOutput = stateToHTML(contentState)
+                DataEntryStore.toggleDraftContentHTML(htmlOutput);
+               
+              }
+        }
+        this.getLoadOrNew()
+        this.onChange = editorState => DataEntryStore.setDraft("editorState", editorState);
+      }
+    componentDidMount() {
+      const {DataEntryStore} = this.props
+        this.getLoadOrNew()
     }
-  }
-  render() {
-    return (
-      <div className="Answer">
-        <div onClick={this.focus}>
-          <Button.Group>
-            <Button icon onClick={this._onBoldClick.bind(this)}>
-              <Icon name="bold" />
-            </Button>
-            <Button icon onClick={this._onUlineClick.bind(this)}>
-              <Icon name="underline" />
-            </Button>
-            <Button icon onClick={this._onItalicClick.bind(this)}>
-              <Icon name="italic" />
-            </Button>
-            <Button icon onClick={this._onUlClick.bind(this)}>
-              <Icon name="unordered list" />
-            </Button>
-            <Button icon onClick={this._onOlClick.bind(this)}>
-              <Icon name="ordered list" />
-            </Button>
-          </Button.Group>
-          <div className="AnswerField" style={{fontSize: "1em"}}>
-            <Editor
-              onBlur={this.passContent}
-              editorState={this.state.editorState}
-              onChange={this.editorStateChanged}
-              handleKeyCommand={this.handleKeyCommand}
-              plugins={plugins}
-              ref={element => {
-                this.editor = element;
-              }}
-            />
-          </div>
+    render(){
+        const {DataEntryStore} = this.props
+        const editorStateChanged = (newEditorState) => {
+            DataEntryStore.setDraft("editorState", newEditorState);
+            passContent();
+          };
 
-          <EmojiSuggestions />
-        </div>
-        <div style={{float: "left", paddingTop: 5}}><WordCounter limit={200} /> words</div>
-        <div style={{ float: "right", paddingTop: 5}}>
-          <EmojiSelect /> 
-        </div> 
-        <div className="EmojiLicense">Emoji by <a style={{color: 'rgb(179, 179, 179)' }} href="https://joypixels.com" rel="noopener noreferrer" target="_blank">JoyPixels</a>  </div>
-      </div>
-    );
-  }
+        const passContent = () => {
+            const contentState = DataEntryStore.draft.editorState.getCurrentContent();
+            DataEntryStore.toggleDraftContentRAW(convertToRaw(contentState));
+            const htmlOutput = stateToHTML(contentState)
+            DataEntryStore.toggleDraftContentHTML(htmlOutput);
+          };
+          
+        const toolbarConfig = this.props.minimal === undefined? {options: ['inline', 'list', 'link', 'emoji', 'remove', 'history'], inline: {options: ['bold', 'italic', 'underline', 'strikethrough']}} : {options: ['emoji', 'link']}
+        
+        return (
+                <div style={this.props.border !== undefined? {border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10, marginRight: 20}: null}>
+                <Editor
+                wrapperClassName="Wrapped"
+                editorState={DataEntryStore.draft.editorState}
+                onEditorStateChange={editorStateChanged}
+                toolbar={toolbarConfig}
+                editorStyle={{backgroundColor: "#ffffff", maxWidth: 900, borderRadius: 5, paddingLeft: 5, paddingRight: 5, minHeight: 200, margin: 0}}   
+                toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}     
+                        
+                        />
+                </div>
+          
+    )
+        }
 }
+
+

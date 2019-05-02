@@ -4,10 +4,12 @@
 }
 
 .TeamActionFrame {
-    margin-top: 30px;
-    min-height: 500px;
-    height: 20px;
+    margin-top: 5px;
+    /* min-height: 500px; */
+    /* height: 20px; */
     width: 100%;
+    /* overflow-y: auto; */
+    padding-bottom: 50px;
 }
 
 .Segment {
@@ -15,11 +17,27 @@
     margin-top: 25px;
 }
 
-.Visable {
-   
-}
-
 .Hidden {
     display: none;
-    background-color: tomato;
+    /* background-color: tomato; */
+}
+
+.WarningStyle {
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin-top: -15px !important;
+    font-size: .8em;
+    color:#9f3a38;
+    
+}
+
+.MoreHigh {
+    margin-top: -30px !important;
+  
+}
+
+.UserTable {
+    min-height: 200px;
+    max-width: 700px;
+    overflow-y: auto;
 }

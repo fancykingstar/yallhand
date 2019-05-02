@@ -1,0 +1,11 @@
+import React from "react"
+import { inject, observer } from "mobx-react";
+
+
+export const GetDisplayName = inject("AccountStore")(observer((props) => {
+    const {AccountStore} = props.AccountStore
+    const displayName = (val) => {
+    const user = AccountStore.allUsers.filter(user => user.userID === val)[0]
+    return user.displayName}
+}))
+

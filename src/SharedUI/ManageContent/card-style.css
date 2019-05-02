@@ -1,0 +1,117 @@
+.CardContainerbg {
+    width: 319px;
+    height: 196px;
+    padding: 0px;
+    
+    /* -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px; */
+    position: relative;   
+    background-repeat: no-repeat;
+}
+
+.CardContaineralpha {
+    width: 319px;
+    height: 196px;
+       background-color:#EEEEEE;
+       opacity: 0.9;
+       
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: absolute;   
+}
+
+
+.displayAdjust {
+    position: absolute;
+    z-index: 2;
+}
+
+.Q {
+    margin-top: 20px;
+    margin-left: 20px;
+    font-weight: 800;
+    font-size: 1.4em;
+}
+
+.Question {
+    min-height: 60px;
+    max-height: 60px;
+    min-width: 282px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.CreateNewHeader {
+    height: 60px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.Owners {
+    height: 50px;
+    margin-top: 8px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.AtmnStatus {
+    margin-top: 7px;
+    margin-left: 20px;
+}
+
+.UsageStatus {
+    margin-top: -21px;
+    margin-left: 70px;
+    position: absolute;
+    z-index: 2;
+    text-align: center;
+    width: 180px;
+}
+
+.CurrentStatus {
+    margin-top: -21px;
+    margin-left: 287px;
+    position: absolute;
+    z-index: 2;
+}
+.Corner {  
+    margin-top: 5px;
+    /* margin-left: 196px; */
+    margin-left: 126px;
+    width: 30%;
+    padding-bottom:85%;
+    border-radius: 17px 0 0 0;
+    overflow: hidden;
+    transform-origin:100% 0;
+    transform: rotate(180deg);
+    position: absolute;
+    z-index: 1;
+  }
+  .Corner:after {
+    content: "";
+    position: absolute;
+    top: 0px; right:8px;
+    width:60%; height:50%;
+    transform-origin:inherit;
+    transform: rotate(45deg);
+    background:#FFFFFF;
+    z-index: 0;
+  }
+  .CreatePost {
+    /* position: relative; */
+    color: rgb(45, 45, 45);
+    width: 319px;
+    height: 150px;
+    border: dashed;
+    padding: 10px;
+    background-color: #EEEEEE;
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    position: relative;
+}
+  

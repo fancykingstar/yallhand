@@ -2,27 +2,34 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import registerServiceWorker from "./registerServiceWorker";
 import { Provider } from "mobx-react";
 import { BrowserRouter } from "react-router-dom";
-import registerServiceWorker from "./registerServiceWorker";
-import { SideBarStore } from "./Stores/SideBarStore";
+import { ChannelStore } from "./Stores/ChannelStore";
 import { PoliciesStore } from "./Stores/PoliciesStore";
 import { UserStore } from "./Stores/UserStore";
 import { ResourcesStore } from "./Stores/ResourcesStore";
-import { AutomationsStore } from "./Stores/AutomationsStore";
 import { TeamStore } from "./Stores/TeamStore";
-import { AnnoucementsStore } from "./Stores/AnnoucementsStore";
+import { AnnouncementsStore } from "./Stores/AnnouncementsStore";
 import { DataEntryStore } from "./Stores/DataEntryStore";
+import { UIStore } from "./Stores/UIStore"
+import { AccountStore } from "./Stores/AccountStore"
+import { EmailStore } from "./Stores/EmailStore"
+import { ScheduleStore } from "./Stores/ScheduleStore"
+
 const Root = (
   <Provider
-    SideBarStore={SideBarStore}
+    ChannelStore={ChannelStore}
     PoliciesStore={PoliciesStore}
     UserStore={UserStore}
     ResourcesStore={ResourcesStore}
-    AutomationsStore={AutomationsStore}
     TeamStore={TeamStore}
-    AnnoucementsStore={AnnoucementsStore}
+    AnnouncementsStore={AnnouncementsStore}
     DataEntryStore={DataEntryStore}
+    UIStore={UIStore}
+    AccountStore={AccountStore}
+    EmailStore={EmailStore}
+    ScheduleStore={ScheduleStore}
   >
     <BrowserRouter>
       <App />

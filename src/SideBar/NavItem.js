@@ -1,31 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
 
-@inject("SideBarStore")
+@inject("UIStore")
 @observer
-export class NavItem extends React.Component {
+class NavItem extends React.Component {
   render() {
     const active =
       this.props.active === true
         ? "NavItemFrame SideBarActive"
-        : "NavItemFrame";
-    const { SideBarStore } = this.props;
-    const checkKnowledge = this.props.id === "knowledge" ? "/panel/"  : "/panel/" + this.props.id
-    const activeall = (val) => {
-    if(val.currentTarget.id === "knowledge" ) {
-      val.currentTarget.id = "All" 
-      return val
-    }
-    else {return val}}
+        : "NavItemFrame lightlink";
+    const { UIStore } = this.props;
 
+    const handleClick = (id) => {
+      id === "dashboard"? this.props.history.push("/panel") : this.props.history.push("/panel/" + this.props.id)
+      UIStore.set("sideNav", "activePrimary", this.props.id)
+      document.getElementById('ActionFrame').scrollTop = 0;
+    }
+    
     return (
-      <Link to={checkKnowledge}>
         <div
           className={active}
-          id={this.props.id}
-          onClick={e => SideBarStore.makeActive(activeall(e))}
+          onClick={e => handleClick(this.props.id)}
         >
           <div className="NavItemIcon">
             <Icon name={this.props.icon} />
@@ -34,7 +31,8 @@ export class NavItem extends React.Component {
             <h4>{this.props.label}</h4>
           </div>
         </div>
-      </Link>
     );
   }
 }
+
+export default withRouter(NavItem)

@@ -1,30 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { UIStore } from "../Stores/UIStore"
+import { Label } from "semantic-ui-react"
 import "./card-style.css";
 import "./style.css";
 
-export const UserCard = props => {
-  // const bgimg = props.data.img;
+const UserCard = props => {
   return (
     <div>
 
             <div className="CardContainerbg" style={{backgroundImage: `url(${props.data.img})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
             <div className="CardContaineralpha"></div>
 
-      <Link
-        to={"/portal/learn-detail/" + props.data.policyID}
-        style={{ color: "rgb(45, 45, 45)" }}
-      >
-        <div className="PortalCard">
+        <div onClick={e => { props.history.push("/portal/learn-detail/" + props.data.policyID)}} 
+    className="PortalCard">
           <div className="PortaldisplayAdjust">
             <div className="PortalQuestion">
-              <h3>{props.data.label}</h3>
+              <h3>{props.data.variations[0].label === ""? props.data.label : props.data.variations[0].label}</h3>
             </div>
+            {UIStore.portal.viewedContent.includes(props.data.policyID) === false? <div style={{marginLeft: 20}}><Label as='a' size="mini" color='red'> Unread </Label></div>  : null}
           </div>
         </div>
-      </Link>
+  
 
     </div>
     </div>
   );
 };
+
+export default withRouter(UserCard)

@@ -1,43 +1,40 @@
-import React from 'react';
-import {inject, observer} from "mobx-react"
-import { UserCard } from './UserCard'
-import {validDisplayPolicies} from '../SharedCalculations/ValidTeams'
-import './style.css'
+import React from "react";
+import { inject, observer } from "mobx-react";
+import UserCard from "./UserCard";
+import { Sort } from "../SharedUI/Sort"
+import { sortByUTC } from "../SharedCalculations/SortByUTC";
+import { PortalContentNoResults } from "./PortalContentNoResults"
+import "./style.css";
 
-@inject("PoliciesStore", "SideBarStore", "UserStore")
+@inject("PoliciesStore", "UIStore")
 @observer
 export class CardFrame extends React.Component {
-    componentWillMount() {
-        const { PoliciesStore } = this.props;
-        const { UserStore } = this.props;
-        PoliciesStore.loadPolicies()
-        const validData = validDisplayPolicies(PoliciesStore.allPolicies, UserStore.previewTeamPath, UserStore.previewTagPath)
-        PoliciesStore.loadUserPortalPolicies(validData)
-    }
+  render() {
+    const { PoliciesStore, UIStore } = this.props;
+    const validData = PoliciesStore.allPolicies;
+    const cardData =
+    UIStore.sideNav.activeChannel === "All"
+        ? validData
+        : validData.filter(
+            policy => policy.chanID === UIStore.sideNav.activeChannel
+          );
+    const cards = sortByUTC(cardData, UIStore.dropdown.portalPolicySort).map(card => (
+      <UserCard data={card} key={card.label} img={card.img} />
+    ));
 
-    render() {
-        const { PoliciesStore } = this.props;
-        const { SideBarStore } = this.props;
-        const validData = PoliciesStore.userAvailablePolicies
-        const cardData = validData.filter(policy => policy.chanID === SideBarStore.channelKeys[SideBarStore.active])
-        // cardData.forEach(policy => {
-        //     policy.variations = policy.variations.filter(variation => variation.teamID === UserStore.previewTeam)
-        // })
-                        
+    const displayContent = cardData.length > 0?   <div className="CardList" style={{paddingTop: 25}}> {cards} </div>  : <PortalContentNoResults/>
+
+
+    return (
+      <div style={{paddingBottom: 5}}>
+            <Sort
+          dropdownValueChange={val => UIStore.set("dropdown", "portalPolicySort", val)}  
+          />
+      {displayContent}
   
+      </div>
 
-        const cards = cardData.map(card => <UserCard data={card} key={card.label} img={card.img}/>)
- 
-
-        
-        return(
-            <div className="CardList">
-     
-                {cards}
-
-             
-        
-            </div>
-        )
-    }
+      
+    )
+  }
 }

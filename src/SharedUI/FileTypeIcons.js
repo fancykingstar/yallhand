@@ -1,12 +1,15 @@
-export const FileTypeIcons =  {
+export const FileTypeIcons =  
+///returns semantic icon for type
 
-        "doc": "file word",
-        "xls": "file excel",
-        "pdf": "file pdf",
-        "ppt": "file powerpoint" ,
-        "pptx" : "file powerpoint",
-        "docx" : "file word",
-        "pages" : "file alternate",
-        "zip" : "file archive"
-}
-
+{
+        "pdf":"file pdf outline",
+        "ocx":"file word outline",
+        "doc":"file word outline",
+        "ges":"apple",
+        "xls":"file excel outline",
+        "lsx":"file excel outline",
+        "ptx":"file powerpoint outline",
+        "default":"file",
+    }
+    
+    

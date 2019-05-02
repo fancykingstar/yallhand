@@ -1,0 +1,157 @@
+.Answer {
+    width: 80%;
+    font-size: .8em;
+}
+
+.Wrapped button{
+    font-family: Lato; 
+    border-radius: 5px;
+}
+
+.Wrapped input{
+    font-family: Lato; 
+    border-radius: 5px;
+}
+
+.AnswerField {
+    background-color: #FFFFFF;
+    padding: 5px;
+    font-weight: 400;
+    font-size: 1.3em;
+    border: solid;
+    width: 100%;
+    border-color: #E0E1E2;
+    border-width: 1px;
+    height: 250px;
+    -webkit-border-radius: 5px 5px 5px 5px; 
+    -moz-border-radius: 5px 5px 5px 5px; 
+    border-radius: 5px 5px 5px 5px; 
+    display: inline-block;
+}
+
+
+.DraftTools {
+    height: 41px !important;
+  
+   
+}
+
+.DraftButtons {
+    position: relative;    
+    display: inline;
+   
+    
+}
+.Draft-Float-Left{
+    float: left;
+}
+.Draft-Float-Right {
+    float: right;
+}
+
+.EmojiSelectFix {
+    position: absolute;
+
+}
+.draftJsEmojiPlugin__emojiSelectButton__3sPol {
+
+    width: 37px !important;
+    height: 37px !important;
+    border-radius: 0px !important;
+    border: 0px !important; 
+    font-weight: 800 !important;
+    line-height: .8em !important;
+    font-family: sans-serif !important;
+    font-size: 1.7em !important;
+}
+
+.draftJsEmojiPlugin__emojiSelectButton__3sPol:hover {
+    background-color: #cacbcd !important;
+}
+
+.draftJsEmojiPlugin__emojiSelectButtonPressed__2Tezu {
+    
+    width: 37px !important;
+    height: 37px !important;
+    border-radius: 0px !important;
+    border: 0px !important; 
+    font-weight: 800 !important;
+    line-height: .9em !important;
+    font-family: sans-serif !important;
+    font-size: 1.7em !important;
+    background-color: #babbbc;
+
+   
+}
+
+.draftJsEmojiPlugin__emojiSelectPopover__1J1s0 {
+    margin-top: -290px !important;
+    margin-left: 40px !important;
+}
+
+
+
+.public-DraftEditor-content {
+    overflow-y: auto !important;
+    max-height: 240px !important;
+
+
+
+}
+
+.draftJsEmojiPlugin__emojiSelectButton__3sPol {
+    border-top-left-radius: .28571429rem  !important;
+    border-bottom-left-radius: .28571429rem  !important;
+    padding: .58571429em .58571429em .69571429em !important;
+    margin-bottom: -1px !important; 
+
+    border: none  !important;
+    background: #e0e1e2 none  !important;
+    color: rgba(0,0,0,.6)  !important;
+}
+
+.draftJsEmojiPlugin__emojiSelectButtonPressed__2Tezu {
+    background-color: #babbbc !important;
+    color: rgba(0,0,0,.9) !important;
+    padding: .58571429em .58571429em .69571429em !important;
+    margin-bottom: -1px !important; 
+    border-top-left-radius: .28571429rem  !important;
+    border-bottom-left-radius: .28571429rem  !important;
+    flex: 1 0 auto  !important;
+    padding: .58571429em .58571429em .73571429em !important;
+    -webkit-box-flex: 1  !important;
+    display: inline-block  !important;
+    min-height: 1em  !important;
+    vertical-align: baseline  !important;
+    border: none  !important;
+}
+
+#openLinkInNewWindow {
+    display: none;
+}
+
+.rdw-link-modal-target-option {
+    display: none;
+}
+
+.FixButtonGroup {
+     border-top-left-radius: 0  !important;
+    border-bottom-left-radius: 0  !important;
+}
+
+.UploadConfig {
+    padding-top: 10px;
+    height: 135px;
+}
+
+.ContentSearchFrame {
+    margin-top: -13px;
+    margin-left: 5px;
+}
+.ContentSearch {
+    margin-top: -10px;
+    padding-right: 10px;
+}
+
+
+/* { fontWeight: "800", marginTop: 25, marginBottom: 5 } */

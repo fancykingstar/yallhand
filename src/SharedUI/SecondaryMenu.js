@@ -13,7 +13,7 @@ export const SecondaryMenu = props => {
   const searchField = props.useSearch ? (
     <Menu.Menu position="right">
       <Menu.Item>
-        <Input size="small" icon="search" placeholder="Search..." />
+        <Input size="small" icon="search" placeholder="Search..." onChange={(e, val) => props.searchOutput(val.value)}/>
       </Menu.Item>
     </Menu.Menu>
   ) : null;

@@ -1,28 +1,45 @@
-import React from 'react';
-import {NavLink} from 'react-router-dom'
-import {QLogo} from '../Assets/Graphics/QLogo'
-import './style.css';
+import React from "react";
+import { inject, observer } from "mobx-react";
+import { NavLink } from "react-router-dom";
+import "./style.css";
 
+
+@inject("AccountStore", "UserStore")
+@observer
 export class Workspace extends React.Component {
-    render() {
-        return(
-            <div className = "Workspace">
-                <NavLink to="/panel/base-settings"> <div className="WorkspaceLogo"/>
-               </NavLink>
-               
-               
-               <div className="WorkspaceName">
-                
-                <div style={{float: 'left', paddingLeft: 2, paddingTop: 13, width: 30, position: 'absolute'}}></div>
-                <div style={{paddingLeft: 15}}>QUADRANCE</div>
-                
-         
-           
-               </div>
-               
-        
-             
-            </div>
-        )
+  render() {
+    const { AccountStore, UserStore } = this.props;
+    const styles = {7: {fontSize: "1.8em"}, 14: {fontSize: "1.3em"}, 30: {fontSize: "0.85em"}}
+    
+    const getStyle = val => {
+      let style = {}
+      let found = false
+      Object.keys(styles).forEach(size => {
+        if(val.length <= Number(size) && !found){
+          found = true
+          style = styles[size]
+        }
+      })
+      UserStore.user.accountID !== AccountStore.account.accountID? style["color"] = "red": null
+      return style
     }
+    const { account } = AccountStore
+    return (
+      <div className="Workspace">
+        <NavLink to="/panel/base-settings">
+          {" "}
+          <div
+            className="WorkspaceLogo"
+            style={{ backgroundImage: `url(${account && account.img ? account.img : ''})` }}
+          />
+        </NavLink>
+
+        <div className="WorkspaceName">
+          <div 
+          style={getStyle(account && account.label ? account.label : '')}
+          className="CompanyName">{account && account.label ? account.label : ''}</div>
+        </div>
+      </div>
+    );
+  }
 }
