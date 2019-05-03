@@ -80,14 +80,14 @@ class DashboardFrame extends React.Component {
         {
           label: 'Email opens',
           fill: false,
-          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: Math.floor(Math.random() * Math.floor(6))})),
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.email_count})),
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 2
       },
       {
         label: 'Portal Views',
         fill: false,
-        data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.count})),
+        data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.portal_count})),
         borderColor: 'rgba(11, 205, 253, 1)',
         borderWidth: 2
     },
@@ -102,8 +102,8 @@ class DashboardFrame extends React.Component {
     }
     const topContent = 
       _.sortBy( 
-        _.uniqBy(AccountStore.dashboardData.total_views, "contentID")
-        .map(i => ({contentID: i.contentID, type: i.type, total: AccountStore.dashboardData.total_views.filter(x => x.contentID === i.contentID).length}))
+        _.uniqBy(AccountStore.dashboardData.total_portal_views, "contentID")
+        .map(i => ({contentID: i.contentID, type: i.type, total: AccountStore.dashboardData.total_portal_views.filter(x => x.contentID === i.contentID).length}))
         , "total").reverse().slice(0, 5).map(content => 
                 <Grid.Row>
                   <Grid.Column width={13}> <p>{getLabel(content)}</p> </Grid.Column>

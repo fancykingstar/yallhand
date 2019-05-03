@@ -4,20 +4,20 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { Table, Header, Button, Checkbox} from "semantic-ui-react";
 
-@inject("EmailStore")
+@inject("AccountStore")
 @observer
 export class CampaignAnalytics extends React.Component {
   render() {
-    const {EmailStore} = this.props
-    const outbounds = EmailStore.allCampaigns
-        .filter(camp => camp.completed)
+    const {AccountStore} = this.props
+    const outbounds = AccountStore.analyticData_campaigns
+        // .filter(camp => camp.completed)
          .map(camp => 
       <Table.Row key={"camp" + giveMeKey()}>
-      <Table.Cell>{EmailStore._getCampaign(camp.campaignID).subject}</Table.Cell>
-      <Table.Cell>{camp.targetUsers.length > 0? "Target Users: " : "selected teams"}</Table.Cell>
-      <Table.Cell>{UTCtoFriendly(camp.updated)}</Table.Cell>
+      <Table.Cell>{camp.subject}</Table.Cell>
+      <Table.Cell>{UTCtoFriendly(camp.sent)}</Table.Cell>
+      <Table.Cell>{`${camp.total_views}/${camp.unique_views}`}</Table.Cell>
       <Table.Cell></Table.Cell>
-      <Table.Cell></Table.Cell>
+      <Table.Cell>{Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)}%</Table.Cell>
       <Table.Cell></Table.Cell>
       <Table.Cell> 
       {/* <Button basic color='red'>Cancel</Button> */}
@@ -35,8 +35,8 @@ export class CampaignAnalytics extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Destination</Table.HeaderCell>
                 <Table.HeaderCell>Sent</Table.HeaderCell>
+                <Table.HeaderCell>Views (All/Unique)</Table.HeaderCell>
                 <Table.HeaderCell>Open Rate</Table.HeaderCell>
                 <Table.HeaderCell>Click Rate</Table.HeaderCell>
                 <Table.HeaderCell></Table.HeaderCell>
