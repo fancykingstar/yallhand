@@ -35,7 +35,7 @@ export const ItsLog = (action, data) => {
 }
 
 //
-export const history = (type, id, data) => {
+export const contentHistory = (type, id, data) => {
   const buildObj = {
     accountID: accountID(),
     updated: now(),
