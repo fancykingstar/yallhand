@@ -1,13 +1,14 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import { withRouter } from "react-router-dom"
-import { Segment, Grid, Header, Icon, Statistic, Dropdown, Button, Input } from "semantic-ui-react";
+import { Segment, Grid, Header, Icon, Statistic, Dropdown, Button, Modal } from "semantic-ui-react";
 import { Scheduled } from "./Scheduled"
 import Notifications from "./Notifications"
 import { Line, Doughnut } from 'react-chartjs-2';
 import CountUp from 'react-countup';
 import {apiCall} from "../DataExchange/Fetch";
 import CreateContent from "../SharedUI/ManageContent/CreateContent";
+import {DateRange} from "../SharedUI/DateRange"
 import moment from "moment"
 import _ from "lodash";
 import "./style.css";
@@ -58,7 +59,8 @@ class DashboardFrame extends React.Component {
       }],
 
   };
-
+  const openRate = AccountStore.dashboardData.total_recipient_count === undefined? 0 : Math.round(AccountStore.dashboardData.total_email_views.length / AccountStore.dashboardData.total_recipient_count * 100)
+  const clickRate =AccountStore.dashboardData.total_email_views === undefined? 0 : Math.round(AccountStore.dashboardData.total_recipient_click / AccountStore.dashboardData.total_email_views.length * 100)
   const getLabel = (data) => {
     let label = ""
    try {
@@ -110,6 +112,13 @@ class DashboardFrame extends React.Component {
                   <Grid.Column> <h4><CountUp duration={1} decimals={0} end={content.total} /></h4> </Grid.Column>
                 </Grid.Row>
         )
+
+    const updateData = (source, val1, val2=Date.now()) => {
+      if(source === "dropdown") UIStore.set("dropdown", "dashboardOverview", val1)
+      if(source === "dropdown") this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1]) 
+      
+
+    }
 
     return (
       <div style={{ paddingRight: 10 }}>
@@ -171,9 +180,15 @@ class DashboardFrame extends React.Component {
         Last{" "}
       <Dropdown 
         options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
-        onChange={(e, val) => UIStore.set("dropdown", "dashboardOverview", val.value)}
+        onChange={(e, val) => updateData("dropdown", val.value)}
         value={UIStore.dropdown.dashboardOverview} />
-        <span style={{paddingLeft: 20}}>Or choose a date range</span>
+        <span onClick={e => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>Or choose a date range</span>
+        <Modal onClose={e => UIStore.set("modal", "dashboardDates", false)} open={UIStore.modal.dashboardDates} size='small'>
+        <Modal.Content>
+          <DateRange output={this.getData}/>
+        </Modal.Content>
+        
+      </Modal>
         </div>
       
         <Segment>
@@ -200,12 +215,16 @@ class DashboardFrame extends React.Component {
                 <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
                 <Statistic.Group widths={1}>
                 <Statistic>
-                  <Statistic.Value><CountUp duration={1} decimals={1} end={AnnouncementsStore.allAnnouncements.length} />%</Statistic.Value>
-                  <Statistic.Label>Open Rate <Icon name="arrow up" color="blue"/>+1%</Statistic.Label>
+                  <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(openRate)? 0: openRate} />%</Statistic.Value>
+                  <Statistic.Label>Open Rate 
+                    {/* <Icon name="arrow up" color="blue"/>+1% */}
+                    </Statistic.Label>
                 </Statistic>
                 <Statistic style={{paddingTop: 10}}>
-                  <Statistic.Value><CountUp duration={1} decimals={1} end={PoliciesStore.allPolicies.length} />%</Statistic.Value>
-                  <Statistic.Label>Click Rate <Icon name="arrow up" color="blue"/>+1%</Statistic.Label>
+                  <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(clickRate)? 0: clickRate} />%</Statistic.Value>
+                  <Statistic.Label>Click Rate 
+                    {/* <Icon name="arrow up" color="blue"/>+1% */}
+                    </Statistic.Label>
                 </Statistic>
               </Statistic.Group>
               </div>
