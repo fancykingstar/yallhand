@@ -12,6 +12,7 @@ import {DateRange} from "../SharedUI/DateRange"
 import moment from "moment"
 import _ from "lodash";
 import "./style.css";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore", "UIStore")
 @observer
@@ -107,7 +108,7 @@ class DashboardFrame extends React.Component {
         _.uniqBy(AccountStore.dashboardData.total_portal_views, "contentID")
         .map(i => ({contentID: i.contentID, type: i.type, total: AccountStore.dashboardData.total_portal_views.filter(x => x.contentID === i.contentID).length}))
         , "total").reverse().slice(0, 5).map(content => 
-                <Grid.Row>
+                <Grid.Row key={giveMeKey()}>
                   <Grid.Column width={13}> <p>{getLabel(content)}</p> </Grid.Column>
                   <Grid.Column> <h4><CountUp duration={1} decimals={0} end={content.total} /></h4> </Grid.Column>
                 </Grid.Row>
@@ -236,7 +237,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
                 <Grid divided>
-                {topContent.length === 0? <span>No Data Yet</span> : topContent}
+                {topContent.length === 0? <span>No Data</span> : topContent}
           
              
               

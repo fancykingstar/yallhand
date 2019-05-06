@@ -39,7 +39,7 @@ export class DateTimeSelect extends React.Component {
   
           <Form.Input label="Choose Date">
             <DatePicker
-              from={"tomorrow"}
+              from={"today"}
               readOnly={true}
               output={val => handleDate(val)}
             />

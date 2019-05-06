@@ -134,7 +134,7 @@ export const campaigns= async (accountID) => {
 }
 
 export const scheduled= async (accountID) => {
-  const result = await apiCall_noBody("schedules/" + accountID, "GET")
+  const result = await apiCall_noBody(`schedules/all?filter={"where":{"accountID":"${accountID}","executed":false}}`, "GET");
   ScheduleStore.loadScheduled(result)
 
   return result
