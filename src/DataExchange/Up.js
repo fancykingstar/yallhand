@@ -27,6 +27,8 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+  console.log(endpoint, meth, payload)
+
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
@@ -116,7 +118,7 @@ export const deleteSchedule = (scheduleID) => {
 ///TEAMS (STRUCTURE)
 export const createTeam = (payload) => {
     return processTemplate(true, "teams", "POST", payload, "teams", 
-        "Your new tag has been created 🙌", 
+        "Your new team has been created 🙌", 
         true,{"event": "create", "type":"team"}
     )
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory } from "../../DataExchange/Up"
-import { content, contentEdit, history } from "../../DataExchange/PayloadBuilder"
+import { content, contentEdit, contentHistory } from "../../DataExchange/PayloadBuilder"
 import { VariationContent } from "./VariationContent";
 import { VariationConfig } from "./VariationConfig";
 import { PublishControls } from "./PublishControls";
@@ -67,7 +67,7 @@ class NewEditVariation extends React.Component {
         else this.props.history.push("/panel/announcements")
       }
     }
-  }
+  } 
 
   changeStage(stage) {
     const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
@@ -76,8 +76,8 @@ class NewEditVariation extends React.Component {
     DataEntryStore.set("content", "stage", stage)
 
     if (stage === "published") {
-      // const historyMode = history(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
-      // createHistory(historyMode)
+      const historyMode = contentHistory(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
+      createHistory(historyMode)
     }
     
     // validateURLs(mode);
@@ -90,7 +90,6 @@ class NewEditVariation extends React.Component {
         else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
         UIStore.set("content", typeId, id);
-        
         history.push(`${path}${res[id]}`);
       });
     }

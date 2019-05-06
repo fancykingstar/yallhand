@@ -125,6 +125,7 @@
 }
 
 .PortalSideNav {
+    height: 100%;
     padding-left: 3px;
     background-color: #4f4f4f;
 }

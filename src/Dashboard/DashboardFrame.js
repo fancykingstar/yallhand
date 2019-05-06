@@ -53,7 +53,7 @@ class DashboardFrame extends React.Component {
 
     const doughnutData =  {
       datasets: [{
-          data: [10, 20, 30],
+          data: AccountStore.dashboardData.sentiment_total === undefined? null : [AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ],
           backgroundColor: ["#FF6384", "#0BCDFD","#B908FA"]
       }],
 
@@ -217,7 +217,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
                 <Grid divided>
-                {topContent}
+                {topContent.length === 0? <span>No Data Yet</span> : topContent}
           
              
               
@@ -233,13 +233,13 @@ class DashboardFrame extends React.Component {
                 <Grid columns="equal">
                   <Grid.Row>
                     <Grid.Column>
-                      <Icon style={{color:"#FF6384"}} name="smile outline"/>{sentimentPercentage(2)}% 
+                      <Icon style={{color:"#FF6384"}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 
                     </Grid.Column>
                     <Grid.Column>
-                    <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{sentimentPercentage(1)}% 
+                    <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{Number.isNaN(sentimentPercentage(1))? 0 : sentimentPercentage(1)}% 
                     </Grid.Column>
                     <Grid.Column>
-                    <Icon style={{color:'#B908FA'}} name="frown outline"/>{sentimentPercentage(0)}% 
+                    <Icon style={{color:'#B908FA'}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
