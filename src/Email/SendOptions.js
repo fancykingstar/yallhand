@@ -13,13 +13,13 @@ import { sendEmailPreview } from "../DataExchange/Up";
 export class SendOptions extends React.Component {
   render() {
     const { UIStore, DataEntryStore, AccountStore } = this.props;
-
+ 
     const sendPreview = () => {
       sendEmailPreview(emailPreview());
     };
   
     const sendLater = () => {
-      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? createCampaign(emailCampaign(false, true)).then(r =>  r.json().then(data => createSchedule(schedule(DataEntryStore.emailCampaign.sendNext, "email send", {"campaignID": data.campaignID})))) : createCampaign(emailCampaign(false, false))
+      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? createCampaign(emailCampaign(false, true), false).then(r =>  r.json().then(data => createSchedule(schedule(DataEntryStore.emailCampaign.sendNext, "email send", {"campaignID": data.campaignID, "label": data.subject})))) : createCampaign(emailCampaign(false, false))
     }
 
     const canSubmit = () => {

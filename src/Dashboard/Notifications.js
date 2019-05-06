@@ -62,10 +62,11 @@ class Notifications extends React.Component {
   
     return (
         <React.Fragment>
+          {AccountStore.reviewQueue.length === 0 ? <div/> :
             <Segment>
         <Header as="h3"> <Icon name="bell" />Notifications</Header>
         {display}
-        </Segment>
+        </Segment>}
         </React.Fragment>
     );
   }
