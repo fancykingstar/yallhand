@@ -56,16 +56,15 @@ class ManageContent extends React.Component {
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
           DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
           DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
-          
+          UIStore.set(
+            "content",
+            "variationID",
+            PoliciesStore._toggleGlobalVariation(UIStore.content.policyID)
+          );
         } else {
           this.props.history.push("/panel/faqs");
         }
       }
-      UIStore.set(
-        "content",
-        "variationID",
-        PoliciesStore._toggleGlobalVariation(UIStore.content.policyID)
-      );
     } else if (this.mode === "announcement") {
       if (
         UIStore.content.announcementID === "" ||
@@ -91,16 +90,16 @@ class ManageContent extends React.Component {
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
           DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
           DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
+          UIStore.set(
+            "content",
+            "variationID",
+            AnnouncementsStore._toggleGlobalVariation(
+              UIStore.content.announcementID
+            )
+          );
         } else {
           this.props.history.push("/panel/announcements");
         }
-        UIStore.set(
-          "content",
-          "variationID",
-          AnnouncementsStore._toggleGlobalVariation(
-            UIStore.content.announcementID
-          )
-        );
       }
     }
   }

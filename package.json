@@ -47,6 +47,7 @@
     "react-draft-wysiwyg": "^1.13.2",
     "react-fullstory": "^1.0.3",
     "react-google-login": "^5.0.2",
+    "react-helmet": "^5.2.1",
     "react-html-parser": "^2.0.2",
     "react-moment": "^0.8.4",
     "react-router-dom": "^4.3.1",

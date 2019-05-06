@@ -20,7 +20,7 @@ export class Scheduled extends React.Component {
       const scheduled = ScheduleStore.allScheduled.map(task =>   <Table.Row key={"sched" + giveMeKey()}>
         <Table.Cell>{UTCtoFriendly(task.when)}</Table.Cell>
         <Table.Cell>{task.task}</Table.Cell>
-        <Table.Cell>{getContentObj(task.data).label}</Table.Cell>
+        <Table.Cell>{task.data.label}</Table.Cell>
         <Table.Cell> 
         <Button basic color='red' onClick={e => cancel(task.scheduleID)}>Cancel</Button>
         </Table.Cell>
@@ -35,7 +35,7 @@ export class Scheduled extends React.Component {
           <Table.Row>
             <Table.HeaderCell>Estimated Delivery</Table.HeaderCell>
             <Table.HeaderCell>Action</Table.HeaderCell>
-            <Table.HeaderCell>Additional Info</Table.HeaderCell>
+            <Table.HeaderCell>Title</Table.HeaderCell>
 
             <Table.HeaderCell />
           </Table.Row>

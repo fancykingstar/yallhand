@@ -32,7 +32,7 @@ h1 h2 h3 h4 h5 span {
   padding-bottom: 5px;
   margin-bottom: 0px;
   /* min-height: 700px; */
-  height: 100%;
+  height: 100vh;
   background-color: #F9F9F9; 
   overflow-y: auto;
   z-index: 0;

@@ -110,7 +110,9 @@ export const logs = async (accountID, userID) => {
     UIStore.set("portal", "viewedContent", result.map(i => i.contentID))
   }
   else{
-    AccountStore.loadAnalyticData(result)
+    console.log(result)
+    AccountStore.loadAnalyticData_portal(result.portal)
+    AccountStore.loadAnalyticData_campaigns(result.campaigns)
   }
 
   return result
@@ -132,7 +134,7 @@ export const campaigns= async (accountID) => {
 }
 
 export const scheduled= async (accountID) => {
-  const result = await apiCall_noBody("schedules/" + accountID, "GET")
+  const result = await apiCall_noBody(`schedules/all?filter={"where":{"accountID":"${accountID}","executed":false}}`, "GET");
   ScheduleStore.loadScheduled(result)
 
   return result

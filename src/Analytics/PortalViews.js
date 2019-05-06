@@ -15,10 +15,10 @@ export class PortalViews extends React.Component {
         const sort = (controller, direction) => {
             const param = controller === "toal"? "total_views" : "unique_views"
             if(direction === "Oldest") {
-            AccountStore.loadAnalyticData(AccountStore.analyticData.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
+            AccountStore.loadAnalyticData(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
             }
             else {
-                AccountStore.loadAnalyticData(AccountStore.analyticData.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
+                AccountStore.loadAnalyticData(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
                 }
         }
 
@@ -116,7 +116,7 @@ export class PortalViews extends React.Component {
                 </Modal>
             }
         
-        const displayResults = searchFilter(AccountStore.analyticData.slice()) 
+        const displayResults = searchFilter(AccountStore.analyticData_portal.slice()) 
         // .filter(log => getLabel(log) !== "obsoleted data")
         .map(log => 
             <Table.Row key={"analyticsResult" + giveMeKey()}>
