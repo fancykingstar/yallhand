@@ -11,7 +11,7 @@ import "./style.css";
 import { apiCall } from "../DataExchange/Fetch"
 import { toast } from 'react-toastify';
 
-@inject("UIStore")
+@inject("UIStore", "AccountStore")
 @observer
 export class InviteUser extends React.Component {
   constructor(props) {
@@ -38,7 +38,7 @@ export class InviteUser extends React.Component {
   }
 
   getDataNewUser () {
-    const { isAdmin } = this.props;
+    const { AccountStore, isAdmin } = this.props;
     const { teamID, teamName, tagID, email } = this.state;
     const userData = user()
 
@@ -46,7 +46,7 @@ export class InviteUser extends React.Component {
       invitedBy: userData.invitedBy,
       email: email,
       teamID: teamID,
-      teamName: teamName,
+      teamName: AccountStore.account.label,
       accountID: userData.accountID,
       tags: tagID === "none" ? [] : [tagID],
       isAdmin: isAdmin
