@@ -8,7 +8,7 @@ import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
-import DevTools from 'mobx-react-devtools'
+import FullStory from 'react-fullstory';
 
 import { ToastContainer, Slide } from "react-toastify";
 
@@ -37,12 +37,11 @@ class AppRoute extends React.Component {
     const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"
     let shouldRedirect = false;
     
-    if (redirect !== path) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1);
+    if (redirect !== path || path.includes("/portal/")) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1);
 
     return (
       <div className="App">
-      <DevTools />
-        {/* <FullStory org="JJAMV"/> */}
+        <FullStory org="JJAMV"/>
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
         {shouldRedirect && <Switch><Redirect push to={redirect}/></Switch>}

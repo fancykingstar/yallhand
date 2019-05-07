@@ -37,8 +37,8 @@ export class VariationConfig extends React.Component {
       
       if(invalidConfigs.includes(DataEntryStore.content.teamID + DataEntryStore.content.tagID)){
         const resetVari = obj.variations.filter(i => i.variationID === DataEntryStore.content.variationID)[0]
-        setTeam(resetVari.teamID)
-        setTag(resetVari.tags.length === 0? "none" : resetVari.tags)
+        setTeam(resetVari === undefined? "" : resetVari.teamID)
+        setTag(resetVari === undefined? "" : resetVari.tags.length === 0? "none" : resetVari.tags)
         toast.error("Whoops! You already have a variation for that team / tag combination.", {hideProgressBar: true})
       }
      }
