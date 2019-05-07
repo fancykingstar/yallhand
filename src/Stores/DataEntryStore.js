@@ -186,6 +186,7 @@ class Store {
     draftRAW: {},
     draftHTML: "",
     //Send Email
+    img: "",
     sendTargetType: "all",
     sendToUsers: [],
     sendToTeamID: "global",

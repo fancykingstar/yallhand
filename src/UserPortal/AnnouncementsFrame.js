@@ -12,11 +12,12 @@ import { sortByUTC } from "../SharedCalculations/SortByUTC";
 import { PortalContentNoResults } from "./PortalContentNoResults"
 import { HTMLtoString} from "../SharedCalculations/HtmlToString"
 
-@inject("AnnouncementsStore", "UserStore")
+@inject("AnnouncementsStore", "UserStore", "UIStore")
 @observer
 class AnnouncementsFrame extends React.Component {
   render() {
-    const { AnnouncementsStore } = this.props;
+    const { AnnouncementsStore, UIStore } = this.props;
+    const feedStyle = UIStore.responsive.isMobile ?  {boxShadow: "0px 0px 2px 0px #ABACAB", margin: 10, padding: 10, borderRadius: 5, textAlign: "center", height: 450} : {boxShadow: "0px 0px 2px 0px #ABACAB", margin: 10, padding: 10, borderRadius: 5, textAlign: "center"}
     const handleClick = val => {
       this.props.history.push("/portal/announcement/" + val);
     };
@@ -28,7 +29,7 @@ class AnnouncementsFrame extends React.Component {
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
     const displayFeed = sortByUTC(announcements, UIStore.dropdown.portalannouncementSort).map(news => (
-      <div onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}} style={{boxShadow: "0px 0px 2px 0px #ABACAB", margin: 10, padding: 10, borderRadius: 5, textAlign: "center"}} key={"portalannouncement" + giveMeKey()}>
+      <div onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}} style={feedStyle} key={"portalannouncement" + giveMeKey()}>
         {/* <div style={{float: "left", width: 300, height: 300, backgroundColor: "red"}}></div> */}
         {news.img !== ""?  <div style={{display: "inline-block", width: 300, height: 225}}><Image style={{paddingRight: 20, paddingTop: 15}} size="medium" src={news.img} /> </div>: null }
         <div style={{height: 120,  display: "inline-block", verticalAlign: "top"}}>
