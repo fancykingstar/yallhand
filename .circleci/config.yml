@@ -28,6 +28,13 @@ jobs:
       VHOST: /var/www/vhosts/quadrance.fabtesting.com
       SERVER: fabtesting.com
 
+  deploy_prod:
+    <<: *deploy_project
+    working_directory: /tmp/quadrance
+    environment:
+      VHOST: /var/www/vhosts/app.yallhands.com
+      SERVER: app.yallhands.com
+
 workflows:
   version: 2
   deploy_fabtesting:
@@ -40,3 +47,7 @@ workflows:
           filters:
             branches:
               only: adfab-master
+      - deploy_prod:
+          filters:
+            branches:
+              only: master
