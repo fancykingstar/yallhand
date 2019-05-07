@@ -31,7 +31,8 @@ export class AskAQuestion extends React.Component {
             user: UserStore.user,
             type: DataEntryStore.ask.type,
             content: DataEntryStore.ask.type !== "specific"? {"variations": [{"label": ""}]} : DataEntryStore.ask.content,
-            message: DataEntryStore.draftContentHTML
+            message: DataEntryStore.draftContentHTML,
+            accountLabel: AccountStore.account.label
         })
         UIStore.set("modal", "askQuestion", false) 
     }

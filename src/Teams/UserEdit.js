@@ -13,6 +13,7 @@ import { userUpdate } from "../DataExchange/PayloadBuilder"
 export class UserEdit extends React.Component {
   render() {
     const { DataEntryStore } = this.props;
+    console.log(DataEntryStore.userEditFields.isAdmin)
     const defaultValues = val =>
         DataEntryStore.userEditFields.userEdit[val];
     // const adminSettings =
@@ -82,7 +83,7 @@ export class UserEdit extends React.Component {
                 label=""
                 defaultVal={defaultValues("teamID")}
                 outputVal={val =>
-                  DataEntryStore.set("userEditFields", "teamID", val)}
+                  DataEntryStore.set("userEditFields", "teamID", val.value)}
               />
               <TagSelect
                 label=""

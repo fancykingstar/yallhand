@@ -71,7 +71,8 @@ class Store {
         createChannel: false,
         modifyChannel: false,
         historyView: false,
-        askQuestion: false
+        askQuestion: false,
+        dashboardDates: false,
     }
 
     @observable
@@ -113,7 +114,7 @@ class Store {
     @observable
     accordion = {
         editBundle: false,
-        bundleConfig: false
+        bundleConfig: false,
     }
 
     @observable

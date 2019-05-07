@@ -34,7 +34,7 @@ export class Users extends React.Component {
     const openEditor = info => {
       DataEntryStore.reset("userEditFields", {adminConfig: "all"});
       DataEntryStore.set("userEditFields", "userEdit", AccountStore._getUser(info) );
-      DataEntryStore.set("userEditFields", "isAdmin", userEdit.isAdmin);
+      DataEntryStore.set("userEditFields", "isAdmin", userEdit.isAdmin === undefined? false: userEdit.isAdmin);
       if(userEdit.isAdmin){
         DataEntryStore.set("userEditFields", "adminTeams", adminLimits.teams)
         DataEntryStore.set("userEditFields", "adminTags", adminLimits.tags)

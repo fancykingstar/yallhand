@@ -2,7 +2,7 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import Header from "../Header/Header";
-import SearchFrame from "./SearchFrame";
+// import SearchFrame from "./SearchFrame";
 import { SideBarPortal } from "./SideBarPortal";
 import PortalSearchResults from "./PortalSearchResults";
 import { PortalResources } from "./PortalResources";

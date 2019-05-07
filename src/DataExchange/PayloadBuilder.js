@@ -35,7 +35,7 @@ export const ItsLog = (action, data) => {
 }
 
 //
-export const history = (type, id, data) => {
+export const contentHistory = (type, id, data) => {
   const buildObj = {
     accountID: accountID(),
     updated: now(),
@@ -83,7 +83,8 @@ export const account = () => {
       "created": now(),
       "timezone": DataEntryStore.superAdmin.accountTimezone,
       "generalEmail": DataEntryStore.superAdmin.accountEmail,
-      "data": {}
+      "data": {},
+      "isActive": true
   };
   return _.extend({}, {"userID": userID(), "updated": now()}, buildObj)
 }
@@ -184,7 +185,7 @@ export const userUpdate = () => {
       key === "tagID"? buildObj["tags"] = [x[key]] : buildObj[key] = x[key]
     }} )
   buildObj.isAdmin = x.isAdmin
-  return _.extend({}, {"accountID": accountID(), "userID": userID()}, buildObj)
+  return _.extend({}, {"accountID": accountID(), "userID": DataEntryStore.userEditFields.userEdit.userID}, buildObj)
 }
 
 

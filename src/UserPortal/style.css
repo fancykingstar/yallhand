@@ -3,22 +3,6 @@
     font-size: 1.3em;
   }
 
-.SearchFrame {
-    position: sticky;
-    bottom: 0;
-    min-height: 100px;
-    /* background-color: #2fc7f8; */
-    width: 100%;
-    text-align: center;
-    z-index: 0;
-    /* background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(233, 47, 150, 0.87) 0%,
-      rgba(0, 212, 255, 1) 53%
-    );
-    background-repeat: no-repeat; */
-}
 
 .PortalContainerNavMobile {
     position: fixed;
@@ -72,7 +56,8 @@
 .SideBarFrame { 
     width: 245px;
     float: left;
-    /* height: 100vh; */
+    height: 100vh;
+    overflow: hidden;
     position: relative;   
     background-color: #4f4f4f;
     border-right: 2px solid #00a3e0;
@@ -125,8 +110,10 @@
 }
 
 .PortalSideNav {
+    height: 100%;
     padding-left: 3px;
     background-color: #4f4f4f;
+    
 }
 
 .Content{
@@ -204,4 +191,13 @@
     height: 1em;
     margin-top: 0.2em;
     background: white;
+  }
+
+  .ActionFrameMessage {
+
+  }
+
+  .NoSearchResults {
+    padding-top: 20px;
+  
   }
