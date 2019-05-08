@@ -62,7 +62,8 @@ export const allContent = async (accountID) =>
      await apiCall_noBody("policies/" + accountID, "GET").then((result) => PoliciesStore.loadPolicies(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result))
      .then(()=> apiCall_noBody(`announcements/all?filter={"where":{"accountID":"${accountID}"}}`, "GET").then((result) => AnnouncementsStore.loadAnnouncements(contentFilter()? validContent(result, UserStore.previewTeamPath, UserStore.previewTagPath) : result)))
      .then(()=> apiCall_noBody("fileresources/" + accountID, "GET").then((result) => ResourcesStore.loadFiles(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
-     .then(()=> apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result)) ) )
+    //  .then(()=> apiCall_noBody("urls/" + accountID, "GET").then((result) => ResourcesStore.loadUrls(contentFilter()? validResources(result, UserStore.previewTeamPath, UserStore.previewTagPath): result))
+      ) 
 
 export const structure = async (accountID) => {
   const result = await apiCall_noBody("teams/" + accountID, "GET")
@@ -128,7 +129,7 @@ export const sentiments = async (accountID) => {
 
 export const campaigns= async (accountID) => {
   const result = await apiCall_noBody("emailcampaigns/" + accountID, "GET")
-  EmailStore.loadCampaigns(result)
+  EmailStore.loadCampaigns(result.filter(i => !i.previewUsers))
 
   return result
 }
