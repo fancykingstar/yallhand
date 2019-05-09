@@ -91,6 +91,7 @@
     -moz-box-shadow:    0px 0px 4px 0px #545454;
     box-shadow:         0px 0px 4px 0px #545454;
     position: relative;
+    overflow: hidden;
   
 }
 .Card:before{
