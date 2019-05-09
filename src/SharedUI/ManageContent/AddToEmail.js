@@ -1,7 +1,7 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import { Segment, Form, Header } from "semantic-ui-react";
-import { toast } from 'react-toastify';
+import toast  from "../../YallToast"
 import { modifyCampaign } from "../../DataExchange/Up"
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "./style.css";

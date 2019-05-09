@@ -2,7 +2,8 @@ import { apiCall, apiCall_noBody, apiCall_del } from "./Fetch"
 import { UIStore } from "../Stores/UIStore";
 import { AccountStore } from "../Stores/AccountStore"
 import { UserStore } from "../Stores/UserStore"
-import { toast } from 'react-toastify';
+// import toast  from "../YallToast"
+import toast  from "../YallToast"
 import 'react-toastify/dist/ReactToastify.css';
 import { ItsLog } from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
