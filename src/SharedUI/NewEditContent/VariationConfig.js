@@ -5,7 +5,7 @@ import { Input, Header, Form, Accordion, Icon } from "semantic-ui-react";
 import { TagSelect } from "../../SharedUI/TagSelect";
 import { TeamSelect } from "../../SharedUI/TeamSelect";
 import { InfoPopUp } from "../../SharedUI/InfoPopUp";
-import { toast } from 'react-toastify';
+import toast  from "../../YallToast"
 
 
 @inject("DataEntryStore", "PoliciesStore", "AnnouncementsStore", "UIStore")
