@@ -84,7 +84,9 @@ class Store {
     }
    
     _getCampaign(id){
-      let obj = this.allCampaigns.filter(campaign => campaign.campaignID === id)[0]
+      let obj = this.allCampaigns.filter(campaign => campaign.campaignID === id)
+      if(obj && obj.length && obj.length > 0) obj = obj[0];
+      else return null;
       if (obj.previewUsers !== undefined) delete obj.previewUsers
       return obj
     }
