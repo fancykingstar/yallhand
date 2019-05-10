@@ -14,7 +14,7 @@ export class CampaignAnalytics extends React.Component {
       const targets = EmailStore._getCampaign(id)
       if (targets.recipientType === "all") return "Everyone"
       else {
-        return targets.recipientType === "users" ? targets.targetUsers.map(i => AccountStore._getUser(i).displayName_full).join(',')
+        return targets.recipientType === "users" ? targets.targetUsers.map(i => AccountStore._getUser(i) === undefined? "New User" : AccountStore._getUser(i).displayName_full).join(',')
         : `${TeamStore._getTeam(targets.teamID).label} ${targets.tags.length === 0? "No Tags" : TeamStore._getTag(targets.tags[0]).label}`
       }
     }

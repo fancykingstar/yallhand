@@ -119,9 +119,15 @@
 .Content{
     height: 100%;
     margin: 30px;
+    line-height: 2;
 
 }
 
+
+.Content li {
+  list-style-position: inside;
+  margin-left: -40px;
+}
 
 
   .PortalCard {

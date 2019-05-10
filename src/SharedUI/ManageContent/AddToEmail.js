@@ -1,7 +1,7 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import { Segment, Form, Header } from "semantic-ui-react";
-import { toast } from 'react-toastify';
+import toast  from "../../YallToast"
 import { modifyCampaign } from "../../DataExchange/Up"
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "./style.css";
@@ -27,21 +27,27 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
     DataEntryStore.set("contentmgmt", "campaign", val)
   }
   const handleClick = () => {
+    const key = {
+      policy: {id: "policyID", current: UIStore.content.policyID},
+      announcement: {id: "announcementID", current: UIStore.content.announcementID},
+    }[props.mode]
     if(DataEntryStore.contentmgmt.campaign === "new"){
-      // DataEntryStore.emailCampaign.sendContent.map(i => i.obj)
-      if(EmailStore._doesCampaignContain(props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, DataEntryStore.contentmgmt.campaign, DataEntryStore.emailCampaign.sendContent)){
+      if(DataEntryStore.emailCampaign.sendContent.filter(i => i[key.id] === key.current).length > 0){
         toast.error("Whoops, that campaign already contains this content 😬", {hideProgressBar: true})
       }else{
         let newBundle = DataEntryStore.emailCampaign.sendContent.slice()
-        props.mode === "policy" ? newBundle.push({policyID: UIStore.content.policyID}) : newBundle.push({announcementID: UIStore.content.announcementID})
+        let updatedObj = {}
+        updatedObj[key.id] = key.current
+        newBundle.push(updatedObj)
         DataEntryStore.set("emailCampaign", "sendContent", newBundle)
+        toast.success("This current has been added to the selected email campaign", {hideProgressBar: true})
       }
     }
-    else if(EmailStore._doesCampaignContain(props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, DataEntryStore.contentmgmt.campaign)){
+    else if(EmailStore._doesCampaignContain(key.current, DataEntryStore.contentmgmt.campaign)){
       toast.error("Whoops, that campaign already contains this content 😬", {hideProgressBar: true})
     }else{
       let newBundle = EmailStore._getCampaign(DataEntryStore.contentmgmt.campaign).content.slice()
-      props.mode === "policy" ? newBundle.push({policyID: UIStore.content.policyID}) : newBundle.push({announcementID: UIStore.content.announcementID})
+      props.mode === "policy" ? newBundle.push({policyID: key.current}) : newBundle.push({announcementID: key.current})
       modifyCampaign(_.assign({}, EmailStore._getCampaign(DataEntryStore.contentmgmt.campaign), {"content": newBundle}))
     }
     
