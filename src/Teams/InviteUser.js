@@ -9,7 +9,7 @@ import { user } from "../DataExchange/PayloadBuilder"
 import moment from "moment"
 import "./style.css";
 import { apiCall } from "../DataExchange/Fetch"
-import { toast } from 'react-toastify';
+import toast  from "../YallToast"
 
 @inject("UIStore", "AccountStore")
 @observer

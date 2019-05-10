@@ -50,7 +50,8 @@ class ManageContent extends React.Component {
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
-          DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
+          // DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
+          DataEntryStore.set("contentmgmt", "campaign", "new");
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)

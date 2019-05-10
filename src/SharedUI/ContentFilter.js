@@ -62,7 +62,7 @@ export class ContentFilter extends React.Component {
           onClick={e =>
             UIStore.set(
               "filter",
-              "anncFilterDrafts",
+              `${this.mode}FilterDrafts`,
               !UIStore.filter[`${this.mode}FilterDrafts`]
             )
           }
@@ -75,7 +75,7 @@ export class ContentFilter extends React.Component {
           onClick={e =>
             UIStore.set(
               "filter",
-              "anncFilterArchived",
+              `${this.mode}FilterArchived`,
               !UIStore.filter[`${this.mode}FilterArchived`]
             )
           }

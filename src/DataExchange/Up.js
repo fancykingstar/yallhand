@@ -2,7 +2,8 @@ import { apiCall, apiCall_noBody, apiCall_del } from "./Fetch"
 import { UIStore } from "../Stores/UIStore";
 import { AccountStore } from "../Stores/AccountStore"
 import { UserStore } from "../Stores/UserStore"
-import { toast } from 'react-toastify';
+// import toast  from "../YallToast"
+import toast  from "../YallToast"
 import 'react-toastify/dist/ReactToastify.css';
 import { ItsLog } from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
@@ -27,7 +28,7 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-  console.log(endpoint, meth, payload)
+  console.log(endpoint, meth, JSON.stringify(payload))
 
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
@@ -360,8 +361,8 @@ export const sendEmailPreview = async (val) => {
   };
 
   await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
-    .then(res => toast.success('Preview email has been send', {hideProgressBar: true}))
-    .catch(e => toast.error('Preview email has not been send', {hideProgressBar: true}))
+    .then(res => toast.success('Preview email has been sent', {hideProgressBar: true}))
+    .catch(e => toast.error('Preview email has not been sent', {hideProgressBar: true}))
 }
 
 
