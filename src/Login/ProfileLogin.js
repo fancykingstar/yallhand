@@ -27,7 +27,7 @@ class ProfileLogin extends React.Component {
         }
         if (res.token) {
           setUser({token: res.token})
-          history.push('/panel')
+          history.push(res.isAdmin? '/panel' : '/portal')
         }
       })
   }
