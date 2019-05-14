@@ -27,6 +27,11 @@ import { loadAdmin } from "./DataExchange/LoadProfile";
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
+  // constructor(props){
+  //   super(props)
+  //   const {UserStore} = this.props;
+  //   if (location.pathname.includes("/panel") && UserStore.user.isAdmin)
+  // }
   componentDidMount() {
     const { UserStore, UIStore } = this.props;
     if (!UIStore._adminLoadingComplete) {

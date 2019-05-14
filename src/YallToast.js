@@ -8,7 +8,7 @@ export default {
       ...options,
       className: css({
         textAlign: "center",
-  fontFamily: 'Nunito Lato',
+  fontFamily: 'Nunito, Lato, Arial !important',
   minHeight:" 50px !important",
   background: "rgb(0, 183, 255) !important",
   color: "#FFFFFF",
@@ -23,7 +23,7 @@ export default {
         ...options,
         className: css({
           textAlign: "center",
-    fontFamily: 'Nunito Lato',
+          fontFamily: 'Nunito, Lato, Arial !important',
     minHeight:" 50px !important",
     background: "#f20404 !important",
     color: "#FFFFFF",
