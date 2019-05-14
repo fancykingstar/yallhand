@@ -105,7 +105,7 @@ class ProfileInfo extends React.Component {
           .then((res) => {
             if (res.token) {
               setUser({token: res.token})
-              this.props.history.push('/panel')
+              this.props.history.push(res.isAdmin? '/panel' : '/portal')
             }
           })
         })

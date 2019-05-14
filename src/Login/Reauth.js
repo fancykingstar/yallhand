@@ -28,7 +28,7 @@ class Reauth extends React.Component {
           }
           if (res.token) {
             setUser({token: res.token})
-            this.props.history.push('/panel')
+            this.props.history.push(res.isAdmin? '/panel' : '/portal')
           }
         })
     }

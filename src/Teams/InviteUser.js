@@ -6,11 +6,12 @@ import { Form, Segment, Header, Dropdown } from "semantic-ui-react";
 import { DatePicker } from "../SharedUI/DatePicker";
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
+import { apiCall } from "../DataExchange/Fetch"
+import { createSchedule } from "../DataExchange/Up";
+import { schedule } from "../DataExchange/PayloadBuilder"
+import toast  from "../YallToast"
 import moment from "moment"
 import "./style.css";
-import { apiCall } from "../DataExchange/Fetch"
-import toast  from "../YallToast"
-
 @inject("UIStore", "AccountStore")
 @observer
 export class InviteUser extends React.Component {
@@ -78,8 +79,9 @@ export class InviteUser extends React.Component {
     let newUser = this.getDataNewUser()
     newUser.now = !later
     if (later) newUser.date = moment(this.state.date).valueOf()
-    // console.log(newUser)
-    await apiCall('validations', 'POST', newUser).then((res) => res.json()).then((res) => res.error ? this.error(res) : this.success())
+    await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+      if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+    })
   }
 
   render() {
