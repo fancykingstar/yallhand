@@ -34,7 +34,7 @@ export class DateTimeSelect extends React.Component {
         updateValue()
       }
       
-    
+   const getTimeOptions = () => UIStore.dateTimeSelect.date === ""? [] : moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day")? alltimes : times
     return ( 
         <React.Fragment>
   
@@ -47,7 +47,7 @@ export class DateTimeSelect extends React.Component {
           </Form.Input>
           <Form.Select
             label="Choose Time"
-            options={UIStore.dateTimeSelect.date === ""? [] : moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day")? alltimes : times}
+            options={getTimeOptions()}
             defaultValue="00:00"
             onChange={(e, val) => handleTime(val.value)}
           />
