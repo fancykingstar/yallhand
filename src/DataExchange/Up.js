@@ -249,7 +249,7 @@ export const createFile = (payload) => {
 }
 
 export const modifyFile = (payload, toast=true) => {
-    processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
+    return processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
         true,{"event": "update", "type":"file"}, toast
     )

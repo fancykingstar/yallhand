@@ -16,21 +16,28 @@ import "./style.css";
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
 @observer
 export class Files extends React.Component {
+  constructor(props){
+    super(props)
+    const {UIStore, ResourcesStore} = this.props
+    this.loadSearch = () => {
+      console.log("reloaded search")
+      UIStore.set("search",
+      "searchFilesData",
+      initSearchObj(
+        ResourcesStore.fileResources,
+        "resourceID"
+      ) 
+    );
+    }
+  }
   componentDidMount() {
     const { UIStore } = this.props;
-    const { ResourcesStore } = this.props;
     if (UIStore.search.searchFilesData.length === 0) {
-      UIStore.set("search",
-        "searchFilesData",
-        initSearchObj(
-          ResourcesStore.fileResources,
-          "resourceID"
-        ) 
-      );
+     this.loadSearch()
     }
   }
   render() {
-  const {ResourcesStore, UIStore, DataEntryStore} = this.props
+  const {ResourcesStore, UIStore, DataEntryStore, AccountStore} = this.props
 
   const edit = (data) => {
     DataEntryStore.set("fileForUpload", "isNew", false)
@@ -60,16 +67,23 @@ export class Files extends React.Component {
   const getIcon = (filetype) => FileTypeIcons[filetype] === undefined? FileTypeIcons["default"] : FileTypeIcons[filetype]  
  
   
-  const addFile = (val) => {
-    createFile(fileResource())
+  const addFile = async (val) => {
+    const newFile = await createFile(fileResource()).then((res) => res.json())
+    await ResourcesStore.loadFiles([...ResourcesStore.fileResources, ...[newFile]])
+    this.loadSearch()
   }
 
-  const updateFile = (val) => {
-    modifyFile(fileResourceEdit())
+  const updateFile = async (val) => {
+    const updatedFile = await modifyFile(fileResourceEdit())
+    await ResourcesStore.loadFiles([...ResourcesStore.fileResources.filter(i => i.resourceID !== updatedFile.resourceID), ...[updatedFile]])
+    this.loadSearch()
  }
- const deleteFile = (val) => {
-  deleteFileresource(val)
+ const deleteFile =  async (val) => {
+  await deleteFileresource(val)
   ///add S3 removal
+  await ResourcesStore.loadFiles(ResourcesStore.fileResources.filter(i => i.resourceID !== val))
+  this.loadSearch()
+
 }
 
  const downloadFile = (S3Key, label) => {
