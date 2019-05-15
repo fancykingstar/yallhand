@@ -1,4 +1,4 @@
-export const times = [
+export const alltimes = [
   {
     text: "12:00 AM",
     value: "00:00"
@@ -389,6 +389,17 @@ export const times = [
 
   
 ];
+
+const validNow = () => {
+  const d = new Date();
+  return {hr: d.getHours(), min: d.getMinutes()}
+}
+
+
+export const times = alltimes.filter(i => {
+  const hrValid = Number(i.value.split(/:/)[0]) < validNow().hr ? false : true
+  return hrValid? Number(i.value.split(/:/)[1])  >= validNow().min : false
+})
 
 export const adjustedTime = (startValue, delta) => {
   const values = times.map(time => time.value);

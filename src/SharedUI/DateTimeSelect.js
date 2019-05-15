@@ -1,6 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { times, adjustedTime } from "../TemplateData/times";
+import { times, alltimes, adjustedTime } from "../TemplateData/times";
 import { Form } from "semantic-ui-react";
 import { DatePicker } from "../SharedUI/DatePicker";
 import moment from "moment"
@@ -29,6 +29,7 @@ export class DateTimeSelect extends React.Component {
         updateValue()
       }
       const handleTime = (val) => {
+        console.log(UIStore.dateTimeSelect.date === ""? false: moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day"))
         UIStore.set("dateTimeSelect", "time", val)
         updateValue()
       }
@@ -46,7 +47,7 @@ export class DateTimeSelect extends React.Component {
           </Form.Input>
           <Form.Select
             label="Choose Time"
-            options={times}
+            options={UIStore.dateTimeSelect.date === ""? [] : moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day")? alltimes : times}
             defaultValue="00:00"
             onChange={(e, val) => handleTime(val.value)}
           />
