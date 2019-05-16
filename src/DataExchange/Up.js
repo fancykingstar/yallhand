@@ -186,7 +186,7 @@ export const modifyUser = (payload) => {
 }
 
 export const offBoardUser = (userID) => {
-    return processTemplate(true, "users/" + userID, "PATCH", {"userID": userID, "accountID": accountID(), "isActive": false}, "users", 
+    return processTemplate(true, "users/" + userID, "PATCH", {"userID": userID, "accountID": accountID(), "isActive": false, "offBoarded": true}, "users", 
     `User offboarded ✌️`, 
     true,{"event": "offboard", "type":"user"}
 )
