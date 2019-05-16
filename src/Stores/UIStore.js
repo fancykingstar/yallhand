@@ -82,6 +82,7 @@ class Store {
 
     @observable
     search = {
+        campaignsSearchValue: "",
         channel: "",
         contentResults: {},
         contentValue: "",

@@ -55,6 +55,6 @@ export const stupidSearch = (searchObj, term) => {
     // const termFormatted = term.toLowerCase().trim()
     let results = []
     Object.keys(searchObj).forEach( (key, i) => 
-        _.includes(searchObj[key], term) ? results.push(key) : null )
+        _.includes(searchObj[key], term.toLowerCase()) ? results.push(key) : null )
     return results
 } 
