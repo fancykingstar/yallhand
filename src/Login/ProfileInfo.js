@@ -92,6 +92,7 @@ class ProfileInfo extends React.Component {
       now: now,
       date: date,
       googleId: googleId,
+      date: new Date()
     })
     .then((res) => res.json())
     .then((res) => {
