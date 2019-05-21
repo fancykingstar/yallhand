@@ -153,5 +153,9 @@
     padding-right: 10px;
 }
 
+.draftDropdown {
+    font-family: 'Nunito', 'Lato' !important;
+    border-radius: 15 !important;
+}
 
 /* { fontWeight: "800", marginTop: 25, marginBottom: 5 } */
