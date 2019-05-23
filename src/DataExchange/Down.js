@@ -111,7 +111,6 @@ export const logs = async (accountID, userID) => {
     UIStore.set("portal", "viewedContent", result.map(i => i.contentID))
   }
   else{
-    console.log(result)
     AccountStore.loadAnalyticData_portal(result.portal)
     AccountStore.loadAnalyticData_campaigns(result.campaigns)
   }

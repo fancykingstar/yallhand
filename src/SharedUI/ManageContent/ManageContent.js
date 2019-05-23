@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Button, Header, Segment } from "semantic-ui-react";
+import { Button, Header, Segment, Menu, Dropdown } from "semantic-ui-react";
 import { SelectVariation } from "../../SharedUI/SelectVariation";
 import { ManageVariationData } from "../../SharedUI/ManageVariationData";
 import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
@@ -109,6 +109,25 @@ class ManageContent extends React.Component {
     
     const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
 
+    const publishOptions = () => {
+      const options = {
+        "draft": <React.Fragment>
+          <Dropdown.Item text='Publish' icon="rocket" />
+          <Dropdown.Item text='Archive' icon="archive" />
+        </React.Fragment> ,
+        "published": 
+        <React.Fragment>
+          <Dropdown.Item text='Unpublish' icon="remove circle" />
+          <Dropdown.Item text='Archive' icon="archive" />
+      </React.Fragment>
+        ,
+        "archived": <React.Fragment>
+        <Dropdown.Item text='Restore' icon="hand spock" />
+      </React.Fragment>,
+      }
+      return options[vari().stage]
+    }
+
     const obj = this.mode === "policy" ? 
     PoliciesStore._getPolicy(UIStore.content.policyID) 
     : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
@@ -128,21 +147,9 @@ class ManageContent extends React.Component {
     const handleEdit = e => {
       e.preventDefault();
       const vari = this.mode === "policy"?
-      Object.assign(
-        {},
-        PoliciesStore._getVariation(
-          UIStore.content.policyID,
-          UIStore.content.variationID
-        )
-      )
+      Object.assign( {}, PoliciesStore._getVariation( UIStore.content.policyID, UIStore.content.variationID ) )
       :
-      Object.assign(
-        {},
-        AnnouncementsStore._getVariation(
-          UIStore.content.announcementID,
-          UIStore.content.variationID
-        )
-      )
+      Object.assign( {}, AnnouncementsStore._getVariation( UIStore.content.announcementID, UIStore.content.variationID ) )
         DataEntryStore.set("content", "label", vari.label);
         DataEntryStore.set("content", "teamID", vari.teamID);
         DataEntryStore.set("content", "tagID",vari.tags.length === 0 ? "none" : vari.tags[0]
@@ -164,6 +171,27 @@ class ManageContent extends React.Component {
           );
        
       } 
+
+      const handleCreateDupe = () => {
+        const vari = this.mode === "policy"?
+        Object.assign( {}, PoliciesStore._getVariation( UIStore.content.policyID, UIStore.content.variationID ) )
+        :
+        Object.assign( {}, AnnouncementsStore._getVariation( UIStore.content.announcementID, UIStore.content.variationID ) )
+        UIStore.set("content", "variationID", generateID());
+          DataEntryStore.set("content", "isNew", false);
+          DataEntryStore.set("content", "stage", "draft");
+          DataEntryStore.set("content", "contentRAW", vari.contentRAW)
+          DataEntryStore.set("content", "contentHTML", vari.contentHTML)
+
+          this.mode === "policy" ?
+          this.props.history.push(
+            "/panel/faqs/policy-variation/" + UIStore.content.variationID
+          )
+          :
+          this.props.history.push(
+            "/panel/announcements/announcement-variation/" + UIStore.content.variationID
+          )
+      }
       
 
       const handleCreateNew = e => {
@@ -221,20 +249,21 @@ class ManageContent extends React.Component {
                       variations={variations()}
                       defaultVal={UIStore.content.variationID}
                       whenChanged={handleChange}
-                    />
-                    <Button
-                      style={{ display: "inline-block", marginLeft: 5 }}
-                      onClick={e => handleEdit(e)}
-                    >
-                      Edit...
-                    </Button>
-                    <Button
-                      color="blue"
-                      style={{ display: "inline-block" }}
-                        onClick={e => handleCreateNew(e)}
-                    >
-                      Create New...
-                    </Button>
+                    />  
+                        <Dropdown 
+                        button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
+                    <Dropdown.Menu>
+                      <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
+                      <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
+                      <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
+                      {/* <Dropdown.Divider /> */}
+                      {/* {publishOptions()} */}
+                    </Dropdown.Menu>
+                    </Dropdown>
+                    <div>
+                      
+                    </div>
+                
                   </div>
                   <br/>
                    <ManageVariationData 

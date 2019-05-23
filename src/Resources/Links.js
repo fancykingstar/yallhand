@@ -64,7 +64,6 @@ export class Links extends React.Component {
     }
 
     const modifyUrl = (val) => {
-      console.log("mod")
       modifyUrlResource(urlResource(val, val.resourceID))
     }
 

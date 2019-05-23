@@ -29,7 +29,6 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
          types.forEach(function(type){
              if (type in fullList) {list.push(...fullList[type])}
          })
-         console.log(list)
          const listDisplay = list.length > 1 ? list.join(', ') : list
          return listDisplay
   }

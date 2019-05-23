@@ -27,7 +27,7 @@ class ProfileInfo extends React.Component {
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
       img: props.item && props.item.img ? props.item.img : '',
     };
-    console.log(this.state)
+
   }
 
   isEmpty (value) {
