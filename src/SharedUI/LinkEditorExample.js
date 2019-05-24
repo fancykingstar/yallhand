@@ -33,10 +33,6 @@ import "./style.css"
       };
       this.focus = () => this.refs.editor.focus();
       this.onChange = (editorState) => this.setState({editorState});
-      // this.logState = () => {
-      //   const content = this.state.editorState.getCurrentContent();
-      //   console.log(convertToRaw(content));
-      // };
       this.promptForLink = this._promptForLink.bind(this);
       this.onURLChange = (e) => this.setState({urlValue: e.target.value});
       this.confirmLink = this._confirmLink.bind(this);
