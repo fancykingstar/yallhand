@@ -5,6 +5,7 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { modifyCampaign } from "../DataExchange/Up"
 import { emailCampaignEdit } from "../DataExchange/PayloadBuilder"
+import { CampaignDetails } from "../SharedUI/CampaignDetails";
 
 
 @inject("EmailStore")
@@ -21,10 +22,8 @@ export class Automations extends React.Component {
           <Table.Cell>{camp.isTriggered ? "live" : "error"}</Table.Cell>
           <Table.Cell>{UTCtoFriendly(camp.updated)}</Table.Cell>
           <Table.Cell>
-            {camp.targetUsers.length > 0 ? "Target Users: " : "selected teams"}
+            {CampaignDetails(camp)} 
           </Table.Cell>
-          <Table.Cell />
-          <Table.Cell />
           <Table.Cell>
             <Button basic color="red" 
             onClick={e => modifyCampaign(emailCampaignEdit({"campaignID": camp.campaignID, "completed": true}))}>
@@ -41,7 +40,7 @@ export class Automations extends React.Component {
               <Table.HeaderCell>Email Subject</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
               <Table.HeaderCell>Online On</Table.HeaderCell>
-              <Table.HeaderCell>Targets</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell />
 
               <Table.HeaderCell />
