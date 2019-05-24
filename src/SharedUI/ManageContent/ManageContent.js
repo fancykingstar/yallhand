@@ -17,9 +17,10 @@ import Settings from "./Settings";
 
 import "./style.css";
 import _ from "lodash";
+import { modifyPolicy, modifyAnnouncement } from "../../DataExchange/Up";
 
 
-@inject( "TeamStore", "DataEntryStore", "PoliciesStore", "UIStore", "AnnouncementsStore", "EmailStore")
+@inject( "TeamStore", "DataEntryStore", "PoliciesStore", "UIStore", "AnnouncementsStore", "EmailStore", "AccountStore")
 @observer
 class ManageContent extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class ManageContent extends React.Component {
   }
 
   componentDidMount() {
-    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, EmailStore } = this.props;
+    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, AccountStore } = this.props;
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
@@ -107,22 +108,31 @@ class ManageContent extends React.Component {
 
   render() {    
     
-    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
+    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore } = this.props;
 
     const publishOptions = () => {
+      const updateStage = (newStage) => {
+        let allVaris = obj.variations.filter(i => i.variationID !== vari().variationID)
+        allVaris.push(Object.assign(vari(), {stage: newStage}))
+        let modifyContent = {variations: allVaris}
+        const id = this.mode === "policy"? "policyID" : "announcementID"
+        modifyContent[id] = obj[id]
+        modifyContent["accountID"] = AccountStore.account.accountID
+        this.mode === "policy"? modifyPolicy(modifyContent) : modifyAnnouncement(modifyContent)
+      }
       const options = {
         "draft": <React.Fragment>
-          <Dropdown.Item text='Publish' icon="rocket" />
-          <Dropdown.Item text='Archive' icon="archive" />
+          <Dropdown.Item text='Publish' icon="rocket" onClick={e=>updateStage("published")}/>
+          <Dropdown.Item text='Archive' icon="archive" onClick={e=>updateStage("archived")}/>
         </React.Fragment> ,
         "published": 
         <React.Fragment>
-          <Dropdown.Item text='Unpublish' icon="remove circle" />
-          <Dropdown.Item text='Archive' icon="archive" />
+          <Dropdown.Item text='Unpublish' icon="remove circle" onClick={e=>updateStage("draft")}/>
+          <Dropdown.Item text='Archive' icon="archive"  onClick={e=>updateStage("archived")}/>
       </React.Fragment>
         ,
         "archived": <React.Fragment>
-        <Dropdown.Item text='Restore' icon="hand spock" />
+        <Dropdown.Item text='Restore' icon="hand spock"  onClick={e=>updateStage("draft")}/>
       </React.Fragment>,
       }
       return options[vari().stage]
@@ -256,8 +266,8 @@ class ManageContent extends React.Component {
                       <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
                       <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
                       <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
-                      {/* <Dropdown.Divider /> */}
-                      {/* {publishOptions()} */}
+                      <Dropdown.Divider /> 
+                    {publishOptions()}
                     </Dropdown.Menu>
                     </Dropdown>
                     <div>
