@@ -4,9 +4,17 @@ import {inject, observer} from "mobx-react"
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, RichUtils, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
+import embed from "embed-video";
+import draftToHtml from "draftjs-to-html";
+import {S3Upload} from "../DataExchange/S3Upload"
+import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
+// import getBlockRenderFunc from "../renderer";
+import './style.css'
+
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-@inject("DataEntryStore")
+
+@inject("DataEntryStore", "AccountStore")
 @observer
 export class DraftFormField extends React.Component {
     constructor(props) {
@@ -36,7 +44,26 @@ export class DraftFormField extends React.Component {
         this.getLoadOrNew()
     }
     render(){
-        const {DataEntryStore} = this.props
+        const {DataEntryStore, AccountStore} = this.props
+
+        // const customBlockType = () => 
+        //   getBlockRenderFunc(
+        //     {
+        //       isReadOnly: this.isReadOnly,
+        //       isImageAlignmentEnabled: this.isImageAlignmentEnabled,
+        //       getEditorState: this.getEditorState,
+        //       onChange: this.onChange
+        //     },
+        //     props.customBlockRenderFunc
+        //   );
+
+        const uploadContentImg = async (file) => 
+             await S3Upload("public-read", "quadrance-files/central", GenerateFileName(AccountStore.account, file.name), file)
+              .then(result => {
+                console.log(result)
+                return result !== null ? { data: { link: result.Location}} : null
+              } )
+
         const editorStateChanged = (newEditorState) => {
             DataEntryStore.setDraft("editorState", newEditorState);
             passContent();
@@ -45,22 +72,63 @@ export class DraftFormField extends React.Component {
         const passContent = () => {
             const contentState = DataEntryStore.draft.editorState.getCurrentContent();
             DataEntryStore.toggleDraftContentRAW(convertToRaw(contentState));
-            const htmlOutput = stateToHTML(contentState)
+            const htmlOutput = draftToHtml(convertToRaw(contentState))
             DataEntryStore.toggleDraftContentHTML(htmlOutput);
           };
           
-        const toolbarConfig = this.props.minimal === undefined? {options: ['inline', 'list', 'link', 'emoji', 'remove', 'history'], inline: {options: ['bold', 'italic', 'underline', 'strikethrough']}} : {options: ['emoji', 'link']}
+        const toolbarConfig = 
+        // this.props.minimal === undefined? 
+        {options: ['inline', 'list', 'link', 'emoji','history','embedded','image','blockType'], inline: {options: ['bold', 'italic', 'underline', 'strikethrough']},
+        blockType: {
+          inDropdown: true,
+          options: ['Normal', 'H1', 'Blockquote', 'Code'],
+          className: undefined,
+          component: undefined,
+          dropdownClassName: "draftDropdown",
+        },
+        embedded: {
+          embedCallback: link => {
+            const detectedSrc = /<iframe.*? src="(.*?)"/.exec(embed(link));
+            return (detectedSrc && detectedSrc[1]) || link;
+          },
+        },
+        image: {
+          // icon: image,
+          className: undefined,
+          component: undefined,
+          popupClassName: undefined,
+          urlEnabled: true,
+          uploadEnabled: true,
+          alignmentEnabled: true,
+          uploadCallback: (e) => uploadContentImg(e),
+          previewImage: true,
+          inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+          alt: { present: false, mandatory: false },
+          defaultSize: {
+            height: 'auto',
+            width: 'auto',
+          },
+        },
+        list: {
+        
+          options: ['unordered', 'ordered'],
+
+        },
+      } 
+        // : {options: ['emoji', 'link']}
         
         return (
                 <div style={this.props.border !== undefined? {border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10, marginRight: 20}: null}>
+    
                 <Editor
                 wrapperClassName="Wrapped"
                 editorState={DataEntryStore.draft.editorState}
                 onEditorStateChange={editorStateChanged}
                 toolbar={toolbarConfig}
                 editorStyle={{backgroundColor: "#ffffff", maxWidth: 900, borderRadius: 5, paddingLeft: 5, paddingRight: 5, minHeight: 200, margin: 0}}   
-                toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}     
-                        
+                toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}    
+                // customBlockRenderFunc={customBlockType}
+        
                         />
                 </div>
           
