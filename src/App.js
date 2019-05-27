@@ -56,7 +56,6 @@ class AppRoute extends React.Component {
 
   render() {
     const {UIStore} = this.props;
-    console.log(this.state.redirect, this.state.shouldRedirect)
     return (
       <div className="App">
         <FullStory org="JJAMV"/>

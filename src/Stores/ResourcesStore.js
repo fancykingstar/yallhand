@@ -39,7 +39,6 @@ class Store {
       if(resource.associations[assocLabels[source_type]].length > 0) {
         const parent = resource.associations[assocLabels[source_type]].filter(item => item[idNames[source_type]] === ID)
         if(parent.length > 0) {
-          // parent.forEach(child => console.log(variID, child.variations, child.variations.filter(vari => vari === variID)))
           parent.forEach(child => {if(child.variations.filter(vari => vari === variID).length > 0){
             matchedResources.push(resource)}
           })

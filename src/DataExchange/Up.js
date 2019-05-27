@@ -28,7 +28,7 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-  console.log(endpoint, meth, JSON.stringify(payload))
+//   console.log(endpoint, meth, JSON.stringify(payload))
 
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
@@ -249,7 +249,7 @@ export const createFile = (payload) => {
 }
 
 export const modifyFile = (payload, toast=true) => {
-    processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
+    return processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
         true,{"event": "update", "type":"file"}, toast
     )

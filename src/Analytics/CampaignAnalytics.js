@@ -4,7 +4,7 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { Table, Header, Button, Modal,Icon} from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
-import {getContentObj} from "../SharedCalculations/GetContentObj"
+import { CampaignDetails } from "../SharedUI/CampaignDetails";
 
 @inject("AccountStore", "EmailStore", "TeamStore", "UIStore")
 @observer
@@ -41,15 +41,7 @@ export class CampaignAnalytics extends React.Component {
       else return all.filter(i => i.subject.toLowerCase().includes(UIStore.search.campaignsSearchValue.toLowerCase()))
   }
 
-    const getCampaignRecipients = (id) => {
-      const targets = EmailStore._getCampaign(id)
-      if(!targets) return;
-      if (targets.recipientType === "all") return "Everyone"
-      else {
-        return targets.recipientType === "users" ? targets.targetUsers.map(i => AccountStore._getUser(i) === undefined? "New User" : AccountStore._getUser(i).displayName_full).join(',')
-        : `${TeamStore._getTeam(targets.teamID).label} ${targets.tags.length === 0? "No Tags" : TeamStore._getTag(targets.tags[0]).label}`
-      }
-    }
+
     const outbounds = searchFilter(AccountStore.analyticData_campaigns).map(camp => {
       const campaign = EmailStore._getCampaign(camp.campaignID)
 
@@ -69,27 +61,7 @@ export class CampaignAnalytics extends React.Component {
           <Table.Cell>{this.clickRate(camp)}%</Table.Cell>
           <Table.Cell></Table.Cell>
           <Table.Cell> 
-            <Modal trigger={ <Button basic>Details</Button>}>
-              <Modal.Header>{camp.subject}</Modal.Header>
-              <Modal.Content>
-                <Modal.Description>
-                {campaign.img === "" ? 
-                  <div/> :
-                  <React.Fragment>
-                    <h4>Featured Image</h4>
-                    <div className="imgPreview"> <img alt="featured visual" src={camp.img} /></div>
-                  </React.Fragment>}
-                <h4>Recipients</h4>
-                <p>{getCampaignRecipients(camp.campaignID)}</p>
-                  <div style={campaign.draftContentHTML === ""? {display: "none"} : {paddingTop: 10, fontSize: "1em"}}>
-                    <span dangerouslySetInnerHTML={{ __html: campaign.draftContentHTML }} />
-                  </div>
-                  <div style={campaign.content.length === 0? {display: "none"} : {paddingTop: 10}}>
-                    <span style={{fontWeight: 800, fontSize: "1em"}}>Selected Content: {campaign.content.map(y => <a key={"template link" + giveMeKey()} href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
-                  </div>
-                </Modal.Description>
-              </Modal.Content>
-              </Modal>
+                    {CampaignDetails(campaign)}
             </Table.Cell>
           </Table.Row>
         )

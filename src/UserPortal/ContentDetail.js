@@ -44,7 +44,6 @@ export class ContentDetail extends React.Component {
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
-        console.log(content)
         const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
         const displayFiles = fileResources.map(file =>
             <Item key={"contentResource" + giveMeKey()}>

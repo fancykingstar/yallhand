@@ -2,8 +2,8 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
 import { Automations } from "./Automations";
-import { EmailPrimary } from "./EmailPrimary";
-import { SendOptions } from "./SendOptions";
+import EmailPrimary from "./EmailPrimary";
+import SendOptions from "./SendOptions";
 import { EmailTemplates } from "./EmailTemplates";
 
 @inject("UIStore", "DataEntryStore", "EmailStore")

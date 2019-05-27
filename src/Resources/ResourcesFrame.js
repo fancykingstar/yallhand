@@ -2,8 +2,10 @@ import React from "react";
 import { Input } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
 import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
-// import { Links } from "./Links"
+import { SearchBox } from "../SharedUI/SearchBox"
 import { Files } from "./Files"
+
+
 import "./style.css";
 
 @inject("UIStore")
@@ -26,21 +28,10 @@ export class ResourcesFrame extends React.Component {
     };
     return (
       <div>
-        {/* <SecondaryMenu
-          menuItems={menuItems}
-          activeItem={UIStore.menuItem.resourcesFrame}
-          handleClick={handleItemClick}
-          useSearch={true}
-          searchOutput={handleSearch}
-        /> */}
         <div style={{float: "right", marginRight: 10, marginTop: 10}}>  
-      <Input icon='search' placeholder='Search...' 
-      onChange={(e, val) => handleSearch(val.value)} 
-      value={UIStore.search.searchFiles}
-      />
+      <SearchBox value={UIStore.search.searchFiles} output={val => handleSearch(val)} />
      </div> 
         <div className="ResourceActionFrame">
-        {/* <div className={isVisable("URL")}>   <Links/></div> */}
         <div>   <Files/></div>
       
         </div>
