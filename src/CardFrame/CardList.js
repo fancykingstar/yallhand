@@ -73,7 +73,7 @@ export class CardList extends React.Component {
         const createcard = PoliciesStore.allPolicies.length === 0 && UIStore.isScreenLoading === true ? <div></div> : <CreateContent mode="policy"/>
         
         return(
-            <div className="CardList">
+            <div className="CardList" style={{paddingLeft: 30}}>
                
                 {createcard}
                 {cards}

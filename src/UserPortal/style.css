@@ -9,7 +9,6 @@
     margin-top: 40px;
     z-index: 50;
     border: 0 none;
-    border-right: 1px solid;
   }
 
 .SearchControls {
@@ -55,12 +54,25 @@
 
 .SideBarFrame { 
     width: 245px;
-    float: left;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;   
+    
+    height: 100%;
+    position: fixed;
+    top: 0px;
     background-color: #4f4f4f;
     border-right: 2px solid #00a3e0;
+}
+
+.SideBarFrameMobile {
+  margin-top: -40px;
+  padding-top: 10px;
+  background-color: #4f4f4f;
+  width: 75vw;
+  height: 100vh;
+  z-index: 50;
+  overflow-y: auto;
+
+
+
 }
 
 .WorkspaceNamePortal {
@@ -118,9 +130,14 @@
 
 .Content{
     height: 100%;
-    margin: 30px;
+    width: 100%;
+    /* margin: 30px; */
     line-height: 2;
 
+}
+
+.PortalContentText {
+  width: 100%;
 }
 
 
@@ -207,3 +224,26 @@
     padding-top: 20px;
   
   }
+
+  .PortalSearchContainer {
+    width: 100%;
+    padding: 10px;
+}
+
+.PortalSearchForm {
+    /* background-color: rgba(129, 129, 129, 0.37);
+    background-color: rgba(212, 212, 212, 0.37); */
+    -webkit-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+    border-radius: 5px;
+
+}
+
+.PortalAnnc {
+  box-shadow: 0px 0px 2px 0px #ABACAB;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px ;
+  text-align: center;
+}
+

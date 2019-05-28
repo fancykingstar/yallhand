@@ -28,6 +28,7 @@ class DashboardFrame extends React.Component {
   }
   componentDidMount(){
     this.getData()
+    window.scrollTo(0, 0);
   }
 
   render() {

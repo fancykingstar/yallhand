@@ -8,6 +8,9 @@ import { PortalViews} from "./PortalViews"
 @inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
 export class AnalyticsFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   render() {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {

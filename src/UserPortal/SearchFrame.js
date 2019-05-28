@@ -1,7 +1,7 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import {withRouter} from "react-router-dom"
-import { Input, Icon, Form} from "semantic-ui-react";
+import { Input, Icon} from "semantic-ui-react";
 import { QLogo } from "../Assets/Graphics/QLogo"
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import "./style.css";
@@ -10,6 +10,10 @@ import "./style.css";
 @inject("UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore")
 @observer
 class SearchFrame extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={searchFocused: false}
+  }
   componentDidMount() {
     const { AnnouncementsStore, PoliciesStore, ResourcesStore, UIStore, AccountStore } = this.props;
     if (UIStore.search.searchAnnouncementsData.length === 0) {
@@ -29,38 +33,45 @@ class SearchFrame extends React.Component {
     }
   }
   render(){
-  const {UIStore} = this.props
+  const {UIStore} = this.props;
 
- 
+  const invisiButton = {border: 0, backgroundColor: "Transparent", outline: "none"};
 
+  const searchOrClear = () => this.props.location.pathname.includes('search') ? 
+     <button style={invisiButton} onClick={e => {
+    UIStore.set("search", "portalSearchValue", "")
+    this.props.history.goBack()
+    }}
+    >
+    <Icon style={{color:"#2dbffe"}} name="remove circle" /></button>  
+    : 
+    <button style={invisiButton} onClick={e => submitSearch(e) } ><Icon style={{color:"#2dbffe"}} name="search" /> </button> 
 
+  const submitSearch = (e) => {
+    e.preventDefault();
+    this.props.history.push("/portal/search");
+
+  }
 
   return (
-    // <div className="SearchFrame">
-    //   <div className="SearchControls">
 
-      <Form onSubmit={() => this.props.history.push("/portal/search")}>
-      <Form.Input 
+      <div className="PortalSearchContainer">
+        <div className="PortalSearchForm" style={{backgroundColor: this.state.searchFocused? "rgba(185, 185, 185, 0.37)":"rgba(129, 129, 129, 0.37)"}}>
+      <Input 
         value={UIStore.search.portalSearchValue}
         onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)} 
         fluid icon 
         placeholder="Search...">
-          <input  style={{background: "transparent", border: "none", color: "#FFFFFF"}} />
-          <Icon style={{color:"#2dbffe"}} name="search" />
-        </Form.Input>
-      </Form>
+          <input 
+          onFocus={() => this.setState({searchFocused: true})}
+          onBlur={() => this.setState({searchFocused: false})}
+          onKeyDown={e => {if(e.key === "Enter") submitSearch(e)}} 
+          style={{background: "transparent", border: "none", color: "#FFFFFF"}} 
+          />
+          {searchOrClear()}
+        </Input>
+      </div></div>
    
-    //   </div>
-    //   <div className="LoginQuadrance">
-    //   <p style={{fontSize: ".2em", opacity: "0.8", marginBottom: 0}}>powered by</p>
-    //       <div style={{ float: "left", opacity: "0.5", marginTop: -4, paddingRight: 4 }}>
-    //         {" "}
-    //         <QLogo fill="#FFFFFF" style="" width="16px" height="20px" />{" "}
-    //       </div>
-    //       <div style={{ float: "right", lineHeight: "15px", fontSize: ".5em" }}> yallhands</div>
-    //     </div>
-  
-    // </div>
   );
 }}
 

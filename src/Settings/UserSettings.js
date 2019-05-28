@@ -23,7 +23,8 @@ export class UserSettings extends React.Component {
     DataEntryStore.set("userSettings", "displayName", UserStore.user.displayName)
     const profile = Object.keys(UserStore.user.profile)
     profile.forEach(attribute => DataEntryStore.set("userSettings", attribute, UserStore.user.profile[attribute]))
-
+    window.scrollTo(0, 0);
+    
   }
   render() {
     const { DataEntryStore, UserStore } = this.props;
@@ -53,41 +54,6 @@ export class UserSettings extends React.Component {
     const handleDeactivate = () => {
       deactivateUser(UserStore.user)
     }
-
-    // const allTheFields = multipleInputs.map(attribute =>
-    //   attribute.prefix !== null ? (
-    //     <React.Fragment key = {"multipleInptsFragements" + giveMeKey()}>
-    //       <Form.Input
-      
-    //         label={
-    //           <span>
-    //             <Icon name={attribute.label.toLowerCase()} /> {attribute.label}{" "}
-    //           </span>
-    //         }
-    //       >
-    //         {" "}
-    //         <Input
-    //           key = {"multipleInpts" + giveMeKey()}
-    //           label={attribute.prefix}
-    //           value={attribute.value}
-    //           onChange={(e, val) =>
-    //             DataEntryStore.set("userSettings", attribute.value, val.value)
-    //           }
-    //         />
-    //       </Form.Input>
-    //     </React.Fragment>
-    //   ) : (
-    //     <Form.Input
-    //       label={attribute.label}
-    //       key = {"multipleInpts" + giveMeKey()}
-    //       value={DataEntryStore.userSettings[attribute.label]}
-    //       onChange={(e, val) =>
-    //         DataEntryStore.set("userSettings", attribute.label, val.value)
-    //       }
-    //     />
-    //   )
-    // );
-   
 
     return (
       <div style={{ padding: 15, maxWidth: 900 }}>
@@ -164,8 +130,6 @@ export class UserSettings extends React.Component {
                 onChange={(e, val) => DataEntryStore.set("userSettings", "About Me", val.value)}    
                />     
 
-{/* const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network})) */}
-            {/* <Form.Input label={ <span> <Icon name="Twitter" />Twitter</span> } > {" "} */}
             <Form.Input label={ <span> <Icon name={"twitter"} /> {"Twitter"}{" "} </span> } > {" "}
             <Input
                 label={"@"}
@@ -176,6 +140,7 @@ export class UserSettings extends React.Component {
 
             <Form.Input label={ <span> <Icon name={"medium"} /> {"Medium"}{" "} </span> } > {" "}
             <Input
+                fluid
                 label={"https://medium.com/@"}
                 value={DataEntryStore.userSettings["Medium"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Medium", val.value)}    
@@ -184,6 +149,7 @@ export class UserSettings extends React.Component {
 
             <Form.Input label={ <span> <Icon name={"github"} /> {"Github"}{" "} </span> } > {" "}
             <Input
+                fluid
                 label={"https://github.com/"}
                 value={DataEntryStore.userSettings["Github"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Github", val.value)}    
@@ -192,6 +158,7 @@ export class UserSettings extends React.Component {
 
             <Form.Input label={ <span> <Icon name={"linkedin"} /> {"LinkedIn"}{" "} </span> } > {" "}
             <Input
+                fluid
                 label={"https://linkedin.com/"}
                 value={DataEntryStore.userSettings["LinkedIn"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "LinkedIn", val.value)}    

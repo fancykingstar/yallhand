@@ -13,6 +13,9 @@ import { ItsLog } from "../DataExchange/PayloadBuilder"
 @inject("UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore")
 @observer
 class PortalSearchResults extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
     render(){
     const {AnnouncementsStore, PoliciesStore, UIStore, ResourcesStore, AccountStore} = this.props
     
@@ -190,7 +193,8 @@ class PortalSearchResults extends React.Component {
         <div  style={{paddingTop: 15}} >
     <Button basic onClick={e => {
         UIStore.set("search", "portalSearchValue", "")
-        this.props.history.push("/portal")
+        // this.props.history.push("/portal")
+        this.props.history.goBack()
     }} >Clear Results</Button>
     </div>
       </div>
