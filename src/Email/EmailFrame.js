@@ -9,6 +9,9 @@ import { EmailTemplates } from "./EmailTemplates";
 @inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
 export class EmailFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
 
   render() {
     const { UIStore } = this.props;

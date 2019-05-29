@@ -79,7 +79,7 @@ export class CampaignAnalytics extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell rowSpan='2'>Name</Table.HeaderCell>
-                <Table.HeaderCell>Sent <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("sent", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("sent", "Lowest")}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Sent<br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("sent", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("sent", "Lowest")}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Views (All/Unique) <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("total_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("total_views", "Lowest")}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Open Rate <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("open_rate", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("open_rate", "Lowest")}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Click Rate <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("clicks", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("clicks", "Lowest")}/></span></Table.HeaderCell>

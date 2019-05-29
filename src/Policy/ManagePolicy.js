@@ -11,6 +11,9 @@ import { ManageVariationData } from "./ManageVariationData";
 @inject("PoliciesStore", "ResourcesStore", "TeamStore")
 @observer
 export class ManagePolicy extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   componentWillMount() {
     const {PoliciesStore} = this.props
     const {TeamStore} = this.props

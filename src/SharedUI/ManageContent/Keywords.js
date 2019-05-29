@@ -39,14 +39,14 @@ export const Keywords = inject("DataEntryStore", "PoliciesStore", "UserStore", "
               <Form onSubmit={e => addKeyword(DataEntryStore.contentmgmt.keywordInput)}>
               <Form.Group inline>
               <Form.Input
+                fluid
                 value={DataEntryStore.contentmgmt.keywordInput}
                 onChange={(e, val) => DataEntryStore.set("contentmgmt", "keywordInput", val.value)}
-                label="Add Related Keywords or Phrases (optional)"
-                style={{ width: 350 }}
+                label="Related Keywords/Phrases (optional)"
                 action="Add"
                 placeholder="Enter term(s)..."
               />
-              <Form.Button disabled={DataEntryStore.contentmgmt.keywordInput === "" && DataEntryStore.contentmgmt.keywords.length === 0} label="" primary type="button" onClick={e => submitUpdate()}>Update</Form.Button>
+              <Form.Button fluid label="" disabled={DataEntryStore.contentmgmt.keywordInput === "" && DataEntryStore.contentmgmt.keywords.length === 0} primary onClick={e => submitUpdate()}>Update</Form.Button>
               </Form.Group>
               </Form>
               <div className="Form">{keywords}</div>

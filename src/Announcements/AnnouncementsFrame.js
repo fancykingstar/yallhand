@@ -18,6 +18,7 @@ import "./style.css";
 class AnnouncementsFrame extends React.Component {
   componentDidMount() {
     const { AnnouncementsStore, UIStore } = this.props;
+    window.scrollTo(0, 0);
     if (UIStore.search.searchAnnouncementsData.length === 0) {
         UIStore.set("search",
           "searchAnnouncementsData",

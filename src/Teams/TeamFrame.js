@@ -10,6 +10,9 @@ import { inject, observer } from "mobx-react";
 @inject("UIStore")
 @observer
 export class TeamFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   render() {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {

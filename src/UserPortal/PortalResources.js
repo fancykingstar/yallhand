@@ -23,6 +23,9 @@ import { ItsLog } from "../DataExchange/PayloadBuilder"
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
 @observer
 export class PortalResources extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
 //   componentDidMount() {
 //     const { UIStore } = this.props;
 //     const { ResourcesStore } = this.props;

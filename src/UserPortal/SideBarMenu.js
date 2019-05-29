@@ -60,9 +60,9 @@ class SideBarMenu extends React.Component {
     );
 
     const resetSearch = () => {
-      if (UIStore.search.portalSearchValue !== "") {
-        UIStore.set("search", "portalSearchValue", "");
-      }
+      // if (UIStore.search.portalSearchValue !== "") {
+      //   UIStore.set("search", "portalSearchValue", "");
+      // }
     };
 
     const portalReturn = this.props.mobile && UserStore.user.isAdmin ? 
@@ -88,8 +88,9 @@ class SideBarMenu extends React.Component {
    
           <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            Feed{" "}
             <Icon style={{color: "#FFFFFF"}} name="newspaper outline" />
+            {" "}Feed{" "}
+       
           
              
             </Menu.Header>
@@ -130,8 +131,9 @@ class SideBarMenu extends React.Component {
 
           <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            Resources{" "}
             <Icon style={{color: "#FFFFFF"}} name="cubes" />
+            {" "}Resources{" "}
+           
         
             </Menu.Header>
 
@@ -169,8 +171,9 @@ class SideBarMenu extends React.Component {
           
             <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            Contact{" "}
             <Icon style={{color: "#FFFFFF"}} name="chat" />
+            {" "}Contact{" "}
+  
           
             </Menu.Header>
             <Menu.Menu>
