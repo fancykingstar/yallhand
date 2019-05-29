@@ -28,20 +28,23 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
     };
 
     const offboardNow = () => {
-        offBoardUser(DataEntryStore.userEditFields.userEdit.userID).then(() => {
-          handleClose()
-          UIStore.set("modal", "editUser", false)
-          })
+      offBoardUser(DataEntryStore.userEditFields.userEdit.userID, true).then(() => {
+        handleClose()
+        UIStore.set("modal", "editUser", false)
+      })
     }
 
     const offboardLater = () => {
-        apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
+      apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
         createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": DataEntryStore.userEditFields.userEdit.userID}))
         .then(() => {
           handleClose() 
           UIStore.set("modal", "editUser", false)
-        })
-
+        });
+        offBoardUser(DataEntryStore.userEditFields.userEdit.userID, false).then(() => {
+          handleClose()
+          UIStore.set("modal", "editUser", false)
+        });
     }
 
     const setOffBoardDate = day => {
