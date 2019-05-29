@@ -23,7 +23,7 @@ export class BaseSettings extends React.Component {
     DataEntryStore.set( "baseSettings", "timezone", AccountStore.account.timezone );
     DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert );
     DataEntryStore.set( "baseSettings", "generalEmail", AccountStore.account.generalEmail );
-
+    window.scrollTo(0, 0);
   }
   render() {
     const { AccountStore } = this.props;

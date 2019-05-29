@@ -78,7 +78,10 @@ export class InviteUser extends React.Component {
   async onboard (later = false) {
     let newUser = this.getDataNewUser()
     newUser.now = !later
-    if (later) newUser.date = moment(this.state.date).valueOf()
+    if (later) {
+      newUser.date = moment(this.state.date).valueOf();
+      newUser.now = false;
+    }
     await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
       if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
     })

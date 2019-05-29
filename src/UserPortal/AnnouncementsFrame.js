@@ -11,13 +11,16 @@ import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { sortByUTC } from "../SharedCalculations/SortByUTC";
 import { PortalContentNoResults } from "./PortalContentNoResults"
 import { HTMLtoString} from "../SharedCalculations/HtmlToString"
+import { contentOverflow } from "../SharedCalculations/ContentOverflow";
 
 @inject("AnnouncementsStore", "UserStore", "UIStore")
 @observer
 class AnnouncementsFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   render() {
     const { AnnouncementsStore, UIStore } = this.props;
-    const feedStyle = UIStore.responsive.isMobile ?  {boxShadow: "0px 0px 2px 0px #ABACAB", margin: 10, padding: 10, borderRadius: 5, textAlign: "center", height: 450} : {boxShadow: "0px 0px 2px 0px #ABACAB", margin: 10, padding: 10, borderRadius: 5, textAlign: "center"}
     const handleClick = val => {
       this.props.history.push("/portal/announcement/" + val);
     };
@@ -29,18 +32,17 @@ class AnnouncementsFrame extends React.Component {
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
     const displayFeed = sortByUTC(announcements, UIStore.dropdown.portalannouncementSort).map(news => (
-      <div onClick={e => handleClick(news.announcementID)} style={{paddingBottom: 15}} style={feedStyle} key={"portalannouncement" + giveMeKey()}>
-        {/* <div style={{float: "left", width: 300, height: 300, backgroundColor: "red"}}></div> */}
-        {news.img !== ""?  <div style={{display: "inline-block", width: 300, height: 225}}><Image style={{paddingRight: 20, paddingTop: 15}} size="medium" src={news.img} /> </div>: null }
-        <div style={{height: 120,  display: "inline-block", verticalAlign: "top"}}>
-        <div style={{display: "block", maxHeight: 100, minWidth: 300}}>
+      <div className="PortalAnnc" onClick={e => handleClick(news.announcementID)} key={"portalannouncement" + giveMeKey()}>
+        {news.img !== ""?  <div style={{display: "inline-block"}}><Image style={{padding: 20}} size="medium" src={news.img} /> </div>: null }
+        <div style={{display: "inline-block", verticalAlign: "top"}}>
+        <div style={{display: "block"}}>
 
         <Header as="h2">
             {news.variations[0].label === ""? news.label : news.variations[0].label}
             <Header.Subheader>{UTCtoFriendly(news.updated)}</Header.Subheader>
             {UIStore.portal.viewedContent.includes(news.announcementID) === false? <Label as='a' size="mini" color='red'> Unread </Label> : null}
         </Header> 
-        <span style={{minWidth: 300, paddingTop: 5}}>{HTMLtoString(news.variations[0].contentHTML).split(".")[0] + ".."}</span>
+        <span style={{paddingTop: 5}}>{contentOverflow(HTMLtoString(news.variations[0].contentHTML), 140)}</span>
         </div>
         </div>
       </div>
@@ -49,9 +51,7 @@ class AnnouncementsFrame extends React.Component {
     const displayContent = displayFeed.length > 0? <React.Fragment> {displayFeed}</React.Fragment> : <PortalContentNoResults/>
 
     return (
-      <div 
-      // style={{marginTop: -35, paddingRight: 15}}
-      >
+      <div >
         <Sort
           dropdownValueChange={val => UIStore.set("dropdown", "portalannouncementSort", val)} 
           searchValueChange={val =>  UIStore.set("search", "searchPortalannouncementValue", val)} 

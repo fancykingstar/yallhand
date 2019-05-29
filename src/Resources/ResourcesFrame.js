@@ -11,6 +11,9 @@ import "./style.css";
 @inject("UIStore")
 @observer
 export class ResourcesFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   render() {
   const handleItemClick = (e, { name }) => {
     UIStore.set("menuItem","resourcesFrame", name);
