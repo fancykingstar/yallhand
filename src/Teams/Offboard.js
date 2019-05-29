@@ -35,7 +35,7 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
     }
 
     const offboardLater = () => {
-        apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
+        apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"}).then((res) => res.json()).then((res)=>console.log(res))
         createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": DataEntryStore.userEditFields.userEdit.userID}))
         .then(() => {
           handleClose() 
