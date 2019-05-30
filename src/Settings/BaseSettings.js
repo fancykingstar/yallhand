@@ -70,7 +70,7 @@ export class BaseSettings extends React.Component {
               />
              
                 
-              <Form.Field>
+              {/* <Form.Field>
                 <Form.Select
                   label="Default Timezone"
                   options={timezones}
@@ -78,7 +78,7 @@ export class BaseSettings extends React.Component {
                   onChange={(e, { value }) => DataEntryStore.set("baseSettings", "timezone", value)}
                   search
                 />
-              </Form.Field>
+              </Form.Field> */}
               <Form.Select
                 label="Default Review Alert For Aging Content"
                 style={{ width: 150 }}

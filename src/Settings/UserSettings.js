@@ -92,13 +92,13 @@ export class UserSettings extends React.Component {
                 <input maxLength="16" />{" "}
               </Form.Input>
              
-                <Form.Select
+                {/* <Form.Select
                   label="Default Timezone"
                   options={timezones}
                   value={DataEntryStore.userSettings.timezone}
                   onChange={(e, { value }) => handleTimezone(value)}
                   search
-                />
+                /> */}
               <Form.Input
                 label={"Title"}
                 value={DataEntryStore.userSettings.Title}

@@ -1,14 +1,12 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Segment, Button, Header, Dropdown, Form } from "semantic-ui-react";
-import { giveMeKey } from "../../SharedCalculations/GiveMeKey"
-import { DatePicker } from "../DatePicker";
 import {periods} from "../../TemplateData/periods"
-import moment from "moment"
 import { contentPatch } from "../../DataExchange/PayloadBuilder"
 import { modifyAnnouncement, modifyPolicy} from "../../DataExchange/Up"
 import { createSchedule } from "../../DataExchange/Up"
 import { schedule } from "../../DataExchange/PayloadBuilder"
+import { DateTimeSelect } from "../../SharedUI/DateTimeSelect";
 import "./style.css";
 
 export const ReviewAlerts = inject("UIStore", "AccountStore", "DataEntryStore")(
@@ -45,11 +43,7 @@ export const ReviewAlerts = inject("UIStore", "AccountStore", "DataEntryStore")(
       ) :
        (
         <React.Fragment>
-          <Form>
-            <Form.Input>
-              <DatePicker output={val => DataEntryStore.set("contentmgmt", "schedAlert", moment(new Date(val)).valueOf())}/>
-            </Form.Input>
-          </Form>
+          <DateTimeSelect notToday value={val => DataEntryStore.set("contentmgmt", "schedAlert", val) } />
         </React.Fragment>
       );
     return (
