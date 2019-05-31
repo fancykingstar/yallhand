@@ -185,11 +185,17 @@ export const modifyUser = (payload) => {
 )
 }
 
-export const offBoardUser = (userID) => {
-    return processTemplate(true, "users/" + userID, "PATCH", {"userID": userID, "accountID": accountID(), "isActive": false, "offBoarded": true, "offBoardDate": new Date()}, "users", 
-    `User offboarded ✌️`, 
-    true,{"event": "offboard", "type":"user"}
-)
+export const offBoardUser = (userID, now) => {
+  let data = {
+    "userID": userID,
+    "accountID": accountID(),
+    "isActive": false
+  };
+  if(!now) {
+    data.offBoarded = true;
+    data.offBoardDate = new Date();
+  }
+  return processTemplate(true, "users/" + userID, "PATCH", data, "users", `User offboarded ✌️`, true,{"event": "offboard", "type":"user"})
 }
 
 export const deleteUser = (userID) => {

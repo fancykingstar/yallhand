@@ -13,7 +13,7 @@ export class SideBar extends React.Component {
   render() {
     const { UIStore } = this.props;
     return (
-      <div className="SideBar">
+      <div className={this.props.mobile? "SideBarMobile":"SideBar"}>
         <Workspace />
         <UserProfile />
         <NavItems

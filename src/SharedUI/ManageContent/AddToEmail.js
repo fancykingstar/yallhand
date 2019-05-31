@@ -60,14 +60,14 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
         <Form onSubmit={e => handleClick(e)}>
           <Form.Group inline>
             <Form.Select
+              fluid
               id=""
               label="Add this content to which email campaign"
-              style={{ width: 350 }}
               options={campaigns}
               defaultValue={"new"}
               onChange={(e, val) => handleSelect(val.value)}
             />
-            <Form.Button label="" primary>
+            <Form.Button fluid label="" primary>
               Submit
             </Form.Button>
           </Form.Group>

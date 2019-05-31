@@ -9,7 +9,6 @@ import CountUp from 'react-countup';
 import {apiCall} from "../DataExchange/Fetch";
 import CreateContent from "../SharedUI/ManageContent/CreateContent";
 import {DateRange} from "../SharedUI/DateRange"
-import moment from "moment"
 import _ from "lodash";
 import "./style.css";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
@@ -28,6 +27,7 @@ class DashboardFrame extends React.Component {
   }
   componentDidMount(){
     this.getData()
+    window.scrollTo(0, 0);
   }
 
   render() {

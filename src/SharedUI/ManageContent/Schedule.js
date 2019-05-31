@@ -41,12 +41,11 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
                 label="Choose action"
                 style={{ width: 100 }}
 
-              /><br/>
-             <DateTimeSelect
-              value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val)}
-             />
+              />
+   
+         
              </Form.Group></Form>
-             {/* <p style={{marginTop: 10}}>{UserStore.user.timezone}</p> */}
+             <DateTimeSelect value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val) } includeTime />
               <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.event === ""} onClick={e => handleClick()}>Set</Button>
 
     
