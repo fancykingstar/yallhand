@@ -91,9 +91,9 @@ export class PortalViews extends React.Component {
                     <Table.Cell textAlign="center">{vari.unique_views}</Table.Cell>
                     {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
                              <React.Fragment>
-                               <Table.Cell textAlign="center">{vari.sentiment[0]}</Table.Cell>
-                               <Table.Cell textAlign="center">{vari.sentiment[1]}</Table.Cell>
                                <Table.Cell textAlign="center">{vari.sentiment[2]}</Table.Cell>
+                               <Table.Cell textAlign="center">{vari.sentiment[1]}</Table.Cell>
+                               <Table.Cell textAlign="center">{vari.sentiment[0]}</Table.Cell>
                                </React.Fragment>
                                 : null }
                     </Table.Row>

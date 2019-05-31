@@ -59,9 +59,9 @@ export class Users extends React.Component {
             <Header.Content>
               {user.displayName_full}
               <Header.Subheader>
-                <Image src={user.img !== "" ? user.img : UserImgPlaceholder()} avatar />
-                {user.isAdmin ? "Admin" : null}
-                {user.displayName_full === "" ? "Invite Sent" : null}
+                <Image src={user.img !== "" && user.img !== undefined ? user.img : UserImgPlaceholder()} avatar />
+                {user.isAdmin ? "Admin" : null}{" "}
+                {user.now ? null: user.date < Date.now()? "Invite Sent":"Scheduled To Invite"}
               </Header.Subheader>
             </Header.Content>
           </Header>
