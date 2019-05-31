@@ -28,6 +28,13 @@ jobs:
       VHOST: /var/www/vhosts/quadrance.fabtesting.com
       SERVER: fabtesting.com
 
+  deploy_ondeck:
+    <<: *deploy_project
+    working_directory: /tmp/quadrance
+    environment:
+      VHOST: /var/www/vhosts/ondeck.yallhands.com
+      SERVER: ondeck.yallhands.com
+
   deploy_prod:
     <<: *deploy_project
     working_directory: /tmp/quadrance
@@ -47,6 +54,10 @@ workflows:
           filters:
             branches:
               only: adfab-master
+      - deploy_ondeck:
+          filters:
+            branches:
+              only: ondeck
       - deploy_prod:
           filters:
             branches:
