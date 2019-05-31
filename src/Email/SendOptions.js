@@ -54,15 +54,9 @@ class SendOptions extends React.Component {
 
     const displaySendOption = UIStore.menuItem.sendEmailOption === "schedule"? 
     <React.Fragment>
-       <Form>
-              <Form.Group>
-                <DateTimeSelect
-                  value={val =>
-                    DataEntryStore.set("emailCampaign", "sendNext", val)
-                  }
-                />
-              </Form.Group>
-            </Form>
+    
+                <DateTimeSelect value={val => DataEntryStore.set("emailCampaign", "sendNext", val) } includeTime />
+           
         <div style={DataEntryStore.emailCampaign.loadedTemplateSubject !== DataEntryStore.emailCampaign.sendSubject? {paddingBottom: 5}:{display: "none"}}> <Checkbox checked={DataEntryStore.emailCampaign.sendSaveTemplate}  onClick={(e, data) => DataEntryStore.set("emailCampaign", "sendSaveTemplate", data.checked)} label="Use as template in the future"/> </div>
       
     </React.Fragment>
