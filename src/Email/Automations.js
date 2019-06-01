@@ -19,16 +19,22 @@ export class Automations extends React.Component {
       .map(camp => (
         <Table.Row key={"camp" + giveMeKey()}>
           <Table.Cell>{EmailStore._getCampaign(camp.campaignID).subject}</Table.Cell>
-          <Table.Cell>{camp.isTriggered ? "live" : "error"}</Table.Cell>
           <Table.Cell>{UTCtoFriendly(camp.updated)}</Table.Cell>
+          <Table.Cell>{camp.suspended? "Paused":"Live"}</Table.Cell>
           <Table.Cell>
             {CampaignDetails(camp)} 
           </Table.Cell>
           <Table.Cell>
-            <Button basic color="red" 
-            onClick={e => modifyCampaign(emailCampaignEdit({"campaignID": camp.campaignID, "completed": true}))}>
-              Discontinue
-            </Button>
+  
+            <Button.Group>
+              {camp.suspended? 
+              <Button basic primary icon="play" onClick={e => modifyCampaign(emailCampaignEdit({"campaignID": camp.campaignID, "suspended": false}), false)}/>
+              :
+              <Button basic color="grey" icon="pause" onClick={e => modifyCampaign( emailCampaignEdit({"campaignID": camp.campaignID, "suspended": true}), false) }/>
+            }
+                
+                <Button basic color="red" icon="circle remove" onClick={e => modifyCampaign(emailCampaignEdit({"campaignID": camp.campaignID, "completed": true}))}/>
+            </Button.Group>
           </Table.Cell>
         </Table.Row>
       ));
@@ -38,9 +44,9 @@ export class Automations extends React.Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Email Subject</Table.HeaderCell>
+              <Table.HeaderCell>Went Online On</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Online On</Table.HeaderCell>
-              <Table.HeaderCell></Table.HeaderCell>
+              <Table.HeaderCell />
               <Table.HeaderCell />
 
               <Table.HeaderCell />

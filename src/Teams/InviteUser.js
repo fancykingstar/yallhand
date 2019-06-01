@@ -3,15 +3,18 @@ import { inject, observer } from "mobx-react";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { Form, Segment, Header, Dropdown } from "semantic-ui-react";
-import { DatePicker } from "../SharedUI/DatePicker";
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
 import { apiCall } from "../DataExchange/Fetch"
 import { createSchedule } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
+import { users } from "../DataExchange/Down";
+import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import toast  from "../YallToast"
 import moment from "moment"
 import "./style.css";
+import { UIStore } from "../Stores/UIStore";
+
 @inject("UIStore", "AccountStore")
 @observer
 export class InviteUser extends React.Component {
@@ -76,6 +79,7 @@ export class InviteUser extends React.Component {
   }
 
   async onboard (later = false) {
+    const {AccountStore} = this.props;
     let newUser = this.getDataNewUser()
     newUser.now = !later
     if (later) {
@@ -83,8 +87,13 @@ export class InviteUser extends React.Component {
       newUser.now = false;
     }
     await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+      console.log(res)
       if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+      else res.error ? this.error(res) : this.success()
     })
+    await users(AccountStore.account.accountID)
+    this.setState(this.reset());
+    
   }
 
   render() {
@@ -115,7 +124,8 @@ export class InviteUser extends React.Component {
               :
                 <React.Fragment>
                   <Form.Input label="Choose Date">
-                    <DatePicker from={"tomorrow"} output={e => this.setState({date: e})} />
+                    <DateTimeSelect notToday value={val => this.setState({date: val}) } />
+
                   </Form.Input>
                   <Form.Button onClick={e => this.onboard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
                 </React.Fragment>}

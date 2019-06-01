@@ -1,55 +1,44 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { times, alltimes, adjustedTime } from "../TemplateData/times";
-import { Form } from "semantic-ui-react";
-import { DatePicker } from "../SharedUI/DatePicker";
+import DateTime from 'react-datetime'
+import './DateTime.css'
 import moment from "moment"
+
+ 
 
 @inject("UIStore")
 @observer
-export class DateTimeSelect extends React.Component {
-
-  componentDidMount() {
-    const {UIStore} = this.props
-    UIStore.set("dateTimeSelect", "date", "")
-    UIStore.set("dateTimeSelect", "time", "00:00")
-    this.props.value(0)
+export class DateTimeSelect extends React.Component { 
+  constructor(props){
+    super(props)
+    const now = moment();
+    const remainder = 15 - (now.minute() % 15);
+    const dateTime = moment(now).add(remainder, "minutes");
+    const start = this.props.notToday === undefined? dateTime: dateTime.add(1, 'day');
+    this.state={current: this.props.includeTime !== undefined? start:start.startOf('day')};
+    this.props.value(this.state.current.valueOf());
   }
-
+ 
   render() {
-      const {UIStore} = this.props
-      const updateValue = () => {
-        if(UIStore.dateTimeSelect.date !== 0){
-        const dateTime = UIStore.dateTimeSelect.date.slice(0,10) +' '+ UIStore.dateTimeSelect.time
-        this.props.value(moment(dateTime).valueOf())
-      }}
-
-      const handleDate = (val) => {
-        UIStore.set("dateTimeSelect", "date", val)
-        updateValue()
-      }
-      const handleTime = (val) => {
-        console.log(UIStore.dateTimeSelect.date === ""? false: moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day"))
-        UIStore.set("dateTimeSelect", "time", val)
-        updateValue()
-      }
       
-   const getTimeOptions = () => UIStore.dateTimeSelect.date === ""? [] : moment(UIStore.dateTimeSelect.date).isSame(new Date(), "day")? alltimes : times
+   const yesterday = moment().subtract( 1, 'day' );
+    const validDates = ( current )=> current.isAfter( this.props.notToday === undefined? yesterday: moment() );
+    const validTimes = () => 
+      // this.state.current.isSame(new Date(), "day")? {hours:{min: moment().format('H')},minutes: {step: 5}}:
+      ({minutes: {step: 15}})
+  
     return ( 
         <React.Fragment>
-  
-          <Form.Input label="Choose Date">
-            <DatePicker
-              from={"today"}
-              readOnly={true}
-              output={val => handleDate(val)}
-            />
-          </Form.Input>
-          <Form.Select
-            label="Choose Time"
-            options={getTimeOptions()}
-            defaultValue="00:00"
-            onChange={(e, val) => handleTime(val.value)}
+          <DateTime 
+          isValidDate={validDates}
+          timeConstraints={validTimes()}
+          timeFormat={this.props.includeTime !== undefined}
+          defaultValue={this.state.current}
+          onChange={e => {
+            const newDate = e.isSame(new Date(), "day")? moment():e
+            this.setState({current: newDate})
+            this.props.value(moment.utc(newDate).valueOf())
+          }}
           />
 
       </React.Fragment>

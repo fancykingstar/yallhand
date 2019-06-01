@@ -69,6 +69,7 @@ class EmailPrimary extends React.Component {
           const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
           AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
           this.props.history.push("/panel/analytics")
+          this.resetEmail();
         }
 
       }

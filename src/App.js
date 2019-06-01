@@ -9,7 +9,7 @@ import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import FullStory from 'react-fullstory';
-
+import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
 
@@ -37,23 +37,12 @@ class AppRoute extends React.Component {
         if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
         else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
       }
-      loadthings()
+      fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
+        mode: 'no-cors',
+        }).then(() => loadthings())
+      .catch(() => toast.error("Unable to connect to Yallhands...", {hideProgressBar: true, autoClose: false, closeOnClick: false}) )
       }
-
-     
     }
-  
-
-  // componentDidMount() {
-  //   const { UserStore, UIStore } = this.props;
-  //   if (!UIStore._adminLoadingComplete) {
-  //     UserStore.setPreviewTeam("")
-  //     UserStore.setPreviewTag("")
-  //     loadAdmin()
-  //   }
-  //   if (!UserStore.isAuthenticated) this.props.history.push('/')
-    
-  // }
 
   render() {
     const {UIStore} = this.props;
@@ -77,6 +66,7 @@ class AppRoute extends React.Component {
         toastClassName='toast-style'
         position="top-center"
         transition={Slide}
+        closeButton={false}
         />
       </div>
     );
