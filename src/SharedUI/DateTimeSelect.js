@@ -16,6 +16,7 @@ export class DateTimeSelect extends React.Component {
     const dateTime = moment(now).add(remainder, "minutes");
     const start = this.props.notToday === undefined? dateTime: dateTime.add(1, 'day');
     this.state={current: this.props.includeTime !== undefined? start:start.startOf('day')};
+    this.props.value(this.state.current.valueOf());
   }
  
   render() {

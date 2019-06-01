@@ -41,10 +41,6 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
           handleClose() 
           UIStore.set("modal", "editUser", false)
         });
-        offBoardUser(DataEntryStore.userEditFields.userEdit.userID, false).then(() => {
-          handleClose()
-          UIStore.set("modal", "editUser", false)
-        });
     }
 
     const setOffBoardDate = day => {

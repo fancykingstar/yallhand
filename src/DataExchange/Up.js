@@ -336,12 +336,12 @@ export const createCampaign = (payload, toastEnabled) => {
     )
 }
 
-export const modifyCampaign = (payload) => {
+export const modifyCampaign = (payload, toastEnabled) => {
     let msg = payload.completed? "The selected campaign has been discontinued 🛑" :"Your campaign has been updated 🛠"
     if(Object.keys(payload).length < 3 && payload.isTemplate === false){msg = "Template removed."}
     return processTemplate(true, "emailcampaigns/" + payload.campaignID, "PATCH", payload, "campaigns", 
     msg,
-    true,{"event": "update", "type":"campaign"}
+    true,{"event": "update", "type":"campaign"}, toastEnabled
 )
 }
 
