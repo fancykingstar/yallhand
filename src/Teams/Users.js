@@ -62,7 +62,7 @@ export class Users extends React.Component {
               <Header.Subheader>
                 <Image src={user.img !== "" && user.img !== undefined ? user.img : UserImgPlaceholder()} avatar />
                 {user.isAdmin ? "Admin" : null}{" "}
-                {user.now ? null: user.date < Date.now()? "Invite Sent":"Scheduled To Invite"}
+                {user.userId ? null: user.now? "Invite Sent":"Scheduled To Invite"}
                 {!user.code && !user.isActive? `Offboarded ${UTCtoFriendly(user.updated).split(',')[0]}`:null}
               </Header.Subheader>
             </Header.Content>
