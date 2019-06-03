@@ -1,26 +1,48 @@
 import React from "react";
+import {withRouter} from "react-router-dom"
 import { inject, observer } from "mobx-react";
 import { Segment, Header, Icon, Form, Checkbox, Menu, Button, Message } from "semantic-ui-react";
 import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import { flashDraft } from "../SharedCalculations/FlashDraft"
 
 import { emailCampaign, emailPreview, schedule } from "../DataExchange/PayloadBuilder";
 import { createCampaign, createSchedule } from "../DataExchange/Up"
 import { sendEmailPreview } from "../DataExchange/Up";
 
-@inject("UIStore", "DataEntryStore", "AccountStore")
+@inject("UIStore", "DataEntryStore", "AccountStore", "EmailStore")
 @observer
-export class SendOptions extends React.Component {
+class SendOptions extends React.Component {
+  constructor(props){
+    super(props)
+    const {DataEntryStore} = this.props
+    this.resetEmail = () => {
+      DataEntryStore.reset("emailCampaign",{sendTargetType: "all", sendToTeamID: "global", sendToTagID: "none", sendOption: "schedule",sendAutomationEvent: "firstLogin"})
+      flashDraft()
+    }
+  }
   render() {
-    const { UIStore, DataEntryStore, AccountStore } = this.props;
+    const { UIStore, DataEntryStore, AccountStore, EmailStore } = this.props;
  
     const sendPreview = () => {
       sendEmailPreview(emailPreview());
     };
   
-    const sendLater = () => {
-      if(canSubmit()) UIStore.menuItem.sendEmailOption === "schedule"? createCampaign(emailCampaign(false, true), false).then(r =>  r.json().then(data => createSchedule(schedule(DataEntryStore.emailCampaign.sendNext, "email send", {"campaignID": data.campaignID, "label": data.subject})))) : createCampaign(emailCampaign(false, false))
-    }
+    const sendLater = async () => {
+      let camp = {}
+      if(canSubmit()) {
+        if(UIStore.menuItem.sendEmailOption === "schedule") 
+        await createCampaign(emailCampaign(false, true), false)
+          .then(r =>  r.json()
+          .then(data => {
+            camp = data
+            createSchedule(schedule(DataEntryStore.emailCampaign.sendNext, 'send campaign', {"campaignID": data.campaignID, "label": data.subject}))})) 
+        else camp = await createCampaign(emailCampaign(false, false)).then((res) => res.json())
+        EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[camp]])
+        UIStore.menuItem.sendEmailOption === "schedule"? this.props.history.push("/panel") : UIStore.set("menuItem", "emailFrame", "automations" )
+          }
+        this.resetEmail();
+      }
 
     const canSubmit = () => {
       let validations = {datetime: false}        
@@ -41,15 +63,9 @@ export class SendOptions extends React.Component {
 
     const displaySendOption = UIStore.menuItem.sendEmailOption === "schedule"? 
     <React.Fragment>
-       <Form>
-              <Form.Group>
-                <DateTimeSelect
-                  value={val =>
-                    DataEntryStore.set("emailCampaign", "sendNext", val)
-                  }
-                />
-              </Form.Group>
-            </Form>
+    
+                <DateTimeSelect value={val => DataEntryStore.set("emailCampaign", "sendNext", val) } includeTime />
+           
         <div style={DataEntryStore.emailCampaign.loadedTemplateSubject !== DataEntryStore.emailCampaign.sendSubject? {paddingBottom: 5}:{display: "none"}}> <Checkbox checked={DataEntryStore.emailCampaign.sendSaveTemplate}  onClick={(e, data) => DataEntryStore.set("emailCampaign", "sendSaveTemplate", data.checked)} label="Use as template in the future"/> </div>
       
     </React.Fragment>
@@ -183,3 +199,4 @@ export class SendOptions extends React.Component {
     );
   }
 }
+export default withRouter(SendOptions)

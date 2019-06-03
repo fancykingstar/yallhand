@@ -9,10 +9,10 @@ import CountUp from 'react-countup';
 import {apiCall} from "../DataExchange/Fetch";
 import CreateContent from "../SharedUI/ManageContent/CreateContent";
 import {DateRange} from "../SharedUI/DateRange"
-import moment from "moment"
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+
 import _ from "lodash";
 import "./style.css";
-import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 @inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore", "UIStore")
 @observer
@@ -28,6 +28,7 @@ class DashboardFrame extends React.Component {
   }
   componentDidMount(){
     this.getData()
+    window.scrollTo(0, 0);
   }
 
   render() {
@@ -54,6 +55,11 @@ class DashboardFrame extends React.Component {
     }
 
     const doughnutData =  {
+      labels: [
+        'Negative',
+        'Neutral',
+        'Positive'
+    ],
       datasets: [{
           data: AccountStore.dashboardData.sentiment_total === undefined? null : [AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ],
           backgroundColor: ["#FF6384", "#0BCDFD","#B908FA"]
@@ -253,13 +259,13 @@ class DashboardFrame extends React.Component {
                 <Grid columns="equal">
                   <Grid.Row>
                     <Grid.Column>
-                      <Icon style={{color:"#FF6384"}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 
+                      <Icon style={{color:'#B908FA'}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 
                     </Grid.Column>
                     <Grid.Column>
                     <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{Number.isNaN(sentimentPercentage(1))? 0 : sentimentPercentage(1)}% 
                     </Grid.Column>
                     <Grid.Column>
-                    <Icon style={{color:'#B908FA'}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
+                    <Icon style={{color:"#FF6384"}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

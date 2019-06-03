@@ -7,6 +7,7 @@ import { getDisplayTeams } from "../SharedCalculations/GetDisplayTeams";
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { UserImgPlaceholder } from "../SharedCalculations/UserImgPlaceholder";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 
 @inject("TeamStore", "UIStore", "DataEntryStore", "AccountStore")
 @observer
@@ -59,9 +60,10 @@ export class Users extends React.Component {
             <Header.Content>
               {user.displayName_full}
               <Header.Subheader>
-                <Image src={user.img !== "" ? user.img : UserImgPlaceholder()} avatar />
-                {user.isAdmin ? "Admin" : null}
-                {user.displayName_full === "" ? "Invite Sent" : null}
+                <Image src={user.img !== "" && user.img !== undefined ? user.img : UserImgPlaceholder()} avatar />
+                {user.isAdmin ? "Admin" : null}{" "}
+                {!user.code ? null: user.now? "Invite Sent":"Scheduled To Invite"}
+                {!user.code && !user.isActive? `Offboarded ${UTCtoFriendly(user.updated).split(',')[0]}`:null}
               </Header.Subheader>
             </Header.Content>
           </Header>

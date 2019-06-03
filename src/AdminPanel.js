@@ -38,6 +38,15 @@ export class AdminPanel extends React.Component {
   render() {
     const { UIStore, UserStore } = this.props;
 
+    const mobileNavDisplay =  UIStore.responsive.mobileNav?
+    <div className="SideBarContainerMobile">
+      <div style={{float: "left"}} > 
+      <SideBar mobile={true} />
+       </div>
+      <div style={{height: "100vh", width: "100vw"}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
+    </div>
+  : null
+
     const accountOptions = () => []
 
     const checkMobile = (width) => {
@@ -55,20 +64,22 @@ export class AdminPanel extends React.Component {
     const loadingDisplay = !UIStore._adminLoadingComplete ? (
       <div />
     ) : (
+      <React.Fragment>
+      <Header />
       <div className="SideAndAction">
         <Responsive {...Responsive.onlyComputer} fireOnMount={true} onUpdate={(e, val) => checkMobile(val.getWidth())}>
         <SideBar />
         </Responsive>
-        <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
-          <div style={{marginTop: 40, position: "fixed", zIndex: 50}}> 
-          <div style={{float: "left"}}>
-            <SideBar />
-          </div>
-          <div style={{height: 800, width: 992}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
+        {/* <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
+          <div> 
+          <div style={{float: "left"}}> <SideBar /> </div>
+          <div style={{height: "100vh", width: "100vw"}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
         </div>
-        </Transition>
-        <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515"} : null}>
-        
+        </Transition> */}
+
+     {mobileNavDisplay}
+
+        <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
             <Route path="/panel/faqs" component={CardFrame} exact />
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
@@ -94,9 +105,12 @@ export class AdminPanel extends React.Component {
            </Route>
 
           </Switch>
+
         </div>
-        <Header />
+   
       </div>
+
+      </React.Fragment>
     );
 
     return <React.Fragment>{loadingDisplay}</React.Fragment>;

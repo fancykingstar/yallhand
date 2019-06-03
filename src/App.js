@@ -9,49 +9,55 @@ import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import FullStory from 'react-fullstory';
-
+import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
+import { getUser } from "./DataExchange/Fetch";
 
 
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
-
-  componentDidMount() {
+  constructor(props){
+    super(props);
     const { UserStore, UIStore } = this.props;
-    if (!UIStore._adminLoadingComplete) {
+    this.state = {shouldRedirect: false, redirect: "/"}
+    if (getUser() === null) this.props.history.push('/');
+    else if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
-      loadAdmin()
+      const loadthings = async ()=>{
+        await loadAdmin()
+        const { location } = this.props;
+        const { isAuthenticated } = UserStore;
+        const path = location.pathname;
+        const loggedOutRoutes = ['/', '/register', '/forgot'];
+        const loggedInRoutes = ['/panel', '/portal'];
+        this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
+        if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
+        else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
+      }
+      fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
+        mode: 'no-cors',
+        }).then(() => loadthings())
+      .catch(() => toast.error("Unable to connect to Yallhands...", {hideProgressBar: true, autoClose: false, closeOnClick: false}) )
+      }
     }
-    if (!UserStore.isAuthenticated) this.props.history.push('/')
-    
-  }
 
   render() {
-    const { UserStore, UIStore, location } = this.props;
-    const { isAuthenticated } = UserStore;
-    const path = location.pathname;
-    const loggedOutRoutes = ['/', '/register', '/forgot'];
-    const loggedInRoutes = ['/panel', '/portal'];
-    const redirect = isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"
-    let shouldRedirect = false;
-    
-    if (redirect !== path || path.includes("/portal/")) shouldRedirect = (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1);
-
+    const {UIStore} = this.props;
     return (
       <div className="App">
         <FullStory org="JJAMV"/>
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
-        {shouldRedirect && <Switch><Redirect push to={redirect}/></Switch>}
+        {this.state.shouldRedirect && <Switch><Redirect push to={this.state.redirect}/></Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
           <Route path="/register" component={Login} />
           <Route path="/forgot" component={Forgot} />
           <Route path="/" component={Login} exact />
-          <Route path="*"> <Redirect push to={redirect}/> </Route>
+          <Route path="*"> <Redirect push to={this.state.redirect}/> </Route>
         </Switch>
         </div>
         <ToastContainer 
@@ -59,6 +65,7 @@ class AppRoute extends React.Component {
         toastClassName='toast-style'
         position="top-center"
         transition={Slide}
+        closeButton={false}
         />
       </div>
     );

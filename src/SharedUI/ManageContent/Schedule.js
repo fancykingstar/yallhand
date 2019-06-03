@@ -4,7 +4,6 @@ import {Segment, Button, Header, Form} from "semantic-ui-react"
 import {DateTimeSelect} from "../DateTimeSelect"
 import { createSchedule } from "../../DataExchange/Up"
 import { schedule } from "../../DataExchange/PayloadBuilder"
-import moment from "moment"
 import "./style.css"
 
 
@@ -34,20 +33,17 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
           <div style={{ maxWidth: 500 }}>
         <Header>Schedule</Header>
         <Form>
-              <Form.Group inline widths="equal">
+              <Form.Group>
               <Form.Select
                 options={options()}
                 onChange={(e, val) => DataEntryStore.set("contentmgmt", "eventType", val.value )}
                 label="Choose action"
-                style={{ width: 100 }}
-
-              /><br/>
-             <DateTimeSelect
-              value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val)}
-             />
+              />
+   
+         
              </Form.Group></Form>
-             {/* <p style={{marginTop: 10}}>{UserStore.user.timezone}</p> */}
-              <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.event === ""} onClick={e => handleClick()}>Set</Button>
+             <DateTimeSelect value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val) } includeTime />
+              <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.eventType === ""} onClick={e => handleClick()}>Set</Button>
 
     
    

@@ -13,13 +13,16 @@ export class PortalViews extends React.Component {
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
 
         const sort = (controller, direction) => {
-            const param = controller === "toal"? "total_views" : "unique_views"
-            if(direction === "Oldest") {
-            AccountStore.loadAnalyticData(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
+            const param = controller
+            if(direction === "Lowest") {
+            AccountStore.loadAnalyticData_portal(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
             }
+
+
             else {
-                AccountStore.loadAnalyticData(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
+                AccountStore.loadAnalyticData_portal(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
                 }
+            
         }
 
 
@@ -50,8 +53,8 @@ export class PortalViews extends React.Component {
             <Table.HeaderCell rowSpan='2'>Label</Table.HeaderCell>
             {vari?
             <Table.HeaderCell textAlign="center" rowSpan='2'>Audience</Table.HeaderCell>: null}
-            <Table.HeaderCell textAlign="center" rowSpan='2'>Total Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("total_views", "Newest")}/> <Icon size="small" name="arrow down" onClick={e => sort("total_views", "Oldest")}/></span>} </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center" rowSpan='2'>Unique Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("unique_views", "Newest")}/> <Icon size="small" name="arrow down" onClick={e => sort("unique_views", "Oldest")}/></span>} </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" rowSpan='2'>Total Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("total_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => sort("total_views", "Lowest")}/></span>} </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center" rowSpan='2'>Unique Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("unique_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => sort("unique_views", "Lowest")}/></span>} </Table.HeaderCell>
             {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
             <Table.HeaderCell textAlign="center"colSpan='3' textAlign="center">Feedback</Table.HeaderCell>: null}
         </Table.Row>
@@ -88,9 +91,9 @@ export class PortalViews extends React.Component {
                     <Table.Cell textAlign="center">{vari.unique_views}</Table.Cell>
                     {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
                              <React.Fragment>
-                               <Table.Cell textAlign="center">{vari.sentiment[0]}</Table.Cell>
-                               <Table.Cell textAlign="center">{vari.sentiment[1]}</Table.Cell>
                                <Table.Cell textAlign="center">{vari.sentiment[2]}</Table.Cell>
+                               <Table.Cell textAlign="center">{vari.sentiment[1]}</Table.Cell>
+                               <Table.Cell textAlign="center">{vari.sentiment[0]}</Table.Cell>
                                </React.Fragment>
                                 : null }
                     </Table.Row>

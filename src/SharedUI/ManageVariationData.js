@@ -58,7 +58,7 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
               <div className="Form">
                 <span>Attached Files: </span> <span style={valStyle} className="lightText">{filesDisplay}</span>
               </div>
-              <div className="Form">
+              <div style={{paddingBottom: 10}} className="Form">
                 <span>Owner: </span>
                 <Label color="blue" horizontal>
                   {AccountStore._getDisplayName(props.variation.userID)}

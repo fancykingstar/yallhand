@@ -9,6 +9,9 @@ import "./style.css";
 @inject("PoliciesStore", "UIStore")
 @observer
 export class CardFrame extends React.Component {
+  componentDidMount(){
+    window.scrollTo(0, 0);
+  }
   render() {
     const { PoliciesStore, UIStore } = this.props;
     const validData = PoliciesStore.allPolicies;

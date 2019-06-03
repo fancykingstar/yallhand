@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom"
 import {inject, observer} from "mobx-react"
 import { Segment, Header, Menu, Form, Icon, Button, Checkbox, Message } from "semantic-ui-react";
 import { ChooseTargeting } from "./ChooseTargeting";
@@ -15,9 +16,11 @@ import { EditorState, convertFromRaw } from "draft-js";
 import _ from "lodash";
 
 
-@inject("UIStore", "DataEntryStore")
+
+
+@inject("UIStore", "DataEntryStore", "EmailStore", "AccountStore")
 @observer
-export class EmailPrimary extends React.Component {
+class EmailPrimary extends React.Component {
   constructor(props){
     super(props)
     const {DataEntryStore} = this.props
@@ -42,7 +45,7 @@ export class EmailPrimary extends React.Component {
     }
   }
   render() {
-      const {UIStore, DataEntryStore} = this.props
+      const {UIStore, DataEntryStore, EmailStore, AccountStore} = this.props
 
       const canSubmit = () => {
         let validations = {subject: false, targets: false, content: false}
@@ -59,8 +62,16 @@ export class EmailPrimary extends React.Component {
         return !Object.values(validations).includes(false)
       }
 
-      const sendNow = () => {
-        if(canSubmit()) {createCampaign(emailCampaign(true, false))}
+      const sendNow = async () => {
+        if(canSubmit()) {
+          const newCamp = await createCampaign(emailCampaign(true, false)).then((res) => res.json())
+          EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[newCamp]])
+          const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
+          AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
+          this.props.history.push("/panel/analytics")
+          this.resetEmail();
+        }
+
       }
 
       const bundlePopulated = DataEntryStore.emailCampaign.sendContent.length === 0;
@@ -186,3 +197,5 @@ export class EmailPrimary extends React.Component {
     );
   }
 }
+
+export default withRouter(EmailPrimary)

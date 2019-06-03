@@ -25,7 +25,7 @@
 
 .displayAdjust {
     position: absolute;
-    z-index: 2;
+    /* z-index: 2; */
 }
 
 .Q {
@@ -67,7 +67,7 @@
     margin-top: -21px;
     margin-left: 70px;
     position: absolute;
-    z-index: 2;
+    /* z-index: 2; */
     text-align: center;
     width: 180px;
 }
@@ -76,7 +76,7 @@
     margin-top: -21px;
     margin-left: 287px;
     position: absolute;
-    z-index: 2;
+    /* z-index: 2; */
 }
 .Corner {  
     margin-top: 5px;

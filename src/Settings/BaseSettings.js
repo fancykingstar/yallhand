@@ -23,7 +23,7 @@ export class BaseSettings extends React.Component {
     DataEntryStore.set( "baseSettings", "timezone", AccountStore.account.timezone );
     DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert );
     DataEntryStore.set( "baseSettings", "generalEmail", AccountStore.account.generalEmail );
-
+    window.scrollTo(0, 0);
   }
   render() {
     const { AccountStore } = this.props;
@@ -70,7 +70,7 @@ export class BaseSettings extends React.Component {
               />
              
                 
-              <Form.Field>
+              {/* <Form.Field>
                 <Form.Select
                   label="Default Timezone"
                   options={timezones}
@@ -78,7 +78,7 @@ export class BaseSettings extends React.Component {
                   onChange={(e, { value }) => DataEntryStore.set("baseSettings", "timezone", value)}
                   search
                 />
-              </Form.Field>
+              </Form.Field> */}
               <Form.Select
                 label="Default Review Alert For Aging Content"
                 style={{ width: 150 }}

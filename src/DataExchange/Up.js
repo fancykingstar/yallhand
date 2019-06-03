@@ -28,7 +28,7 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-  console.log(endpoint, meth, JSON.stringify(payload))
+//   console.log(endpoint, meth, JSON.stringify(payload))
 
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
@@ -185,11 +185,17 @@ export const modifyUser = (payload) => {
 )
 }
 
-export const offBoardUser = (userID) => {
-    return processTemplate(true, "users/" + userID, "PATCH", {"userID": userID, "accountID": accountID(), "isActive": false}, "users", 
-    `User offboarded ✌️`, 
-    true,{"event": "offboard", "type":"user"}
-)
+export const offBoardUser = (userID, now) => {
+  let data = {
+    "userID": userID,
+    "accountID": accountID(),
+    "isActive": false
+  };
+  if(!now) {
+    data.offBoarded = true;
+    data.offBoardDate = new Date();
+  }
+  return processTemplate(true, "users/" + userID, "PATCH", data, "users", `User offboarded ✌️`, true,{"event": "offboard", "type":"user"})
 }
 
 export const deleteUser = (userID) => {
@@ -249,7 +255,7 @@ export const createFile = (payload) => {
 }
 
 export const modifyFile = (payload, toast=true) => {
-    processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
+    return processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
         "Your file has been updated 🛠☁️", 
         true,{"event": "update", "type":"file"}, toast
     )
@@ -330,12 +336,12 @@ export const createCampaign = (payload, toastEnabled) => {
     )
 }
 
-export const modifyCampaign = (payload) => {
+export const modifyCampaign = (payload, toastEnabled) => {
     let msg = payload.completed? "The selected campaign has been discontinued 🛑" :"Your campaign has been updated 🛠"
     if(Object.keys(payload).length < 3 && payload.isTemplate === false){msg = "Template removed."}
     return processTemplate(true, "emailcampaigns/" + payload.campaignID, "PATCH", payload, "campaigns", 
     msg,
-    true,{"event": "update", "type":"campaign"}
+    true,{"event": "update", "type":"campaign"}, toastEnabled
 )
 }
 

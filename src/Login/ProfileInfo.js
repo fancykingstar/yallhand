@@ -27,7 +27,7 @@ class ProfileInfo extends React.Component {
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
       img: props.item && props.item.img ? props.item.img : '',
     };
-    console.log(this.state)
+
   }
 
   isEmpty (value) {
@@ -92,6 +92,7 @@ class ProfileInfo extends React.Component {
       now: now,
       date: date,
       googleId: googleId,
+      date: new Date()
     })
     .then((res) => res.json())
     .then((res) => {
@@ -105,7 +106,7 @@ class ProfileInfo extends React.Component {
           .then((res) => {
             if (res.token) {
               setUser({token: res.token})
-              this.props.history.push('/panel')
+              this.props.history.push(res.isAdmin? '/panel' : '/portal')
             }
           })
         })

@@ -12,7 +12,6 @@ export const ManageVariationData = inject("PoliciesStore", "ResourcesStore")(obs
         const policy = props.policy
         const variations = props.policy.variations
         const thisVariation = variations.filter(variation => variation.variationID === PoliciesStore.toggledVariation)[0]
-        console.log(thisVariation)
         const files = ResourcesStore.fileResources.filter(file => file.variationID.includes(PoliciesStore.toggledVariation))
         const urls = ResourcesStore.urlResources.filter(file => file.variationID.includes(PoliciesStore.toggledVariation))
         const tags = thisVariation.tags.length > 0 ? thisVariation.tags : []

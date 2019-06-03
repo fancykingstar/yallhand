@@ -29,7 +29,6 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
          types.forEach(function(type){
              if (type in fullList) {list.push(...fullList[type])}
          })
-         console.log(list)
          const listDisplay = list.length > 1 ? list.join(', ') : list
          return listDisplay
   }
@@ -54,7 +53,6 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
     
         <Table.Cell > {auto.label}</Table.Cell>
         <Table.Cell>{addCommas(auto.capture)}</Table.Cell>
-        {/* <Table.Cell >{auto.capture.template}{auto.capture.custom}</Table.Cell> */}
         <Table.Cell >{auto.action}</Table.Cell>
         <Table.Cell >{auto.endpoint.join(', ')}</Table.Cell>
         <Table.Cell >{UTCtoFriendly(auto.updated)}</Table.Cell>
@@ -62,18 +60,6 @@ export const AutomationList = inject("AutomationsStore")(observer((props) => {
       </Table.Row>
     ));
 
-    // {
-    //     "accountID": "A1",
-    //     "automationID": "auto1",
-    //     "label": "Contact HR",
-    //     "action": "email",
-    //     "endpoint": ["mark@aubry.ai"],
-    //     "capture": [{"template": ["email", "username", "channel", "query", "team"]}, {"custom": ["good time to contact?"]}],
-    //     "policyID": ["P5"],
-    //     "updated": "1538147254",
-    //     "public": true,
-    //     "admin": {"userID": "userID", "displayName": "Mark Z."}
-    // },
 
 
 

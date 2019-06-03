@@ -5,7 +5,7 @@ import { content, contentEdit, contentHistory } from "../../DataExchange/Payload
 import { VariationContent } from "./VariationContent";
 import { VariationConfig } from "./VariationConfig";
 import { PublishControls } from "./PublishControls";
-import { validateURLs } from "./ValidateURLs"
+import toast from "../../YallToast"
 import _ from "lodash";
 
 @inject("DataEntryStore", "UserStore", "PoliciesStore", "AnnouncementsStore", "UIStore", "ResourcesStore")
@@ -109,7 +109,11 @@ class NewEditVariation extends React.Component {
     return (
       <div style={{overflowY: "auto", overflowX: "hidden"}}>
         {(variationID !== "" || announcementID !== "" || DataEntryStore.content.isNew) && <React.Fragment>
-          <PublishControls stage={stage} onClick={val => this.changeStage(val)}/>
+          <PublishControls stage={stage} onClick={val => {
+            DataEntryStore.content.teamID === "" || DataEntryStore.content.tagID === "" ? 
+            toast.error("Whoops. Please select team and tag options.", { hideProgressBar: true })
+          : this.changeStage(val)}
+           } />
           <VariationConfig mode={mode}/>
          {DataEntryStore.content.contentRAW === undefined? <div/> : <VariationContent mode={mode}/>}
         </React.Fragment>}

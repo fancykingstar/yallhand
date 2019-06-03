@@ -36,6 +36,9 @@ export class ContentDetail extends React.Component {
         if(UIStore.portal.viewedContent.includes(content[this.props.mode + "ID"]) === false){
             UIStore.set("portal", "viewedContent", [...UIStore.portal.viewedContent, content[this.props.mode + "ID"]])
         }
+
+        window.scrollTo(0, 0);
+        
     }
 
     render() {
@@ -44,7 +47,6 @@ export class ContentDetail extends React.Component {
         const mode = this.props.mode
         const content = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.id) 
         : PoliciesStore._getPolicy(this.props.match.params.id)
-        console.log(content)
         const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
         const displayFiles = fileResources.map(file =>
             <Item key={"contentResource" + giveMeKey()}>
@@ -77,7 +79,7 @@ export class ContentDetail extends React.Component {
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
-                  <div style={{fontSize:"1.4em"}}>
+                  <div className="PortalContentText" style={{fontSize:"1.4em"}}>
                   {/* <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/> */}
                   <span dangerouslySetInnerHTML={{ __html: content.variations[0].contentHTML }} />
                   </div>
@@ -109,7 +111,7 @@ export class ContentDetail extends React.Component {
                     </Grid.Row>
                 </Grid>
                 </Container>
-                <div style={{paddingBottom: 120}}/>
+                <div/>
                    
                 </div>
                 

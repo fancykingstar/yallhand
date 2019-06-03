@@ -8,7 +8,7 @@ import {
   Divider,
   Container
 } from "semantic-ui-react";
-import { DatePicker } from "../SharedUI/DatePicker";
+import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { offBoardUser, createSchedule, deleteUser } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { apiCall } from "../DataExchange/Fetch"
@@ -28,20 +28,19 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
     };
 
     const offboardNow = () => {
-        offBoardUser(DataEntryStore.userEditFields.userEdit.userID).then(() => {
-          handleClose()
-          UIStore.set("modal", "editUser", false)
-          })
+      offBoardUser(DataEntryStore.userEditFields.userEdit.userID, true).then(() => {
+        handleClose()
+        UIStore.set("modal", "editUser", false)
+      })
     }
 
     const offboardLater = () => {
-        apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
+      apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
         createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": DataEntryStore.userEditFields.userEdit.userID}))
         .then(() => {
           handleClose() 
           UIStore.set("modal", "editUser", false)
-        })
-
+        });
     }
 
     const setOffBoardDate = day => {
@@ -101,7 +100,7 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
             </Grid.Column>
 
             <Grid.Column verticalAlign="middle">
-              <Container textAlign="center">
+              <Container style={{paddingTop: 12}} textAlign="center">
                 <Button
                   onClick={e => offboardLater()}
                   content="Schedule Last Day"
@@ -110,8 +109,9 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
                   size="large"
                   disabled={DataEntryStore.onOffBoarding.offBoardingDate === ""}
                 />
-                <Form.Input style={{ paddingTop: 10 }} label="Choose Date">
-                <DatePicker from={"tomorrow"} output={setOffBoardDate} />
+                <Form.Input label="Choose Date">
+
+                <DateTimeSelect notToday value={val => setOffBoardDate(val) } />
                 </Form.Input>
               </Container>
             </Grid.Column>
