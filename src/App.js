@@ -18,8 +18,7 @@ import { getUser } from "./DataExchange/Fetch";
 @observer
 class AppRoute extends React.Component {
   constructor(props){
-    super(props)
-    console.log("ondeck branch is go")
+    super(props);
     const { UserStore, UIStore } = this.props;
     this.state = {shouldRedirect: false, redirect: "/"}
     if (getUser() === null) this.props.history.push('/');
