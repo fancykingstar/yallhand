@@ -26,8 +26,7 @@ export const account = async (accountID) => {
 export const users_and_teams = async (accountID, userID) => {
   const me = await apiCall_noBody(`user/${userID}`, "GET");
   const users = await apiCall_noBody(`users/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-  // const users = await apiCall_noBody(`users/all?filter={"where":{"teamID":"${users[0].teamID}"}}`, "GET");
-  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}", "now":false}}`, "GET");
+  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}"}}`, "GET");
   AccountStore.loadUsers([...users, ...inactiveUsers]);
   DataEntryStore.superAdmin.previewAccount === "" ? UserStore.loadUser(AccountStore._getUser(userID)) : null;
   const teams = await apiCall_noBody(`teams/${accountID}`, "GET");
@@ -44,7 +43,6 @@ export const users_and_teams = async (accountID, userID) => {
 }
 
 export const users = async (accountID) => {
-
   const users = await apiCall_noBody(`users/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
   const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}", "now":false}}`, "GET");
   AccountStore.loadUsers([...users, ...inactiveUsers]);
