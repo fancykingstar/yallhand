@@ -18,7 +18,7 @@ export class Scheduled extends React.Component {
       }
 
       const displayTask = (task) => 
-        ({"send campaign": `Send ${task.data.label} ${!task.userID? `to ${AccountStore._getUser(task.data.userID).displayName_full} (Email Automation)`:null}`,
+        ({"send campaign": `Send ${task.data.label} ${!task.userID? `to ${AccountStore._getUser(task.data.userID).displayName_full} (Email Automation)`:""}`,
           "onboard user": `Onboard ${AccountStore.allUsers.filter(i=>i.id === task.data.id)[0].email}`,
           "offboard user": `Offboard ${AccountStore._getUser(task.data.userID).displayName_full}`,
           "publish content": `Publish ${getContentObj(task.data).label}`,
