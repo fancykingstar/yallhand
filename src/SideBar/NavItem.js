@@ -25,7 +25,7 @@ class NavItem extends React.Component {
           onClick={e => handleClick(this.props.id)}
         >
           <div className="NavItemIcon">
-            <Icon name={this.props.icon} />
+            {typeof(this.props.icon) !== "string"? this.props.icon: <Icon name={this.props.icon} />}
           </div>
           <div className="NavItemText">
             <h4>{this.props.label}</h4>

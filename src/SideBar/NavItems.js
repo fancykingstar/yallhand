@@ -59,7 +59,7 @@ class NavItems extends React.Component {
         />
 
         <br />
-
+ 
         <NavItem
           id="announcements"
           icon="bullhorn"
@@ -67,11 +67,24 @@ class NavItems extends React.Component {
           active={UIStore.sideNav.activePrimary === "announcements"}
         />
 
+
+      {UserStore.user.invitedBy !== "admin"?"":
+      <React.Fragment>
+      <NavItem
+          id="announcements"
+          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} class="fas fa-vote-yea"/>}
+          label="Polls"
+          active={UIStore.sideNav.activePrimary === "announcements"}
+        />  
         <br />
+        </React.Fragment>
+    }
+
+
         <NavItem
           id="email"
           icon="mail"
-          label="Email Campaign"
+          label="Email Campaigns"
           active={UIStore.sideNav.activePrimary === "email"}
         />
 
@@ -90,8 +103,32 @@ class NavItems extends React.Component {
           icon="cubes"
           label="Resources"
           active={UIStore.sideNav.activePrimary === "resources"}
+
         />
+
+      {UserStore.user.invitedBy !== "admin"?"":
+      <React.Fragment>
+        <br/>
+      <NavItem
+          id="announcements"
+          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} class="fas fa-tasks"/>}
+          label="Tasks"
+          active={UIStore.sideNav.activePrimary === "announcements"}
+        />  
+        <br />
+        <NavItem
+          id="announcements"
+          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} class="fas fa-robot"/>}
+
+          label="Automations"
+          active={UIStore.sideNav.activePrimary === "announcements"}
+        />  
+   
+        </React.Fragment>
+    }
       </div>
+
+      
     );
   }
 }

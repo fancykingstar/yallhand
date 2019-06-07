@@ -88,7 +88,7 @@ class SideBarMenu extends React.Component {
    
           <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            <Icon style={{color: "#FFFFFF"}} name="newspaper outline" />
+            <Icon size="small" style={{color: "#FFFFFF"}} name="newspaper outline" />
             {" "}Feed{" "}
        
           
@@ -96,6 +96,7 @@ class SideBarMenu extends React.Component {
             </Menu.Header>
             <Menu.Menu>
               <Menu.Item
+                active={UIStore.sideNav.activePrimary === "announcements"}
                 style={
                   UIStore.sideNav.activePrimary === "announcements"
                     ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
@@ -112,9 +113,10 @@ class SideBarMenu extends React.Component {
 
               </Menu.Item>
               <Menu.Item
+                active={UIStore.sideNav.activePrimary === "policies"}
                 style={
                   UIStore.sideNav.activePrimary === "policies"
-                    ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
+                    ? { backgroundColor: "#00a3e0", width: "247px", fontSize: "1em" }
                     : {fontSize: "1em"}
                 }
                 onClick={e => {
@@ -126,12 +128,31 @@ class SideBarMenu extends React.Component {
                 FAQs
                 {nonviewedPolicies.length === 0? null :  <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedPolicies.length)}</Label></div>}
               </Menu.Item>
+                {UserStore.user.invitedBy !== "admin"? "":
+              <Menu.Item
+                active={UIStore.sideNav.activePrimary === "policies"}
+                style={
+                  UIStore.sideNav.activePrimary === "policies"
+                    ? { backgroundColor: "#00a3e0", width: "247px", fontSize: "1em" }
+                    : {fontSize: "1em"}
+                }
+                onClick={e => {
+                  UIStore.set("sideNav", "activePrimary", "policies");
+                  this.props.history.push("/portal/learn");
+                  document.getElementById('ActionFrame').scrollTop = 0;
+                }}
+              >               
+                Surveys
+                {nonviewedPolicies.length === 0? null :  <div style={{display: "inline-block", marginLeft: 10}}><Label size="mini" color='red'>{String(nonviewedPolicies.length)}</Label></div>}
+              </Menu.Item>
+                }
+                
             </Menu.Menu>
           </Menu.Item>
 
           <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            <Icon style={{color: "#FFFFFF"}} name="cubes" />
+            <Icon size="small" style={{color: "#FFFFFF"}} name="cubes" />
             {" "}Resources{" "}
            
         
@@ -139,6 +160,7 @@ class SideBarMenu extends React.Component {
 
             <Menu.Menu>
               <Menu.Item
+                active={UIStore.sideNav.activePrimary === "resources"}
                 style={
                   UIStore.sideNav.activePrimary === "resources"
                     ? { backgroundColor: "#00a3e0", color: "#FFFFFF", width: "247px", fontSize: "1em" }
@@ -171,7 +193,7 @@ class SideBarMenu extends React.Component {
           
             <Menu.Item>
             <Menu.Header style={{fontSize: "1.3em", color: "#FF136B"}}>
-            <Icon style={{color: "#FFFFFF"}} name="chat" />
+            <Icon size="small" style={{color: "#FFFFFF"}} name="chat" />
             {" "}Contact{" "}
   
           

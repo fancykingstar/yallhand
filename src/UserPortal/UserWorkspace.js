@@ -4,7 +4,7 @@ import "./style.css"
 
 export const UserWorkspace = props => {
   return (
-    <div style={{ height: 100 }}>
+    <div style={{ height: 120 }}>
 
         <div
           className={props.mobile? "WorkspacePortalLogoSm" : "WorkspacePortalLogoLrg"}

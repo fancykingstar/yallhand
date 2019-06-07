@@ -58,28 +58,25 @@
     height: 100%;
     position: fixed;
     top: 0px;
-    background-color: #4f4f4f;
+    background-color: #2b2a2a;
     border-right: 2px solid #00a3e0;
 }
 
 .SideBarFrameMobile {
   margin-top: -40px;
   padding-top: 10px;
-  background-color: #4f4f4f;
+  background-color: #2b2a2a;
   width: 75vw;
   height: 100vh;
   z-index: 50;
   overflow-y: auto;
-
-
-
 }
 
 .WorkspaceNamePortal {
     margin: auto;
     padding: 10px;
     text-align: center;
-    font-size: 1.8em;
+    font-size: 1.5em;
     color: rgb(255, 255, 255, .5)
   }
 
@@ -88,8 +85,8 @@
   
     margin: auto;
     margin-top: 50px;
-    height: 60px;
-    width: 60px;
+    height: 80px;
+    width: 80px;
     border: solid;
     border-width: 2px;
     border-color: #2dbffe;
@@ -124,7 +121,7 @@
 .PortalSideNav {
     height: 100%;
     padding-left: 3px;
-    background-color: #4f4f4f;
+    background-color: #2b2a2a;
     
 }
 
@@ -216,9 +213,9 @@
     background: white;
   }
 
-  .ActionFrameMessage {
+  /* .ActionFrameMessage {
 
-  }
+  } */
 
   .NoSearchResults {
     padding-top: 20px;
@@ -239,11 +236,92 @@
 
 }
 
-.PortalAnnc {
-  box-shadow: 0px 0px 2px 0px #ABACAB;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 5px ;
-  text-align: center;
+.AnncList {
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.AnncWrapper {
+  flex-grow: 1;
+  flex-shrink:1;
+  position: relative;
+  min-height: 350px;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 0;
+  -webkit-box-shadow: 0px 0px 2px 0px #545454;
+  -moz-box-shadow:    0px 0px 2px 0px #545454;
+  box-shadow:         0px 0px 2px 0px #545454;
+
+  align-items:center;
+
+
+}
+
+
+.AnncWrapper:hover {
+  -webkit-box-shadow: 0px 0px 2px 0px #2FC7F8;
+  -moz-box-shadow:    0px 0px 2px 0px #2FC7F8;
+  box-shadow:         0px 0px 5px 2px #2FC7F8;
+}
+
+
+
+.AnncSingle {
+  width:100%;
+  height:100%;
+
+
+}
+
+.AnncContent {
+  color: #FFFFFF;
+}
+
+.AnncContentAlt {
+  z-index: 5;
+}
+
+.AnncContentAlt h1,
+.AnncContentAlt h4,
+.AnncContentAlt p
+{
+  
+  color: #FFFFFF;
+  display: inline-block;
+
+}
+
+.AnncContent p {
+  font-size: 1.3em;
+}
+
+.AnncContentAlt p {
+  font-size: 1.3em;
+}
+
+
+.AnncPortalalpha {
+  margin: -10px;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  opacity: 0.15;
+  position: absolute;   
+  filter: blur(1px);
+  background-size:     cover;                     
+  background-repeat:   no-repeat;
+  background-position: center center;  
+  z-index: -1;
+
+}
+
+.AnncTS {
+  /* position: absolute; */
+  bottom: 0;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 1.2em;
+
+}
