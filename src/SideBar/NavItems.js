@@ -111,7 +111,7 @@ class NavItems extends React.Component {
         <br/>
       <NavItem
           id="announcements"
-          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} class="fas fa-tasks"/>}
+          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} class="fas fa-tasks"/>}
           label="Tasks"
           active={UIStore.sideNav.activePrimary === "announcements"}
         />  
