@@ -37,7 +37,7 @@ class SearchFrame extends React.Component {
 
   const invisiButton = {border: 0, backgroundColor: "Transparent", outline: "none"};
 
-  const searchOrClear = () => this.props.location.pathname.includes('search') ? 
+  const searchOrClear = () => this.props.location.pathname.includes('search') || UIStore.search.portalSearchValue !== "" ? 
      <button style={invisiButton} onClick={e => {
     UIStore.set("search", "portalSearchValue", "")
     this.props.history.goBack()
