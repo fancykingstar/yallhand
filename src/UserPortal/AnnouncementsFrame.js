@@ -109,20 +109,14 @@ class AnnouncementsFrame extends React.Component {
     // ))
 
 
-    const displayContent = displayFeed.length > 0? <React.Fragment> {displayFeed}</React.Fragment> : <PortalContentNoResults/>
+    const displayContent = displayFeed.length > 0? <React.Fragment><Sort
+    dropdownValueChange={val => UIStore.set("dropdown", "portalannouncementSort", val)} 
+    searchValueChange={val =>  UIStore.set("search", "searchPortalannouncementValue", val)} 
+    searchValue={UIStore.search.searchPortalannouncementValue}
+    /> <div className="AnncList"> {displayFeed}</div></React.Fragment> : <PortalContentNoResults/>
 
     return (
-      <div >
-        <Sort
-          dropdownValueChange={val => UIStore.set("dropdown", "portalannouncementSort", val)} 
-          searchValueChange={val =>  UIStore.set("search", "searchPortalannouncementValue", val)} 
-          searchValue={UIStore.search.searchPortalannouncementValue}
-          />
-      
-        <div className="AnncList">
-        {displayContent}  
-        </div>
-      </div>
+      <div > {displayContent} </div>
     );
   }
 }
