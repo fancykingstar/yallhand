@@ -52,6 +52,7 @@ class Store {
     label: "",
     variationID: "",
     img: "",
+    imgData: {},
     campaign: "",
     keywordInput: "",
     keywords: [],
@@ -72,6 +73,7 @@ class Store {
     teamsLabel: "",
     teamsDropdown: "",
     teamsSaveDisabled: false,
+   
 
     //Teams > Teams/Tags modal to edit/delete
     selectedTag: "",
@@ -84,7 +86,8 @@ class Store {
     selectedTeamLabel: "",
     _selectedTeamLabel: "",
     teamEditDropdownVal: "",
-    teamEditSaveDisabled: false
+    teamEditSaveDisabled: false,
+    preventDelete: false
   };
 
   @observable userEditFields = {

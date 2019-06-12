@@ -402,8 +402,9 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   export const featuredImgEdit = (type) => {
  
     const buildObj = {
-        img: DataEntryStore.contentmgmt.img,
+        img: DataEntryStore.contentmgmt.img,    
     }
+    if(buildObj.img.includes("unsplash")) buildObj.imgData = DataEntryStore.contentmgmt.imgData;
     type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.announcementID = UIStore.content.announcementID
     return _.extend({}, base(), buildObj)
   }

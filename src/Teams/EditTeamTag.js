@@ -12,7 +12,7 @@ import {
 } from "../DataExchange/Up";
 import { teamUpdate, tagUpdate } from "../DataExchange/PayloadBuilder"
 
-@inject("UIStore", "DataEntryStore", "TeamStore", "AccountStore")
+@inject("UIStore", "DataEntryStore", "TeamStore", "AccountStore", "PoliciesStore", "AnnouncementsStore", )
 @observer
 export class EditTeamTag extends React.Component {
   constructor(props) {
@@ -28,9 +28,8 @@ export class EditTeamTag extends React.Component {
     DataEntryStore.set("teamEditFields", "teamEditSaveDisabled", false);
   }
   render() {
-    const { DataEntryStore } = this.props;
-    const { UIStore } = this.props;
-    const { TeamStore } = this.props;
+    const { DataEntryStore, UIStore, PoliciesStore, AnnouncementsStore, ResourcesStore } = this.props;
+
     const newLabelStatus = FormCharMax(
       this.props.mode === "team"
         ? DataEntryStore.teamEditFields.selectedTeamLabel
@@ -169,17 +168,18 @@ export class EditTeamTag extends React.Component {
                   </Form.Button>
                   <ConfirmDelete
                     disabled={
-                      this.props.mode === "tag"
-                        ? TeamStore._getTag(
-                            DataEntryStore.teamEditFields.selectedTag
-                          ).count !== 0 || TeamStore.tags
-                          .filter(tag => tag.parent === DataEntryStore.teamEditFields.selectedTag)
-                          .length !== 0 
-                        : TeamStore._getTeam(
-                            DataEntryStore.teamEditFields.selectedTeam
-                          ).count !== 0 || TeamStore.structure
-                            .filter(team => team.parent === DataEntryStore.teamEditFields.selectedTeam)
-                            .length !== 0 
+                        DataEntryStore.teamEditFields.preventDelete
+                      // this.props.mode === "tag"
+                      //   ? TeamStore._getTag(
+                      //       DataEntryStore.teamEditFields.selectedTag
+                      //     ).count !== 0 || TeamStore.tags
+                      //     .filter(tag => tag.parent === DataEntryStore.teamEditFields.selectedTag)
+                      //     .length !== 0 
+                      //   : TeamStore._getTeam(
+                      //       DataEntryStore.teamEditFields.selectedTeam
+                      //     ).count !== 0 || TeamStore.structure
+                      //       .filter(team => team.parent === DataEntryStore.teamEditFields.selectedTeam)
+                      //       .length !== 0 
                     }
                     label={
                       this.props.mode === "team"

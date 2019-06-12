@@ -10,6 +10,10 @@ import "./style.css";
 @inject("DataEntryStore", "AccountStore")
 @observer
 export class FeaturedAvatar extends React.Component {
+  componentWillUnmount(){
+  const { DataEntryStore } = this.props;
+   DataEntryStore.reset("featuredImage");
+  }
   render() {
     const { AccountStore } = this.props
     const { DataEntryStore } = this.props;
@@ -27,7 +31,7 @@ export class FeaturedAvatar extends React.Component {
                 this.props.uploaded(result.Location)
             }
         }
-      )
+      ).then(()=> DataEntryStore.reset("featuredImage") )
     };
 
 

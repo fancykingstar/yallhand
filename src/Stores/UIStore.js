@@ -73,6 +73,7 @@ class Store {
         historyView: false,
         askQuestion: false,
         dashboardDates: false,
+        getUnsplash: false
     }
 
     @observable
