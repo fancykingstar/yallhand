@@ -120,7 +120,7 @@ export class BaseSettings extends React.Component {
         
         <Segment>
           <Header>Billing & Payments</Header>
-          <span style={{fontWeight: 800}}>Free Trial Until: </span><span>{AccountStore.account.data.trialExp === undefined? "No Date Entered" : UTCtoFriendly(AccountStore.account.data.trialExp)}</span>
+          <span style={{fontWeight: 800}}>Free Trial Until: </span><span>{!AccountStore.account.data.trialExp? "No Date Entered" : UTCtoFriendly(AccountStore.account.data.trialExp)}</span>
         </Segment>
         <Segment >
           <div style={{height: 50}}>  

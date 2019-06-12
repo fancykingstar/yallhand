@@ -81,9 +81,9 @@ export const account = () => {
       "img": DataEntryStore.superAdmin.accountImg,
       "reviewAlert": DataEntryStore.superAdmin.accountReviewAlert,
       "created": now(),
-      "timezone": DataEntryStore.superAdmin.accountTimezone,
+      // "timezone": DataEntryStore.superAdmin.accountTimezone,
       "generalEmail": DataEntryStore.superAdmin.accountEmail,
-      "data": {},
+      "data": {trialExp: DataEntryStore.superAdmin.accountTrial},
       "isActive": true
   };
   return _.extend({}, {"userID": userID(), "updated": now()}, buildObj)

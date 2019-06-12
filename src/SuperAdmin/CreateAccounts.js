@@ -6,11 +6,16 @@ import {periods} from "../TemplateData/periods"
 import { createAccount } from "../DataExchange/Up";
 import { account } from "../DataExchange/PayloadBuilder"
 import { api_get } from "./Down"
-const timezones = require("../TemplateData/timezones.json")
+import {DateTimeSelect} from "../SharedUI/DateTimeSelect"
+// const timezones = require("../TemplateData/timezones.json")
 
 @inject("DataEntryStore")
 @observer
 export class CreateAccounts extends React.Component {
+constructor(props){
+  super(props);
+  this.state={showDateTime: false}
+}
 render(){
     const {DataEntryStore} = this.props
 
@@ -55,13 +60,20 @@ render(){
                       
                 
               <Form.Field>
+                
                 <Form.Select
-                  label="Default Timezone"
-                  options={timezones}
+                  label="Trial Expiration"
+                  options={[
+                    { "text":"14 Days", "value": Date.now() + (86400000 * 14) },
+                    { "text":"30 Days", "value": Date.now() + (86400000 * 30) },
+                    { "text":"None", "value": "" },
+                ]
+                  }
                   value={DataEntryStore.superAdmin.accountTimezone}
-                  onChange={(e, { value }) => DataEntryStore.set("superAdmin", "accountTimezone", value)}
+                  onChange={(e, { value }) => DataEntryStore.set("superAdmin", "accountTrial", value)}
                   search
                 />
+                {this.state.showDateTime?       <DateTimeSelect value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val) } includeTime />: ""}
               </Form.Field>
               <Form.Select
                 label="Default Review Alert For Aging Content"
