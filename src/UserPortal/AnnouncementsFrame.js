@@ -1,17 +1,16 @@
 import React from "react";
-import "./style.css";
-
 import { inject, observer } from "mobx-react";
-import { Image, Header, Label, Icon } from "semantic-ui-react";
-import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
+import { Label, Icon } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
-import { UIStore } from "../Stores/UIStore";
 import { Sort } from "../SharedUI/Sort"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { sortByUTC } from "../SharedCalculations/SortByUTC";
 import { PortalContentNoResults } from "./PortalContentNoResults"
 import { HTMLtoString} from "../SharedCalculations/HtmlToString"
 import { contentOverflow } from "../SharedCalculations/ContentOverflow";
+
+import "./style.css";
+
 
 @inject("AnnouncementsStore", "UserStore", "UIStore")
 @observer
@@ -33,7 +32,7 @@ class AnnouncementsFrame extends React.Component {
         ary.forEach(news => {
             if(subI === 13) subI = 0;
             const r = ary.length - (i + 1)
-            anncs.push( <div style={{flexBasis: UIStore.responsive.isMobile? "100%": subIndexKey[subI]}}>
+            anncs.push( <div key={giveMeKey()} style={{flexBasis: UIStore.responsive.isMobile? "100%": subIndexKey[subI]}}>
               
           <div className="AnncWrapper" onClick={e => handleClick(news.announcementID)} key={"portalannouncement" + giveMeKey()} 
             style={{
@@ -47,12 +46,9 @@ class AnnouncementsFrame extends React.Component {
            
             <p>{contentOverflow(HTMLtoString(news.variations[0].contentHTML), 140)}</p>
             <br/>
-            {/* <h4>Read More<Icon name="triangle right"/></h4><br/> */}
-
+       
             </div>
-            {/* <div className="AnncTS">
-               <p>{UTCtoFriendly(news.updated)}</p><br/>
-            </div> */}
+     
             {UIStore.portal.viewedContent.includes(news.announcementID) === false? <Label as='a' size="mini" color='red'> Unread </Label> : null}
         </div>
               </div></div>)
@@ -62,13 +58,7 @@ class AnnouncementsFrame extends React.Component {
         return anncs
     }
 
-    // const get_random_color = () => {
-    //   function c() {
-    //     var hex = Math.floor(Math.random()*256).toString(16);
-    //     return ("0"+String(hex)).substr(-2); // pad with zero
-    //   }
-    //   return "#"+c()+c()+c();
-    // }
+
 
     const handleClick = val => {
       this.props.history.push("/portal/announcement/" + val);
@@ -81,33 +71,6 @@ class AnnouncementsFrame extends React.Component {
             .filter(news => news.chanID === UIStore.sideNav.activeChannel);
 
     const displayFeed = allAnnc(sortByUTC(announcements, UIStore.dropdown.portalannouncementSort))
-    //   <div className="PortalAnnc" onClick={e => handleClick(news.announcementID)} key={"portalannouncement" + giveMeKey()}>
-    //     {news.img !== ""?  <div style={{display: "inline-block"}}><Image style={{padding: 20}} size="medium" src={news.img} /> </div>: null }
-    //     <div style={{display: "inline-block", verticalAlign: "top"}}>
-    //     <div style={{display: "block"}}>
-
-    //     <Header as="h2">
-    //         {news.variations[0].label === ""? news.label : news.variations[0].label}
-    //         <Header.Subheader>{UTCtoFriendly(news.updated)}</Header.Subheader>
-    //         {UIStore.portal.viewedContent.includes(news.announcementID) === false? <Label as='a' size="mini" color='red'> Unread </Label> : null}
-    //     </Header> 
-    //     <span style={{paddingTop: 5}}>{contentOverflow(HTMLtoString(news.variations[0].contentHTML), 140)}</span>
-    //     </div>
-    //     </div>
-    //   </div>
-    // ));
-  
-   
-    // <div className="AnncSingle">
-    //     <div className="AnncContent">
-    //     <h2>{news.variations[0].label === ""? news.label : news.variations[0].label}</h2><br/>
-    //     <p>{contentOverflow(HTMLtoString(news.variations[0].contentHTML), 140)}</p>
-    //     <br/>
-    //     <h4>Read More<Icon name="triangle right"/></h4>
-    //     </div>
-    // </div>
-    // ))
-
 
     const displayContent = displayFeed.length > 0? <React.Fragment><Sort
     dropdownValueChange={val => UIStore.set("dropdown", "portalannouncementSort", val)} 

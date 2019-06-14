@@ -129,18 +129,26 @@
     height: 100%;
     width: 100%;
     /* margin: 30px; */
-    line-height: 2;
+    font-size: 1.3em;
+    color: #00334d;
+    letter-spacing: .01em;
 
 }
 
 .PortalContentText {
   width: 100%;
+  line-height: 1.4em;
 }
 
+.Content h1 {
+  font-size: 3em !important;
+  color: #00334d !important;
+}
 
 .Content li {
   list-style-position: inside;
-  margin-left: -40px;
+  line-height: 1.4em;
+  /* margin-left: -40px; */
 }
 
 

@@ -10,6 +10,7 @@ import {S3Upload} from "../DataExchange/S3Upload"
 import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
 // import getBlockRenderFunc from "../renderer";
 import './style.css'
+import _ from "lodash";
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -21,7 +22,11 @@ export class DraftFormField extends React.Component {
         super(props);
         const { DataEntryStore } = this.props;
         this.getLoadOrNew = () => {
-            if (this.props.loadContent === null || this.props.loadContent === undefined) {
+            if (this.props.loadContent === 
+              null 
+              || this.props.loadContent === undefined 
+              || typeof(this.props.loadContent) === 'object' && _.isEmpty(this.props.loadContent))
+              {
                 DataEntryStore.setDraft(
                   "editorState",
                   EditorState.createEmpty()

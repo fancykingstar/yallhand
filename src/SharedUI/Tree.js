@@ -20,7 +20,7 @@ export const Tree = props => {
     let assocContent = [];
     [...AnnouncementsStore.allAnnouncements, ...PoliciesStore.allPolicies].forEach(i => {
       i.variations.forEach(vari => {
-        const mode = vari.policyID? "policy":"announcement"
+        const mode = i.policyID? "policy":"announcement"
         if(vari[props.id] === item[props.id]){assocContent.push({label: vari.label !== ""? vari.label: i.label, mode, id: mode === "policy"? "policyID":"announcementID"})}
       })
     });

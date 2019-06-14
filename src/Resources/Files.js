@@ -20,7 +20,6 @@ export class Files extends React.Component {
     super(props)
     const {UIStore, ResourcesStore} = this.props
     this.loadSearch = () => {
-      console.log("reloaded search")
       UIStore.set("search",
       "searchFilesData",
       initSearchObj(

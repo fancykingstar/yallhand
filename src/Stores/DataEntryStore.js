@@ -366,6 +366,7 @@ class Store {
   resetDraft(){
     this.draftContentRAW = {};
     this.draftContentHTML = "";
+    if(this.draft.editorState) delete this.draft.editorState;
     // this.draft = {};
   }
 

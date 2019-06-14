@@ -23,6 +23,7 @@ import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
+import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
 
 @inject( "UserStore", "UIStore", )
 @observer
@@ -34,6 +35,9 @@ export class AdminPanel extends React.Component {
       UserStore.setPreviewTag("")
       loadAdmin()
     }
+  }
+  componentDidUpdate() {
+    syncAdminNav(this.props.location)
   }
   render() {
     const { UIStore, UserStore } = this.props;
