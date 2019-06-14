@@ -39,6 +39,7 @@ export class BaseSettings extends React.Component {
 
     return (
       <div style={{ padding: 15, maxWidth: 900 }}>
+  
         <Header
           as="h2"
           content="Account Settings"
@@ -121,6 +122,7 @@ export class BaseSettings extends React.Component {
         <Segment>
           <Header>Billing & Payments</Header>
           <span style={{fontWeight: 800}}>Free Trial Until: </span><span>{!AccountStore.account.data.trialExp? "No Date Entered" : UTCtoFriendly(AccountStore.account.data.trialExp)}</span>
+          
         </Segment>
         <Segment >
           <div style={{height: 50}}>  

@@ -48,6 +48,17 @@
   box-shadow: 0px 0px 5px 0px #545454;
 }
 
+.LoginLegal {
+  font-size: 0.75em;
+  display: block;
+  padding-top: 10px;
+  text-align: center;
+  position: relative;
+  color: #FFFFFF;
+
+
+}
+
 .ContainerLogin {
   position: fixed;
   min-width: 350px;

@@ -52,7 +52,9 @@ class PrimaryLogins extends React.Component {
             Already have an account?
           </span>}
           {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
+
         </div>
+        
       </React.Fragment>
     );
   }

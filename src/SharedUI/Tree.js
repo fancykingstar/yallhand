@@ -74,7 +74,7 @@ export const Tree = props => {
             />
             <List.Content>
               <List.Header
-                className="HeaderLink"
+                style={{marginTop: -2}}
                 as="a"
                 onClick={item[id] === "global"? null : e => handleClick(e, {
                   item,
