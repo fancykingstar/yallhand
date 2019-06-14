@@ -71,10 +71,10 @@ class NavItems extends React.Component {
       {UserStore.user.invitedBy !== "admin"?"":
       <React.Fragment>
       <NavItem
-          id="announcements"
+          id="polls"
           icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-vote-yea"/>}
           label="Polls"
-          active={UIStore.sideNav.activePrimary === "announcements"}
+          active={UIStore.sideNav.activePrimary === "polls"}
         />  
         <br />
         </React.Fragment>
@@ -110,18 +110,18 @@ class NavItems extends React.Component {
       <React.Fragment>
         <br/>
       <NavItem
-          id="announcements"
+          id="tasks"
           icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
           label="Tasks"
-          active={UIStore.sideNav.activePrimary === "announcements"}
+          active={UIStore.sideNav.activePrimary === "tasks"}
         />  
         <br />
         <NavItem
-          id="announcements"
+          id="automations"
           icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-robot"/>}
 
           label="Automations"
-          active={UIStore.sideNav.activePrimary === "announcements"}
+          active={UIStore.sideNav.activePrimary === "automations"}
         />  
    
         </React.Fragment>
