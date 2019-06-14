@@ -2,24 +2,14 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom"
 import  NavItem  from "./NavItem";
+import {syncAdminNav} from "../SharedCalculations/SyncAdminNav"
 import "./style.css";
 
 @inject("UIStore", "UserStore")
 @observer
 class NavItems extends React.Component {
   componentDidMount() {
-    const { UIStore } = this.props;
-    const location = this.props.location.pathname
-    if(location.slice(-6) === "/panel"){UIStore.set("sideNav", "activePrimary", "dashboard")}
-    else if(location.includes("/panel/superadmin")){UIStore.set("sideNav", "activePrimary", "superadmin")}
-    else if(location.includes("/panel/teams")){UIStore.set("sideNav", "activePrimary", "teams")}
-    else if(location.includes("/panel/faqs")){UIStore.set("sideNav", "activePrimary", "faqs")}
-    else if(location.includes("/panel/announcements")){UIStore.set("sideNav", "activePrimary", "announcements")}
-    else if(location.includes("/panel/email")){UIStore.set("sideNav", "activePrimary", "email")}
-    else if(location.includes("/panel/analytics")){UIStore.set("sideNav", "activePrimary", "analytics")}
-    else if(location.includes("/panel/resources")){UIStore.set("sideNav", "activePrimary", "resources")}
-    else{UIStore.set("sideNav", "activePrimary", "")}
-    UIStore.set("sideNav", "activeChannel", "All")
+    syncAdminNav(this.props.location)
   }
   render() {
     const { UIStore, UserStore } = this.props;
