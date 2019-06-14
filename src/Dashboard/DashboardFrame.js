@@ -54,7 +54,7 @@ class DashboardFrame extends React.Component {
       UIStore.set("menuItem", "emailFrame", "send email")
     }
 
-    const mockDoughnut = UserStore.user.invitedBy !=="admin"?[AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ]: [11, 31, 58]
+    const mockDoughnut = () => UserStore.user.invitedBy !=="admin"?[AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ]: [11, 31, 58]
     const doughnutData =  {
       labels: [
         'Negative',
@@ -62,7 +62,7 @@ class DashboardFrame extends React.Component {
         'Positive'
     ],
       datasets: [{
-          data: AccountStore.dashboardData.sentiment_total === undefined? null : mockDoughnut,
+          data: AccountStore.dashboardData.sentiment_total === undefined? null : mockDoughnut(),
           backgroundColor: ["#FF6384", "#0BCDFD","#B908FA"]
       }],
 
