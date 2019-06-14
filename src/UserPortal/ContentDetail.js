@@ -72,14 +72,14 @@ export class ContentDetail extends React.Component {
         return(
             <div className="Content">
             <BackButton/>
-                <Container textAlign="center">
+                <Container>
                 {content.img.length !== 0 ?  <Image centered rounded size="large" src={content.img}/> : null}
                     <Header
                     as="h1"
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
-                  <div className="PortalContentText" style={{fontSize:"1.4em"}}>
+                  <div className="PortalContentText">
                   {/* <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/> */}
                   <span dangerouslySetInnerHTML={{ __html: content.variations[0].contentHTML }} />
                   </div>
