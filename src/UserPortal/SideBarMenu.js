@@ -130,14 +130,14 @@ class SideBarMenu extends React.Component {
               </Menu.Item>
                 {UserStore.user.invitedBy !== "admin"? "":
               <Menu.Item
-                active={UIStore.sideNav.activePrimary === "policies"}
+                active={UIStore.sideNav.activePrimary === "surveys"}
                 style={
-                  UIStore.sideNav.activePrimary === "policies"
+                  UIStore.sideNav.activePrimary === "surveys"
                     ? { backgroundColor: "#00a3e0", width: "247px", fontSize: "1em" }
                     : {fontSize: "1em"}
                 }
                 onClick={e => {
-                  UIStore.set("sideNav", "activePrimary", "policies");
+                  UIStore.set("sideNav", "activePrimary", "surveys");
                   this.props.history.push("/portal/learn");
                   document.getElementById('ActionFrame').scrollTop = 0;
                 }}
