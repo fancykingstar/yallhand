@@ -27,8 +27,8 @@ class UserPortal extends React.Component {
     const { UserStore } = this.props;
     if (UserStore.previewTeam !== "") {
       loadAdmin().then(()=>this.setState({loaded:true})) 
-      
     }
+    else {this.setState({loaded:true})}
   }
 
   componentWillMount() {

@@ -1,5 +1,6 @@
 import React from "react";
 import { Message, Form, Divider, Header, Icon } from "semantic-ui-react";
+import { Legal } from "./Legal";
 import { apiCall, setUser } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom";
 
@@ -68,6 +69,7 @@ class ProfileLogin extends React.Component {
             </div>
             </div>
           </div>
+          <Legal/>
           {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
           {successMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="info" content={successMsg} positive/></div>}
         </div>

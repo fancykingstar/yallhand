@@ -2,6 +2,7 @@ import React from "react";
 import { Message, Form, Divider, Header } from "semantic-ui-react";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
 import { apiCall, setUser } from "../DataExchange/Fetch";
+import { Legal } from "./Legal"
 import { withRouter } from "react-router-dom";
 
 class ProfileInfo extends React.Component {
@@ -159,7 +160,9 @@ class ProfileInfo extends React.Component {
               <Form.Button primary onClick={() => this.register()}>Continue</Form.Button>
             </Form>
           </div>
+          <Legal/>
           {error && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning"  content={error} negative/></div>}
+          
         </div>
       </React.Fragment>
     );

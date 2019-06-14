@@ -3,6 +3,8 @@
 }
 
 .imgPreview {
+  overflow: hidden;
+  background-position: center;
   text-align: center;
   margin: 0 15px 0 0;
 

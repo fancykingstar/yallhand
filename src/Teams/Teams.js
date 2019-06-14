@@ -28,11 +28,13 @@ export class Teams extends React.Component {
        
       }
     };
-    const handleEdit = val => {
+    const handleEdit = data => {
+      const val = data.item
       DataEntryStore.set("teamEditFields", "selectedTeam", val.teamID);
       DataEntryStore.set("teamEditFields", "_selectedTeamLabel", val.label);
       DataEntryStore.set("teamEditFields", "selectedTeamLabel", val.label);
       DataEntryStore.set( "teamEditFields", "teamEditDropdownVal", TeamStore._getParent("team", val.teamID) );
+      DataEntryStore.set("teamEditFields", "preventDelete", data.assoc || data.children)
       UIStore.set("modal", "editTeam", true);
     };
     const handleLabelInput = debounce(val => {

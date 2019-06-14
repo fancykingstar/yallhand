@@ -52,6 +52,7 @@ class Store {
     label: "",
     variationID: "",
     img: "",
+    imgData: {},
     campaign: "",
     keywordInput: "",
     keywords: [],
@@ -72,6 +73,7 @@ class Store {
     teamsLabel: "",
     teamsDropdown: "",
     teamsSaveDisabled: false,
+   
 
     //Teams > Teams/Tags modal to edit/delete
     selectedTag: "",
@@ -84,7 +86,8 @@ class Store {
     selectedTeamLabel: "",
     _selectedTeamLabel: "",
     teamEditDropdownVal: "",
-    teamEditSaveDisabled: false
+    teamEditSaveDisabled: false,
+    preventDelete: false
   };
 
   @observable userEditFields = {
@@ -250,12 +253,14 @@ class Store {
     previewAccount: "",
     accountArmed: false,
     accountLabel: "",
-    accountTimezone: 0,
+    // accountTimezone: 0,
+    accountTrial: 0,
     accountReviewAlert: 0,
     accountEmail: "",
     accountImg: "",
     analyticsLoading: false,
-    analyticsAccount: "",
+    analyticsAccount: "all",
+    analyticsSource: "all",
     analyticsType: "both",
     analyticsAction: "all",
     analyticsSort: "new",

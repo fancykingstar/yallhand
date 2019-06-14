@@ -28,16 +28,13 @@ export class Tags extends React.Component {
         createTag(tag()).then(() => {document.getElementById('tagInput').value = ""})
       }
     };
-    const handleEdit = val => {
-      //val is full object
+    const handleEdit = data => {
+      const val = data.item
       DataEntryStore.set("teamEditFields", "selectedTag", val.tagID);
       DataEntryStore.set("teamEditFields", "_selectedTagLabel", val.label); //for UI title
       DataEntryStore.set("teamEditFields", "selectedTagLabel", val.label);
-      DataEntryStore.set(
-        "teamEditFields",
-        "tagEditDropdownVal",
-        TeamStore._getParent("tag", val.tagID)
-      );
+      DataEntryStore.set( "teamEditFields", "tagEditDropdownVal", TeamStore._getParent("tag", val.tagID) );
+      DataEntryStore.set("teamEditFields", "preventDelete", data.assoc || data.children);
       UIStore.set("modal", "editTag", true);
     };
     const handleLabelInput = debounce(val => {

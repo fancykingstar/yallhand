@@ -49,13 +49,9 @@ render(){
             <br/>
             <Segment inverted>
                 <Dropdown value={DataEntryStore.superAdmin.userSelected} onChange={(e, val) => DataEntryStore.set("superAdmin", "userSelected", val.value)} placeholder="choose user" options={DataEntryStore.superAdmin.allUsers} />
-                <br/>
-                {/* <Button.Group style={{paddingTop: 15}}>
-                    <Button inverted>Load...</Button>
-                   
-                </Button.Group> */}
+
                 
-                <Button onClick={e => deleteUser()} style={{marginTop: 15}} inverted color="red" floated="right">Delete</Button>
+                <Button onClick={e => deleteUser()} style={{marginTop: 15, marginLeft: 10}} inverted color="red" >Delete</Button>
             </Segment>
 
 

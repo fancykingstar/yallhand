@@ -177,27 +177,28 @@ class PortalSearchResults extends React.Component {
     || filteredURLs().length !== 0
     || filteredFiles().length !== 0
     || filteredPeople().length !==0?
-    <div style={filteredPeople().length !==0? {paddingBottom: 185} : null}>
+    <div style={{width: "100%", height: "100%", overflowY: "scroll",overflowX: "hidden",}}> 
+    <div style={filteredPeople().length !==0? {paddingBottom: 10} : null}>
     {content}
     {resources}
     {people}
   
-    </div>   
+    </div></div>
     :
     <PortalSearchLogo />
 
     return(
-
-        <div style={{width: "100%", height: "100%", position: "absolute", overflowY: "scroll"}}> 
+      <React.Fragment>
         {isSearchResults}
-        <div  style={{paddingTop: 15}} >
-    <Button basic onClick={e => {
-        UIStore.set("search", "portalSearchValue", "")
-        // this.props.history.push("/portal")
-        this.props.history.goBack()
-    }} >Clear Results</Button>
+        <div  style={{paddingTop: 5, paddingBottom: 15}} >
+    <Button basic 
+            onClick={e => {
+              UIStore.set("search", "portalSearchValue", "")
+            this.props.history.goBack() }} >
+            Clear Results</Button>
     </div>
-      </div>
+      
+      </React.Fragment>
 
  
     )
