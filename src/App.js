@@ -28,7 +28,7 @@ class AppRoute extends React.Component {
       UserStore.setPreviewTag("")
       const loadthings = async ()=>{
         await loadAdmin();
-        const { isAuthenticated } = UserStore;
+        const { isAuthenticated } = getUser() ? UserStore: false;
         const path = location.pathname;
         const loggedOutRoutes = ['/', '/register', '/forgot'];
         const loggedInRoutes = ['/panel', '/portal'];
