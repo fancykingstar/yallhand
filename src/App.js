@@ -20,18 +20,14 @@ class AppRoute extends React.Component {
   constructor(props){
     super(props);
     const { UserStore, UIStore } = this.props;
+    const { location } = this.props;
     this.state = {shouldRedirect: false, redirect: "/"}
-    if (getUser() === null) this.props.history.push('/');
+    if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
     else if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
       const loadthings = async ()=>{
-        const loaded = await loadAdmin()
-        if(!loaded) {
-          toast.error("Session expired. Please log back in.", {hideProgressBar: true, autoClose: false, closeOnClick: false}); 
-          this.props.history.push('/');
-        }
-        const { location } = this.props;
+        await loadAdmin();
         const { isAuthenticated } = UserStore;
         const path = location.pathname;
         const loggedOutRoutes = ['/', '/register', '/forgot'];
