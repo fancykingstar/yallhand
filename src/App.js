@@ -26,7 +26,11 @@ class AppRoute extends React.Component {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
       const loadthings = async ()=>{
-        await loadAdmin()
+        const loaded = await loadAdmin()
+        if(!loaded) {
+          toast.error("Session expired. Please log back in.", {hideProgressBar: true, autoClose: false, closeOnClick: false}); 
+          this.props.history.push('/');
+        }
         const { location } = this.props;
         const { isAuthenticated } = UserStore;
         const path = location.pathname;

@@ -15,13 +15,13 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
     apiCall_noBody('users/me', 'GET').then(res => {
       if(res.error) {
         deleteUser()
-        return
+        return false
       }
   
       apiCall_noBody(`users/all?filter={"where":{"email":"${encodeURIComponent(res.email)}"}}`, 'GET').then(async (res) => {
         if(res.length === 0) {
           deleteUser()
-          return
+          return false
         }
   
         const { accountID, userID } = superStatus ? superUser : res[0]
