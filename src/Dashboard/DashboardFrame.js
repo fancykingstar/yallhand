@@ -32,7 +32,7 @@ class DashboardFrame extends React.Component {
   }
 
   render() {
-    const {AccountStore, AnnouncementsStore, PoliciesStore, TeamStore, EmailStore, UIStore, UserStore} = this.props
+    const {AccountStore, AnnouncementsStore, PoliciesStore,  UIStore, UserStore} = this.props
 
     const createAnnc = () => {
       this.setState({createContent: "announcement"})

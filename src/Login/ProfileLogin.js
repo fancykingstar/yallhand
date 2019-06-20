@@ -19,9 +19,11 @@ class ProfileLogin extends React.Component {
   login () {
     const { history } = this.props
     this.setState({errorMsg: null})
+    console.log({email: this.state.email, password: this.state.password})
     apiCall('users/login', 'POST', {email: this.state.email, password: this.state.password})
       .then((res) => res.json())
       .then((res) => {
+        console.log(res)
         if (res.error) {
           if (res.error.message && res.error.message === 'Denied: unauthorized access') return this.setState({errorMsg: res.error.message})
           else return this.setState({errorMsg: 'Connection error (Email / Password is not good)'})
