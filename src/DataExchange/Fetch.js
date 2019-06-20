@@ -38,7 +38,6 @@ export const getHeaders = () => {
 
 export const apiCall = async (endpoint, method, data = {}) => {
   const headers = getHeaders()
-  console.log(headers)
   return fetch(api_url + endpoint, {
     method: method,
     mode: "cors",

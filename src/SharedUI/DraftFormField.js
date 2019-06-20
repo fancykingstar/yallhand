@@ -65,7 +65,6 @@ export class DraftFormField extends React.Component {
         const uploadContentImg = async (file) => 
              await S3Upload("public-read", "quadrance-files/central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
-                console.log(result)
                 return result !== null ? { data: { link: result.Location}} : null
               } )
 

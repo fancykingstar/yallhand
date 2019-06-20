@@ -28,8 +28,6 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-  console.log(endpoint, meth, JSON.stringify(payload))
-
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
