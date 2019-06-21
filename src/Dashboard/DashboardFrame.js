@@ -229,24 +229,23 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <h4>All Email Campaigns</h4>
                 <div style={{marginTop: "auto", minHeight:240, position: "relative"}}>
-                <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
-                <Statistic.Group widths={1}>
-                <Statistic>
-                  <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(openRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.open  :openRate} />%</Statistic.Value>
-                  <Statistic.Label>Open Rate 
-                    {/* <Icon name="arrow up" color="blue"/>+1% */}
-                    </Statistic.Label>
-                </Statistic>
-                <Statistic style={{paddingTop: 10}}>
-                  <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(clickRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.click  :clickRate} />%</Statistic.Value>
-                  <Statistic.Label>Click Rate 
-                    {/* <Icon name="arrow up" color="blue"/>+1% */}
-                    </Statistic.Label>
-                </Statistic>
-              </Statistic.Group>
-              </div>
+                  <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
+                    <Statistic.Group widths={1}>
+                      <Statistic>
+                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(openRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.open  :openRate} />%</Statistic.Value>
+                        <Statistic.Label>Open Rate 
+                        {/* <Icon name="arrow up" color="blue"/>+1% */}
+                        </Statistic.Label>
+                      </Statistic>
+                      <Statistic style={{paddingTop: 10}}>
+                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(clickRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.click  :clickRate} />%</Statistic.Value>
+                        <Statistic.Label>Click Rate 
+                          {/* <Icon name="arrow up" color="blue"/>+1% */}
+                          </Statistic.Label>
+                      </Statistic>
+                    </Statistic.Group>
+                  </div>
                 </div>
-                
               </Segment>
             </Grid.Column>
             <Grid.Column>
@@ -261,37 +260,35 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <div style={{marginTop: 0, paddingTop: 0, paddingBottom: 5}}>   <h4>All Sentiment Surveys</h4></div>
                 <div style={{paddingBottom: 10}}> 
-                <Grid columns="equal">
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Icon style={{color:'#B908FA'}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 
-                    </Grid.Column>
-                    <Grid.Column>
-                    <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{Number.isNaN(sentimentPercentage(1))? 0 : sentimentPercentage(1)}% 
-                    </Grid.Column>
-                    <Grid.Column>
-                    <Icon style={{color:"#FF6384"}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+                  <Grid columns="equal">
+                    <Grid.Row>
+                      <Grid.Column>
+                        <Icon style={{color:'#B908FA'}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 
+                      </Grid.Column>
+                      <Grid.Column>
+                        <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{Number.isNaN(sentimentPercentage(1))? 0 : sentimentPercentage(1)}% 
+                      </Grid.Column>
+                      <Grid.Column>
+                        <Icon style={{color:"#FF6384"}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                 </div>
                 <div style={{height: 220, position: "relative"}}>
-                <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
-                <Doughnut 
-                 data={doughnutData}
-                 options={{legend: false}}
-                />
-                </div>
+                  <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
+                    <Doughnut 
+                    data={doughnutData}
+                    options={{legend: false}}
+                    />
+                  </div>
                
-                <Statistic.Group widths={1}>
-                  <Statistic>
-                    <Statistic.Label>{AccountStore.dashboardData.length === 0? 0 : UserStore.user.invitedBy === "admin"? 621: AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]} TOTAL</Statistic.Label>
-                  </Statistic>
-                </Statistic.Group>
+                  <Statistic.Group widths={1}>
+                    <Statistic>
+                      <Statistic.Label>{AccountStore.dashboardData.length === 0? 0 : UserStore.user.invitedBy === "admin"? 621: AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]} TOTAL</Statistic.Label>
+                    </Statistic>
+                  </Statistic.Group>
                 </div>
               </Segment>
-
-
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
@@ -301,7 +298,7 @@ class DashboardFrame extends React.Component {
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
-                <Scheduled/>
+              <Scheduled/>
             </Grid.Column>
           </Grid.Row>
         </Grid>
