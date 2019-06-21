@@ -156,83 +156,74 @@ class DashboardFrame extends React.Component {
           subheader="Activities and Information Overview"
         />
         <div className="dashboardShortcuts">
-        <Segment width="100%">
-        <Grid stackable columns={4}>
-        <Grid.Row>
-          <Grid.Column>
-          <div style={{width: 155, margin: "auto"}}
-          onClick={e => createEmail()}
-          >
-          <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="mail"/></div>
-          <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Send Email</h4></div>
-          </div>
-          </Grid.Column>
-          <Grid.Column>
-          <div style={{width: 155, margin: "auto"}}
-          onClick={e => createAnnc()}
-          >
-          <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="bullhorn"/></div>
-          <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create Announcement</h4></div>
-          </div>
-          </Grid.Column>
-          <Grid.Column>
-          <div style={{width: 155, margin: "auto"}}
-          onClick={e => createFAQ()}
-          >
-          <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="question"/></div>
-          <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create FAQ</h4></div>
-          </div>
-          </Grid.Column>
-          <Grid.Column 
-          onClick={e => onboardUser()}
-          >
-          <div style={{width: 155, margin: "auto"}}>
-          <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="user outline"/></div>
-          <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Onboard User</h4></div>
-          </div>
-          </Grid.Column>
-        </Grid.Row>
-        
-        </Grid>
-        </Segment>
-       
-
-        
-          
-
+          <Segment width="100%">
+            <Grid stackable columns={4}>
+              <Grid.Row>
+                <Grid.Column>
+                <div style={{width: 155, margin: "auto"}}
+                onClick={e => createEmail()}
+                >
+                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="mail"/></div>
+                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Send Email</h4></div>
+                </div>
+                </Grid.Column>
+                <Grid.Column>
+                <div style={{width: 155, margin: "auto"}}
+                onClick={e => createAnnc()}
+                >
+                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="bullhorn"/></div>
+                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create Announcement</h4></div>
+                </div>
+                </Grid.Column>
+                <Grid.Column>
+                <div style={{width: 155, margin: "auto"}}
+                onClick={e => createFAQ()}
+                >
+                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="question"/></div>
+                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create FAQ</h4></div>
+                </div>
+                </Grid.Column>
+                <Grid.Column 
+                onClick={e => onboardUser()}
+                >
+                <div style={{width: 155, margin: "auto"}}>
+                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="user outline"/></div>
+                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Onboard User</h4></div>
+                </div>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
         </div>
         <div style={{paddingTop: 10}}>
-        <Icon name="calendar alternate outline" color="blue"/>
-        Last{" "}
-      <Dropdown 
-        options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
-        onChange={(e, val) => updateData("dropdown", val.value)}
-        value={UIStore.dropdown.dashboardOverview} />
-        <span onClick={e => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>Or choose a date range</span>
-        <Modal onClose={e => UIStore.set("modal", "dashboardDates", false)} open={UIStore.modal.dashboardDates} size='small'>
-        <Modal.Content>
-          <DateRange output={this.getData}/>
-        </Modal.Content>
-        
-      </Modal>
+          <Icon name="calendar alternate outline" color="blue"/>
+          Last{" "}
+          <Dropdown 
+          options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
+          onChange={(e, val) => updateData("dropdown", val.value)}
+          value={UIStore.dropdown.dashboardOverview} />
+          <span onClick={e => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>Or choose a date range</span>
+          <Modal onClose={e => UIStore.set("modal", "dashboardDates", false)} open={UIStore.modal.dashboardDates} size='small'>
+            <Modal.Content>
+              <DateRange output={this.getData}/>
+            </Modal.Content>
+          </Modal>
         </div>
       
         <Segment>
-        {" "}<Icon style={{color:"#FF6384"}} name="square"/>Email Views <Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views
-        <div style={{paddingTop: 10, minHeight: 200}}>
-        <Line
-        data={data}
-        width={100}
-        height={50}
-        options={{ maintainAspectRatio: false, legend: false, scales:{xAxes:[{display: false}] }}}
-      />
-        </div>
+          {" "}<Icon style={{color:"#FF6384"}} name="square"/>Email Views <Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views
+          <div style={{paddingTop: 10, minHeight: 200}}>
+            <Line
+            data={data}
+            width={100}
+            height={50}
+            options={{ maintainAspectRatio: false, legend: false, scales:{xAxes:[{display: false}] }}}
+            />
+          </div>
         </Segment>
         <br/>
      
-   
         <Grid columns="three" divided stackable>
-         
           <Grid.Row>
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
@@ -263,12 +254,7 @@ class DashboardFrame extends React.Component {
                 <h4>Most Viewed</h4>
                 <Grid divided>
                 {topContent.length === 0? <span>No Data</span> : topContent}
-          
-             
-              
-             
                 </Grid>
-               
               </Segment>
             </Grid.Column>
             <Grid.Column>
@@ -298,9 +284,9 @@ class DashboardFrame extends React.Component {
                 </div>
                
                 <Statistic.Group widths={1}>
-                <Statistic>
-                  <Statistic.Label>{AccountStore.dashboardData.length === 0? 0 : UserStore.user.invitedBy === "admin"? 621: AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]} TOTAL</Statistic.Label>
-                </Statistic>
+                  <Statistic>
+                    <Statistic.Label>{AccountStore.dashboardData.length === 0? 0 : UserStore.user.invitedBy === "admin"? 621: AccountStore.dashboardData.sentiment_total[0] + AccountStore.dashboardData.sentiment_total[1] + AccountStore.dashboardData.sentiment_total[2]} TOTAL</Statistic.Label>
+                  </Statistic>
                 </Statistic.Group>
                 </div>
               </Segment>
