@@ -21,8 +21,7 @@ class DashboardFrame extends React.Component {
     super(props);
     this.state = {
       createContent: "announcement", 
-      startDate: '', 
-      endDate: ''
+      dateRange: ""
     };
     const {AccountStore} = this.props;
 
@@ -31,8 +30,7 @@ class DashboardFrame extends React.Component {
           AccountStore.loadDashboardData(data)
           let dataset = AccountStore.dashboardData.counts_by_date
           this.setState({
-            startDate: dataset[0].date_friendly,
-            endDate: dataset[dataset.length - 1].date_friendly
+            dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
           })
       }));
   }
@@ -212,7 +210,7 @@ class DashboardFrame extends React.Component {
           options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
           onChange={(e, val) => updateData("dropdown", val.value)}
           value={UIStore.dropdown.dashboardOverview} />
-          <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>{`${this.state.startDate}-${this.state.endDate}`}</span>
+          <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>{this.state.dateRange}</span>
           <Modal onClose={closeCalendarModal} open={UIStore.modal.dashboardDates} size='small'>
             <Modal.Content>
               <DateRange output={this.getData}/>
