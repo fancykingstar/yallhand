@@ -19,11 +19,21 @@ import "./style.css";
 class DashboardFrame extends React.Component {
   constructor(props){
     super(props);
-    this.state = {createContent: "announcement"};
+    this.state = {
+      createContent: "announcement", 
+      startDate: '', 
+      endDate: ''
+    };
     const {AccountStore} = this.props;
+
     this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now()) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
       .then(result => result.json().then(data => {
           AccountStore.loadDashboardData(data)
+          let dataset = AccountStore.dashboardData.counts_by_date
+          this.setState({
+            startDate: dataset[0].date_friendly,
+            endDate: dataset[dataset.length - 1].date_friendly
+          })
       }));
   }
   componentDidMount(){
@@ -33,7 +43,6 @@ class DashboardFrame extends React.Component {
 
   render() {
     const {AccountStore, AnnouncementsStore, PoliciesStore,  UIStore, UserStore} = this.props
-
     const createAnnc = () => {
       this.setState({createContent: "announcement"})
       UIStore.set("modal", "createContent", true)
@@ -111,17 +120,16 @@ class DashboardFrame extends React.Component {
           data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: realOrMock(i.email_count)})),
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 2
-      },
-      {
-        label: 'Portal Views',
-        fill: false,
-        data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: realOrMock2(i.portal_count)})),
-        borderColor: 'rgba(11, 205, 253, 1)',
-        borderWidth: 2
-    },
-    ]
-  }
-
+        },
+        {
+          label: 'Portal Views',
+          fill: false,
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: realOrMock2(i.portal_count)})),
+          borderColor: 'rgba(11, 205, 253, 1)',
+          borderWidth: 2
+        },
+      ]
+    }
     const createcontent = this.state.createContent === "announcement"? <div id="create annc"><CreateContent invisible mode="announcement"/></div> : <CreateContent invisible mode="policy"/>
     const sentimentPercentage = (sentiment) => {
       if(AccountStore.dashboardData.length === 0){return 0}
@@ -139,11 +147,13 @@ class DashboardFrame extends React.Component {
                 </Grid.Row>
         )
 
-    const updateData = (source, val1, val2=Date.now()) => {
+
+    const closeCalendarModal = () => {
+      UIStore.set("modal", "dashboardDates", false)
+    }
+    const updateData = (source, val1) => {
       if(source === "dropdown") UIStore.set("dropdown", "dashboardOverview", val1)
       if(source === "dropdown") this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1]) 
-      
-
     }
 
     return (
@@ -202,8 +212,8 @@ class DashboardFrame extends React.Component {
           options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
           onChange={(e, val) => updateData("dropdown", val.value)}
           value={UIStore.dropdown.dashboardOverview} />
-          <span onClick={e => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>Or choose a date range</span>
-          <Modal onClose={e => UIStore.set("modal", "dashboardDates", false)} open={UIStore.modal.dashboardDates} size='small'>
+          <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>{`${this.state.startDate}-${this.state.endDate}`}</span>
+          <Modal onClose={closeCalendarModal} open={UIStore.modal.dashboardDates} size='small'>
             <Modal.Content>
               <DateRange output={this.getData}/>
             </Modal.Content>
