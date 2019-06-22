@@ -20,6 +20,7 @@ class Store {
     baseSettings: this.baseSettings,
     userSettings: this.userSettings,
     emailCampaign: this.emailCampaign,
+    supportTicket: this.supportTicket,
     channel: this.channel,
     tempContent: this.tempContent,
     content: this.content,
@@ -27,7 +28,6 @@ class Store {
     api: this.api,
     superAdmin: this.superAdmin,
     ask: this.ask
-    
   }; 
 
   //SHARED DRAFT JS FIELDS (need to be global and not wrapped in object)
@@ -93,7 +93,6 @@ class Store {
   @observable userEditFields = {
     //Users and User Edit Fields
     userEdit: {},
-
     displayName_full: "",
     displayName: "",
     email: "",
@@ -206,6 +205,11 @@ class Store {
     sendAutomationDelay: 0,
   }
 
+  @observable supportTicket = {
+    //temp draft storage
+    sendSubject: ""
+  }
+
   @observable baseSettings = {
     label: "",
     imgFile: "",
@@ -280,6 +284,7 @@ class Store {
   }
 
   set(target, key, val, deepval = null) {
+    console.log(target, val)
     try {
       deepval === null
         ? (this.keys[target][key] = val)
