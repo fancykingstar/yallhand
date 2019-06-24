@@ -2,7 +2,7 @@ import React from "react";
 import { inject, observer} from "mobx-react"
 import { NavLink } from "react-router-dom";
 import { Dropdown, Image, Button, Modal, Form } from "semantic-ui-react";
-import { deleteUser } from "../DataExchange/Fetch"
+import { deleteUser, apiCall } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
 import "./style.css";
 
@@ -27,30 +27,11 @@ class UserProfile extends React.Component {
 
     const submitJiraTicket = (e) => {
       e.preventDefault()
-      const jira_token = process.env.REACT_APP_JIRA_TOKEN
-      fetch('https://aubryai.atlassian.net/rest/api/latest/issue', {
-        method: "POST", 
-        mode: "cors",
-        headers: {
-          'Authorization': 'Basic ' + btoa(process.env.REACT_APP_JIRA_UN + ":" + jira_token),
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(
-          {
-            "fields": {
-              "project":
-              {
-                  "key": "YS"
-              },
-              "summary": "Test.",
-              "description": "Test",
-              "issuetype": {
-                  "name": "Story"
-              }     
-            }
-          }
-        )
-      })
+      let {sendSummary, sendDescription} = DataEntryStore.supportTicket
+
+      apiCall("users/needsupport", "POST", {summary: sendSummary, description: sendDescription})
+      .then(res => res.json())
+      .catch(err => console.log(err))
     }
     return (
       <div className="UserProfile">
@@ -71,10 +52,16 @@ class UserProfile extends React.Component {
           <Modal onClose={e => UIStore.set("modal", "customerSupport", false)} open={UIStore.modal.customerSupport} size='small'>
             <Modal.Content>
               <Form>
-                <Form.Input label="Message"
-                  value={DataEntryStore.supportTicket.sendSubject}
+                <Form.Input label="Title"
+                  value={DataEntryStore.supportTicket.sendSummary}
                   onChange={(e, val) => 
-                    DataEntryStore.set("supportTicket", "sendSubject", val.value)
+                    DataEntryStore.set("supportTicket", "sendSummary", val.value)
+                  }
+                />
+                <Form.Input label="Description"
+                  value={DataEntryStore.supportTicket.sendDescription}
+                  onChange={(e, val) => 
+                    DataEntryStore.set("supportTicket", "sendDescription", val.value)
                   }
                 />
                 <Form.Button

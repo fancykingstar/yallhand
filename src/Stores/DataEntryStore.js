@@ -207,7 +207,8 @@ class Store {
 
   @observable supportTicket = {
     //temp draft storage
-    sendSubject: ""
+    sendSummary: "", 
+    sendDescription: ""
   }
 
   @observable baseSettings = {
@@ -284,7 +285,6 @@ class Store {
   }
 
   set(target, key, val, deepval = null) {
-    console.log(target, val)
     try {
       deepval === null
         ? (this.keys[target][key] = val)
