@@ -1,6 +1,8 @@
 import React from "react";
 import { inject, observer} from "mobx-react"
 import { NavLink } from "react-router-dom";
+import toast  from "../YallToast"
+
 import { Dropdown, Image, Button, Modal, Form } from "semantic-ui-react";
 import { deleteUser, apiCall } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
@@ -30,7 +32,10 @@ class UserProfile extends React.Component {
       let {sendSummary, sendDescription} = DataEntryStore.supportTicket
 
       apiCall("users/needsupport", "POST", {summary: sendSummary, description: sendDescription})
-      .then(res => res.json())
+      .then(() => {
+        UIStore.set("modal", "customerSupport", false)
+        toast.success("Your support request has been generated.", {hideProgressBar: true})
+      })
       .catch(err => console.log(err))
     }
     return (
