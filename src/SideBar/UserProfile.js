@@ -2,7 +2,7 @@ import React from "react";
 import { inject, observer} from "mobx-react"
 import { NavLink } from "react-router-dom";
 import toast  from "../YallToast"
-
+import { isEmpty } from '../SharedValidations/InputValidations'
 import { Dropdown, Image, Button, Modal, Form } from "semantic-ui-react";
 import { deleteUser, apiCall } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
@@ -30,13 +30,19 @@ class UserProfile extends React.Component {
     const submitJiraTicket = (e) => {
       e.preventDefault()
       let {sendSummary, sendDescription} = DataEntryStore.supportTicket
-
-      apiCall("users/needsupport", "POST", {summary: sendSummary, description: sendDescription})
-      .then(() => {
-        UIStore.set("modal", "customerSupport", false)
-        toast.success("Your support request has been generated.", {hideProgressBar: true})
-      })
-      .catch(err => console.log(err))
+      if(isEmpty(sendSummary) || isEmpty(sendDescription)) {
+        toast.error("Please fill out all fields...", {hideProgressBar: true}) 
+      } else {
+        apiCall("users/needsupport", "POST", {summary: sendSummary, description: sendDescription})
+        .then(() => {
+          UIStore.set("modal", "customerSupport", false)
+          toast.success("Your support request has been generated.", {hideProgressBar: true})
+        })
+        .catch(err => {
+          console.log(err)
+          toast.error("oops somethign went wrong", {hideProgressBar: true})
+        })
+      }
     }
     return (
       <div className="UserProfile">
