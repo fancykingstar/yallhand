@@ -4,8 +4,6 @@ import DateTime from 'react-datetime'
 import './DateTime.css'
 import moment from "moment"
 
- 
-
 @inject("UIStore")
 @observer
 export class DateTimeSelect extends React.Component { 
@@ -26,12 +24,42 @@ export class DateTimeSelect extends React.Component {
     const validTimes = () => 
       // this.state.current.isSame(new Date(), "day")? {hours:{min: moment().format('H')},minutes: {step: 5}}:
       ({minutes: {step: 15}})
-  
+
+    const getValidTimes = (dateTime) => {
+      if (moment().isSame(dateTime, 'day')) {
+        return {
+          hours: {
+            min: moment().format('H'),
+            max: 23,
+            step: 1,
+          },
+          minutes: {
+            min: moment().format('M'),
+            max: 59,
+            step: 15,
+          },
+        };
+      }
+    
+      return {
+        hours: {
+          min: 0,
+          max: 23,
+          step: 1,
+        },
+        minutes: {
+          min: 0,
+          max: 59,
+          step: 15,
+        },
+      };
+    }
+
     return ( 
         <React.Fragment>
           <DateTime 
           isValidDate={validDates}
-          timeConstraints={validTimes()}
+          timeConstraints={ getValidTimes(this.state.dateTime) } 
           timeFormat={this.props.includeTime !== undefined}
           defaultValue={this.state.current}
           onChange={e => {
