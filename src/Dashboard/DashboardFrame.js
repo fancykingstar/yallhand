@@ -25,18 +25,24 @@ class DashboardFrame extends React.Component {
     };
     const {AccountStore} = this.props;
 
-    this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now()) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
+    this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now(), updateDataField = false) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
       .then(result => result.json().then(data => {
           AccountStore.loadDashboardData(data)
+          if(updateDataField) {
           let dataset = AccountStore.dashboardData.counts_by_date
           this.setState({
             dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
           })
+          }
       }));
   }
+
   componentDidMount(){
     this.getData()
     window.scrollTo(0, 0);
+    this.setState({
+      dateRange: "Or choose a date range"
+    })
   }
 
   render() {

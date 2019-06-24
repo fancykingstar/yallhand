@@ -34,7 +34,7 @@ export class DateRange extends React.Component {
     const modifiers = { start: from, end: to };
     const handleClick = (start, end) => {
       UIStore.set("modal", "dashboardDates", false)
-      this.props.output(start, end)
+      this.props.output(start, end, true)
     }
     return (
       <div className="RangeExample">
