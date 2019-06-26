@@ -6,7 +6,6 @@ import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
 import embed from "embed-video";
 import draftToHtml from "draftjs-to-html";
-import createEmojiPlugin from 'draft-js-emoji-plugin';
 
 import {S3Upload} from "../DataExchange/S3Upload"
 import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
@@ -51,9 +50,6 @@ export class DraftFormField extends React.Component {
         this.getLoadOrNew()
     }
     render(){
-        console.log(emojiList)
-        const emojiPlugin = createEmojiPlugin();
-        const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
         const {DataEntryStore, AccountStore} = this.props
 
         // const customBlockType = () => 
@@ -143,8 +139,6 @@ export class DraftFormField extends React.Component {
               toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}
               plugins={[emojiPlugin]}    
             />
-            <EmojiSuggestions />
-            <EmojiSelect />
           </React.Fragment>
         </div>
       )
