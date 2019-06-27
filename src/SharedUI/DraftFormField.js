@@ -136,8 +136,7 @@ export class DraftFormField extends React.Component {
               onEditorStateChange={editorStateChanged}
               toolbar={toolbarConfig}
               editorStyle={{backgroundColor: "#ffffff", maxWidth: 900, borderRadius: 5, paddingLeft: 5, paddingRight: 5, minHeight: 200, margin: 0}}   
-              toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}
-              plugins={[emojiPlugin]}    
+              toolbarStyle={{backgroundColor: "#f9f9f9", border: 0}}    
             />
           </React.Fragment>
         </div>
