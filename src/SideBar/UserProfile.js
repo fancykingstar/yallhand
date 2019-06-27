@@ -7,6 +7,7 @@ import { Dropdown, Image, Button, Modal, Form } from "semantic-ui-react";
 import { deleteUser, apiCall } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
 import "./style.css";
+import { AccountStore } from "../Stores/AccountStore";
 
 @inject("UserStore", "UIStore", "DataEntryStore")
 @observer
@@ -28,12 +29,18 @@ class UserProfile extends React.Component {
     }
 
     const submitJiraTicket = (e) => {
+      const {accountID, generalEmail, label} = AccountStore.account
       e.preventDefault()
-      let {sendSummary, sendDescription} = DataEntryStore.supportTicket
-      if(isEmpty(sendSummary) || isEmpty(sendDescription)) {
+      let {sendDescription} = DataEntryStore.supportTicket
+      if(isEmpty(sendDescription)) {
         toast.error("Please fill out all fields...", {hideProgressBar: true}) 
       } else {
-        apiCall("users/needsupport", "POST", {summary: sendSummary, description: sendDescription})
+        apiCall("users/needsupport", "POST", {
+          summary: label, 
+          description: `User Description: ${sendDescription},\n 
+                        email: ${generalEmail},\n 
+                        accountId: ${accountID}, \n
+                        label: ${label}`})
         .then(() => {
           UIStore.set("modal", "customerSupport", false)
           toast.success("Your support request has been generated.", {hideProgressBar: true})
@@ -63,12 +70,6 @@ class UserProfile extends React.Component {
           <Modal onClose={e => UIStore.set("modal", "customerSupport", false)} open={UIStore.modal.customerSupport} size='small'>
             <Modal.Content>
               <Form>
-                <Form.Input label="Title"
-                  value={DataEntryStore.supportTicket.sendSummary}
-                  onChange={(e, val) => 
-                    DataEntryStore.set("supportTicket", "sendSummary", val.value)
-                  }
-                />
                 <Form.Input label="Description"
                   value={DataEntryStore.supportTicket.sendDescription}
                   onChange={(e, val) => 
