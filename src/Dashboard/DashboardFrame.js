@@ -29,10 +29,10 @@ class DashboardFrame extends React.Component {
       .then(result => result.json().then(data => {
           AccountStore.loadDashboardData(data)
           if(updateDataField) {
-          let dataset = AccountStore.dashboardData.counts_by_date
-          this.setState({
-            dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
-          })
+            let dataset = AccountStore.dashboardData.counts_by_date
+            this.setState({
+              dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
+            })
           }
       }));
   }
@@ -155,9 +155,17 @@ class DashboardFrame extends React.Component {
     const closeCalendarModal = () => {
       UIStore.set("modal", "dashboardDates", false)
     }
+
     const updateData = (source, val1) => {
-      if(source === "dropdown") UIStore.set("dropdown", "dashboardOverview", val1)
-      if(source === "dropdown") this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1]) 
+      console.log(source, val1)
+      if(source === "dropdown" && val1 !== "custom")  {
+        UIStore.set("dropdown", "dashboardOverview", val1)
+        this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1],Date.now(), true)
+      }
+
+      if(source === "dropdown" && val1 === "custom")  {
+        UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)
+      }
     }
 
     return (
@@ -213,10 +221,10 @@ class DashboardFrame extends React.Component {
           <Icon name="calendar alternate outline" color="blue"/>
           Last{" "}
           <Dropdown 
-          options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90}]} 
-          onChange={(e, val) => updateData("dropdown", val.value)}
+          options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90},{"text": "choose custom date range", "value": "custom"}]} 
+          onChange={(e, val) => updateData("dropdown", val.value, true)}
           value={UIStore.dropdown.dashboardOverview} />
-          <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} style={{paddingLeft: 20}}>{this.state.dateRange}</span>
+          <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} className="date-range font-800">{this.state.dateRange}</span>
           <Modal onClose={closeCalendarModal} open={UIStore.modal.dashboardDates} size='small'>
             <Modal.Content>
               <DateRange output={this.getData}/>

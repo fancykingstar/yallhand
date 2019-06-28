@@ -105,3 +105,12 @@ pre {
   z-index: 50;
   border: 0 none;
 }
+
+.date-range {
+  padding-left: 20px;
+}
+
+.font-800 {
+  font-weight: 800
+}
+
