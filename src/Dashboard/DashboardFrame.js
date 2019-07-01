@@ -25,24 +25,22 @@ class DashboardFrame extends React.Component {
     };
     const {AccountStore} = this.props;
 
-    this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now(), updateDataField = false) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
+    this.getData = (startDate=Date.now() - 2592000000, endDate=Date.now()) => apiCall("itslogs/views/analyticssummary", "POST", {accountID: AccountStore.account.accountID, startDate, endDate})
       .then(result => result.json().then(data => {
-          AccountStore.loadDashboardData(data)
-          if(updateDataField) {
-            let dataset = AccountStore.dashboardData.counts_by_date
-            this.setState({
-              dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
-            })
-          }
+        AccountStore.loadDashboardData(data)
+          let dataset = AccountStore.dashboardData.counts_by_date
+          this.setState({
+            dateRange: `${dataset[0].date_friendly}-${dataset[dataset.length - 1].date_friendly}`,
+          })
       }));
   }
 
   componentDidMount(){
     this.getData()
     window.scrollTo(0, 0);
-    this.setState({
-      dateRange: "Or choose a date range"
-    })
+    // this.setState({
+    //   dateRange: "Or choose a date range"
+    // })
   }
 
   render() {
@@ -160,7 +158,7 @@ class DashboardFrame extends React.Component {
       console.log(source, val1)
       if(source === "dropdown" && val1 !== "custom")  {
         UIStore.set("dropdown", "dashboardOverview", val1)
-        this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1],Date.now(), true)
+        this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1])
       }
 
       if(source === "dropdown" && val1 === "custom")  {
@@ -222,7 +220,7 @@ class DashboardFrame extends React.Component {
           Last{" "}
           <Dropdown 
           options={[{"text": "30 days", "value": 30},{"text": "60 days", "value": 60},{"text": "90 days", "value": 90},{"text": "choose custom date range", "value": "custom"}]} 
-          onChange={(e, val) => updateData("dropdown", val.value, true)}
+          onChange={(e, val) => updateData("dropdown", val.value)}
           value={UIStore.dropdown.dashboardOverview} />
           <span onClick={() => UIStore.set("modal", "dashboardDates", !UIStore.modal.dashboardDates)} className="date-range font-800">{this.state.dateRange}</span>
           <Modal onClose={closeCalendarModal} open={UIStore.modal.dashboardDates} size='small'>
