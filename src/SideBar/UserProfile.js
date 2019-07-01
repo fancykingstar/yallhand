@@ -70,13 +70,14 @@ class UserProfile extends React.Component {
           <Modal onClose={e => UIStore.set("modal", "customerSupport", false)} open={UIStore.modal.customerSupport} size='small'>
             <Modal.Content>
               <Form>
-                <Form.Input label="Description"
+                <Form.TextArea placeholder='Describe your issue..' label="Open support ticket"
                   value={DataEntryStore.supportTicket.sendDescription}
                   onChange={(e, val) => 
                     DataEntryStore.set("supportTicket", "sendDescription", val.value)
                   }
                 />
                 <Form.Button
+                  disabled={!DataEntryStore.supportTicket.sendDescription}
                   onClick={
                     submitJiraTicket
                   }
