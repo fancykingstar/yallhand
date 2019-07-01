@@ -46,9 +46,14 @@ export class DateTimeSelect extends React.Component {
   }
 
   render() {
+    const yesterday = moment().subtract( 1, 'day' );
+
+    const validDates = ( current )=> current.isAfter( this.props.notToday === undefined? yesterday: moment() );
+
     return ( 
         <React.Fragment>
           <DateTime 
+          isValidDate={validDates}
           timeConstraints={this.validTimeConstraints()}
           defaultValue={this.state.currentDate}
           value={this.state.currentDate}
