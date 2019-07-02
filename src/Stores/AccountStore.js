@@ -1,5 +1,6 @@
 import { observable, action, computed } from "mobx";
 import { getDefaultWorkspaceImg } from "../SharedCalculations/GetDefaultWorkspaceImg"
+import {UserStore} from "../Stores/UserStore"
 import _ from "lodash";
 
 class Store {
@@ -80,10 +81,11 @@ class Store {
     this.reviewQueue = all
   }
 
-  _getUsersSelectOptions() {
-      return this.allUsers
-        .filter(user => user.displayName_full !== "" && user.isActive)
-        .map(user => ({"text": user.displayName_full, "value": user.userID}))
+  _getUsersSelectOptions(obj="") {
+      const key = obj ? Object.keys(obj)[0] : ""
+      const selectedUsers = !key ? this.allUsers : this.allUsers.filter(i=>i[key] === Object.values(obj)[0])
+      return selectedUsers.filter(user => user.displayName_full !== "" && user.isActive)
+        .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName_full + " (me) ":user.displayName_full }))
   }
 
   _getUser(ID) {
