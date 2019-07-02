@@ -26,29 +26,21 @@ export const Schedule = inject("DataEntryStore", "UIStore")(
         }
        
     return(
-       
-      
-  
         <Segment>
           <div style={{ maxWidth: 500 }}>
-        <Header>Schedule</Header>
-        <Form>
+            <Header>Schedule</Header>
+            <Form>
               <Form.Group>
-              <Form.Select
-                options={options()}
-                onChange={(e, val) => DataEntryStore.set("contentmgmt", "eventType", val.value )}
-                label="Choose action"
-              />
-   
-         
-             </Form.Group></Form>
-             <DateTimeSelect value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val) } includeTime />
-              <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.eventType === ""} onClick={e => handleClick()}>Set</Button>
-
-    
-   
-            </div>
-            
+                <Form.Select
+                  options={options()}
+                  onChange={(e, val) => DataEntryStore.set("contentmgmt", "eventType", val.value )}
+                  label="Choose action"
+                />
+             </Form.Group>
+            </Form>
+            <DateTimeSelect value={val => DataEntryStore.set("contentmgmt", "eventDateTime", val) } includeTime />
+            <Button primary disabled={DataEntryStore.contentmgmt.eventDateTime === "" || DataEntryStore.contentmgmt.eventType === ""} onClick={e => handleClick()}>Set</Button>
+          </div> 
         </Segment>
       )
 }))
