@@ -16,6 +16,7 @@ class Store {
   @observable dashboardData = []
   @observable sentiments = []
   @observable reviewQueue = []
+  @observable stripe = {}
 
   @action
   set(target, key, val){
@@ -90,6 +91,10 @@ class Store {
 
   loadReviewQueue(all) {
     this.reviewQueue = all
+  }
+
+  loadStripe(data) {
+    this.stripe = data
   }
 
   _getUsersSelectOptions(obj="") {
