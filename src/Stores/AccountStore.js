@@ -68,10 +68,21 @@ class Store {
     })
   }
 
-  loadLogs(allLogs) { this.logs = allLogs }
-  loadAnalyticData_portal(allLogs) { this.analyticData_portal = allLogs }
-  loadAnalyticData_campaigns(allLogs) { this.analyticData_campaigns = allLogs }
-  loadDashboardData(allLogs) { this.dashboardData = allLogs }
+  loadLogs(allLogs) {
+    this.logs = allLogs
+  }
+
+  loadAnalyticData_portal(allLogs) { 
+    this.analyticData_portal = allLogs
+  }
+  
+  loadAnalyticData_campaigns(allLogs) { 
+    this.analyticData_campaigns = allLogs
+  }
+
+  loadDashboardData(allLogs) { 
+    this.dashboardData = allLogs
+  }
 
   loadSentiments(allSentiments) {
     this.sentiments = allSentiments

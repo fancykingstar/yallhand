@@ -19,6 +19,7 @@ class ProfileLogin extends React.Component {
   login () {
     const { history } = this.props
     this.setState({errorMsg: null})
+
     apiCall('users/login', 'POST', {email: this.state.email, password: this.state.password})
       .then((res) => res.json())
       .then((res) => {

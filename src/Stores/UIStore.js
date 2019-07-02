@@ -196,8 +196,8 @@ class Store {
     @action
     set(target, key, val){
         try {
-          // console.log(key, val)
         this.keys[target][key] = val
+        
         }
         catch (error) {
             console.log("Is the request value set in UIStore Keys?", error);
