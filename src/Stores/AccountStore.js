@@ -5,7 +5,8 @@ import _ from "lodash";
 
 class Store {
   keys = {
-    "account": this.account
+    "account": this.account,
+    "stripe": this.stripe,
   }
 
   @observable account = {}
@@ -16,7 +17,11 @@ class Store {
   @observable dashboardData = []
   @observable sentiments = []
   @observable reviewQueue = []
-  @observable stripe = {}
+
+  @observable stripe = {
+    data: {},
+    plans: {},
+  }
 
   @action
   set(target, key, val){
@@ -91,10 +96,6 @@ class Store {
 
   loadReviewQueue(all) {
     this.reviewQueue = all
-  }
-
-  loadStripe(data) {
-    this.stripe = data
   }
 
   _getUsersSelectOptions(obj="") {

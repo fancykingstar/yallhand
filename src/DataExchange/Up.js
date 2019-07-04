@@ -344,10 +344,10 @@ export const modifyCampaign = (payload, toastEnabled) => {
 }
 
 ///SETTINGS
-export const modifyAccount = (payload) => {
+export const modifyAccount = (payload, toast=true) => {
     return processTemplate(true, "accounts/" + payload.accountID, "PATCH", payload, "account", 
     "Your account settings have been updated 🛠", 
-    true,{"event": "update", "type":"account"}
+    true,{"event": "update", "type":"account"}, toast
 )
 }
 

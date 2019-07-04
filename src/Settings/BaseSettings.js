@@ -9,7 +9,7 @@ import { baseSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyAccount } from "../DataExchange/Up"
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
 import { Billing } from "./Billing";
-import { getStripeAcct } from "../DataExchange/ThirdParty";
+import { getStripeAcct, getStripePlan } from "../DataExchange/ThirdParty";
 import _ from 'lodash';
 import "./style.css"
 
@@ -17,7 +17,7 @@ import "./style.css"
 @inject("AccountStore", "DataEntryStore")
 @observer
 export class BaseSettings extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     const { AccountStore } = this.props;
     const { DataEntryStore } = this.props;
 
@@ -27,16 +27,17 @@ export class BaseSettings extends React.Component {
     DataEntryStore.set( "baseSettings", "timezone", AccountStore.account.timezone );
     DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert );
     DataEntryStore.set( "baseSettings", "generalEmail", AccountStore.account.generalEmail );
-    if(AccountStore.account.data.stripe.id) getStripeAcct(AccountStore.account.data.stripe.id);
+    if(AccountStore.account.data.stripe && _.isEmpty(AccountStore.stripe)) await getStripeAcct(AccountStore.account.data.stripe.id);
+    if(_.isEmpty(AccountStore.stripe.plans)) await getStripePlan();
     window.scrollTo(0, 0);
   }
   render() {
     const { AccountStore } = this.props;
     const { DataEntryStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.baseSettings.label, 24);
-    const timezones = require("../TemplateData/timezones.json")
-      .map(time => ({ text: time.text, value: time.offset }))
-      .reverse();
+    // const timezones = require("../TemplateData/timezones.json")
+    //   .map(time => ({ text: time.text, value: time.offset }))
+    //   .reverse();
 
     const handleDelete = () => {
       console.log("delete account request")
