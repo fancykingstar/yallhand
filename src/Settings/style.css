@@ -42,3 +42,24 @@
     width: 100%;
     /* background-color: red; */
 }
+
+.cardinfo::placeholder {
+    font-family: "Helvetica Rounded", Lato, Arial, sans-serif;
+    font-size: 18px;
+}
+
+.cardinfo {
+    font-family: "Helvetica Rounded", Lato, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 18px;
+    height: 25px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 0px;
+    margin-top: 5px;
+}
+
+.infoError {
+    border-bottom: 2px solid red;
+}

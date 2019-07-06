@@ -1,60 +1,43 @@
 import React from 'react';
 import {injectStripe} from 'react-stripe-elements';
-import {Button} from "semantic-ui-react"
-
-
+import {Button, Checkbox} from "semantic-ui-react"
 import CardSection from './CardSection';
-import AddressSection from "./AddressSection";
-
+import {AccountStore} from "../Stores/AccountStore";
+import "./style.css";
 class CheckoutForm extends React.Component {
-
-  handleSubmit = (ev) => {
-    // We don't want to let default form submission happen here, which would refresh the page.
+  constructor(props){
+    super(props);
+    this.state={nameError:false, name: "", recur: false, recurError:false}
+  }
+  handleSubmit = async (ev) => {
     ev.preventDefault();
-
-    // Within the context of `Elements`, this call to createPaymentMethod knows from which Element to
-    // create the PaymentMethod, since there's only one in this group.
-    // See our createPaymentMethod documentation for more:
-    // https://stripe.com/docs/stripe-js/reference#stripe-create-payment-method
-    this.props.stripe
-      .createPaymentMethod('card', {billing_details: {name: 'Jenny Rosen'}})
-      .then(({paymentMethod}) => {
-        console.log('Received Stripe PaymentMethod:', paymentMethod);
-      });
-
-    // You can also use handleCardPayment with the Payment Intents API automatic confirmation flow.
-    // See our handleCardPayment documentation for more:
-    // https://stripe.com/docs/stripe-js/reference#stripe-handle-card-payment
-    // this.props.stripe.handleCardPayment('{PAYMENT_INTENT_CLIENT_SECRET}', {});
-
-    // You can also use createToken to create tokens.
-    // See our tokens documentation for more:
-    // https://stripe.com/docs/stripe-js/reference#stripe-create-token
-    this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
-    // token type can optionally be inferred if there is only one Element
-    // with which to create tokens
-    // this.props.stripe.createToken({name: 'Jenny Rosen'});
-
-    // You can also use createSource to create Sources.
-    // See our Sources documentation for more:
-    // https://stripe.com/docs/stripe-js/reference#stripe-create-source
-    this.props.stripe.createSource({
+    if (!this.state.name) this.setState({nameError:true});
+    else if (!this.state.recur) this.setState({recurError:true})
+    else {
+      this.setState({nameError:false, recurError:false});
+      const src = await this.props.stripe.createSource({
       type: 'card',
-      owner: {
-        name: 'Jenny Rosen',
-      },
+      owner: {name: "test user"},
+      usage: "reusable"
     });
+    if (src.source) this.props.addMethod(src)
   };
+  };
+  
 
   render() {
+    const chargeNow = AccountStore.account.plan === 'demo' && AccountStore.stripe.data.subscriptions.data.length === 0? `. I will be charged ${this.props.pricing} for my first month upon submitting.`:"."
     return (
       <form onSubmit={this.handleSubmit}>
-        {/* <AddressSection /> */}
-
-        {/* <AddressSection/> */}
         <CardSection />
-        <br/>
-        <Button onClick={e => this.handleSubmit(e)} size="tiny">Update</Button>
+        <input value={this.state.name} onChange={e=>this.setState({name: e.currentTarget.value})} placeholder="Cardholder's name (e.g. Jane Smith)" className={this.state.nameError? "cardinfo infoError":"cardinfo"}/>
+        <div style={{marginTop: 10}}>
+        <Checkbox onChange={()=>this.setState({recur: !this.state.recur})} checked={this.state.recur} className={this.state.recurError? "infoError":""} label={`I understand this card will be charged automatically on a monthly recurring basis and I can cancel at anytime${chargeNow} `} />
+       
+        </div>
+        <div style={{marginTop: 20}}><Button onClick={e => this.handleSubmit(e)} primary size="tiny">Submit</Button></div>
+        
+        
       </form>
     );
   }

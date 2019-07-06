@@ -21,6 +21,7 @@ class Store {
   @observable stripe = {
     data: {},
     plans: {},
+    invoice: {}
   }
 
   @action
@@ -120,7 +121,7 @@ class Store {
 
   @computed
   get _allActiveUsers() {
-    return this.allUsers.filter(user => user.displayName_full !== "" && user.isActive)
+    return this.allUsers.filter(user => user.isActive || user.now === "false")
   }
 }
 
