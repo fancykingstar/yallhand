@@ -24,7 +24,7 @@ class ProfileLogin extends React.Component {
       .then((res) => {
         if (res.error) {
           if (res.error.message && res.error.message === 'Denied: unauthorized access') return this.setState({errorMsg: res.error.message})
-          else return this.setState({errorMsg: 'Connection error (Email / Password is not good)'})
+          else return this.setState({errorMsg: 'Connection error (Your email or password is not valid)'})
         }
         if (res.token) {
           setUser({token: res.token})

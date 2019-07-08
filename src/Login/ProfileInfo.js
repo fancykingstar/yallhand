@@ -13,7 +13,7 @@ class ProfileInfo extends React.Component {
       error: null,
       name: props.item && props.item.displayName_full ? props.item.displayName_full : '',
       username: props.item && props.item.displayName ? props.item.displayName : '',
-      phone: props.item && props.item.phone ? props.item.phone : '',
+      // phone: props.item && props.item.phone ? props.item.phone : '',
       email: props.item && props.item.email ? props.item.email : '',
       email_disable: props.item && props.item.email ? true : false,
       password: '',
@@ -27,6 +27,7 @@ class ProfileInfo extends React.Component {
       date: props.item && props.item.date ? props.item.date : '',
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
       img: props.item && props.item.img ? props.item.img : '',
+      boss: props.item && props.item.boss ? props.item.boss : '',
     };
 
   }
@@ -69,10 +70,10 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tag, email, phone, password, accountID, now, date, googleId, img } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tag, email, dob, password, accountID, now, date, boss, googleId, img } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
-    else if (this.validate('phone', 'phone') !== '') return;
+    // else if (this.validate('phone', 'phone') !== '') return;
     else if (this.validate('email', 'email') !== '') return;
     else if (!googleId && this.validate('password', 'password') !== '') return;
     else if (!googleId && this.validate('password_confirm', 'password confirm') !== '') return;
@@ -87,10 +88,12 @@ class ProfileInfo extends React.Component {
       tags: tag,
       email: email,
       img: img,
-      phone: phone,
+      // phone: phone,
+      dob:dob,
       password: googleId ? googleId : password,
       accountID: accountID,
       now: now,
+      boss: boss,
       date: date,
       googleId: googleId,
       date: new Date()
@@ -123,7 +126,7 @@ class ProfileInfo extends React.Component {
             <Header as="h2">Register your account</Header>
             <Divider />
             <Form>
-              <Form.Input label="Full Name"
+              <Form.Input label="Full Legal Name"
                           value={this.state.name}
                           onBlur={() => this.validate('name', 'name')}
                           onChange={(e) => this.setState({name: e.target.value})}>
@@ -131,14 +134,14 @@ class ProfileInfo extends React.Component {
               </Form.Input>
               <Form.Input onBlur={() => this.validate('username', 'display name')}
                           value={this.state.username} onChange={(e) => this.setState({username: e.target.value})}
-                          label={<span style={{color: "#000000"}}>Display Name<InfoPopUp content="Short name or nickname" /></span>}>
+                          label={<span style={{color: "#000000", fontWeight: 700, fontSize: '0.92em'}}>Display Name<InfoPopUp content="Short name or nickname" /></span>}>
                 <input maxLength="16" />
               </Form.Input>
-              <Form.Input icon="phone"
-                          type="tel"
-                          label="mobile"
-                          onBlur={() => this.validate('phone', 'phone')}
-                          onChange={(e) => this.setState({phone: e.target.value})}/>
+              <Form.Input icon="birthday cake"
+                          type="date"
+                          label="Birthday"
+                          onChange={(e) => this.setState({dob: e.target.value})}/>
+              
               <Form.Input icon="mail"
                           label="email" 
                           value={this.state.email}

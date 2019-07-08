@@ -2,7 +2,7 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header, Button, Modal,Icon} from "semantic-ui-react";
+import { Table, Header,Icon} from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 
@@ -31,7 +31,7 @@ export class CampaignAnalytics extends React.Component {
     this.sort("sent", "Highest")
   }
   render() {
-    const {AccountStore, EmailStore, TeamStore, UIStore} = this.props
+    const {AccountStore, EmailStore, UIStore} = this.props
 
 
     
@@ -47,18 +47,18 @@ export class CampaignAnalytics extends React.Component {
 
       if(!campaign) return null
       return (
-        <Table.Row disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false} key={"camp" + giveMeKey()}>
-          <Table.Cell>
+        <Table.Row key={"camp" + giveMeKey()}>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>
             <Header>
               <Header.Content>
               {camp.subject}
               </Header.Content>
             </Header>
           </Table.Cell>
-          <Table.Cell>{UTCtoFriendly(camp.sent)}</Table.Cell>
-          <Table.Cell>{`${camp.total_views}/${camp.unique_views}`}</Table.Cell>
-          <Table.Cell>{camp.open_rate}%</Table.Cell>
-          <Table.Cell>{this.clickRate(camp)}%</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{UTCtoFriendly(camp.sent)}</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{`${camp.total_views}/${camp.unique_views}`}</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{camp.open_rate}%</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{this.clickRate(camp)}%</Table.Cell>
           <Table.Cell></Table.Cell>
           <Table.Cell> 
                     {CampaignDetails(campaign)}

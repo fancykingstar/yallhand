@@ -17,6 +17,7 @@ export class TeamFrame extends React.Component {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {
       UIStore.set("menuItem","teamFrame", name);
+      if (name !== "users") UIStore.set("search", "searchUsers", "");
     };
     const isVisable = name => {
       return name === UIStore.menuItem.teamFrame ? "Visable" : "Hidden";

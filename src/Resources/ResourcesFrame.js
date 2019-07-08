@@ -1,16 +1,16 @@
 import React from "react";
-import { Input } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
-import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { Files } from "./Files"
-
-
 import "./style.css";
 
 @inject("UIStore")
 @observer
 export class ResourcesFrame extends React.Component {
+  componentWillUnmount(){
+    const {UIStore} = this.props;
+    UIStore.set("search", "searchFiles", "");
+  }
   componentDidMount(){
     window.scrollTo(0, 0);
   }
