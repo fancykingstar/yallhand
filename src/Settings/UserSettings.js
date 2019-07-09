@@ -4,13 +4,9 @@ import { Header, Segment, Form, Button, Message, Icon, Input } from "semantic-ui
 import { FeaturedAvatar} from "../SharedUI/ManageContent/FeaturedAvatar";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
-import { MultipleInputFields } from "../SharedUI/MultipleInputFields.js";
-import { modifyUserSettings, deactivateUser } from "../DataExchange/Up"
 import { userSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyUser } from "../DataExchange/Up"
-// import _ from "lodash";
-import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
-import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+
 
 @inject("UserStore", "DataEntryStore")
 @observer
@@ -49,11 +45,7 @@ export class UserSettings extends React.Component {
     const profileLabels = ["Title", "Department", "Location", "Phone or Extension", "Mobile", "About Me"].map(i => ({label: i, prefix: null, value: i}))
     const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network}))
     const multipleInputs = [...profileLabels,...socialLabels]
-    
 
-    const handleDeactivate = () => {
-      deactivateUser(UserStore.user)
-    }
 
     return (
       <div style={{ padding: 15, maxWidth: 900 }}>
@@ -197,11 +189,6 @@ export class UserSettings extends React.Component {
               </Form>
         </Segment>
         
-       
-       {/* <Segment>
-         <div style={{height: 30}}>    <ConfirmDelete deleteLabel="Deactivate" size="mini" confirm={handleDeactivate}/></div>
-   
-       </Segment> */}
         <div style={{height: 100}}></div>
     
   

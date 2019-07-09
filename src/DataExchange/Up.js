@@ -343,6 +343,19 @@ export const modifyCampaign = (payload, toastEnabled) => {
 )
 }
 
+///EMAIL FUNCTIONS
+export const sendEmailPreview = async (val) => {
+    const previewValues = {
+      isSendNow: true,
+      completed: false,
+    };
+    await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
+      .then(res => toast.success('Preview email has been sent', {hideProgressBar: true}))
+      .catch(e => toast.error('Preview email has not been sent', {hideProgressBar: true}))
+  }
+
+  
+
 ///SETTINGS
 export const modifyAccount = (payload) => {
     return processTemplate(true, "accounts/" + payload.accountID, "PATCH", payload, "account", 
@@ -351,23 +364,7 @@ export const modifyAccount = (payload) => {
 )
 }
 
-////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
 
-export const deactivateUser = (val) => {
-    setTimeout(() => {console.log("user deactivated", val)}, 1000)
-}
-
-
-export const sendEmailPreview = async (val) => {
-  const previewValues = {
-    isSendNow: true,
-    completed: false,
-  };
-
-  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
-    .then(res => toast.success('Preview email has been sent', {hideProgressBar: true}))
-    .catch(e => toast.error('Preview email has not been sent', {hideProgressBar: true}))
-}
 
 
 

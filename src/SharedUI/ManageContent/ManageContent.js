@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Button, Header, Segment, Menu, Dropdown } from "semantic-ui-react";
+import { Header, Segment, Dropdown } from "semantic-ui-react";
 import { SelectVariation } from "../../SharedUI/SelectVariation";
 import { ManageVariationData } from "../../SharedUI/ManageVariationData";
 import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
@@ -51,6 +51,7 @@ class ManageContent extends React.Component {
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
+          DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           // DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
           DataEntryStore.set("contentmgmt", "campaign", "new");
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
@@ -86,6 +87,7 @@ class ManageContent extends React.Component {
           );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
+          DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           DataEntryStore.set("contentmgmt", "bundle", "queue");
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert)
@@ -109,6 +111,8 @@ class ManageContent extends React.Component {
   render() {    
     
     const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore } = this.props;
+
+    console.log(DataEntryStore.contentmgmt.imgData);
 
     const publishOptions = () => {
       const updateStage = (newStage) => {
@@ -284,6 +288,7 @@ class ManageContent extends React.Component {
                 <FeaturedImage
                   mode={this.mode}
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
+                  imgData={DataEntryStore.contentmgmt.imgData}
                   output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
                 />
 

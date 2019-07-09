@@ -33,7 +33,10 @@ export class InviteUser extends React.Component {
       adminTagID: "none",
       date: "",
       email: "",
-      dropdown: "today"
+      boss: "",
+      isAdmin: false,
+      dropdown: "today",
+      
     };
   }
 
@@ -42,8 +45,8 @@ export class InviteUser extends React.Component {
   }
 
   getDataNewUser () {
-    const { AccountStore, isAdmin } = this.props;
-    const { teamID, teamName, tagID, email } = this.state;
+    const { AccountStore} = this.props;
+    const { teamID, teamName, tagID, email, isAdmin, boss } = this.state;
     const userData = user()
 
     return {
@@ -53,7 +56,8 @@ export class InviteUser extends React.Component {
       teamName: AccountStore.account.label,
       accountID: userData.accountID,
       tags: tagID === "none" ? [] : [tagID],
-      isAdmin: isAdmin
+      isAdmin,
+      boss
     }
   }
 
@@ -99,7 +103,7 @@ export class InviteUser extends React.Component {
   render() {
     const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
     const { email, teamID, tagID, dropdown } = this.state;
-    const { isAdmin } = this.props;
+    const { isAdmin, AccountStore } = this.props;
 
     return (
       <div className="Segment">
@@ -107,17 +111,24 @@ export class InviteUser extends React.Component {
           <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Admin Collaborators" subheader="Send invite to admin to generate and manage information"/> :
           <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Users" subheader="Send invite for new user to join organization"/>}
         <Segment>
-          <Form>
-            <Form.Group widths="equal">
-              <Form.Input fluid label="Email" value={email} placeholder="jane@placethatwework.co" onChange={(e, v) => this.setState({email: v.value})}/>
+          <Form widths="equal">
+            <Form.Group > 
+              <Form.Input label="Email" value={email} placeholder="jane@placethatwework.co" onChange={(e, v) => this.setState({email: v.value})}/>
               <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e.value, teamName: e.text})}/>
-              <TagSelect label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
+              <TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
+              <Form.Dropdown
+                label="Reports to (optional):"
+                search
+                selection
+                onChange={(e, val) => this.setState({boss:val.value})}
+                value={this.state.boss}
+                options={AccountStore._getUsersSelectOptions()}
+              />
+            
             </Form.Group>
-            <span>
-              start user{" "}
-              <Dropdown onChange={(e, v) => this.setState({dropdown: v.value})} options={dropDownText} value={dropdown} inline />
-            </span>
-            <div style={{paddingTop: 10}}>
+           <div style={{float:"left"}}> <span> start user{" "} <Dropdown onChange={(e, v) => this.setState({dropdown: v.value})} options={dropDownText} value={dropdown} inline /> </span></div>
+            <div style={{float: "right"}}><Form.Checkbox checked={this.state.isAdmin} onChange={()=>this.setState({isAdmin:!this.state.isAdmin})} label="Admin"/></div>
+            <div style={{paddingTop: 20}}>
               <Form.Group inline>
               {dropdown === "today" ?
                 <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={this.checkMail()}/>
@@ -130,6 +141,7 @@ export class InviteUser extends React.Component {
                   <Form.Button onClick={e => this.onboard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
                 </React.Fragment>}
               </Form.Group>
+              
             </div>
           </Form>
         </Segment>

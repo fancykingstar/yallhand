@@ -19,7 +19,6 @@ export class DateTimeSelect extends React.Component {
   
   validTimeConstraints () {
     if(moment().isSame(this.state.currentDate, 'day')) {
-      console.log('today do something diferently')
       return {
         hours: {
           min: this.state.currentDate.hours(),

@@ -16,6 +16,10 @@ import "./style.css";
 @inject("AnnouncementsStore", "AccountStore", "UIStore", "DataEntryStore")
 @observer
 class AnnouncementsFrame extends React.Component {
+  componentWillUnmount() {
+    const {UIStore} = this.props;
+    UIStore.set("search","searchAnnouncements","");
+  }
   componentDidMount() {
     const { AnnouncementsStore, UIStore } = this.props;
     window.scrollTo(0, 0);
