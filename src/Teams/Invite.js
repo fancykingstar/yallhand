@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Segment} from "semantic-ui-react"
+import {Button, Segment, Form} from "semantic-ui-react"
 import { UserInvite } from './UserInvite';
-
+import { isValidEmail } from "../SharedValidations/InputValidations";
 
 export const Invite = () => {
   const userObj  = {
@@ -17,39 +17,34 @@ export const Invite = () => {
       isAdmin: false,
       dropdown: "today",
   }
-  const [userInvites, setuserInvites] = useState([userObj])
-  // console.log(userInvites)
-  // const reset = () => {
-  //   return {
-  //     teamID: "global",
-  //     teamName: "global",
-  //     tagID: "none",
-  //     adminConfig: "all",
-  //     adminTeamID: "global",
-  //     adminTagID: "none",
-  //     date: "",
-  //     email: "",
-  //     boss: "",
-  //     isAdmin: false,
-  //     dropdown: "today",
-  //   };
-  // }
   
+  const [userInvites, setuserInvites] = useState([userObj])  
+
   const handleClick = () => {
-    console.log('hi')
     setuserInvites([...userInvites, userObj])
   }
 
+  const updateFields = (fieldObj, id) => {
+    let userList = userInvites
+    userList[id].email = fieldObj.email
+    setuserInvites(userList)
+  }
+
   const displayUserInvites = () => {
-    return userInvites.map(invite => {
-      console.log('invite', invite)
-      return <UserInvite info={invite}/>
+    return userInvites.map((invite, index) => {
+      return <UserInvite info={invite} key={index} id={index} updateFields={updateFields}/>
     })
   }
   
-  // const addUserFormField = () => {
-  //   return <UserInvite/>
-  // }
+  const checkMail =  () => {
+    console.log(userInvites)
+    // return !isValidEmail(props.email)
+    userInvites.forEach(userInvite => {
+      console.log(!isValidEmail(userInvite.email))
+    })
+  }
+
+  checkMail()
   return(
     <div className="Segment">
       <Segment>
@@ -61,6 +56,11 @@ export const Invite = () => {
         {displayUserInvites()}
         <Button onClick={handleClick}> + </Button>
       </Segment>
+      {/* <div style={{paddingTop: 20}}>
+          <Form.Group inline>
+            <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
+          </Form.Group>
+        </div> */}
     </div>
   )
 } 

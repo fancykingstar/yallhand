@@ -5,7 +5,7 @@ import { Form, Segment, Header, Dropdown } from "semantic-ui-react";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
-import { isValidEmail } from "../SharedValidations/InputValidations";
+import { chownSync } from 'fs';
 
 export const UserInvite = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, email, isAdmin, boss } = props.info;
@@ -26,15 +26,14 @@ export const UserInvite = inject("AccountStore")(observer((props) => {
     }
   }
 
-  const checkMail =  () => {
-    return !isValidEmail(props.email)
+  const setEmail = (emailInput) => {
+    props.updateFields(emailInput, props.id)
   }
-
   return( 
     <Segment>
       <Form widths="equal">
         <Form.Group > 
-          <Form.Input label="Email" value={email} placeholder="jane@placethatwework.co" onChange={(e, v) => this.setState({email: v.value})}/>
+          <Form.Input label="Email" placeholder="jane@placethatwework.co" onChange={(e, v) => setEmail({email: v.value})}/>
           <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e.value, teamName: e.text})}/>
           <TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
           <Form.Dropdown
@@ -48,11 +47,6 @@ export const UserInvite = inject("AccountStore")(observer((props) => {
         
         </Form.Group>
         <div style={{float:"left"}}> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
-        <div style={{paddingTop: 20}}>
-          <Form.Group inline>
-            <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
-          </Form.Group>
-        </div>
       </Form>
     </Segment>
   )
