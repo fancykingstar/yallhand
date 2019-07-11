@@ -37,6 +37,7 @@ export const Invite = () => {
   
   const handleClick = () => {
     console.log('hi')
+    setuserInvites([...userInvites, userObj])
   }
 
   const displayUserInvites = () => {
