@@ -30,24 +30,22 @@ export const UserInvite = inject("AccountStore")(observer((props) => {
     props.updateFields(emailInput, props.id)
   }
   return( 
-    <Segment>
-      <Form widths="equal">
-        <Form.Group > 
-          <Form.Input label="Email" placeholder="jane@placethatwework.co" onChange={(e, v) => setEmail({email: v.value})}/>
-          <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e.value, teamName: e.text})}/>
-          <TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
-          <Form.Dropdown
-            label="Reports to (optional):"
-            search
-            selection
-            onChange={(e, val) => this.setState({boss:val.value})}
-            value={boss}
-            options={AccountStore._getUsersSelectOptions()}
-          />
-        
-        </Form.Group>
-        <div style={{float:"left"}}> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
-      </Form>
-    </Segment>
+    <Form widths="equal">
+      <Form.Group > 
+        <Form.Input label="Email" placeholder="jane@placethatwework.co" onChange={(e, v) => setEmail({email: v.value})}/>
+        <TeamSelect label="Choose Team:" value={teamID} outputVal={e => this.setState({teamID: e.value, teamName: e.text})}/>
+        <TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => this.setState({tagID: e})}/>
+        <Form.Dropdown
+          label="Reports to (optional):"
+          search
+          selection
+          onChange={(e, val) => this.setState({boss:val.value})}
+          value={boss}
+          options={AccountStore._getUsersSelectOptions()}
+        />
+      
+      </Form.Group>
+      <div style={{float:"left"}}> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
+    </Form>
   )
 }))

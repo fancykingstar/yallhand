@@ -38,11 +38,31 @@ export const Invite = () => {
   
   const checkMail =  () => {
     console.log(userInvites)
-    // return !isValidEmail(props.email)
     userInvites.forEach(userInvite => {
       console.log(!isValidEmail(userInvite.email))
+      if(isValidEmail(userInvite.email)) {
+        return false
+      }
+      return true
     })
   }
+
+  // onboard = async(later = false) => {
+  //   const {AccountStore} = this.props;
+  //   let newUser = this.getDataNewUser()
+  //   newUser.now = !later
+  //   if (later) {
+  //     newUser.date = moment(this.state.date).valueOf();
+  //     newUser.now = false;
+  //   }
+  //   await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+  //     console.log(res)
+  //     if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+  //     else res.error ? this.error(res) : this.success()
+  //   })
+  //   await users(AccountStore.account.accountID)
+  //   this.setState(this.reset());
+  // }
 
   checkMail()
   return(
@@ -55,12 +75,17 @@ export const Invite = () => {
         {/* {addUserFormField()} */}
         {displayUserInvites()}
         <Button onClick={handleClick}> + </Button>
+        <div style={{paddingTop: 20}}>
+          <Form.Group inline>
+            <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
+          </Form.Group>
+        </div>
       </Segment>
       {/* <div style={{paddingTop: 20}}>
-          <Form.Group inline>
-            <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
-          </Form.Group>
-        </div> */}
+        <Form.Group inline>
+          <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
+        </Form.Group>
+      </div> */}
     </div>
   )
 } 
