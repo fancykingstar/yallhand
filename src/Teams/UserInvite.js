@@ -1,7 +1,7 @@
 import React from 'react';
 import {inject, observer} from 'mobx-react';
 import { user } from "../DataExchange/PayloadBuilder"
-import { Form, Segment, Header, Dropdown } from "semantic-ui-react";
+import { Form, Dropdown, Button } from "semantic-ui-react";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
@@ -29,6 +29,10 @@ export const UserInvite = inject("AccountStore")(observer((props) => {
   const setEmail = (emailInput) => {
     props.updateFields(emailInput, props.id)
   }
+
+  const removeRow = () => {
+    props.removeRow(props.id)
+  }
   return( 
     <Form widths="equal">
       <Form.Group > 
@@ -43,7 +47,7 @@ export const UserInvite = inject("AccountStore")(observer((props) => {
           value={boss}
           options={AccountStore._getUsersSelectOptions()}
         />
-      
+        <Button onClick={removeRow}> x </Button>
       </Form.Group>
       <div style={{float:"left"}}> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
     </Form>

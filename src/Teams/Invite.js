@@ -31,16 +31,24 @@ export class Invite extends React.Component  {
   handleClick = () => {
     this.setState({ userInvites: [...this.state.userInvites, this.reset()]})
   }
-
+  
   updateFields = (fieldObj, id) => {
     let userList = this.state.userInvites
     userList[id].email = fieldObj.email
     this.setState({userInvites: userList})
   }
 
+  removeRow = (id) => {
+    let userList = this.state.userInvites
+    if(userList.length > 1) {
+      userList.splice(userList[id], 1)
+      this.setState({userInvites: userList})
+    }
+  }
+
   displayUserInvites = () => {
     return this.state.userInvites.map((invite, index) => {
-      return <UserInvite info={invite} key={index} id={index} updateFields={this.updateFields}/>
+      return <UserInvite info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
     })
   }
   
