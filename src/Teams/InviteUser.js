@@ -96,7 +96,6 @@ export class InviteUser extends React.Component {
     })
     await users(AccountStore.account.accountID)
     this.setState(this.reset());
-    
   }
 
   render() {

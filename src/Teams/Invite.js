@@ -1,8 +1,13 @@
 import React from 'react';
+import { inject, observer } from "mobx-react";
 import {Button, Segment, Form} from "semantic-ui-react"
 import { UserInvite } from './UserInvite';
 import { isValidEmail } from "../SharedValidations/InputValidations";
+import { user } from "../DataExchange/PayloadBuilder"
+import moment from "moment"
 
+@inject("AccountStore")
+@observer
 export class Invite extends React.Component  {
   constructor(props) {
     super(props);
@@ -58,6 +63,36 @@ export class Invite extends React.Component  {
     })
   }
 
+  getDataNewUser (userObj) {
+    const { AccountStore} = this.props;
+    const { teamID, tagID, email, isAdmin, boss } = userObj;
+    const userData = user()
+
+    return {
+      invitedBy: userData.invitedBy,
+      email: email,
+      teamID: teamID,
+      teamName: AccountStore.account.label,
+      accountID: userData.accountID,
+      tags: tagID === "none" ? [] : [tagID],
+      isAdmin,
+      boss
+    }
+  }
+
+  onBoard = async(later = false) => {
+    const {AccountStore} = this.props;
+    this.state.userInvites.forEach( userInvite => {
+      console.log(userInvite)
+      let newUser = this.getDataNewUser()
+      newUser.now = !later
+      if (later) {
+        newUser.date = moment(this.state.date).valueOf();
+        newUser.now = false;
+      }
+    })
+  }
+
   render() {
     return(
       <div className="Segment">
@@ -66,7 +101,9 @@ export class Invite extends React.Component  {
           <Button onClick={this.handleClick}> + </Button>
           <div style={{paddingTop: 20}}>
             <Form.Group inline>
-              <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()}/>
+              <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
+              content="Schedule Start Day" icon="clock"
+              onClick={e => this.onBoard(true)}/>
             </Form.Group>
           </div>
         </Segment>
