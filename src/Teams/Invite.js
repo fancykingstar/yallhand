@@ -1,11 +1,19 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Segment, Form} from "semantic-ui-react"
 import { UserInvite } from './UserInvite';
 import { isValidEmail } from "../SharedValidations/InputValidations";
 
-export const Invite = () => {
-  const userObj  = {
-    teamID: "global",
+export class Invite extends React.Component  {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userInvites: [this.reset()]
+    }
+  }
+
+  reset () {
+    return {
+      teamID: "global",
       teamName: "global",
       tagID: "none",
       adminConfig: "all",
@@ -16,76 +24,45 @@ export const Invite = () => {
       boss: "",
       isAdmin: false,
       dropdown: "today",
-  }
-  
-  const [userInvites, setuserInvites] = useState([userObj])  
-
-  const handleClick = () => {
-    setuserInvites([...userInvites, userObj])
+      
+    };
   }
 
-  const updateFields = (fieldObj, id) => {
-    let userList = userInvites
+  handleClick = () => {
+    this.setState({ userInvites: [...this.state.userInvites, this.reset()]})
+  }
+
+  updateFields = (fieldObj, id) => {
+    let userList = this.state.userInvites
     userList[id].email = fieldObj.email
-    setuserInvites(userList)
+    this.setState({userInvites: userList})
   }
 
-  const displayUserInvites = () => {
-    return userInvites.map((invite, index) => {
-      return <UserInvite info={invite} key={index} id={index} updateFields={updateFields}/>
+  displayUserInvites = () => {
+    return this.state.userInvites.map((invite, index) => {
+      return <UserInvite info={invite} key={index} id={index} updateFields={this.updateFields}/>
     })
   }
   
-  const checkMail =  () => {
-    console.log(userInvites)
-    userInvites.forEach(userInvite => {
-      console.log(!isValidEmail(userInvite.email))
-      if(isValidEmail(userInvite.email)) {
-        return false
-      }
-      return true
+  checkMail = () =>  {
+    return this.state.userInvites.some(userInvite => {
+      return !isValidEmail(userInvite.email)
     })
   }
 
-  // onboard = async(later = false) => {
-  //   const {AccountStore} = this.props;
-  //   let newUser = this.getDataNewUser()
-  //   newUser.now = !later
-  //   if (later) {
-  //     newUser.date = moment(this.state.date).valueOf();
-  //     newUser.now = false;
-  //   }
-  //   await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
-  //     console.log(res)
-  //     if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
-  //     else res.error ? this.error(res) : this.success()
-  //   })
-  //   await users(AccountStore.account.accountID)
-  //   this.setState(this.reset());
-  // }
-
-  checkMail()
-  return(
-    <div className="Segment">
-      <Segment>
-      {/* {isAdmin ?
-          <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Admin Collaborators" subheader="Send invite to admin to generate and manage information"/> :
-          <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Users" subheader="Send invite for new user to join organization"/>} */}
-        {/* <UserInvite/> */}
-        {/* {addUserFormField()} */}
-        {displayUserInvites()}
-        <Button onClick={handleClick}> + </Button>
-        <div style={{paddingTop: 20}}>
-          <Form.Group inline>
-            <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
-          </Form.Group>
-        </div>
-      </Segment>
-      {/* <div style={{paddingTop: 20}}>
-        <Form.Group inline>
-          <Form.Button size="small" onClick={e => this.onboard()} content="Onboard Now" icon="street view" primary disabled={checkMail()}/>
-        </Form.Group>
-      </div> */}
-    </div>
-  )
+  render() {
+    return(
+      <div className="Segment">
+        <Segment>
+          {this.displayUserInvites()}
+          <Button onClick={this.handleClick}> + </Button>
+          <div style={{paddingTop: 20}}>
+            <Form.Group inline>
+              <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()}/>
+            </Form.Group>
+          </div>
+        </Segment>
+      </div>
+    )
+  }
 } 
