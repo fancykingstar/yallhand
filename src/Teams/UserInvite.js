@@ -5,26 +5,28 @@ import { Form, Dropdown, Button } from "semantic-ui-react";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
-import { chownSync } from 'fs';
+import { users } from "../DataExchange/Down";
+import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import moment from "moment"
 
 export const UserInvite = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, email, isAdmin, boss } = props.info;
   const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
 
-  const getDataNewUser =  () => {
-    const { AccountStore} = props;
-    const userData = user()
-    return {
-      invitedBy: userData.invitedBy,
-      email: email,
-      teamID: teamID,
-      teamName: AccountStore.account.label,
-      accountID: userData.accountID,
-      tags: tagID === "none" ? [] : [tagID],
-      isAdmin,
-      boss
-    }
-  }
+  // const getDataNewUser =  () => {
+  //   const { AccountStore} = props;
+  //   const userData = user()
+  //   return {
+  //     invitedBy: userData.invitedBy,
+  //     email: email,
+  //     teamID: teamID,
+  //     teamName: AccountStore.account.label,
+  //     accountID: userData.accountID,
+  //     tags: tagID === "none" ? [] : [tagID],
+  //     isAdmin,
+  //     boss
+  //   }
+  // }
 
   const setEmail = (emailInput) => {
     props.updateFields(emailInput, props.id)
