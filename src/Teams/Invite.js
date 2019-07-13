@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import {Button, Segment, Form} from "semantic-ui-react"
+import {Button, Segment, Form, Dropdown} from "semantic-ui-react"
 import { UserInvite } from './UserInvite';
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
@@ -107,11 +107,14 @@ export class Invite extends React.Component  {
   }
 
   render() {
+    const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
+
     return(
       <div className="Segment">
         <Segment>
           {this.displayUserInvites()}
           <Button onClick={this.handleClick}> + </Button>
+          <div> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
           <div style={{paddingTop: 20}}>
             <Form.Group inline>
               <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
