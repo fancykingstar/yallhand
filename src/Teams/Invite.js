@@ -5,6 +5,10 @@ import { UserInvite } from './UserInvite';
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
 import moment from "moment"
+import { apiCall } from "../DataExchange/Fetch"
+import { createSchedule } from "../DataExchange/Up";
+import { schedule } from "../DataExchange/PayloadBuilder"
+import { users } from "../DataExchange/Down";
 
 @inject("AccountStore")
 @observer
@@ -82,15 +86,24 @@ export class Invite extends React.Component  {
 
   onBoard = async(later = false) => {
     const {AccountStore} = this.props;
-    this.state.userInvites.forEach( userInvite => {
+    for(const userInvite of this.state.userInvites) {
       console.log(userInvite)
-      let newUser = this.getDataNewUser()
+      let newUser = this.getDataNewUser(userInvite)
       newUser.now = !later
       if (later) {
         newUser.date = moment(this.state.date).valueOf();
         newUser.now = false;
       }
-    })
+
+      console.log(newUser)
+      await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+        console.log(res)
+        if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+        else res.error ? this.error(res) : this.success()
+      })
+      await users(AccountStore.account.accountID)
+      this.setState(this.reset());
+    }
   }
 
   render() {
