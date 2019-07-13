@@ -118,7 +118,7 @@ export class Invite extends React.Component  {
           <div style={{paddingTop: 20}}>
             <Form.Group inline>
               <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
-              content="Schedule Start Day" icon="clock"
+              content="Onboard Now" icon="clock"
               onClick={e => this.onBoard(true)}/>
             </Form.Group>
           </div>
