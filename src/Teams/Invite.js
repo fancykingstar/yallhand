@@ -1,7 +1,7 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
 import {Button, Segment, Form, Dropdown, Header} from "semantic-ui-react"
-import { UserInvite } from './UserInvite';
+import { InviteUser } from './InviteUser';
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
 import moment from "moment"
@@ -74,7 +74,7 @@ export class Invite extends React.Component  {
 
   displayUserInvites = () => {
     return this.state.userInvites.map((invite, index) => {
-      return <UserInvite info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
+      return <InviteUser info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
     })
   }
   
