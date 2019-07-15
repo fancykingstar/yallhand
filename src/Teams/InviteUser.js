@@ -139,7 +139,6 @@ export class InviteUser extends React.Component {
                   <Form.Button onClick={e => this.onboard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
                 </React.Fragment>}
               </Form.Group>
-              
             </div>
           </Form>
         </Segment>

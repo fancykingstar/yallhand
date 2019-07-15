@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import {Button, Segment, Form, Dropdown} from "semantic-ui-react"
+import {Button, Segment, Form, Dropdown, Header} from "semantic-ui-react"
 import { UserInvite } from './UserInvite';
 import { isValidEmail } from "../SharedValidations/InputValidations";
 import { user } from "../DataExchange/PayloadBuilder"
@@ -56,8 +56,11 @@ export class Invite extends React.Component  {
   }
   
   updateFields = (fieldObj, id) => {
+    let updatingFields = Object.keys(fieldObj)
     let userList = this.state.userInvites
-    userList[id].email = fieldObj.email
+    updatingFields.forEach( field => {
+      userList[id][field] = fieldObj[field]
+    })
     this.setState({userInvites: userList})
   }
 
@@ -129,6 +132,7 @@ export class Invite extends React.Component  {
 
     return(
       <div className="Segment">
+        <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Users" subheader="Send invite for new user to join organization"/>
         <Segment>
           {this.displayUserInvites()}
           <Button onClick={this.handleClick}> + </Button>

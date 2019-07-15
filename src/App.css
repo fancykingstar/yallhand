@@ -120,7 +120,14 @@ pre {
 }
 
 .close-icon {
-  font-size: 2.3em;
+  background-color: #e0e1e2 none;
+}
+
+close-icon:before {
+  content: 'x'; 
+  color: #fff;
+  font-weight: 300;
+  font-family: Arial, sans-serif;
 }
 
 @media screen and (max-width: 600px) {
