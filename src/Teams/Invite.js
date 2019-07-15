@@ -9,6 +9,7 @@ import { apiCall } from "../DataExchange/Fetch"
 import { createSchedule } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { users } from "../DataExchange/Down";
+import toast  from "../YallToast"
 
 @inject("AccountStore")
 @observer
@@ -36,6 +37,19 @@ export class Invite extends React.Component  {
       
     };
   }
+
+  error (validation) {
+    let message = '';
+    if (validation.userId) message = `${this.state.email} has already been invited to Join and is registered`
+    else message = `${this.state.email} has already been invited to Join with code ${validation.code}`
+    toast.error(message, {hideProgressBar: true})
+    this.setState(this.reset());
+  }
+
+  success () {
+    toast.success(`🎉 ${this.state.email} has been invited to Join ✉️`, {hideProgressBar: true})
+    this.setState(this.reset());
+  } 
 
   handleClick = () => {
     this.setState({ userInvites: [...this.state.userInvites, this.reset()]})
@@ -67,6 +81,12 @@ export class Invite extends React.Component  {
     })
   }
 
+  checkDate () {
+    return this.state.userInvites.some(userInvite => {
+      return (userInvite.date === "" || userInvite.date === undefined)
+    })
+  }
+
   getDataNewUser (userObj) {
     const { AccountStore} = this.props;
     const { teamID, tagID, email, isAdmin, boss } = userObj;
@@ -95,9 +115,7 @@ export class Invite extends React.Component  {
         newUser.now = false;
       }
 
-      console.log(newUser)
       await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
-        console.log(res)
         if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
         else res.error ? this.error(res) : this.success()
       })
