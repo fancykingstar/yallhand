@@ -118,20 +118,3 @@ pre {
   display: flex;
   align-items: center;
 }
-
-.close-icon {
-  background-color: #e0e1e2 none;
-}
-
-close-icon:before {
-  content: 'x'; 
-  color: #fff;
-  font-weight: 300;
-  font-family: Arial, sans-serif;
-}
-
-@media screen and (max-width: 600px) {
-  .close-icon-mobile {
-    display: block;
-  }
-}
