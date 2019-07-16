@@ -10,7 +10,6 @@ import { createSchedule } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { users } from "../DataExchange/Down";
 import toast  from "../YallToast"
-
 @inject("AccountStore")
 @observer
 export class Invite extends React.Component  {

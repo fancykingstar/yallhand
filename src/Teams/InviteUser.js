@@ -19,10 +19,12 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
   const removeRow = () => {
     props.removeRow(props.id)
   }
-  console.log('hi', isAdmin)
   return( 
     <Form widths="equal">
       <Form.Group className="form-row" > 
+        <div className="close-field mobile">
+          <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
+        </div>
         <Form.Input label="Email" placeholder="jane@placethatwework.co" onChange={(e, v) => setField({email: v.value})}/>
         <TeamSelect label="Choose Team:" outputVal={e => setField({teamID: e.value, teamName: e.text})}/>
         <TagSelect  label="Choose Tag (optional):" outputVal={e => setField({tagID: e})}/>
@@ -33,7 +35,7 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
           onChange={(e, val) => setField({boss:val.value})}
           options={AccountStore._getUsersSelectOptions()}
         />
-        <div className="close-field">
+        <div className="close-field desktop">
           <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
         </div>
       </Form.Group>

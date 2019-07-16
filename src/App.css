@@ -123,3 +123,14 @@ pre {
 .close-field {
   margin-top: 30px;
 }
+
+@media screen and (max-width: 767px) {
+  .close-field.desktop {
+    display: none!important;
+  }
+  .close-field.mobile {
+    display: block;
+    width: 100%;
+    text-align: right;
+  }
+}

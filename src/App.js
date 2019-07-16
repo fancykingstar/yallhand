@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { observer, inject } from "mobx-react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
@@ -12,7 +11,7 @@ import FullStory from 'react-fullstory';
 import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
-
+import "./App.css";
 
 @inject("UIStore", "UserStore")
 @observer
