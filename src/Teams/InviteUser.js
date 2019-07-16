@@ -33,7 +33,9 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
           onChange={(e, val) => setField({boss:val.value})}
           options={AccountStore._getUsersSelectOptions()}
         />
-        <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
+        <div className="close-field">
+          <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
+        </div>
       </Form.Group>
     </Form>
   )
