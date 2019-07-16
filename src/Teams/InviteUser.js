@@ -5,7 +5,7 @@ import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
 
-export const UserInvite = inject("AccountStore")(observer((props) => {
+export const InviteUser = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, boss, isAdmin } = props.info;
   const setEmail = (emailInput) => {
     props.updateFields(emailInput, props.id)
