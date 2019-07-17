@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Segment, Form, Button, Message } from "semantic-ui-react";
+import { Header, Segment, Form, Button, Message, Icon, Grid } from "semantic-ui-react";
 import { FeaturedAvatar } from "../SharedUI/ManageContent/FeaturedAvatar"
 import { periods } from "../TemplateData/periods"
 import { FormCharMax } from "../SharedValidations/FormCharMax";
@@ -8,14 +8,21 @@ import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
 import { baseSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyAccount } from "../DataExchange/Up"
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
+
+import { Billing } from "./Billing";
+import { getStripeAcct, getStripePlan, getInvoicePreview } from "../DataExchange/ThirdParty";
 import {deleteUser} from "../DataExchange/Fetch";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import _ from 'lodash';
+import "./style.css"
 
 
 @inject("AccountStore", "DataEntryStore", "UIStore", "UserStore")
 @observer
 export class BaseSettings extends React.Component {
-  componentDidMount() {
+
+  async componentDidMount() {
+
     const { AccountStore, DataEntryStore } = this.props;
     DataEntryStore.set("baseSettings", "label", AccountStore.account.label);
     DataEntryStore.set("baseSettings", "img", AccountStore.account.img);
@@ -23,15 +30,14 @@ export class BaseSettings extends React.Component {
     DataEntryStore.set( "baseSettings", "timezone", AccountStore.account.timezone );
     DataEntryStore.set( "baseSettings", "reviewAlert", AccountStore.account.reviewAlert );
     DataEntryStore.set( "baseSettings", "generalEmail", AccountStore.account.generalEmail );
+    if(AccountStore.account.data.stripe && _.isEmpty(AccountStore.stripe.data)) await getStripeAcct(AccountStore.account.data.stripe);
+    if(_.isEmpty(AccountStore.stripe.plans)) await getStripePlan();
+    if(_.isEmpty(AccountStore.stripe.invoice)) await getInvoicePreview(AccountStore.account.data.stripe);
     window.scrollTo(0, 0);
   }
   render() {
     const { AccountStore, DataEntryStore, UIStore, UserStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.baseSettings.label, 24);
-    const timezones = require("../TemplateData/timezones.json")
-      .map(time => ({ text: time.text, value: time.offset }))
-      .reverse();
-
     const handleDelete = () => {
       modifyAccount({accountID:AccountStore.account.accountID, isActive: false, data: {delete: true}});
       deleteUser();
@@ -73,16 +79,6 @@ export class BaseSettings extends React.Component {
                 options={AccountStore._getUsersSelectOptions()}
               />
              
-                
-              {/* <Form.Field>
-                <Form.Select
-                  label="Default Timezone"
-                  options={timezones}
-                  value={DataEntryStore.baseSettings.timezone}
-                  onChange={(e, { value }) => DataEntryStore.set("baseSettings", "timezone", value)}
-                  search
-                />
-              </Form.Field> */}
               <Form.Select
                 label="Default Review Alert For Aging Content"
                 style={{ width: 150 }}
@@ -122,11 +118,7 @@ export class BaseSettings extends React.Component {
           }}
         />
         
-        <Segment>
-          <Header>Billing & Payments</Header>
-          <span style={{fontWeight: 800}}>Free Trial Until: </span><span>{!AccountStore.account.data.trialExp? "No Date Entered" : UTCtoFriendly(AccountStore.account.data.trialExp)}</span>
-          
-        </Segment>
+        <Billing/>
         <Segment >
           <div style={{height: 50}}>  
           <Form>

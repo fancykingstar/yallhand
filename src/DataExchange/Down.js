@@ -140,6 +140,6 @@ export const scheduled= async (accountID) => {
 
 export const history = async () => {
   const result = await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET")
-
   return result
 }
+
