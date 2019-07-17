@@ -12,23 +12,15 @@ import "./style.css";
 @inject("UserStore", "PoliciesStore", "UIStore")
 @observer
 export class CardFrame extends React.Component {
+  componentWillUnmount(){
+    const {UIStore} = this.props;
+    UIStore.set("search","searchPolicies","");
+  }
   componentDidMount(){
     window.scrollTo(0, 0);
   }
   render() {
     const { UIStore } = this.props;
-
-    const responsive = UIStore.responsive.isMobile? 
-        <React.Fragment>
-            <div style={{float: "left", width: 180}}> <CardFilter /></div>
-            <div style={{float: "right"}}>   <CardSort /></div>
-        </React.Fragment>
-        :
-        <React.Fragment>
-          <div style={{marginLeft: 15}}>    <CardFilter/></div>
-        
-            <CardSort/>
-        </React.Fragment>
     
     return (
       <div>

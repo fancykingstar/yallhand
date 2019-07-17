@@ -56,7 +56,7 @@ const Card = inject("DataEntryStore", "PoliciesStore", "AccountStore")(observer(
                 <div className="Owners">{adminLabels}</div>
                 <div className="AtmnStatus">{automationLabel}</div>
                 <div className="UsageStatus">
-                   {counts.global} Global / {counts.local} Teams
+                   {counts.global} Global / {counts.local} Variations
                 </div>
                 <div className="CurrentStatus">
                 {/* <Icon name={conditions[props.data.state]['iconName']} color={conditions[props.data.state]['color']} size='large' /> */}

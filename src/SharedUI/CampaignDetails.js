@@ -16,6 +16,12 @@ const getCampaignRecipients = (id) => {
   }
 }
 
+const automationText = (campaign) => {
+  const event = {"offboard": "start of user being offboarded", "firstLogin": "start of user being onboarded"}[campaign.event]
+  const delay = (val) => val === 0? "": `${val} days after `
+  return delay(campaign.delay) + event
+}
+
 export const CampaignDetails = (campaign) => 
 <Modal trigger={ <Button basic>Details</Button>}>
 <Modal.Header>{campaign.subject}</Modal.Header>
@@ -27,6 +33,12 @@ export const CampaignDetails = (campaign) =>
       <h4>Featured Image</h4>
       <div className="imgPreview"> <img alt="featured visual" src={campaign.img} /></div>
     </React.Fragment>}
+    {!campaign.isTriggered?"":
+    <React.Fragment>
+    <h4>Automation Event</h4>
+    <p>{automationText(campaign.eventTrigger)}</p>
+    </React.Fragment>
+  }
   <h4>Recipients</h4>
   <p>{getCampaignRecipients(campaign.campaignID)}</p>
   <h4>Content</h4>

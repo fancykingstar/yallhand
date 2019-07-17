@@ -8,16 +8,21 @@ import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
 import { baseSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyAccount } from "../DataExchange/Up"
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
+
 import { Billing } from "./Billing";
 import { getStripeAcct, getStripePlan, getInvoicePreview } from "../DataExchange/ThirdParty";
+import {deleteUser} from "../DataExchange/Fetch";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import _ from 'lodash';
 import "./style.css"
 
 
-@inject("AccountStore", "DataEntryStore")
+@inject("AccountStore", "DataEntryStore", "UIStore", "UserStore")
 @observer
 export class BaseSettings extends React.Component {
+
   async componentDidMount() {
+
     const { AccountStore, DataEntryStore } = this.props;
     DataEntryStore.set("baseSettings", "label", AccountStore.account.label);
     DataEntryStore.set("baseSettings", "img", AccountStore.account.img);
@@ -31,11 +36,14 @@ export class BaseSettings extends React.Component {
     window.scrollTo(0, 0);
   }
   render() {
-    const { AccountStore } = this.props;
-    const { DataEntryStore } = this.props;
+    const { AccountStore, DataEntryStore, UIStore, UserStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.baseSettings.label, 24);
     const handleDelete = () => {
-      console.log("delete account request")
+      modifyAccount({accountID:AccountStore.account.accountID, isActive: false, data: {delete: true}});
+      deleteUser();
+      if(UIStore.isScreenLoading) UIStore.toggleScreenLoading();
+      UserStore.isAuthenticated = false;
+      this.props.history.push("/login");
     }
 
     return (

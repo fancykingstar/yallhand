@@ -5,7 +5,9 @@ import { S3Upload } from "../../DataExchange/S3Upload";
 import { GenerateFileName } from "../../SharedCalculations/GenerateFileName";
 import { modifyAnnouncement, modifyPolicy } from "../../DataExchange/Up";
 import { featuredImgEdit } from "../../DataExchange/PayloadBuilder";
+import _ from "lodash";
 import "./style.css";
+import { apiCall } from "../../DataExchange/Fetch";
 
 @inject("DataEntryStore", "AccountStore", "UIStore")
 @observer
@@ -29,17 +31,13 @@ export class FeaturedImage extends React.Component {
   
       return url;
   }
+
     this.getImg = async () => {
       this.setState({ loading: true });
-      await fetch(
-        this.buildUrl("https://api.unsplash.com/photos/random", {
-          "client_id" : "6a82972f0ec211502167800943cc2a2fcb1ef366d17a6e8dcee536e0bf41e139", "query": this.state.input
-      }), {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      }).then(res => res.json()).then(res => 
-        this.setState({ retrievedImg: res, loading: false } ) );
-    };
+      await apiCall('/fileresources/unsplash/random', 'POST', {query:this.state.input}).then(res => res.json()).then(res =>
+        this.setState({ retrievedImg: res, loading: false } )
+
+        ) };
   }
   componentWillUnmount() {
     const { DataEntryStore } = this.props;
@@ -56,11 +54,14 @@ export class FeaturedImage extends React.Component {
     ) : (
       <div />
     );
+    const requestDownload = async () => {
+      await apiCall('/fileresources/unsplash/reqdownload', 'POST', {url:this.state.retrievedImg.links.download_location});
+    }
     const handleSubmit = e => {
       e.preventDefault();
       S3Upload(
         "public-read",
-        "quadrance-files/central",
+        "central",
         GenerateFileName(
           AccountStore.account,
           DataEntryStore.featuredImage.filename
@@ -68,7 +69,9 @@ export class FeaturedImage extends React.Component {
         DataEntryStore.featuredImage.file
       )
         .then(result => {
-          if (result !== null) { DataEntryStore.set("contentmgmt", "img", result.Location) }
+          if (result !== null) { 
+            DataEntryStore.set("contentmgmt", "img", result.file.location) 
+          }
         })
         .then(() => {
           if (this.props.mode)
@@ -80,6 +83,7 @@ export class FeaturedImage extends React.Component {
     };
 
     const setUnsplash = async () => {
+      await requestDownload();
       DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
       DataEntryStore.set("contentmgmt", "imgData", this.state.retrievedImg);
       if (this.props.mode) await this.props.mode === "policy"
@@ -134,11 +138,12 @@ export class FeaturedImage extends React.Component {
     const preview =
       this.props.circular !== undefined ? (
         <div className="Avatar-Wrap">
+
           {" "}
           <img className="Avatar" size="small" src={this.props.defaultImgUrl} />
         </div>
       ) : (
-        <div className="imgPreview">{imagePreview}</div>
+        <React.Fragment> <div className="imgPreview">{imagePreview} </div> {_.isEmpty(this.props.imgData)?"": <div style={{maxWidth: '100px'}}><p style={{fontSize: "0.7em"}}>Photo by <a target="_blank" href={`https://unsplash.com/@${this.props.imgData.user.username}?utm_source=yallhands&utm_medium=referral`}>{this.props.imgData.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></p></div>} </React.Fragment>
       );
 
     return (
@@ -160,6 +165,7 @@ export class FeaturedImage extends React.Component {
             </Form>
            <div style={{width: '100%', textAlign: 'center'}}>
              <div>
+               {!this.state.retrievedImg? "":          <h4>Photo by <a target="_blank" href={`https://unsplash.com/@${this.state.retrievedImg.user.username}?utm_source=yallhands&utm_medium=referral`}>{this.state.retrievedImg.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></h4>}
              <img
               style={{ maxWidth: 800, overflow: "hidden" }}
               src={this.state.retrievedImg? this.state.retrievedImg.urls.regular: ""}
@@ -194,7 +200,7 @@ export class FeaturedImage extends React.Component {
             <Form.Button
               onClick={e => UIStore.set("modal", "getUnsplash", true)}
             >
-              From Stock...
+              Search Unsplash...
             </Form.Button>
           </Form.Group>
         </Form>
