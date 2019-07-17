@@ -243,13 +243,13 @@ export const fileResource = (assoc=null) => {
   label: DataEntryStore.fileForUpload.label,
   S3Key: DataEntryStore.fileForUpload.S3Key,
   url: DataEntryStore.fileForUpload.url, 
-  filename: DataEntryStore.fileForUpload.filename,
+  // filename: DataEntryStore.fileForUpload.filename,
   type: DataEntryStore.fileForUpload.type,
   size: DataEntryStore.fileForUpload.file.size, 
   teamID: DataEntryStore.fileForUpload.teamID,
-  tags: DataEntryStore.fileForUpload.tagID === "none" ? [] : [DataEntryStore.fileForUpload.tagID]
+  tags: DataEntryStore.fileForUpload.tagID === "none" || DataEntryStore.fileForUpload.tagID === ""? [] : [DataEntryStore.fileForUpload.tagID]
   };
-  assoc !== null? buildObj.associations = assoc : null
+  assoc !== null? buildObj.associations = assoc : {policies:[], announcements:[]};
   return _.extend({}, base(), buildObj)
 }
 
@@ -403,6 +403,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
  
     const buildObj = {
         img: DataEntryStore.contentmgmt.img,    
+        imgData: {}
     }
     if(buildObj.img.includes("unsplash")) buildObj.imgData = DataEntryStore.contentmgmt.imgData;
     type === "policy" ? buildObj.policyID = UIStore.content.policyID : buildObj.announcementID = UIStore.content.announcementID

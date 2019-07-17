@@ -245,12 +245,12 @@ export const deleteUrlResource = (resourceID) => {
 }
 
 ///FILE RESOURCES
-export const createFile = (payload) => {
-    return processTemplate(true, "fileresources", "POST", payload, "files", 
-        "Your file has been uploaded ☁️", 
-        true,{"event": "create", "type":"file"}
-    )
-}
+// export const createFile = (payload) => {
+//     return processTemplate(true, "fileresources", "POST", payload, "files", 
+//         "Your file has been uploaded ☁️", 
+//         true,{"event": "create", "type":"file"}
+//     )
+// }
 
 export const modifyFile = (payload, toast=true) => {
     return processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
