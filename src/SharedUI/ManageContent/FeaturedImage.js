@@ -61,7 +61,7 @@ export class FeaturedImage extends React.Component {
       e.preventDefault();
       S3Upload(
         "public-read",
-        "quadrance-files/central",
+        "central",
         GenerateFileName(
           AccountStore.account,
           DataEntryStore.featuredImage.filename
@@ -69,7 +69,9 @@ export class FeaturedImage extends React.Component {
         DataEntryStore.featuredImage.file
       )
         .then(result => {
-          if (result !== null) { DataEntryStore.set("contentmgmt", "img", result.Location) }
+          if (result !== null) { 
+            DataEntryStore.set("contentmgmt", "img", result.file.location) 
+          }
         })
         .then(() => {
           if (this.props.mode)

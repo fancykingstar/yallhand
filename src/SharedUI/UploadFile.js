@@ -5,6 +5,8 @@ import { GenerateFileName } from "../SharedCalculations/GenerateFileName";
 import { S3Upload } from "../DataExchange/S3Upload";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { UploadConfig } from "../SharedUI/UploadConfig";
+import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
+import {modifyFile} from "../DataExchange/Up";
 
 @inject("UIStore", "DataEntryStore", "AccountStore")
 @observer
@@ -12,22 +14,17 @@ export class UploadFile extends React.Component {
   render() {
     const { UIStore, DataEntryStore, AccountStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.fileForUpload.label, 48);
-    const handleSubmit = (type) => {
+    const handleSubmit = async (type) => {
       if(type === "update" && DataEntryStore.fileForUpload.file === ""){
+        await modifyFile(fileResourceEdit());
         UIStore.set("modal", "uploadFile", false);
-        this.props.output(type);
+        this.props.output("");
+        
       }else{
-        S3Upload("authenticated-read", "quadrance-files/gramercy", GenerateFileName(AccountStore.account, DataEntryStore.fileForUpload.filename), DataEntryStore.fileForUpload.file)
-        .then(result =>
-          {
-              if(result !== null){
-                DataEntryStore.set("fileForUpload", "url", result.Location)
-                DataEntryStore.set("fileForUpload", "S3Key", result.Key)
-            }
-          }
-        ).then(() => {
+        S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, DataEntryStore.fileForUpload.filename), DataEntryStore.fileForUpload.file, this.props.assoc? fileResource(this.props.assoc): fileResource())
+        .then((r) => {
           UIStore.set("modal", "uploadFile", false);
-          this.props.output(type);
+          this.props.output(r);
         })
       }
       
@@ -51,6 +48,7 @@ export class UploadFile extends React.Component {
             this.props.mode
           } variation`
         : this.props.title;
+
     const CreateOrUpdate = !DataEntryStore.fileForUpload.isNew ? (
         <Form.Button
           onClick={e => handleSubmit("update")}
@@ -100,6 +98,7 @@ export class UploadFile extends React.Component {
                   {/* {includeTeamTag} */}
                 </Form.Group>
 
+                {!DataEntryStore.fileForUpload.isNew? "":  
                 <Form.Input
                   label={!DataEntryStore.fileForUpload.isNew ? "Replace File (optional)" : "Add File (required)"}
                   size="mini"
@@ -107,7 +106,7 @@ export class UploadFile extends React.Component {
                   type="file"
                   style={{ maxWidth: 350 }}
                   onChange={e => handleFileChange(e)}
-                />
+                />}
                 {useConfig}
 
                 <Form.Group>

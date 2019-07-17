@@ -9,8 +9,7 @@ import { UploadFile } from "../SharedUI/UploadFile";
 import { AssociationSummary } from "../SharedUI/AssociationSummary"
 import { initSearchObj, stupidSearch } from "../SharedCalculations/StupidSearch";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey"
-import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
-import { createFile, modifyFile, deleteFileresource } from "../DataExchange/Up";
+import { deleteFileresource } from "../DataExchange/Up";
 import "./style.css";
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
@@ -64,19 +63,8 @@ export class Files extends React.Component {
   }
 
   const getIcon = (filetype) => FileTypeIcons[filetype] === undefined? FileTypeIcons["default"] : FileTypeIcons[filetype]  
- 
-  
-  const addFile = async (val) => {
-    const newFile = await createFile(fileResource()).then((res) => res.json())
-    await ResourcesStore.loadFiles([...ResourcesStore.fileResources, ...[newFile]])
-    this.loadSearch()
-  }
 
-  const updateFile = async (val) => {
-    const updatedFile = await modifyFile(fileResourceEdit())
-    await ResourcesStore.loadFiles([...ResourcesStore.fileResources.filter(i => i.resourceID !== updatedFile.resourceID), ...[updatedFile]])
-    this.loadSearch()
- }
+
  const deleteFile =  async (val) => {
   await deleteFileresource(val)
   ///add S3 removal
@@ -87,7 +75,7 @@ export class Files extends React.Component {
 
  const downloadFile = (S3Key, label) => {
     const ext = "." + S3Key.split(".")[1]
-    S3Download("quadrance-files/gramercy", S3Key, label, ext)
+    S3Download("gramercy", S3Key, label, ext)
  }
 
 
@@ -108,7 +96,7 @@ export class Files extends React.Component {
       <Table.Row key={"files" + giveMeKey()}>
         <Table.Cell>
           <Icon color="blue" name={getIcon(resfile.url.slice(-3))} />
-          <Item style={{cursor: "pointer"}} as="a" onClick={e => downloadFile(resfile.S3Key.split("gramercy/")[1], resfile.label)}>{resfile.label}</Item>
+          <Item style={{cursor: "pointer"}} as="a" onClick={e => downloadFile(resfile.S3Key, resfile.label)}>{resfile.label}</Item>
        
         </Table.Cell>
         <Table.Cell >{resfile.type}</Table.Cell>
@@ -138,7 +126,7 @@ export class Files extends React.Component {
           close={e => close}
           selection={""}
           title="Upload and configure a new file"
-          output={val => val === "create" ? addFile(val) : updateFile(val)}
+          output={val => this.loadSearch()}
           includeTeamTag={true}
 
         />

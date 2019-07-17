@@ -5,32 +5,26 @@ import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
 import {inject, observer} from "mobx-react"
 import { FilesSearch } from "../FilesSearch";
 import { UploadFile } from "../../SharedUI/UploadFile";
-import { fileResource, fileResourceEdit, fileResourceAssociate } from "../../DataExchange/PayloadBuilder"
-import { createFile, modifyFile } from "../../DataExchange/Up";
+import { fileResourceAssociate } from "../../DataExchange/PayloadBuilder"
+import { modifyFile } from "../../DataExchange/Up";
 import { addAssociation } from "../../SharedCalculations/AddAssociation"
 import { removeAssociation } from "../../SharedCalculations/RemoveAssociation"
 import {S3Download} from "../../DataExchange/S3Download"
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 
-@inject("ResourcesStore", "UIStore", "DataEntryStore")
+
+@inject("ResourcesStore", "UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class AttachedFiles extends React.Component {
 
   render() {
-    const {ResourcesStore, UIStore, DataEntryStore} = this.props
+    const {ResourcesStore, UIStore, DataEntryStore, AccountStore} = this.props
   
     const handleAddButton = () => {
       DataEntryStore.reset("fileForUpload", {"isNew": true, "teamID": "global", "tagID": "none", "associations": {"policies": [], "announcements": []}})
       UIStore.set("modal", "uploadAssocEdit", false)
       UIStore.set("modal", "uploadFile", true)
-    }
-
-    const addFile = (val) => {
-      const assoc = this.props.mode === "policy"? 
-        {"announcements":[], "policies": [{"policyID": UIStore.content.policyID, "variations":[UIStore.content.variationID]}]}
-        : {"policies":[], "announcements": [{"announcementID": UIStore.content.announcementID, "variations":[UIStore.content.variationID]}]}
-      createFile(fileResource(assoc))
     }
   
 
@@ -54,6 +48,10 @@ export class AttachedFiles extends React.Component {
       const ext = "." + S3Key.split(".")[1]
       S3Download("quadrance-files/gramercy", S3Key, label, ext)
    }
+
+   const getAssoc = () => this.props.mode === "policy"? 
+   {"announcements":[], "policies": [{"policyID": UIStore.content.policyID, "variations":[UIStore.content.variationID]}]}
+   : {"policies":[], "announcements": [{"announcementID": UIStore.content.announcementID, "variations":[UIStore.content.variationID]}]}
 
 
     const getFiles = () => ResourcesStore.matchedResources("file", this.props.mode, this.props.mode === "policy" ? UIStore.content.policyID : UIStore.content.announcementID, UIStore.content.variationID) 
@@ -85,7 +83,8 @@ export class AttachedFiles extends React.Component {
           close={e => close}
           selection={""}
           title="Upload and configure a new file"
-          output={val => addFile(val)}
+          output={val => close()}
+          assoc={getAssoc()}
     
         />
 
