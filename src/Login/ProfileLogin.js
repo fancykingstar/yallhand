@@ -1,5 +1,6 @@
 import React from "react";
 import { Message, Form, Divider, Header, Icon } from "semantic-ui-react";
+import { Legal } from "./Legal";
 import { apiCall, setUser } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom";
 
@@ -18,12 +19,13 @@ class ProfileLogin extends React.Component {
   login () {
     const { history } = this.props
     this.setState({errorMsg: null})
+
     apiCall('users/login', 'POST', {email: this.state.email, password: this.state.password})
       .then((res) => res.json())
       .then((res) => {
         if (res.error) {
           if (res.error.message && res.error.message === 'Denied: unauthorized access') return this.setState({errorMsg: res.error.message})
-          else return this.setState({errorMsg: 'Connection error (Email / Password is not good)'})
+          else return this.setState({errorMsg: 'Connection error (Your email or password is not valid)'})
         }
         if (res.token) {
           setUser({token: res.token})
@@ -68,6 +70,7 @@ class ProfileLogin extends React.Component {
             </div>
             </div>
           </div>
+          <Legal/>
           {errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={errorMsg} negative/></div>}
           {successMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="info" content={successMsg} positive/></div>}
         </div>

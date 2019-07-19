@@ -172,11 +172,11 @@ class EmailPrimary extends React.Component {
           />
         )}
 
-          </div>
+          </div> 
         </div>
         <div style={{paddingTop: 10}}>
           <span style={{fontWeight: 800, fontSize: ".9em", paddingBottom: 0}}>Custom Featured Image (optional)</span>
-           <FeaturedImage maxWidth={600} compact defaultImgUrl={DataEntryStore.contentmgmt.img} output={val => DataEntryStore.set("contentmgmt", "bundle", val)}/>
+           <FeaturedImage maxWidth={600} compact defaultImgUrl={DataEntryStore.contentmgmt.img} imgData={DataEntryStore.contentmgmt.imgData} output={val => DataEntryStore.set("contentmgmt", "img", val)}/>
            {/* <FeaturedImage defaultImgUrl={DataEntryStore.contentmgmt.img} output={val => DataEntryStore.set("contentmgmt", "bundle", val)}/> */}
           </div>
 

@@ -19,8 +19,7 @@ export class UploadConfig extends React.Component {
   componentDidMount() {
     const { UIStore } = this.props;
     const { DataEntryStore } = this.props;
-    const key = {"url": "urlForUpload", "file": "fileForUpload"}[this.props.mode]
-    if(DataEntryStore[key].associations.policies.length === 0 && DataEntryStore[key].associations.announcements.length === 0 ){
+    if(DataEntryStore.fileForUpload.associations.policies.length === 0 && DataEntryStore.fileForUpload.associations.announcements.length === 0 ){
       UIStore.set("dropdown", "uploadConfig", "general")
     }
     else{
@@ -30,7 +29,6 @@ export class UploadConfig extends React.Component {
   render() {
     const { UIStore } = this.props;
     const { DataEntryStore } = this.props;
-    const key = {"url": "urlForUpload", "file": "fileForUpload"}[this.props.mode]
     const config =
       UIStore.dropdown.uploadConfig === "general" ? (
         <React.Fragment>
@@ -38,14 +36,14 @@ export class UploadConfig extends React.Component {
           <TeamSelect
             label={"Limit Access To Teams"}
             placeholder="choose team..."
-            value={DataEntryStore[key].teamID}
-            outputVal={val => DataEntryStore.set(key, "teamID", val.value)}
+            value={DataEntryStore.fileForUpload.teamID}
+            outputVal={val => DataEntryStore.set("fileForUpload", "teamID", val.value)}
           />
           <TagSelect
             label={"Limit Access By Tag"}
             placeholder="choose tag..."
-            value={DataEntryStore[key].tagID}
-            outputVal={val => DataEntryStore.set(key, "tagID", val.value)}
+            value={DataEntryStore.fileForUpload.tagID}
+            outputVal={val => DataEntryStore.set("fileForUpload", "tagID", val)}
           />
           </Form.Group>
         </React.Fragment>
@@ -56,7 +54,7 @@ export class UploadConfig extends React.Component {
             styleOveride={true} 
             output={val => addContent(val)}/> */}
             <AssocLabelGroup
-              assoc={DataEntryStore[key].associations}
+              assoc={DataEntryStore.fileForUpload.associations}
               remove={val => removeAssociation(val)}
               disableRemove
             />
@@ -65,7 +63,7 @@ export class UploadConfig extends React.Component {
       );
 
     const removeAssociation = (obj) => {
-        let allAssoc = Object.assign({}, DataEntryStore[key].associations)
+        let allAssoc = Object.assign({}, DataEntryStore.fileForUpload.associations)
         const idKey = {"policy": "policyID", "announcement": "announcementID"}[obj.type]
         const assocKey = {"policy": "policies", "announcement": "announcements"}[obj.type]
             let assoc = obj.type === "policy" ? allAssoc.policies.slice() : allAssoc.announcements.slice()

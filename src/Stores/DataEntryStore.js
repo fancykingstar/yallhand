@@ -20,6 +20,7 @@ class Store {
     baseSettings: this.baseSettings,
     userSettings: this.userSettings,
     emailCampaign: this.emailCampaign,
+    supportTicket: this.supportTicket,
     channel: this.channel,
     tempContent: this.tempContent,
     content: this.content,
@@ -27,7 +28,6 @@ class Store {
     api: this.api,
     superAdmin: this.superAdmin,
     ask: this.ask
-    
   }; 
 
   //SHARED DRAFT JS FIELDS (need to be global and not wrapped in object)
@@ -52,6 +52,7 @@ class Store {
     label: "",
     variationID: "",
     img: "",
+    imgData: {},
     campaign: "",
     keywordInput: "",
     keywords: [],
@@ -72,6 +73,7 @@ class Store {
     teamsLabel: "",
     teamsDropdown: "",
     teamsSaveDisabled: false,
+   
 
     //Teams > Teams/Tags modal to edit/delete
     selectedTag: "",
@@ -84,13 +86,13 @@ class Store {
     selectedTeamLabel: "",
     _selectedTeamLabel: "",
     teamEditDropdownVal: "",
-    teamEditSaveDisabled: false
+    teamEditSaveDisabled: false,
+    preventDelete: false
   };
 
   @observable userEditFields = {
     //Users and User Edit Fields
     userEdit: {},
-
     displayName_full: "",
     displayName: "",
     email: "",
@@ -187,6 +189,7 @@ class Store {
     draftHTML: "",
     //Send Email
     img: "",
+    imgData: {},
     sendTargetType: "all",
     sendToUsers: [],
     sendToTeamID: "global",
@@ -201,6 +204,12 @@ class Store {
     sendNext: 0,
     sendAutomationEvent: "firstLogin",
     sendAutomationDelay: 0,
+  }
+
+  @observable supportTicket = {
+    //temp draft storage
+    sendSummary: "", 
+    sendDescription: ""
   }
 
   @observable baseSettings = {
@@ -250,12 +259,14 @@ class Store {
     previewAccount: "",
     accountArmed: false,
     accountLabel: "",
-    accountTimezone: 0,
+    // accountTimezone: 0,
+    accountTrial: 0,
     accountReviewAlert: 0,
     accountEmail: "",
     accountImg: "",
     analyticsLoading: false,
-    analyticsAccount: "",
+    analyticsAccount: "all",
+    analyticsSource: "all",
     analyticsType: "both",
     analyticsAction: "all",
     analyticsSort: "new",
@@ -361,6 +372,7 @@ class Store {
   resetDraft(){
     this.draftContentRAW = {};
     this.draftContentHTML = "";
+    if(this.draft.editorState) delete this.draft.editorState;
     // this.draft = {};
   }
 

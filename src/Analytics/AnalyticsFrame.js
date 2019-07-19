@@ -8,6 +8,11 @@ import { PortalViews} from "./PortalViews"
 @inject("UIStore", "DataEntryStore", "EmailStore")
 @observer
 export class AnalyticsFrame extends React.Component {
+  componentWillUnmount(){
+    const {UIStore} = this.props;
+    UIStore.set("search","campaignsSearchValue","");
+    UIStore.set("search","analyticsSearchValue","");
+  }
   componentDidMount(){
     window.scrollTo(0, 0);
   }
@@ -15,6 +20,8 @@ export class AnalyticsFrame extends React.Component {
     const { UIStore } = this.props;
     const handleItemClick = (e, { name }) => {
       UIStore.set("menuItem", "analyticsFrame", name);
+      UIStore.set("search","campaignsSearchValue","");
+      UIStore.set("search","analyticsSearchValue","");
     };
 
     const isVisable = name => {

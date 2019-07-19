@@ -12,6 +12,11 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 @inject("TeamStore", "UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class Users extends React.Component {
+  componentWillUnmount(){
+    const {UIStore} = this.props;
+    UIStore.set("search", "searchUsers", "")
+  }
+
   componentDidMount() {
     const { AccountStore, TeamStore, UIStore } = this.props;
     if (UIStore.search.searchUsersData.length === 0) {

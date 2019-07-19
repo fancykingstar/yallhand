@@ -14,16 +14,16 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
   
     apiCall_noBody('users/me', 'GET').then(res => {
       if(res.error) {
-        deleteUser()
-        return
-      }
+        deleteUser();
+      };
   
       apiCall_noBody(`users/all?filter={"where":{"email":"${encodeURIComponent(res.email)}"}}`, 'GET').then(async (res) => {
         if(res.length === 0) {
-          deleteUser()
-          return
-        }
-  
+          deleteUser();
+        };
+        
+        if(getUser()){
+
         const { accountID, userID } = superStatus ? superUser : res[0]
   
         const account = await load.account(accountID);
@@ -72,9 +72,11 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
   
         UIStore.toggleScreenLoading()
         const authd = await res[0]? UserStore.isAuthenticated = true : UserStore.isAuthenticated = false;
+        };
         resolve(true)
       })
     })
-  });
+  }
+  );
   
 }

@@ -2,24 +2,14 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom"
 import  NavItem  from "./NavItem";
+import {syncAdminNav} from "../SharedCalculations/SyncAdminNav"
 import "./style.css";
 
 @inject("UIStore", "UserStore")
 @observer
 class NavItems extends React.Component {
   componentDidMount() {
-    const { UIStore } = this.props;
-    const location = this.props.location.pathname
-    if(location.slice(-6) === "/panel"){UIStore.set("sideNav", "activePrimary", "dashboard")}
-    else if(location.includes("/panel/superadmin")){UIStore.set("sideNav", "activePrimary", "superadmin")}
-    else if(location.includes("/panel/teams")){UIStore.set("sideNav", "activePrimary", "teams")}
-    else if(location.includes("/panel/faqs")){UIStore.set("sideNav", "activePrimary", "faqs")}
-    else if(location.includes("/panel/announcements")){UIStore.set("sideNav", "activePrimary", "announcements")}
-    else if(location.includes("/panel/email")){UIStore.set("sideNav", "activePrimary", "email")}
-    else if(location.includes("/panel/analytics")){UIStore.set("sideNav", "activePrimary", "analytics")}
-    else if(location.includes("/panel/resources")){UIStore.set("sideNav", "activePrimary", "resources")}
-    else{UIStore.set("sideNav", "activePrimary", "")}
-    UIStore.set("sideNav", "activeChannel", "All")
+    syncAdminNav(this.props.location)
   }
   render() {
     const { UIStore, UserStore } = this.props;
@@ -59,7 +49,7 @@ class NavItems extends React.Component {
         />
 
         <br />
-
+ 
         <NavItem
           id="announcements"
           icon="bullhorn"
@@ -67,11 +57,24 @@ class NavItems extends React.Component {
           active={UIStore.sideNav.activePrimary === "announcements"}
         />
 
+
+      {UserStore.user.invitedBy !== "admin"?"":
+      <React.Fragment>
+      <NavItem
+          id="polls"
+          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-vote-yea"/>}
+          label="Polls"
+          active={UIStore.sideNav.activePrimary === "polls"}
+        />  
         <br />
+        </React.Fragment>
+    }
+
+
         <NavItem
           id="email"
           icon="mail"
-          label="Email Campaign"
+          label="Email Campaigns"
           active={UIStore.sideNav.activePrimary === "email"}
         />
 
@@ -90,8 +93,32 @@ class NavItems extends React.Component {
           icon="cubes"
           label="Resources"
           active={UIStore.sideNav.activePrimary === "resources"}
+
         />
+
+      {UserStore.user.invitedBy !== "admin"?"":
+      <React.Fragment>
+        <br/>
+      <NavItem
+          id="tasks"
+          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
+          label="Tasks"
+          active={UIStore.sideNav.activePrimary === "tasks"}
+        />  
+        <br />
+        <NavItem
+          id="automations"
+          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-robot"/>}
+
+          label="Automations"
+          active={UIStore.sideNav.activePrimary === "automations"}
+        />  
+   
+        </React.Fragment>
+    }
       </div>
+
+      
     );
   }
 }

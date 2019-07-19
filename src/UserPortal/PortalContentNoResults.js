@@ -7,15 +7,16 @@ import "./style.css"
 
 export const PortalContentNoResults = () => {
     return(
-        <div className="ActionFrameMessage">
-        <div className="NoSearchResults">
+        <div className="NoResultsContainer" >
+            <div className="NoResultsMessage">
+        <Desert/>
+        <span style={{fontSize:"2.8em", color: "#ABACAB", lineHeight: "30px"}}> {"  "}Nothing here...(yet)</span>
+        </div>
+        </div>
  
-    <div style={{marginTop: 100, width: "100%", display: "inline-block"}}>  
-    <div style={{paddingTop: 30,textAlign: "center"}}><Desert/><span style={{fontSize:"2.8em", color: "#ABACAB", lineHeight: "30px"}}>{"  "}Nothing here...(yet)</span></div> 
- 
+
+  
        
-    </div>
-    </div>    
-    </div>
+
     )
 }

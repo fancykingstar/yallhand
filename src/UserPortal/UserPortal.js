@@ -19,11 +19,16 @@ import { AskAQuestion } from "./AskAQuestion"
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore", "UIStore")
 @observer
 class UserPortal extends React.Component {
+  constructor(props){
+    super(props)
+    this.state={loaded: false}
+  }
   componentDidMount() {
     const { UserStore } = this.props;
     if (UserStore.previewTeam !== "") {
-      loadAdmin()
+      loadAdmin().then(()=>this.setState({loaded:true})) 
     }
+    else {this.setState({loaded:true})}
   }
 
   componentWillMount() {
@@ -42,7 +47,7 @@ class UserPortal extends React.Component {
       }
     };
 
-    const userPortal = !UIStore._adminLoadingComplete ? (
+    const userPortal = !UIStore._adminLoadingComplete || !this.state.loaded ? (
       <div />
     ) : (
       <React.Fragment>

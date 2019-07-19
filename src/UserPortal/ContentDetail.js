@@ -1,8 +1,6 @@
 import React from "react"
 import { inject, observer } from "mobx-react";
 import {  Header, Container, Image, Icon, Grid, Item, Button } from 'semantic-ui-react'
-import {DraftHTMLDisplay} from "../SharedCalculations/DraftHTMLDisplay"
-import { AskAQuestion } from "./AskAQuestion"
 import { Sentiment } from "./Sentiment"
 import {downloadFilePortal} from "../DataExchange/DownloadFile"
 import { log } from "../DataExchange/Up"
@@ -11,6 +9,7 @@ import { apiCall_noBody } from "../DataExchange/Fetch"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton"
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly'
+import _ from "lodash";
 import "./style.css"
 
 @inject("AnnouncementsStore", "PoliciesStore", "ResourcesStore", "UIStore", "UserStore", "DataEntryStore")
@@ -72,15 +71,19 @@ export class ContentDetail extends React.Component {
         return(
             <div className="Content">
             <BackButton/>
-                <Container textAlign="center">
-                {content.img.length !== 0 ?  <Image centered rounded size="large" src={content.img}/> : null}
+                <Container>
+                {content.img.length !== 0 ?  
+                <React.Fragment>
+                    <Image centered rounded size="large" src={content.img}/> {_.isEmpty(content.imgData)?"": <div style={{width: '100%'}}><div style={{textAlign: 'center'}}><p style={{fontSize: "0.7em", color: "#ABACAB"}}>Photo by <a target="_blank" href={`https://unsplash.com/@${content.imgData.user.username}?utm_source=yallhands&utm_medium=referral`}>{content.imgData.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></p></div></div>}
+                </React.Fragment>
+                 : null}
+                 
                     <Header
                     as="h1"
                     content={content.variations[0].label === ""? content.label: content.variations[0].label}
                     subheader={UTCtoFriendly(content.updated).split(",")[0]}
                   />
-                  <div className="PortalContentText" style={{fontSize:"1.4em"}}>
-                  {/* <DraftHTMLDisplay storedState={content.variations[0].contentRAW}/> */}
+                  <div className="PortalContentText">
                   <span dangerouslySetInnerHTML={{ __html: content.variations[0].contentHTML }} />
                   </div>
                   </Container>

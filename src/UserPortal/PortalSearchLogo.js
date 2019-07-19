@@ -5,8 +5,8 @@ import "./style.css"
 
 export const PortalSearchLogo = () => {
     return(
-        <div className="ActionFrameMessage">
-    <div className="NoSearchResults">
+        <div className="NoResultsContainer">
+    <div className="NoResultsMessage">
         <span 
          style={{fontSize:"3em", color: "#ABACAB"}}
          ><Icon name="search"/>{"  "}no search results... </span>

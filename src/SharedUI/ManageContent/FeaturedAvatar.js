@@ -3,13 +3,15 @@ import { inject, observer } from "mobx-react";
 import { Segment, Image, Form, Header } from "semantic-ui-react";
 import {S3Upload} from "../../DataExchange/S3Upload"
 import {GenerateFileName} from "../../SharedCalculations/GenerateFileName"
-import {modifyAnnouncement, modifyPolicy} from "../../DataExchange/Up"
-import {featuredImgEdit} from "../../DataExchange/PayloadBuilder"
 import "./style.css";
 
 @inject("DataEntryStore", "AccountStore")
 @observer
 export class FeaturedAvatar extends React.Component {
+  componentWillUnmount(){
+  const { DataEntryStore } = this.props;
+   DataEntryStore.reset("featuredImage");
+  }
   render() {
     const { AccountStore } = this.props
     const { DataEntryStore } = this.props;
@@ -20,14 +22,16 @@ export class FeaturedAvatar extends React.Component {
     );
     const handleSubmit = (e) => {
       e.preventDefault();
-      S3Upload("public-read", "quadrance-files/central", GenerateFileName(AccountStore.account, DataEntryStore.featuredImage.filename), DataEntryStore.featuredImage.file)
-      .then(result =>
-        {
-            if(result !== null){
-                this.props.uploaded(result.Location)
-            }
-        }
-      )
+      S3Upload(
+        "public-read",
+        "central",
+        GenerateFileName(
+          AccountStore.account,
+          DataEntryStore.featuredImage.filename
+        ),
+        DataEntryStore.featuredImage.file )
+      .then(result => { if(result !== null){ this.props.uploaded(result.file.location) } } )
+      .then(()=> DataEntryStore.reset("featuredImage"))
     };
 
 

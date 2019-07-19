@@ -28,8 +28,6 @@ const refresh = {
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-//   console.log(endpoint, meth, JSON.stringify(payload))
-
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
@@ -247,12 +245,12 @@ export const deleteUrlResource = (resourceID) => {
 }
 
 ///FILE RESOURCES
-export const createFile = (payload) => {
-    return processTemplate(true, "fileresources", "POST", payload, "files", 
-        "Your file has been uploaded ☁️", 
-        true,{"event": "create", "type":"file"}
-    )
-}
+// export const createFile = (payload) => {
+//     return processTemplate(true, "fileresources", "POST", payload, "files", 
+//         "Your file has been uploaded ☁️", 
+//         true,{"event": "create", "type":"file"}
+//     )
+// }
 
 export const modifyFile = (payload, toast=true) => {
     return processTemplate(true, "fileresources/" + payload.resourceID, "PATCH", payload, "files", 
@@ -345,31 +343,28 @@ export const modifyCampaign = (payload, toastEnabled) => {
 )
 }
 
+///EMAIL FUNCTIONS
+export const sendEmailPreview = async (val) => {
+    const previewValues = {
+      isSendNow: true,
+      completed: false,
+    };
+    await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
+      .then(res => toast.success('Preview email has been sent', {hideProgressBar: true}))
+      .catch(e => toast.error('Preview email has not been sent', {hideProgressBar: true}))
+  }
+
+  
+
 ///SETTINGS
-export const modifyAccount = (payload) => {
+export const modifyAccount = (payload, toast=true) => {
     return processTemplate(true, "accounts/" + payload.accountID, "PATCH", payload, "account", 
     "Your account settings have been updated 🛠", 
-    true,{"event": "update", "type":"account"}
+    true,{"event": "update", "type":"account"}, toast
 )
 }
 
-////////////////////////WASTELANDS OF TEMPORARY GARBAGE//////////////////
 
-export const deactivateUser = (val) => {
-    setTimeout(() => {console.log("user deactivated", val)}, 1000)
-}
-
-
-export const sendEmailPreview = async (val) => {
-  const previewValues = {
-    isSendNow: true,
-    completed: false,
-  };
-
-  await apiCall(`emailcampaigns`, 'POST', Object.assign(val, previewValues)).then((res) => res.json())
-    .then(res => toast.success('Preview email has been sent', {hideProgressBar: true}))
-    .catch(e => toast.error('Preview email has not been sent', {hideProgressBar: true}))
-}
 
 
 

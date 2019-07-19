@@ -17,7 +17,8 @@ class NewEditVariation extends React.Component {
     this.mode = this.props.location.pathname.includes("policy") ? "policy" : "announcement"
     this.state = {
       announcementID: '',
-      variationID: ''
+      variationID: '',
+      loaded: false
     }
   }
 
@@ -50,37 +51,44 @@ class NewEditVariation extends React.Component {
       DataEntryStore.set("content", "contentHTML", contentHTML)
       DataEntryStore.set("content", "isNew", false)
       DataEntryStore.set("content", "variationID", variationID)
-
+      this.setState({loaded:true})
     }
 
-    if (this.mode === "policy") {
-      if (variationID === "" || id !== variationID){
-        const vari = PoliciesStore._getVariation(PoliciesStore._getPolicyIDfromVariation(id), id)
-        if (!_.isEmpty(vari) ) load(vari)
-        else this.props.history.push("/panel/faqs")
-      }
+
+    if (this.mode === "policy" && !DataEntryStore.content.isNew) {
+        try{ 
+          const vari = PoliciesStore._getVariation(PoliciesStore._getPolicyIDfromVariation(id), id);
+          if (!_.isEmpty(vari) ) load(vari);
+          else if (id === variationID) this.setState({loaded:true});
+          else this.props.history.push("/panel/faqs");    
+        }
+        catch(error){
+          this.props.history.push("/panel/faqs");
+        }
     }
-    else if (this.mode === "announcement") {
-      if (announcementID === "" || id !== variationID) {
-        const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(id), id)
-        if (!_.isEmpty(vari)) load(vari)
-        else this.props.history.push("/panel/announcements")
-      }
-    }
+    else if (this.mode === "announcement" && !DataEntryStore.content.isNew) {
+        try {
+          const vari = AnnouncementsStore._getVariation(AnnouncementsStore._getAnnouncementIDfromVariation(id), id);
+          if (!_.isEmpty(vari)) load(vari);
+          else if (variationID === id) this.setState({loaded:true});
+          else this.props.history.push("/panel/announcements");
+        }
+        catch(error){
+          this.props.history.push("/panel/announcements");
+        }
   } 
+    else if (DataEntryStore.content.isNew)this.setState({loaded:true});
+}
 
   changeStage(stage) {
     const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
     const { isNew } = DataEntryStore.content;
     const { mode } = this;
     DataEntryStore.set("content", "stage", stage)
-
     if (stage === "published") {
       const historyMode = contentHistory(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
       createHistory(historyMode)
     }
-    
-    // validateURLs(mode);
     const isPolicy = mode === "policy";
     const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
     const typeId = `${mode}ID`;
@@ -93,30 +101,41 @@ class NewEditVariation extends React.Component {
         history.push(`${path}${res[id]}`);
       });
     }
-    else 
-    isPolicy ? modifyPolicy(contentEdit(mode)) : modifyAnnouncement(contentEdit(mode)).then(res => {
-      if (isNew) DataEntryStore.set("content", "isNew", false)
+    else {
+      if (isPolicy) modifyPolicy(contentEdit(mode));
+      else modifyAnnouncement(contentEdit(mode));
+      if (isNew) DataEntryStore.set("content", "isNew", false);
       history.push(`${path}${UIStore.content[mode + "ID"]}`);
-    });
- 
+    }
   }
   
+ 
+
   render() {
+    
     const { DataEntryStore } = this.props;
     const { content } = DataEntryStore;
     const { announcementID, variationID, stage } = content;
     const { mode } = this;
+
+    const displayVariation = () => !this.state.loaded?
+     <div/>
+    : 
+    <React.Fragment>
+    {(variationID !== "" || announcementID !== "" || DataEntryStore.content.isNew) && <React.Fragment>
+    <PublishControls stage={stage} onClick={val => {
+      DataEntryStore.content.teamID === "" || DataEntryStore.content.tagID === "" ? 
+      toast.error("Whoops. Please select team and tag options.", { hideProgressBar: true })
+    : this.changeStage(val)}
+     } />
+    <VariationConfig mode={mode}/>
+   {DataEntryStore.content.contentRAW === undefined? <div/> : <VariationContent mode={mode}/>}
+  </React.Fragment>}
+  </React.Fragment>
+
     return (
       <div style={{overflowY: "auto", overflowX: "hidden"}}>
-        {(variationID !== "" || announcementID !== "" || DataEntryStore.content.isNew) && <React.Fragment>
-          <PublishControls stage={stage} onClick={val => {
-            DataEntryStore.content.teamID === "" || DataEntryStore.content.tagID === "" ? 
-            toast.error("Whoops. Please select team and tag options.", { hideProgressBar: true })
-          : this.changeStage(val)}
-           } />
-          <VariationConfig mode={mode}/>
-         {DataEntryStore.content.contentRAW === undefined? <div/> : <VariationContent mode={mode}/>}
-        </React.Fragment>}
+          {displayVariation()}
       </div>
     );
   }

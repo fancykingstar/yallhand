@@ -6,7 +6,15 @@ const api_url = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : 
 
 export const getUser = () => {
   let user = localStorage.getItem('user')
-  if (user) user = JSON.parse(user)
+  const parseUser = () => {
+    let parsed = null;
+    try{
+      parsed = JSON.parse(user)
+    }
+    catch(error){ }
+  return parsed
+  }
+  if (user) user = parseUser()
   return user
 }
 
@@ -30,7 +38,6 @@ export const getHeaders = () => {
 
 export const apiCall = async (endpoint, method, data = {}) => {
   const headers = getHeaders()
-
   return fetch(api_url + endpoint, {
     method: method,
     mode: "cors",
