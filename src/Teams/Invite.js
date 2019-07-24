@@ -109,7 +109,6 @@ export class Invite extends React.Component  {
   onBoard = async(later = false) => {
     const {AccountStore} = this.props;
     for(const userInvite of this.state.userInvites) {
-      console.log(userInvite)
       let newUser = this.getDataNewUser(userInvite)
       newUser.now = !later
       if (later) {
@@ -122,8 +121,8 @@ export class Invite extends React.Component  {
         else res.error ? this.error(res) : this.success()
       })
       await users(AccountStore.account.accountID)
-      this.setState(this.reset());
     }
+    this.setState(this.reset());
   }
 
   render() {
