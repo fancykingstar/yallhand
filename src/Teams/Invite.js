@@ -118,8 +118,6 @@ export class Invite extends React.Component  {
         debugger
         newUser.now = false;
       }
-      console.log(this.state.userInvites)
-      console.log(newUser.date)
       
       // accountID: "5d0bc91ce3a53b0ac4de1b15"
       // boss: ""
@@ -128,11 +126,11 @@ export class Invite extends React.Component  {
       // invitedBy: "5d0bca19e3a53b0ac4de1b19"
       // isAdmin: false
       // now: false
-    //   await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
-    //     if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
-    //     else res.error ? this.error(res) : this.success()
-    //   })
-    //   await users(AccountStore.account.accountID)
+      await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+        if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+        else res.error ? this.error(res) : this.success()
+      })
+      await users(AccountStore.account.accountID)
     }
     this.setState(this.reset());
   }
@@ -151,7 +149,7 @@ export class Invite extends React.Component  {
             <Form.Group inline>
               <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
               content="Onboard Now" icon="clock"
-              onClick={e => this.onBoard(true)}/>
+              onClick={e => this.onBoard()}/>
             </Form.Group>
           </div>
         </Segment>
