@@ -18,7 +18,8 @@ export class Invite extends React.Component  {
   constructor(props) {
     super(props);
     this.state = {
-      userInvites: [this.reset()]
+      userInvites: [this.reset()], 
+      dropdown: "today"
     }
   }
 
@@ -57,14 +58,11 @@ export class Invite extends React.Component  {
   }
   
   updateFields = (fieldObj, id) => {
-    // debugger
     let userList = [...this.state.userInvites]
     userList[id] = {...userList[id], ...fieldObj}
-    // debugger
     this.setState({
         userInvites: userList
     })
-    
   }
 
   removeRow = (id) => {
@@ -76,7 +74,6 @@ export class Invite extends React.Component  {
   }
 
   checkMultiRow = () => {
-    console.log('this runs')
     if(this.state.userInvites.length > 1) {
       return true
     }
@@ -84,9 +81,7 @@ export class Invite extends React.Component  {
   }
 
   displayUserInvites = () => {
-    console.log('rendering invites')
     return this.state.userInvites.map((invite, index) => {
-      console.log("im an invite", invite)
       return <InviteUser multipleRows={this.checkMultiRow()} info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow} checked={invite.isAdmin}/>
     })
   }
@@ -125,10 +120,8 @@ export class Invite extends React.Component  {
     for(const userInvite of this.state.userInvites) {
       let newUser = this.getDataNewUser(userInvite)
       newUser.now = !later
-      debugger
       if (later) {
         newUser.date = moment(userInvite.date).valueOf();
-        debugger
         newUser.now = false;
       }
       
@@ -144,6 +137,7 @@ export class Invite extends React.Component  {
   render() {
     console.log(this.state.userInvites)
     const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
+    const {dropdown} = this.state
 
     return(
       <div className="Segment">
@@ -151,12 +145,30 @@ export class Invite extends React.Component  {
         <Segment>
           {this.displayUserInvites()}
           <Button onClick={this.handleClick}> + </Button>
-          <div> <span> start user{" "} <Dropdown options={dropDownText} value={"today"} inline /> </span></div>
+          <div> 
+            <span> start user{" "} 
+              <Dropdown 
+                options={dropDownText} 
+                value={dropdown} 
+                onChange={(e, v) => this.setState({dropdown: v.value})}
+                inline /> 
+            </span>
+          </div>
           <div style={{paddingTop: 20}}>
             <Form.Group inline>
+            {dropdown === "today" ?
               <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
               content="Onboard Now" icon="clock"
               onClick={e => this.onBoard()}/>
+             :
+              <React.Fragment>
+                <Form.Input label="Choose Date">
+                  <DateTimeSelect notToday value={val => this.setState({date: val}) } />
+
+                </Form.Input>
+                <Form.Button onClick={e => this.onboard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
+              </React.Fragment>
+            }
             </Form.Group>
           </div>
         </Segment>
