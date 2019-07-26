@@ -63,6 +63,7 @@ export class Invite extends React.Component  {
       userList[id][field] = fieldObj[field]
     })
     this.setState({userInvites: userList})
+    debugger
   }
 
   removeRow = (id) => {
