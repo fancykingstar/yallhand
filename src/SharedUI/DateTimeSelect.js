@@ -42,9 +42,11 @@ export class DateTimeSelect extends React.Component {
     this.setState({
       currentDate: newDateTime
     })
+    this.props.value(newDateTime)
   }
 
   render() {
+    console.log(this.props)
     const yesterday = moment().subtract( 1, 'day' );
 
     const validDates = ( current )=> current.isAfter( this.props.notToday === undefined? yesterday: moment() );

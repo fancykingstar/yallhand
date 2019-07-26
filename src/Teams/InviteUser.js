@@ -19,8 +19,6 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
     props.removeRow(props.id)
   }
 
-  console.log('isAdmin', isAdmin)
-  debugger
   return( 
     <Form widths="equal">
       <Form.Group className="form-row" > 

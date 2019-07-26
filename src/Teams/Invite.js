@@ -19,7 +19,8 @@ export class Invite extends React.Component  {
     super(props);
     this.state = {
       userInvites: [this.reset()], 
-      dropdown: "today"
+      dropdown: "today", 
+      onBoardDate: ''
     }
   }
 
@@ -35,8 +36,7 @@ export class Invite extends React.Component  {
       email: "",
       boss: "",
       isAdmin: false,
-      dropdown: "today",
-      
+      dropdown: "today"
     };
   }
 
@@ -93,9 +93,7 @@ export class Invite extends React.Component  {
   }
 
   checkDate () {
-    return this.state.userInvites.some(userInvite => {
-      return (userInvite.date === "" || userInvite.date === undefined)
-    })
+      return (this.state.onBoardDate === "" || this.state.onBoardDate === undefined)
   }
 
   getDataNewUser (userObj) {
@@ -121,7 +119,7 @@ export class Invite extends React.Component  {
       let newUser = this.getDataNewUser(userInvite)
       newUser.now = !later
       if (later) {
-        newUser.date = moment(userInvite.date).valueOf();
+        newUser.date = moment(this.state.onBoardDate).valueOf();
         newUser.now = false;
       }
       
@@ -135,7 +133,6 @@ export class Invite extends React.Component  {
   }
 
   render() {
-    console.log(this.state.userInvites)
     const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
     const {dropdown} = this.state
 
@@ -163,10 +160,9 @@ export class Invite extends React.Component  {
              :
               <React.Fragment>
                 <Form.Input label="Choose Date">
-                  <DateTimeSelect notToday value={val => this.setState({date: val}) } />
-
+                  <DateTimeSelect notToday value={val => this.setState({onBoardDate: val}) } />
                 </Form.Input>
-                <Form.Button onClick={e => this.onboard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
+                <Form.Button onClick={e => this.onBoard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail()}/>
               </React.Fragment>
             }
             </Form.Group>
