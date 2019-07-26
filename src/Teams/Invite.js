@@ -113,19 +113,11 @@ export class Invite extends React.Component  {
       newUser.now = !later
       debugger
       if (later) {
-        console.log('date?', this.state.date)
         newUser.date = moment(userInvite.date).valueOf();
         debugger
         newUser.now = false;
       }
       
-      // accountID: "5d0bc91ce3a53b0ac4de1b15"
-      // boss: ""
-      // date: NaN
-      // email: "df@dfv.com"
-      // invitedBy: "5d0bca19e3a53b0ac4de1b19"
-      // isAdmin: false
-      // now: false
       await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
         if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
         else res.error ? this.error(res) : this.success()
