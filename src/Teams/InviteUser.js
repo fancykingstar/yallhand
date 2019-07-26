@@ -10,7 +10,6 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
   const { multipleRows } = props
 
   const setField = (content) => {
-    console.log(content, 'this riunsdf')
     props.updateFields(content, props.id)
 
   }

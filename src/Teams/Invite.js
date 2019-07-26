@@ -36,7 +36,6 @@ export class Invite extends React.Component  {
       email: "",
       boss: "",
       isAdmin: false,
-      dropdown: "today"
     };
   }
 
@@ -93,7 +92,7 @@ export class Invite extends React.Component  {
   }
 
   checkDate () {
-      return (this.state.onBoardDate === "" || this.state.onBoardDate === undefined)
+    return (this.state.onBoardDate === "" || this.state.onBoardDate === undefined)
   }
 
   getDataNewUser (userObj) {
@@ -162,7 +161,7 @@ export class Invite extends React.Component  {
                 <Form.Input label="Choose Date">
                   <DateTimeSelect notToday value={val => this.setState({onBoardDate: val}) } />
                 </Form.Input>
-                <Form.Button onClick={e => this.onBoard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail()}/>
+                <Form.Button onClick={e => this.onBoard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
               </React.Fragment>
             }
             </Form.Group>
