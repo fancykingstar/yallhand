@@ -10,6 +10,8 @@ import { createSchedule } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { users } from "../DataExchange/Down";
 import toast  from "../YallToast"
+import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+
 @inject("AccountStore")
 @observer
 export class Invite extends React.Component  {
@@ -71,9 +73,17 @@ export class Invite extends React.Component  {
     }
   }
 
+  checkMultiRow = () => {
+    console.log('this runs')
+    if(this.state.userInvites.length > 1) {
+      return true
+    }
+    return false
+  }
+
   displayUserInvites = () => {
     return this.state.userInvites.map((invite, index) => {
-      return <InviteUser info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
+      return <InviteUser multipleRows={this.checkMultiRow()} info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
     })
   }
   
