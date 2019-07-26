@@ -8,9 +8,6 @@ import { AccountStore } from "../Stores/AccountStore";
 export const InviteUser = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, boss, isAdmin } = props.info;
   const { multipleRows } = props
-  const setEmail = (emailInput) => {
-    props.updateFields(emailInput, props.id)
-  }
 
   const setField = (content) => {
     console.log(content, 'this riunsdf')

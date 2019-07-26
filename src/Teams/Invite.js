@@ -57,13 +57,14 @@ export class Invite extends React.Component  {
   }
   
   updateFields = (fieldObj, id) => {
-    let updatingFields = Object.keys(fieldObj)
-    let userList = this.state.userInvites
-    updatingFields.forEach( field => {
-      userList[id][field] = fieldObj[field]
+    // debugger
+    let userList = [...this.state.userInvites]
+    userList[id] = {...userList[id], ...fieldObj}
+    // debugger
+    this.setState({
+        userInvites: userList
     })
-    this.setState({userInvites: userList})
-    debugger
+    
   }
 
   removeRow = (id) => {
@@ -83,8 +84,10 @@ export class Invite extends React.Component  {
   }
 
   displayUserInvites = () => {
+    console.log('rendering invites')
     return this.state.userInvites.map((invite, index) => {
-      return <InviteUser multipleRows={this.checkMultiRow()} info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow}/>
+      console.log("im an invite", invite)
+      return <InviteUser multipleRows={this.checkMultiRow()} info={invite} key={index} id={index} updateFields={this.updateFields} removeRow={this.removeRow} checked={invite.isAdmin}/>
     })
   }
   
@@ -139,6 +142,7 @@ export class Invite extends React.Component  {
   }
 
   render() {
+    console.log(this.state.userInvites)
     const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
 
     return(
