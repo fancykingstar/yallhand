@@ -40,16 +40,16 @@ export class Invite extends React.Component  {
     };
   }
 
-  error (validation) {
+  error (validation, email) {
     let message = '';
-    if (validation.userId) message = `${this.state.email} has already been invited to Join and is registered`
-    else message = `${this.state.email} has already been invited to Join with code ${validation.code}`
+    if (validation.userId) message = `${email} has already been invited to Join and is registered`
+    else message = `${email} has already been invited to Join with code ${validation.code}`
     toast.error(message, {hideProgressBar: true})
     this.setState(this.reset());
   }
 
-  success () {
-    toast.success(`🎉 ${this.state.email} has been invited to Join ✉️`, {hideProgressBar: true})
+  success (email) {
+    toast.success(`🎉 ${email} has been invited to Join ✉️`, {hideProgressBar: true})
     this.setState(this.reset());
   } 
 
@@ -127,7 +127,7 @@ export class Invite extends React.Component  {
       
       await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
         if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
-        else res.error ? this.error(res) : this.success()
+        else res.error ? this.error(res, newUser.email) : this.success(newUser.email)
       })
       await users(AccountStore.account.accountID)
     }
