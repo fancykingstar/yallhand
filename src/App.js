@@ -21,7 +21,7 @@ class AppRoute extends React.Component {
     super(props);
     const { UserStore, UIStore } = this.props;
     const { location } = this.props;
-    console.log("Ondeck is active!")
+    console.log("Ondeck is active")
     this.state = {shouldRedirect: false, redirect: "/"}
     if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
     else if (!UIStore._adminLoadingComplete) {
