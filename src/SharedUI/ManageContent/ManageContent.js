@@ -266,20 +266,27 @@ class ManageContent extends React.Component {
                       defaultVal={UIStore.content.variationID}
                       whenChanged={handleChange}
                     />
-                        <Dropdown
-                        button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
-                    <Dropdown.Menu>
-                      <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
-                      {teamList.length > 1 && tagList.length > 0 ?
+                    {tagList.length > 0 && teamList.length > 1 ?
+                      <Dropdown
+                      button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
+                      <Dropdown.Menu>
+                        <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
                         <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
                         <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
-                        :
-                        null
-                      }
-                      <Dropdown.Divider />
-                    {publishOptions()}
-                    </Dropdown.Menu>
-                    </Dropdown>
+                        <Dropdown.Divider />
+                      {publishOptions()}
+                      </Dropdown.Menu>
+                      </Dropdown>
+                      :
+                      <Dropdown
+                      button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
+                      <Dropdown.Menu>
+                        <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
+                        <Dropdown.Divider />
+                      {publishOptions()}
+                      </Dropdown.Menu>
+                      </Dropdown>
+                    }
                     <div>
 
                     </div>
