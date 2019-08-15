@@ -18,7 +18,7 @@ export class TeamSelect extends React.Component {
 
     return (
       <Fragment>
-        {teamList.length > 0 ?
+        {teamList.length > 1 ?
           <Form.Dropdown
             {...val}
             search
@@ -30,7 +30,8 @@ export class TeamSelect extends React.Component {
               const text = teamList.filter(t => t.value === val.value)[0].text
               this.props.outputVal({value: val.value, text: text})
             }}
-            placeholder={placeholder !== undefined ? placeholder : ""} />
+            placeholder={placeholder !== undefined ? placeholder : ""}
+          />
           :
           null
         }
