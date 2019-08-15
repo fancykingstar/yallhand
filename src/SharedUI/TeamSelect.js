@@ -18,18 +18,22 @@ export class TeamSelect extends React.Component {
 
     return (
       <Fragment>
-        <Form.Dropdown
-          {...val}
-          search
-          selection
-          label={label === "" ? "Team" : label}
-          style={style}
-          options={teamList}
-          onChange={(e, val) => {
-            const text = teamList.filter(t => t.value === val.value)[0].text
-            this.props.outputVal({value: val.value, text: text})
-          }}
-          placeholder={placeholder !== undefined ? placeholder : ""} />
+        {teamList.length > 0 ?
+          <Form.Dropdown
+            {...val}
+            search
+            selection
+            label={label === "" ? "Team" : label}
+            style={style}
+            options={teamList}
+            onChange={(e, val) => {
+              const text = teamList.filter(t => t.value === val.value)[0].text
+              this.props.outputVal({value: val.value, text: text})
+            }}
+            placeholder={placeholder !== undefined ? placeholder : ""} />
+          :
+          null
+        }
       </Fragment>
     )
   }

@@ -11,6 +11,8 @@ export class TagSelect extends React.Component {
     const style = { minWidth: 200 };
     const label = this.props.label === "" ? "Tag" : this.props.label
     const val = value !== undefined ? {value: value} : {defaultValue: defaultVal === undefined ? null : defaultVal.length === 0 ? "none": defaultVal[0]}
+  
+
 
     const tagsElement = TeamStore.tagsSelect.map((tag, i) => {
       return {
@@ -23,15 +25,20 @@ export class TagSelect extends React.Component {
 
     return (
       <Fragment>
-        <Form.Dropdown
-          {...val}
-          search
-          selection
-          label={label}
-          style={style}
-          options={tagsElement}
-          onChange={(e, val) => this.props.outputVal(val.value)}
-          placeholder={placeholder !== undefined ? placeholder : ""} />
+        {tagsElement.length > 0 ?
+          <Form.Dropdown
+            {...val}
+            search
+            selection
+            label={label}
+            style={style}
+            options={tagsElement}
+            onChange={(e, val) => this.props.outputVal(val.value)}
+            placeholder={placeholder !== undefined ? placeholder : ""} />
+          :
+          null
+        }
+
       </Fragment>
     )
   }
