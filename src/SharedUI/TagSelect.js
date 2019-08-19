@@ -23,7 +23,7 @@ export class TagSelect extends React.Component {
 
     return (
       <Fragment>
-        {tagsElement.length > 0 ?
+        {TeamStore.tags.length !== 0 ?
           <Form.Dropdown
             {...val}
             search

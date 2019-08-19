@@ -18,7 +18,7 @@ export class TeamSelect extends React.Component {
 
     return (
       <Fragment>
-        {teamList.length > 1 ?
+        {TeamStore.structure.length !== 1 ?
           <Form.Dropdown
             {...val}
             search

@@ -109,4 +109,3 @@ export class ChooseTargeting extends React.Component {
 
   }
 }
-
