@@ -42,6 +42,7 @@ export class DateTimeSelect extends React.Component {
     this.setState({
       currentDate: newDateTime
     })
+    this.props.value(newDateTime)
   }
 
   render() {
