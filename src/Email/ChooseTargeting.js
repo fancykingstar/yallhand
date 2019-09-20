@@ -102,7 +102,7 @@ export class ChooseTargeting extends React.Component {
     return (
         <div style={{ minWidth: 400 }}>
           <span style={{fontSize: ".9em"}}>
-          Send Email{" "}
+          Send {this.props.label? this.props.label: "Email"}{" "}
             <Dropdown
               inline
               onChange={(e, val) =>  DataEntryStore.set("emailCampaign", "sendTargetType", val.value)}

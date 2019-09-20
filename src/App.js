@@ -11,11 +11,21 @@ import FullStory from 'react-fullstory';
 import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
+
 
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
+  componentDidCatch(error, info) {
+    alert(error);
+    // Display fallback UI
+    // this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    // logErrorToMyService(error, info);
+  }
   constructor(props){
     super(props);
     const { UserStore, UIStore } = this.props;
@@ -44,8 +54,16 @@ class AppRoute extends React.Component {
 
   render() {
     const {UIStore} = this.props;
+
+    const theme = createMuiTheme({
+      typography: {
+        fontFamily: 'Lato, Arial',
+      }
+    });
+
     return (
       <div className="App">
+        <ThemeProvider theme={theme}>
         <FullStory org="JJAMV"/>
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
@@ -66,6 +84,7 @@ class AppRoute extends React.Component {
         transition={Slide}
         closeButton={false}
         />
+        </ThemeProvider>
       </div>
     );
   }

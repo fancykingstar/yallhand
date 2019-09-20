@@ -271,7 +271,8 @@ class ManageContent extends React.Component {
                       button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
                       <Dropdown.Menu>
                         <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
-                        <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
+                        {TeamStore.tags.length * TeamStore.structure.length === variations.length? null :
+                        <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>}
                         <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
                         <Dropdown.Divider />
                       {publishOptions()}

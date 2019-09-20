@@ -36,12 +36,12 @@ class DashboardFrame extends React.Component {
   }
 
   componentDidMount(){
+    const {UIStore} = this.props;
     this.getData()
     window.scrollTo(0, 0);
-    // this.setState({
-    //   dateRange: "Or choose a date range"
-    // })
+    UIStore.set("dropdown", "dashboardOverview", 30);
   }
+
 
   render() {
     const {AccountStore, AnnouncementsStore, PoliciesStore,  UIStore, UserStore} = this.props
@@ -155,7 +155,6 @@ class DashboardFrame extends React.Component {
     }
 
     const updateData = (source, val1) => {
-      console.log(source, val1)
       if(source === "dropdown" && val1 !== "custom")  {
         UIStore.set("dropdown", "dashboardOverview", val1)
         this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1])

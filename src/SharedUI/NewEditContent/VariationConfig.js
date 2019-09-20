@@ -8,7 +8,8 @@ import { InfoPopUp } from "../../SharedUI/InfoPopUp";
 import toast  from "../../YallToast"
 
 
-@inject("DataEntryStore", "PoliciesStore", "AnnouncementsStore", "UIStore")
+
+@inject("DataEntryStore", "PoliciesStore", "AnnouncementsStore", "UIStore", "TeamStore")
 @observer
 export class VariationConfig extends React.Component {
   componentDidMount(){
@@ -21,7 +22,7 @@ export class VariationConfig extends React.Component {
     else{UIStore.set("dropdown", "altLabel", false)}
   }
   render() {
-    const { DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore } = this.props;
+    const { DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, TeamStore } = this.props;
 
     const obj = Object.assign({}, this.props.mode === "policy" ? 
       PoliciesStore._getPolicy(UIStore.content.policyID)
@@ -97,7 +98,7 @@ export class VariationConfig extends React.Component {
         <div style={{ marginTop: 0, paddingTop: 0, width: "100%" }} />
         <div className="Form">
           <div style={{ paddingBottom: 5, paddingTop: 10 }}>
-            <h4>Audience</h4>
+            {TeamStore.tags.length !== 0 && TeamStore.structure.length !== 1? <h4>Audience</h4> : null}
           </div>
           <Form>
             <Form.Group>

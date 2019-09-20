@@ -22,6 +22,7 @@ class Store {
     emailCampaign: this.emailCampaign,
     supportTicket: this.supportTicket,
     channel: this.channel,
+    survey: this.survey,
     tempContent: this.tempContent,
     content: this.content,
     contentmgmt: this.contentmgmt,
@@ -177,6 +178,10 @@ class Store {
     //content search 
     contentResults: [],
     contentValue: ""
+  }
+
+  @observable survey = {
+    saveAttempt: false
   }
 
   @observable channel = {

@@ -58,17 +58,16 @@ class NavItems extends React.Component {
         />
 
 
-      {UserStore.user.invitedBy !== "admin"?"":
       <React.Fragment>
       <NavItem
-          id="polls"
+          id="surveys"
           icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-vote-yea"/>}
-          label="Polls"
-          active={UIStore.sideNav.activePrimary === "polls"}
+          label="Surveys"
+          active={UIStore.sideNav.activePrimary === "surveys"}
         />  
         <br />
         </React.Fragment>
-    }
+    
 
 
         <NavItem
