@@ -181,7 +181,8 @@ class Store {
   }
 
   @observable survey = {
-    saveAttempt: false
+    saveAttempt: false,
+    surveyItems: []
   }
 
   @observable channel = {
@@ -354,6 +355,12 @@ class Store {
       }
     })
     return reset
+  }
+
+  deleteChild(parent,key){
+    console.log(JSON.stringify(this.keys[parent]))
+    delete this.keys[parent][key];
+    console.log(JSON.stringify(this.keys[parent]))
   }
 
 

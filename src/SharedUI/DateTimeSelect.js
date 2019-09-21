@@ -13,7 +13,8 @@ export class DateTimeSelect extends React.Component {
     const remainder = 15 - (now.minute() % 15);
 
     this.state = {
-      currentDate: moment(now).add(remainder, "minutes")
+      currentDate: ""
+      // moment(now).add(remainder, "minutes")
     }
   }
   
@@ -55,7 +56,8 @@ export class DateTimeSelect extends React.Component {
           <DateTime 
           isValidDate={validDates}
           timeConstraints={this.validTimeConstraints()}
-          defaultValue={this.state.currentDate}
+          // defaultValue={this.state.currentDate}
+          inputProps={{ placeholder: 'Choose date and time' }}
           value={this.state.currentDate}
           onChange={e => this.updateDate(e)}
           />
