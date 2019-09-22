@@ -8,10 +8,10 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
 import { CardFrame } from "./CardFrame/CardFrame";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
-import {SurveyNewEdit} from "./Surveys/SurveyNewEdit";
+import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
-import { SurveyFrame } from "./Surveys/SurveyFrame";
+import SurveyFrame from "./Surveys/SurveyFrame";
 import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -92,8 +92,8 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/>
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/resources" component={ResourcesFrame} />
-            <Route path="/panel/surveys" component={SurveyFrame} />
-            <Route path="/panel/survey-detail" component={SurveyNewEdit} />
+            <Route path="/panel/surveys" component={SurveyFrame} exact/>
+            <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
             <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />

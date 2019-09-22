@@ -1,12 +1,14 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { Segment, Button, Form, Header } from "semantic-ui-react";
 import { SurveyItem } from "./SurveyItem";
 import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import BackButton from "../SharedUI/BackButton";
 import _ from "lodash";
 
-export class SurveyNewEdit extends React.Component {
+class SurveyNewEdit extends React.Component {
     constructor(props) {
     super(props);
     this.state = {
@@ -35,6 +37,7 @@ export class SurveyNewEdit extends React.Component {
   };
 
   validate = () => {
+    console.log(JSON.stringify(this.state))
     const {label, targetType, targetConfig, deadline, surveyItems} = this.state;
     const review = {
       general: Boolean(label && surveyItems.length && deadline),
@@ -146,6 +149,7 @@ export class SurveyNewEdit extends React.Component {
 
     return (
       <div>
+        <BackButton/>
         {JSON.stringify(this.state.surveyItems)}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Survey builder
@@ -183,3 +187,4 @@ export class SurveyNewEdit extends React.Component {
     );
   }
 }
+export default withRouter(SurveyNewEdit);
