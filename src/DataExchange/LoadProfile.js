@@ -67,6 +67,9 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
   
         const a = await load.sentiments(accountID);
         UIStore.set("adminLoadingComplete", "sentiments", true)
+
+        const surveys = await load.surveys(accountID);
+        UIStore.set("adminLoadingComplete", "surveys", true)
   
         AccountStore.loadReviewQueue(reviewAlertCheck())
   

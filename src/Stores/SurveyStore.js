@@ -2,11 +2,6 @@ import { observable, action, computed } from "mobx";
 import _ from "lodash";
 
 class Store {
-  keys = {
-    "account": this.account,
-    "stripe": this.stripe,
-  }
-
   @observable allSurveys = []
 
 

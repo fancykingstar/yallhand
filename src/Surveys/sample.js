@@ -1,4 +1,6 @@
 export const sample = {
+    surveyID: "00001",
+    instances: [{instanceID: "a7sjk239oZSJ", sent: 1569087505000, userID:"AA", deadline: 1571857208000}],
     surveyItems: [
         {
             _id: "16d51a0bd49k0sxgx8p",
@@ -30,12 +32,14 @@ export const sample = {
     userID: "aksjdflkajsdlf",
     targetType: "all",
     targetsConfig: {},
-    deadline: "2019-09-21T04:00:00.000Z",
     stage: "inactive",
-    surveyID: "00001",
     category: "",
-    completed: "",
-    recurring: "",
-    responses: {"16d51a0bd49k0sxgx8p": [{userID: "", updated: "", response: ""}], "16d51a1085bk0sxhc2k": []}
-
+    anonymous: false,
+    responses_by_instance: [{
+        instanceID: "a7sjk239oZSJ",
+        completed: true,
+        data: 
+        { "16d51a0bd49k0sxgx8p": {updated: 1569264646000, response: 4}, "16d51a1085bk0sxhc2k": []}}
+      ]
+    
   };

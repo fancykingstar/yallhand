@@ -94,6 +94,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/resources" component={ResourcesFrame} />
             <Route path="/panel/surveys" component={SurveyFrame} exact/>
             <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
+            <Route path="/panel/surveys/manage-survey/" component={SurveyNewEdit} exact/>
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
             <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />

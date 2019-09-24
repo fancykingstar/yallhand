@@ -15,10 +15,10 @@ class SurveyFrame extends React.Component {
     super(props);
     this.state = { UIFilter: "active" };
   }
-  componentDidMount(){
-    const {SurveyStore} = this.props;
-    SurveyStore.loadSurveys([sample]);
-  }
+  // componentDidMount(){
+  //   const {SurveyStore} = this.props;
+  //   SurveyStore.loadSurveys([sample]);
+  // }
   render() {
     const MenuContainer = styled.div`
       display: flex;
@@ -35,7 +35,7 @@ class SurveyFrame extends React.Component {
     const data = SurveyStore.allSurveys.map(survey => [survey.label, survey.updated, survey.userID, survey.stage])
     
     const handleClick = (survey) => {
-      this.props.history.push( "/panel/surveys/manage-survey/" + survey.surveyID );
+      this.props.history.push(`/panel/surveys/manage-survey/${survey? survey.surveyID: ""}` );
 
     }
 
@@ -62,7 +62,7 @@ class SurveyFrame extends React.Component {
         </Header>
         <MenuContainer>
           <div style={{ textAlign: "center" }}>
-            <Button color="blue">
+            <Button color="blue" onClick={()=>handleClick()}>
               {" "}
               <Icon name="plus" /> Create New...{" "}
             </Button>
@@ -70,7 +70,7 @@ class SurveyFrame extends React.Component {
         </MenuContainer>
         <div style={{ marginTop: 15 }}>
           <MUIDataTable
-            title={"Employee List"}
+            // title={"Employee List"}
             data={data}
             columns={columns}
             options={options}

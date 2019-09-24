@@ -24,10 +24,12 @@ const refresh = {
   announcements: () => reload.announcements(accountID()),
   files: () => reload.files(accountID()),
   campaigns: () => reload.campaigns(accountID()),
-  account: () => reload.account(accountID())
+  account: () => reload.account(accountID()),
+  surveys: () => reload.surveys(accountID())
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+  console.log("payload", JSON.stringify(payload))
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
@@ -362,6 +364,27 @@ export const modifyAccount = (payload, toast=true) => {
     "Your account settings have been updated 🛠", 
     true,{"event": "update", "type":"account"}, toast
 )
+}
+
+///SURVEYS
+export const createSurvey = (payload) => {
+  return processTemplate(true, "surveys", "POST", payload, "surveys", 
+      "Your new survey has been created 🙌", 
+      true,{"event": "create", "type":"survey"}
+  )
+}
+
+export const modifySurvey = (payload) => {
+  processTemplate(true, "surveys/" + payload.surveyID, "PATCH", payload, "surveys", 
+  "Your surveys has been updated 🛠", 
+  true,{"event": "update", "type":"survey"}
+)
+}
+
+export const deleteSurvey = (surveyID) => {
+  processTemplate(false, "surveys/" + surveyID, "DELETE", {}, "surveys", 
+  "Selected surveys deleted 👋", 
+  true,{"event": "delete", "type":"survey"})
 }
 
 

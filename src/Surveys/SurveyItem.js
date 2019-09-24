@@ -30,10 +30,6 @@ export const SurveyItem = inject("DataEntryStore")(observer((props) => {
     props.shiftRow(direction, props.index)
   }
 
-  // const addRow = () => {
-  //   props.Add;
-  // }
-
   const addMultiChoice = resChoices.length < 5?  <span onClick={()=>setField({resChoices: [...resChoices, ""]})} style={{color:"#2185d0"}}>Create Choice...</span> : null
 
 
@@ -117,7 +113,7 @@ export const SurveyItem = inject("DataEntryStore")(observer((props) => {
         >
           <MenuItem value="Scale10">Scale on 1-10</MenuItem>
           <MenuItem value="Scale5">Scale on 1-5</MenuItem>
-          <MenuItem value="star">Star Rating ⭐️⭐️⭐️</MenuItem>
+          <MenuItem value="star">5-Star Rating ⭐️</MenuItem>
         </Select>
         {scaleConfig === "Scale10" || scaleConfig === "Scale5"?  ScaleLabels : null}
       </FormControl>

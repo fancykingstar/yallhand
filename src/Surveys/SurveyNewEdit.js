@@ -1,13 +1,18 @@
 import React from "react";
+import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Segment, Button, Form, Header } from "semantic-ui-react";
+import { Segment, Button, Form, Header, Checkbox } from "semantic-ui-react";
 import { SurveyItem } from "./SurveyItem";
 import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
+import {survey} from "../DataExchange/PayloadBuilder";
+import {createSurvey} from "../DataExchange/Up";
 import _ from "lodash";
 
+@inject("SurveyStore")
+@observer
 class SurveyNewEdit extends React.Component {
     constructor(props) {
     super(props);
@@ -17,7 +22,8 @@ class SurveyNewEdit extends React.Component {
       targetType: "all",
       targetsConfig: {} ,
       deadline: "",
-      stage: "inactive"
+      stage: "inactive",
+      anonymous: false,
     }
   };
 
@@ -100,9 +106,21 @@ class SurveyNewEdit extends React.Component {
     console.log(this.state.surveyItems);
   }
 
-  render() {
-    const { DataEntryStore } = this.props;
+  saveSurvey = () => {
+    const {surveyItems, label, targetType, anonymous} = this.state;
+    createSurvey(survey(surveyItems, label, targetType, anonymous));
+  }
 
+  componentDidMount(){
+    const {SurveyStore} = this.props;
+    const id = this.props.match.params.id;
+    const loadSurvey = this.props.match.params.id? SurveyStore.allSurveys.filter(i=>i.surveyID === id)[0] : false;
+    console.log("id", id, "survey", SurveyStore.allSurveys)
+    if(loadSurvey) this.setState(loadSurvey);
+  }
+  
+
+  render() {
     const launch = (
       <Button
         disabled={
@@ -114,7 +132,7 @@ class SurveyNewEdit extends React.Component {
       </Button>
     );
     const save = (
-      <Button onClick={e => console.log(this.validate())}>
+      <Button onClick={e => this.saveSurvey()}>
         Save
       </Button>
     );
@@ -144,13 +162,12 @@ class SurveyNewEdit extends React.Component {
       )
     };
 
-    // const handleItemChange = async e => {};
 
 
     return (
       <div>
         <BackButton/>
-        {JSON.stringify(this.state.surveyItems)}
+        {/* {JSON.stringify(this.state.surveyItems)} */}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Survey builder
           <Header.Subheader>
@@ -176,6 +193,10 @@ class SurveyNewEdit extends React.Component {
               value={e => this.setState({ deadline: e })}
               includeTime
             />
+          </div>
+          <div style={{margin: "5px 0 5px"}}>
+          <span style={{fontWeight: 800}}>Anonymous Responses </span><br/>
+          <Checkbox size toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
           </div>
           <div>{actions[this.state.stage]}</div>
         </Segment>

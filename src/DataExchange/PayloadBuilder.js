@@ -452,6 +452,18 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return buildObj
   }
 
+  export const survey = ( surveyItems, label, targetType, anonymous ) => {
+    const buildObj = {
+      surveyItems,
+      label,
+      targetType,
+    "targetsConfig": {},
+    "stage": "draft",
+      anonymous,
+    };
+    return _.extend({}, base(), buildObj)
+  };
+
 
   
   

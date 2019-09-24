@@ -9,6 +9,7 @@ import { EmailStore } from "../Stores/EmailStore"
 import { ScheduleStore } from "../Stores/ScheduleStore"
 import { DataEntryStore } from "../Stores/DataEntryStore"
 import { UIStore } from "../Stores/UIStore";
+import { SurveyStore } from "../Stores/SurveyStore";
 import { validContent} from "../SharedCalculations/ValidContent"
 import { validResources } from "../SharedCalculations/ValidResource"
 import {apiCall_noBody, apiCall} from "./Fetch"
@@ -139,7 +140,11 @@ export const scheduled= async (accountID) => {
 }
 
 export const history = async () => {
-  const result = await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET")
+  const result = await apiCall_noBody("histories/" + AccountStore.account.accountID, "GET");
   return result
 }
 
+export const surveys= async (accountID) => {
+  const result = await apiCall_noBody(`surveys/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
+  SurveyStore.loadSurveys(result);
+}
