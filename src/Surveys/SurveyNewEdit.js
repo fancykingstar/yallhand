@@ -9,6 +9,7 @@ import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
 import {survey} from "../DataExchange/PayloadBuilder";
 import {createSurvey} from "../DataExchange/Up";
+import moment from "moment";
 import _ from "lodash";
 
 @inject("SurveyStore")
@@ -38,9 +39,11 @@ class SurveyNewEdit extends React.Component {
         resChoices: [],
         scaleLabels_lo: "Least Favorable",
         scaleLabels_hi: "Most Favorable",
-        valid: false
+        valid: false,
     };
   };
+
+
 
   validate = () => {
     console.log(JSON.stringify(this.state))
@@ -107,15 +110,14 @@ class SurveyNewEdit extends React.Component {
   }
 
   saveSurvey = () => {
-    const {surveyItems, label, targetType, anonymous} = this.state;
-    createSurvey(survey(surveyItems, label, targetType, anonymous));
+    const {surveyItems, label, targetType, anonymous, deadline} = this.state;
+    createSurvey(survey(surveyItems, label, targetType, anonymous, deadline));
   }
 
   componentDidMount(){
     const {SurveyStore} = this.props;
     const id = this.props.match.params.id;
     const loadSurvey = this.props.match.params.id? SurveyStore.allSurveys.filter(i=>i.surveyID === id)[0] : false;
-    console.log("id", id, "survey", SurveyStore.allSurveys)
     if(loadSurvey) this.setState(loadSurvey);
   }
   
@@ -165,9 +167,8 @@ class SurveyNewEdit extends React.Component {
 
 
     return (
-      <div>
+      <div> 
         <BackButton/>
-        {/* {JSON.stringify(this.state.surveyItems)} */}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Survey builder
           <Header.Subheader>
@@ -190,8 +191,9 @@ class SurveyNewEdit extends React.Component {
           </div>
           <div style={{ marginTop: "-5px" }}>
             <DateTimeSelect
-              value={e => this.setState({ deadline: e })}
+              value={e => this.setState({ deadline: moment(e).valueOf() })}
               includeTime
+              defaultValue={this.state.deadline}
             />
           </div>
           <div style={{margin: "5px 0 5px"}}>

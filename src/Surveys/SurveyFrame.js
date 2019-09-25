@@ -4,21 +4,11 @@ import { withRouter } from "react-router-dom";
 import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
-
-import {sample} from "./sample";
 import { SurveyStore } from "../Stores/SurveyStore";
 
 @inject("SurveyStore")
 @observer
 class SurveyFrame extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { UIFilter: "active" };
-  }
-  // componentDidMount(){
-  //   const {SurveyStore} = this.props;
-  //   SurveyStore.loadSurveys([sample]);
-  // }
   render() {
     const MenuContainer = styled.div`
       display: flex;

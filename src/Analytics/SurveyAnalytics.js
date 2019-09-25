@@ -59,7 +59,6 @@ export class SurveyAnalytics extends React.Component {
             />
               <div style={{ marginTop: 15 }}>
           <MUIDataTable
-            // title={"Employee List"}
             data={data}
             columns={columns}
             options={options}

@@ -1,0 +1,31 @@
+[
+    {
+		"survey_group_label": "Employee Satisfaction",
+		"questions": [
+			{
+				"type": "radio",
+				"position": 0,
+				"completed": false,
+				"updated": 1567214821003,
+				"question": "What is your perception of how your manager treats your success",
+				"answer_options": [
+					"They push me and give me clear direction",
+					"My manager shows no interest in my success",
+					"My manager seems interested, but doesn't take action"
+				]
+			},
+			{
+				"type": "radio",
+				"position": 1,
+				"completed": false,
+				"updated": 1567214821000,
+				"question": "What is your perception of how your manager treats your success",
+				"answer_options": [
+					"They push me and give me clear direction",
+					"My manager shows no interest in my success",
+					"My manager seems interested, but doesn't take action"
+				]
+			}
+		]
+	}
+]

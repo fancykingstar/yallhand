@@ -2,7 +2,7 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
-import UserPortal from "./UserPortal/UserPortal";
+// import UserPortal from "./UserPortal/UserPortal";
 import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
@@ -13,7 +13,7 @@ import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
-import "./App.css";
+// import "./App.css";
 
 
 @inject("UIStore", "UserStore")
@@ -70,7 +70,7 @@ class AppRoute extends React.Component {
         {this.state.shouldRedirect && <Switch><Redirect push to={this.state.redirect}/></Switch>}
         <Switch>
           <Route path="/panel" component={AdminPanel} />
-          <Route path="/portal" component={UserPortal} />
+          {/* <Route path="/portal" component={UserPortal} /> */}
           <Route path="/register" component={Login} />
           <Route path="/forgot" component={Forgot} />
           <Route path="/" component={Login} exact />
