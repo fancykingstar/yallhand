@@ -42,7 +42,7 @@ class ActionsForm extends React.Component {
 
         return (
 
-            <React.Fragment>
+            <>
                 <div className="section_title shadow">
                     {console.log(selectedActionData)}
                     <h4><IconButton
@@ -112,7 +112,7 @@ class ActionsForm extends React.Component {
                         </Form>
                     </div>
                 </div>
-            </React.Fragment>
+            </>
 
         );
     }

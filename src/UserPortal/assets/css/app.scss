@@ -224,7 +224,7 @@ body{font-family: 'Rubik', sans-serif;}
 }
 /* Suggesion component */
 .suggession_img img{max-height: 104px;width: 100%; border-radius: 8px;}
-.suggession_title{margin-top: 16px;color: #0f141a;}
+.suggession_title{margin-top: 16px;color: #0f141a;text-align:left;}
 
 //  directory page css
 .inner_staff_detail{
@@ -291,6 +291,9 @@ body{font-family: 'Rubik', sans-serif;}
         height: 100%;
         right: 0;
         top: 0;
+        @media (max-width: 599px){
+            display: none;
+        }
     }
     .hierarchy-group:last-child,
     .hierarchy-group.MuiGrid-item:last-child{
@@ -350,7 +353,7 @@ body{font-family: 'Rubik', sans-serif;}
             font-size: 14px;
         }
     }
-    @media (max-width:1280px){
+    @media (max-width:1280px) and (min-width: 600px){
         .MuiCardMedia-root{
             display: block;
             margin: 0 auto 10px;
@@ -362,6 +365,27 @@ body{font-family: 'Rubik', sans-serif;}
         &.has_child:after{
             right: 4px;
         }
+    }
+}
+.hierarchy-wrap.slider{
+    margin-top: 30px;
+    background: transparent !important;
+    overflow: visible;
+    .slick-arrow.slick-next{
+        display: none !important;
+    }
+    .MuiGrid-root.hierarchy-group,
+    .slick-list{
+        border-radius: 8px;
+    overflow: hidden;
+    .MuiCard-root{
+        overflow: visible;
+    }
+    }
+    .slick-slider  .slick-arrow.slick-prev{
+        top: -30px;
+        left: auto;
+        right: auto;
     }
 }
 .inner_staff_detail.all-staff{
@@ -436,6 +460,7 @@ body{font-family: 'Rubik', sans-serif;}
     margin-bottom: 26px;
     img{
         width: 48px;height: 48px;border-radius: 50%;margin-right: 16px;
+        object-fit: cover;
     }
     .userPostDate{
         a{

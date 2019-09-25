@@ -26,7 +26,7 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
-import {UserPortal} from "./UserPortal/App";
+
 
 @inject( "UserStore", "UIStore", )
 @observer
@@ -97,8 +97,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
             <Route path="/panel/surveys/manage-survey/" component={SurveyNewEdit} exact/>
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
-            {/* <Route path="/panel" component={DashboardFrame} exact/> */}
-            <Route path="/panel" component={UserPortal} exact/>
+            <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
             <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />

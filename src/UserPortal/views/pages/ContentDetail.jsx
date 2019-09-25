@@ -13,20 +13,22 @@ class ContentDetail extends React.Component {
       super(props);
       this.state = {
          Announcements: [],
-         PostData: ''
+         PostData: '',
+         qaData: []
       }
    }
    componentDidMount() {
       this.setState({
          Announcements: ContentData.suggested,
-         PostData: ContentData.post
+         PostData: ContentData.post,
+         qaData: ContentData.questionAnswer
       });
 
       document.body.classList.add('page_content_white');
       document.body.classList.remove('page_content_bg');
    }
    render() {
-      const { PostData, Announcements } = this.state;
+      const { PostData, Announcements, qaData } = this.state;
       return (
          <Layout>
             <div className="">
@@ -35,7 +37,7 @@ class ContentDetail extends React.Component {
 
                   <div className="page_content_bg">
                      <div className="smallContainer">
-                        <QuestionAnswer />
+                        <QuestionAnswer qaData={qaData} />
                      </div>
                   </div>
                   <div className="announcements-wrap">

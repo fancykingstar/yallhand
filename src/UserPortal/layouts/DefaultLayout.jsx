@@ -185,7 +185,7 @@ const DefaultLayout = ({ ...props }) => {
             <main className={clsx(classes.content, "main-content-container")}>
                 <div className={classes.toolbar} />
                 <div className="page-container">
-                    {props.children}
+                    {React.cloneElement(props.children, { datawidth: width })}
                 </div>
                 <LayoutFooter />
             </main>
