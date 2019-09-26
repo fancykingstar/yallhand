@@ -5,8 +5,6 @@ import UserProfile from "./UserProfile";
 import { ChannelContainer } from "./ChannelContainer";
 import NavItems from "./NavItems";
 import { QLogo } from "../Assets/Graphics/QLogo";
-import "./style.css";
-
 @inject("UIStore")
 @observer
 export class SideBar extends React.Component {
@@ -19,7 +17,7 @@ export class SideBar extends React.Component {
         <NavItems
           whenClicked={val => UIStore.set("sideNav", "activePrimary", val)}
         />
-        <ChannelContainer />
+        {/* <ChannelContainer /> */}
         <div className="PoweredByFrame">
           <div className="PoweredByText">
             <div style={{ float: "left", paddingTop: 7, paddingLeft: 12 }}>

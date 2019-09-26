@@ -5,6 +5,11 @@ $closedDrawerWidth:73px;
 @import "nav";
 @import "app";
 
+
+@import '~bootstrap/scss/bootstrap.scss';
+
+
+
 body, html, body .MuiTypography-body1{font-family: 'Rubik', sans-serif;}
 .page_content_white,.bg-white{
   background: #fff;

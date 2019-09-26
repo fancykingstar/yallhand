@@ -6,18 +6,17 @@ import { withRouter } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
 import "./style.css";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
-import {LazyImage} from "../SharedUI/LazyImage";
 
 
-@inject("AnnouncementsStore", "AccountStore", "UIStore", "DataEntryStore")
+@inject("AnnouncementsStore", "AccountStore", "UIStore", "DataEntryStore", "ChannelStore")
 @observer
 class AnnouncementsFrame extends React.Component {
   render() {
-    const { AnnouncementsStore,UIStore, DataEntryStore } = this.props;
+    const { AnnouncementsStore,UIStore, DataEntryStore, ChannelStore } = this.props;
 
     const handleClick = val => {
-      UIStore.set("content", "announcementID", val)
-      const announcement = Object.assign({}, AnnouncementsStore._getAnnouncement(val))
+      UIStore.set("content", "announcementID", val.announcementID)
+      const announcement = Object.assign({}, val)
       UIStore.set("content", "variationID", AnnouncementsStore._toggleGlobalVariation(announcement.announcementID))
       DataEntryStore.set("contentmgmt", "label",  announcement.label)
       DataEntryStore.set("contentmgmt", "img",  announcement.img)
@@ -39,10 +38,12 @@ class AnnouncementsFrame extends React.Component {
     //   .map(announcement => (
     //   <FeedItem key={"announcement" + giveMeKey()} data={announcement} clicked={handleClick} />
     // ));
-      
-    const columns = ["","Title", "Last Updated", "Created By", "Channel","State"];
 
-    const data = AnnouncementsStore.allAnnouncements.map(annc => [<LazyImage src={annc.img} size="tiny"/>,annc.label, UTCtoFriendly(annc.updated), annc.userID, annc.chanID, annc.state])
+    
+      
+    const columns = ["","Title", "Last Updated", "Channel","State"];
+
+    const data = AnnouncementsStore.allAnnouncements.map(annc => [<img style={{height: 75, width: 120, objectFit: annc.img? "cover":"contain" }} src={annc.img? annc.img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"} size="tiny"/>,annc.label, UTCtoFriendly(annc.updated), ChannelStore._getLabel(annc.chanID), annc.state])
     
     const options = {
       elevation: 1,

@@ -6,7 +6,7 @@ import { Responsive, Transition } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { SideBar } from "./SideBar/SideBar";
-import { CardFrame } from "./CardFrame/CardFrame";
+import CardFrame from "./CardFrame/CardFrame";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
 import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
@@ -26,6 +26,7 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+import "./CSS/styles.scss";
 
 
 @inject( "UserStore", "UIStore", )
@@ -73,7 +74,7 @@ export class AdminPanel extends React.Component {
     ) : (
       <React.Fragment>
       <Header />
-      <div className="SideAndAction">
+      <div id="SideAndAction" className="SideAndAction">
         <Responsive {...Responsive.onlyComputer} fireOnMount={true} onUpdate={(e, val) => checkMobile(val.getWidth())}>
         <SideBar />
         </Responsive>
@@ -92,7 +93,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
             <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/>
             <Route path="/panel/teams" component={TeamFrame} />
-            <Route path="/panel/resources" component={ResourcesFrame} />
+            <Route path="/panel/storage" component={ResourcesFrame} />
             <Route path="/panel/surveys" component={SurveyFrame} exact/>
             <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
             <Route path="/panel/surveys/manage-survey/" component={SurveyNewEdit} exact/>

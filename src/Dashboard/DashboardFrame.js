@@ -2,6 +2,8 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import { withRouter } from "react-router-dom"
 import { Segment, Grid, Header, Icon, Statistic, Dropdown, Button, Modal } from "semantic-ui-react";
+
+
 import { Scheduled } from "./Scheduled"
 import Notifications from "./Notifications"
 import { Line, Doughnut } from 'react-chartjs-2';
@@ -12,7 +14,7 @@ import {DateRange} from "../SharedUI/DateRange"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 import _ from "lodash";
-import "./style.css";
+// import "./style.css";
 
 @inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore", "UIStore", "UserStore")
 @observer
@@ -175,7 +177,7 @@ class DashboardFrame extends React.Component {
           subheader="Activities and Information Overview"
         />
         <div className="dashboardShortcuts">
-          <Segment width="100%">
+          <Segment>
             <Grid stackable columns={4}>
               <Grid.Row>
                 <Grid.Column>
@@ -241,8 +243,8 @@ class DashboardFrame extends React.Component {
           </div>
         </Segment>
         <br/>
-     
-        <Grid columns="three" divided stackable>
+     <br/>
+        <Grid className="grid-adjustment" columns="three" divided stackable>
           <Grid.Row>
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
@@ -270,7 +272,11 @@ class DashboardFrame extends React.Component {
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
-                <Grid divided>
+                <Grid className="grid-adjustment" divided>
+                {/* <Grid.Row>
+                  <Grid.Column width={13}> <p>"hi there"</p> </Grid.Column>
+                  <Grid.Column> <h4><CountUp duration={1} decimals={0} end={Math.floor(Math.random() * 627) + 3} /></h4> </Grid.Column>
+                </Grid.Row> */}
                 {topContent.length === 0? <span>No Data</span> : topContent}
                 </Grid>
               </Segment>
@@ -279,7 +285,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <div style={{marginTop: 0, paddingTop: 0, paddingBottom: 5}}>   <h4>All Sentiment Surveys</h4></div>
                 <div style={{paddingBottom: 10}}> 
-                  <Grid columns="equal">
+                  <Grid className="grid-adjustment" columns="equal">
                     <Grid.Row>
                       <Grid.Column>
                         <Icon style={{color:'#B908FA'}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 

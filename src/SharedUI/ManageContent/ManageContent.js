@@ -12,6 +12,7 @@ import { Keywords } from "./Keywords";
 import { ReviewAlerts } from "./ReviewAlerts";
 import { Schedule } from "./Schedule";
 import { History } from "./History";
+import { Channel } from "./Channel";
 import { generateID } from "../../SharedCalculations/GenerateID";
 import Settings from "./Settings";
 
@@ -304,6 +305,10 @@ class ManageContent extends React.Component {
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
                   imgData={DataEntryStore.contentmgmt.imgData}
                   output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
+                />
+                <Channel 
+                  mode={this.mode}
+                  defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
                 />
 
                 {DataEntryStore.contentmgmt.everPublished?

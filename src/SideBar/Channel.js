@@ -6,7 +6,6 @@ import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 import { modifyChannel, deleteChannel } from "../DataExchange/Up";
 import { channelUpdate } from "../DataExchange/PayloadBuilder";
 import { StdInputValidation} from "../SharedCalculations/StdInputValidation"
-import "./style.css";
 
 export const Channel = inject(
   "UIStore",

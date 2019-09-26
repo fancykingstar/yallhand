@@ -1,0 +1,26 @@
+
+@import "app";
+@import "semantic-ui";
+.SideAndAction {
+    @import "dashboard";
+    @import "sidebar";
+    h4 {  
+        font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+        font-weight: 700;
+        font-size: 1.1em;
+    }
+
+    p {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    th {
+        padding-top: 12px!important;
+        font-size: 1rem;
+        font-weight: 700;
+        font-family: "Nunito",'Helvetica Neue',Arial,Helvetica,sans-serif;
+    }
+
+ 
+}

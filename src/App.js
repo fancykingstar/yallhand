@@ -14,8 +14,8 @@ import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
-import "./App.css";
-import "./UserPortal/assets/css/normalize.scss";
+// import "./App.css";
+// import "./UserPortal/assets/css/normalize.scss";
 
 @inject("UIStore", "UserStore")
 @observer

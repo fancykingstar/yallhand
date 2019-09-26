@@ -19,7 +19,9 @@ export class DateTimeSelect extends React.Component {
   }
   
   validTimeConstraints () {
-    if(moment().isSame(this.state.currentDate, 'day')) {
+    const {currentDate} = this.state.currentDate
+    if (typeof(currentDate) === "number") this.setState({currentDate: moment(this.state.currentDate)});
+    if(currentDate && this.state.currentmoment().isSame(currentDate, 'day')) {
       return {
         hours: {
           min: this.state.currentDate.hours(),

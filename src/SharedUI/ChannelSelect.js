@@ -19,7 +19,7 @@ export class ChannelSelect extends React.Component {
     return (
       <React.Fragment>
         <Form.Select
-            label={label}
+            label={label + " "}
             search
             selection
             options={ChannelStore._channelSelect}

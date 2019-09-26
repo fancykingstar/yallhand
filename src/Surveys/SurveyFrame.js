@@ -5,10 +5,9 @@ import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
 import { SurveyStore } from "../Stores/SurveyStore";
+import { AccountStore} from "../Stores/AccountStore";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
-
-@inject("SurveyStore")
-@observer
 class SurveyFrame extends React.Component {
   
   render() {
@@ -29,7 +28,7 @@ class SurveyFrame extends React.Component {
     
     const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
 
-    const data = SurveyStore.allSurveys.map(survey => [survey.label, survey.updated, survey.userID, survey.stage])
+    const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.stage])
     
 
 
