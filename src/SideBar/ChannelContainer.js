@@ -5,8 +5,8 @@ import { ChannelSearch } from "./ChannelSearch";
 import { inject, observer } from "mobx-react";
 import { Transition } from "semantic-ui-react";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
-
 import "./style.css";
+
 
 @inject("ChannelStore", "PoliciesStore", "UIStore")
 @observer

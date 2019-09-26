@@ -15,7 +15,7 @@ import { getUser } from "./DataExchange/Fetch";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import "./App.css";
-
+import "./UserPortal/assets/css/normalize.scss";
 
 @inject("UIStore", "UserStore")
 @observer
@@ -33,26 +33,26 @@ class AppRoute extends React.Component {
     const { location } = this.props;
     this.state = {shouldRedirect: false, redirect: "/"}
 
-    // this.state = {shouldRedirect: false, redirect: "/"}
+    this.state = {shouldRedirect: false, redirect: "/"}
     // if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
     // else if (!UIStore._adminLoadingComplete) {
-    //   UserStore.setPreviewTeam("")
-    //   UserStore.setPreviewTag("")
-    //   const loadthings = async ()=>{
-    //     await loadAdmin();
-    //     const { isAuthenticated } = getUser() ? UserStore: false;
-    //     const path = location.pathname;
-    //     const loggedOutRoutes = ['/', '/register', '/forgot'];
-    //     const loggedInRoutes = ['/panel', '/portal'];
-    //     this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
-    //     if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
-    //     else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
-    //   }
-    //   fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
-    //     mode: 'no-cors',
-    //     }).then(() => loadthings())
-    //   .catch(() => toast.error("Unable to connect to Yallhands...", {hideProgressBar: true, autoClose: false, closeOnClick: false}) )
-    //   }
+      UserStore.setPreviewTeam("")
+      UserStore.setPreviewTag("")
+      const loadthings = async ()=>{
+        await loadAdmin();
+        const { isAuthenticated } = getUser() ? UserStore: false;
+        const path = location.pathname;
+        const loggedOutRoutes = ['/', '/register', '/forgot'];
+        const loggedInRoutes = ['/panel', '/portal'];
+        this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
+        // if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
+        // else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
+      }
+      fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
+        mode: 'no-cors',
+        }).then(() => loadthings())
+      .catch(() => toast.error("Unable to connect to Yallhands...", {hideProgressBar: true, autoClose: false, closeOnClick: false}) )
+      // }
     }
 
   render() {

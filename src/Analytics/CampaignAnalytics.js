@@ -43,7 +43,7 @@ export class CampaignAnalytics extends React.Component {
             
             <Header
             as="h2"
-            content="Survey Performance"
+            content="Email Campaign Performance"
             />
   
               <div style={{ marginTop: 15 }}>

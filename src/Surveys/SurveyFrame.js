@@ -6,9 +6,11 @@ import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
 import { SurveyStore } from "../Stores/SurveyStore";
 
+
 @inject("SurveyStore")
 @observer
 class SurveyFrame extends React.Component {
+  
   render() {
     const MenuContainer = styled.div`
       display: flex;
@@ -20,14 +22,16 @@ class SurveyFrame extends React.Component {
       }
     `;
 
-    const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
-
-    const data = SurveyStore.allSurveys.map(survey => [survey.label, survey.updated, survey.userID, survey.stage])
-    
     const handleClick = (survey) => {
       this.props.history.push(`/panel/surveys/manage-survey/${survey? survey.surveyID: ""}` );
 
     }
+    
+    const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
+
+    const data = SurveyStore.allSurveys.map(survey => [survey.label, survey.updated, survey.userID, survey.stage])
+    
+
 
     const options = {
       elevation: 1,
@@ -58,9 +62,10 @@ class SurveyFrame extends React.Component {
             </Button>
           </div>
         </MenuContainer>
+        <span>
+  </span>      
         <div style={{ marginTop: 15 }}>
           <MUIDataTable
-            // title={"Employee List"}
             data={data}
             columns={columns}
             options={options}

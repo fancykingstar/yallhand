@@ -21,7 +21,7 @@ import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
 
 // import 'bootstrap/dist/css/bootstrap.css';
-import "../assets/css/styles.scss";
+import "../assets/css/UserPortal.scss";
 
 const drawerWidth = 256;
 

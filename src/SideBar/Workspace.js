@@ -2,8 +2,6 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import "./style.css";
-
-
 @inject("AccountStore", "UserStore")
 @observer
 export class Workspace extends React.Component {

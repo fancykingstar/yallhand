@@ -1,12 +1,12 @@
 import React from 'react';
-// import { Switch } from 'react-router-dom';
-// import { BrowserRouter as Router } from "react-router-dom";
-// import { Route } from 'react-router';
+import { Switch } from 'react-router-dom';
+import { BrowserRouter as Router } from "react-router-dom";
+import { Route } from 'react-router';
 
 import Home from './views/pages/Home';
-// import Actions from './views/pages/Actions';
-// import Directory from './views/pages/Directory';
-// import ContentDetail from './views/pages/ContentDetail';
+import Actions from './views/pages/Actions';
+import Directory from './views/pages/Directory';
+import ContentDetail from './views/pages/ContentDetail';
 
 
 import history from './helpers/history';
@@ -14,7 +14,7 @@ import history from './helpers/history';
 export class UserPortal extends React.Component {
     render() {
         return (
-            <div>
+            <div className="UserPortal">
                 <Home/>
                 {/* <Router history={history}>
                     <Switch>
@@ -32,4 +32,4 @@ export class UserPortal extends React.Component {
     }
 }
 
-
+// export default App;

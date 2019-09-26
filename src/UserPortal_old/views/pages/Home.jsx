@@ -9,7 +9,6 @@ import Sidebar from '../components/Sidebar'
 import ImageBox from '../components/ImageBox';
 import IconBox from "../components/IconBox";
 
-
 // import Star from '../../assets/images/star.svg';
 import Star from '@material-ui/icons/Star';
 

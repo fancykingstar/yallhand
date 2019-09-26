@@ -1,13 +1,7 @@
-@font-face {
-	font-family: 'Conv_GothamRounded-Medium';
-	src: url('../fonts/GothamRounded-Medium.eot');
-	src: local('☺'), url('../fonts/GothamRounded-Medium.woff') format('woff'), url('../fonts/GothamRounded-Medium.ttf') format('truetype'), url('../fonts/GothamRounded-Medium.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
 
-*{margin: 0;padding: 0;}
-body, html, .MuiTypography-body1{font-family: 'Rubik', sans-serif;}
+
+
+
 :focus {
     outline: none;
 }
@@ -430,8 +424,11 @@ body{font-family: 'Rubik', sans-serif;}
 
 .staffDetailTab{
     .nav-link{padding: 10px 0px;margin-right: 15px;margin-bottom: 24px;color: #66696e;font-size: 14px;}
-    .nav-tabs .nav-link.active{background: no-repeat;border-color:transparent;border-bottom: 2px solid #1249bd;color: #0f141a
-        ;    
+    .nav-tabs .nav-link.active{
+        background: no-repeat;
+        border-color:transparent;
+        border-bottom: 2px solid #1249bd;
+        color: #0f141a;    
     }
 }
 
@@ -472,7 +469,10 @@ body{font-family: 'Rubik', sans-serif;}
     }
 }
 .PostDetailContent{
-    p{font-size: 20px;line-height: 28px;color: #0f141a;
+    p{
+        font-size: 20px;
+        line-height: 28px;
+        color: #0f141a;
         
     }
     @media(max-width: 767px) {
