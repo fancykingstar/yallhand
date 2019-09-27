@@ -8,15 +8,16 @@ import Layout from '../../layouts/DefaultLayout';
 import Sidebar from '../components/Sidebar'
 import ImageBox from '../components/ImageBox';
 import IconBox from "../components/IconBox";
+import {Survey} from "../components/Survey";
 
 import {AnnouncementsStore} from "../../../Stores/AnnouncementsStore";
 import {PoliciesStore} from "../../../Stores/PoliciesStore";
+import {SurveyStore} from "../../../Stores/SurveyStore";
 
 
 // import Star from '../../assets/images/star.svg';
 import Star from '@material-ui/icons/Star';
 
-import SurveyData from '../../data/survey.json';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 
@@ -32,12 +33,11 @@ class Home extends React.Component {
    }
    componentDidMount() {
       this.setState({
-         SurveyData: SurveyData,
+         SurveyData: SurveyStore.allSurveys,
          Announcements: AnnouncementsStore.allAnnouncements,
          faqs: PoliciesStore.allPolicies,
          suggestedActions: PostData.suggestedActions
       })
-      console.log("home ", AnnouncementsStore.allAnnouncements)
    }
    render() { 
       const { SurveyData, Announcements, faqs, suggestedActions } = this.state
@@ -117,24 +117,8 @@ class Home extends React.Component {
                         </div>
                         <div className="page_content shadow">
 
-                           {(SurveyData) ? SurveyData.map((item, index) => {
-                              return <div className="servay_group" key={index}>
-                                 <div className="inner_page_content_title">
-                                    <h5>{item.survey_group_label}</h5>
-                                    <p>23m ago</p>
-                                 </div>
-                                 {item.questions.map((question, innerIndex) => {
-                                    return <div className="check_question" key={innerIndex}>
-                                       <h6>{question.question}</h6>
-                                       {question.answer_options.map((option, opIndex) => {
-                                          return <label className="customCheckbox" key={opIndex}>
-                                             <input name="checkinput" value={opIndex} type="checkbox" />
-                                             <span>{option}</span>
-                                          </label>
-                                       })}
-                                    </div>
-                                 })}
-                              </div>
+                           {(SurveyData.length) ? SurveyData.map((item, index) => {
+                              return <Survey data={item} index={index}/>
                            }) : ('')}
 
                            <div className="announce_component">
@@ -169,7 +153,7 @@ class Home extends React.Component {
                            </div>
                         </div>
 
-                        <div>
+                        {/* <div>
                            <div className="section_title shadow">
                               <h4>Suggested Actions</h4>
                            </div>
@@ -186,12 +170,12 @@ class Home extends React.Component {
                                  })}
                               </div>
                            </div>
-                        </div>
+                        </div> */}
                      </Col>
-
+{/* 
                      <Col lg={{ width: 1280, size: 3, order: 2 }} md={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
                         <Sidebar />
-                     </Col>
+                     </Col> */}
                   </Row>
                </Container>
             </div>

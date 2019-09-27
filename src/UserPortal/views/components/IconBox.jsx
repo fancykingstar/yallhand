@@ -24,8 +24,8 @@ class IconBox extends React.Component {
         }
         else {
             return (
-                <a href="#/" onClick={this.props.showAction}>
-                    <div className="icon-box-wrap">
+                // <a href="#/" >
+                    <div onClick={this.props.showAction} className="icon-box-wrap">
                         <div className={"icon big " + this.props.iClass}>
 
                             {(this.props.user_img) ? <Svg src={this.props.user_img} default={Star} /> : <Star />}
@@ -34,7 +34,7 @@ class IconBox extends React.Component {
                         </div>
                         <div className="title">{this.props.title}</div>
                     </div>
-                </a>
+                // </a>
             )
         }
     }

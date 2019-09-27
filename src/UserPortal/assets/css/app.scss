@@ -84,8 +84,19 @@ body{font-family: 'Rubik', sans-serif;}
     p{font-size: 13px;line-height: 16px;color: #88878f;}
 }
 
+.survey_group_questions {
+   border:2px solid #e3e8ee;border-radius: 8px;
+   margin-bottom: 24px;
+}
+
+.survey_page {
+    padding-top: 15px;
+    background-color: #fff;
+}
+
 .check_question{
-    padding: 23px 24px;border:2px solid #e3e8ee;border-radius: 8px;margin-bottom: 24px;
+    padding: 12px 24px;
+    margin-bottom: 24px;
     h6{
         font-weight: 500;
         color: #0f141a;
@@ -576,3 +587,6 @@ body{font-family: 'Rubik', sans-serif;}
         }
     }
 }
+.binary_button {
+    margin: 15px;
+  }

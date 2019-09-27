@@ -5,11 +5,20 @@ import Typography from '@material-ui/core/Typography';
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import {UserStore} from '../../../Stores/UserStore';
 
 class Header extends React.Component {
+   constructor(props){
+      super(props);
+      this.state={user: null}
+   }
+   componentDidMount(){
 
+      this.setState({user: UserStore.user})
+   }
    render() {
       const pageTitle = this.props.pageTitle;
+      const user = this.state.user;
       return (
          <div className="page-header">
             <div className="container">
@@ -29,17 +38,17 @@ class Header extends React.Component {
                         </div>
                         <div className="header_right">
                            <div className="header_search">
-                              <form>
+                              {/* <form>
                                  <div className="search_div">
                                     <input type="text" name="search" placeholder="Search"></input>
                                     <button><img src={search_icon} alt="" /></button>
                                  </div>
-                              </form>
+                              </form> */}
                               <div className="header_select">
                                  <select>
-                                    <option>Edward</option>
-                                    <option>Edward1</option>
-                                    <option>Edward2</option>
+                                    <option>{user? user.displayName: ""}</option>
+                                    {/* <option>Edward1</option>
+                                    <option>Edward2</option> */}
                                  </select>
                               </div>
                            </div>

@@ -19,6 +19,8 @@ import Directory from '../assets/images/Directory.svg';
 import logo_img from "../assets/images/logo.png";
 import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
+import {AccountStore} from "../../Stores/AccountStore";
+
 
 // import 'bootstrap/dist/css/bootstrap.css';
 import "../assets/css/UserPortal.scss";
@@ -107,6 +109,9 @@ const DefaultLayout = ({ ...props }) => {
     function handleDrawerToggleMobile() {
         setMopen(!mopen);
     }
+
+    const account = AccountStore.account;
+
     return (
         <div className={clsx(classes.root, "topBorderBefore", (((width <= 992) ? !mopen : !open) ? "menuClosed" : 'menuOpen'))}>
             <CssBaseline />
@@ -132,53 +137,53 @@ const DefaultLayout = ({ ...props }) => {
                 open={(width <= 992) ? mopen : open}
             >
                 <div className="menuHeader">
-                    <h2 className="menu-header "><img src={logo_img} alt="Shell Global" />Shell Global</h2>
+                    <h2 className="menu-header "><img src={account.img} alt="org logo" />{account.label}</h2>
                 </div>
                 <div className="menu-content">
                     <List>
-                        <ListItem button key="home" component={Link} to="/">
+                        <ListItem button key="home" component={Link} to="/portal">
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
-                        <ListItem button key="actions" component={Link} to="actions">
+                        {/* <ListItem button key="actions" component={Link} to="actions">
                             <ListItemIcon><TouchAppIcon /></ListItemIcon>
                             <ListItemText primary="Actions" />
-                        </ListItem>
-                        <ListItem button key="events">
+                        </ListItem> */}
+                        {/* <ListItem button key="events">
                             <ListItemIcon><EventIcon /></ListItemIcon>
                             <ListItemText primary="Events" />
-                        </ListItem>
-                        <ListItem button key="announcements">
+                        </ListItem> */}
+                        <ListItem button key="announcements" component={Link} to='/portal/announcements' >
                             <ListItemIcon><img src={Announcements} alt="" /></ListItemIcon>
                             <ListItemText primary="Announcements" />
                         </ListItem>
-                        <ListItem button key="faqs">
+                        <ListItem button key="faqs" component={Link} to='/portal/learn'>
                             <ListItemIcon><HelpIcon /></ListItemIcon>
                             <ListItemText primary="Faqs" />
                         </ListItem>
-                        <ListItem button key="surveys">
+                        <ListItem button key="surveys" component={Link} to='/portal/surveys'>
                             <ListItemIcon><img src={Surveys} alt="" /></ListItemIcon>
                             <ListItemText primary="Surveys" />
                         </ListItem>
-                        <ListItem button key="directory" component={Link} to="directory">
+                        {/* <ListItem button key="directory" component={Link} to="directory">
                             <ListItemIcon><img src={Directory} alt="" /></ListItemIcon>
                             <ListItemText primary="Directory" />
-                        </ListItem>
+                        </ListItem> */}
 
                         <ListItem button key="files">
                             <ListItemIcon><FaRegFileAlt /></ListItemIcon>
                             <ListItemText primary="Files" />
                         </ListItem>
 
-                        <ListItem button key="mysaved">
+                        {/* <ListItem button key="mysaved">
                             <ListItemIcon><img src={MySaved} alt="" /></ListItemIcon>
                             <ListItemText primary="My Saved" />
-                        </ListItem>
+                        </ListItem> */}
                     </List>
 
                 </div>
                 <div className="menu-footer">
-                    <img src={menu_footer_logo_img} alt="Shell Global" />
+                    <img src={menu_footer_logo_img} alt="yallhands" />
                     {/* yallhands */}
                 </div>
             </Drawer>
