@@ -446,9 +446,11 @@ body{font-family: 'Rubik', sans-serif;}
         background-image: linear-gradient(to right, #2bf1f8,#4784f6,#8b3dee,#d424de,#da17b1);
     }
     .contentDetailTitle{padding: 40px 0;}
-    .contentBigImage{margin-bottom: 32px;
+    .contentBigImage{
+        margin-bottom: 32px;
         img{
             margin: auto;
+            max-height: 600px;
         }
     }
 }

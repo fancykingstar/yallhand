@@ -1,5 +1,6 @@
 import React from 'react';
 import * as constants from "../../constants/constants.js";
+import { withRouter } from "react-router-dom";
 
 class ImageBox extends React.Component {
     render() {
@@ -8,14 +9,17 @@ class ImageBox extends React.Component {
         classes += " " + this.props.main_class;
         return (
             (box_type === 'announce') ? (
-                <div className={classes}>
+                <div className={classes}
+                    onClick={()=> this.props.history.push(this.props.url)}
+                >
                     <div className="announce_img">
                         <a className="settings_icon" href="#/"><img src={constants.SETTING_ICON} alt="setting" /></a>
-                        <a className="link_announce" href={((this.props.url) && this.props.url !== '') ? this.props.url : "#/"}>
+                        {/* <a className="link_announce" href={((this.props.url) && this.props.url !== '') ? this.props.url : "#/"}> */}
                             <img src={this.props.user_img} alt={this.props.title} />
                             <div className="announce_title">
                                 <h4>{this.props.title}</h4>
-                            </div></a>
+                            </div>
+                            {/* </a> */}
                     </div>
                 </div>) :
                 (box_type === "suggession") ? (
@@ -43,4 +47,5 @@ class ImageBox extends React.Component {
     }
 }
 
-export default ImageBox;
+// export default ImageBox;
+export default withRouter(ImageBox);

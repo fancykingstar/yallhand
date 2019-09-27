@@ -9,12 +9,16 @@ import Sidebar from '../components/Sidebar'
 import ImageBox from '../components/ImageBox';
 import IconBox from "../components/IconBox";
 
+import {AnnouncementsStore} from "../../../Stores/AnnouncementsStore";
+import {PoliciesStore} from "../../../Stores/PoliciesStore";
+
 
 // import Star from '../../assets/images/star.svg';
 import Star from '@material-ui/icons/Star';
 
 import SurveyData from '../../data/survey.json';
 import PostData from '../../data/home.json';
+import { css } from '@material-ui/system';
 
 class Home extends React.Component {
    constructor(props) {
@@ -29,12 +33,13 @@ class Home extends React.Component {
    componentDidMount() {
       this.setState({
          SurveyData: SurveyData,
-         Announcements: PostData.featuredContent.Announcements,
-         faqs: PostData.featuredContent.FAQs,
+         Announcements: AnnouncementsStore.allAnnouncements,
+         faqs: PoliciesStore.allPolicies,
          suggestedActions: PostData.suggestedActions
       })
+      console.log("home ", AnnouncementsStore.allAnnouncements)
    }
-   render() {
+   render() { 
       const { SurveyData, Announcements, faqs, suggestedActions } = this.state
       const settings = {
          dots: false,
@@ -138,7 +143,7 @@ class Home extends React.Component {
                                  <Slider {...settings}>
                                     {Announcements.map((item, index) => {
                                        return <ImageBox
-                                          url="content-detail"
+                                          url={`/portal/announcement/${item.announcementID}`}
                                           main_class={"auto-col"}
                                           user_img={item.img}
                                           title={item.label}
@@ -152,6 +157,7 @@ class Home extends React.Component {
                                     <Slider {...settings}>
                                        {faqs.map((item, index) => {
                                           return <ImageBox
+                                             url={`/portal/learn-detail/${item.policyID}`}
                                              key={index}
                                              main_class={"auto-col"}
                                              user_img={item.img}

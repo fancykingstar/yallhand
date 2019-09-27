@@ -1,5 +1,6 @@
 import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
+import {inject, observer} from "mobx-react";
 
 import { Row } from 'reactstrap';
 
@@ -8,6 +9,11 @@ import PostDetails from '../components/PostDetails';
 import QuestionAnswer from '../components/QuestionAnswer';
 import ContentData from '../../data/content-detail.json';
 
+// import { AnnouncementsStore } from "../../../Stores/AnnouncementsStore";
+// import { PoliciesStore} from "../../../Stores/PoliciesStore";
+
+@inject("AnnouncementsStore", "PoliciesStore")
+@observer
 class ContentDetail extends React.Component {
    constructor(props) {
       super(props);
@@ -16,11 +22,16 @@ class ContentDetail extends React.Component {
          PostData: '',
          qaData: []
       }
+      const {AnnouncementsStore, PoliciesStore} = this.props;
+      console.log("construct", AnnouncementsStore.allAnnouncements.length)
    }
    componentDidMount() {
+      const {AnnouncementsStore, PoliciesStore} = this.props;
+      const urlData = {path:  this.props.match.url, id: this.props.match.params.id}
+      const content = urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
       this.setState({
          Announcements: ContentData.suggested,
-         PostData: ContentData.post,
+         PostData: content,
          qaData: ContentData.questionAnswer
       });
 
@@ -34,13 +45,13 @@ class ContentDetail extends React.Component {
             <div className="">
                <div className="">
                   <PostDetails post={PostData} />
-
+{/* 
                   <div className="page_content_bg">
                      <div className="smallContainer">
                         <QuestionAnswer qaData={qaData} />
                      </div>
-                  </div>
-                  <div className="announcements-wrap">
+                  </div> */}
+                  {/* <div className="announcements-wrap">
                      <div className="smallContainer">
                         <div className="title-box">More from Announcements</div>
                         <div className="slider_wrap announce_main_box">
@@ -54,7 +65,7 @@ class ContentDetail extends React.Component {
                            </Row>
                         </div>
                      </div>
-                  </div>
+                  </div> */}
 
 
                </div>
