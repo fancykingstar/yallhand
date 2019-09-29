@@ -25,7 +25,8 @@ const refresh = {
   files: () => reload.files(accountID()),
   campaigns: () => reload.campaigns(accountID()),
   account: () => reload.account(accountID()),
-  surveys: () => reload.surveys(accountID())
+  surveys: () => reload.surveys(accountID()),
+  tasks: () => reload.tasks(accountID()),
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
@@ -387,6 +388,26 @@ export const deleteSurvey = (surveyID) => {
   true,{"event": "delete", "type":"survey"})
 }
 
+///TASKS
+export const createTask = (payload) => {
+  return processTemplate(true, "tasks", "POST", payload, "tasks", 
+      "Your new task has been created 🙌", 
+      true,{"event": "create", "type":"task"}
+  )
+}
+
+export const modifyTask = (payload) => {
+  processTemplate(true, "tasks/" + payload.taskID, "PATCH", payload, "tasks", 
+  "Your tasks has been updated 🛠", 
+  true,{"event": "update", "type":"task"}
+)
+}
+
+export const deleteTask = (taskID) => {
+  processTemplate(false, "tasks/" + taskID, "DELETE", {}, "tasks", 
+  "Selected tasks deleted 👋", 
+  true,{"event": "delete", "type":"task"})
+}
 
 
 

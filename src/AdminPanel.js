@@ -12,6 +12,8 @@ import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
+import TaskFrame from "./Tasks/TaskFrame";
+import TaskNewEdit from "./Tasks/TasksNewEdit";
 import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -95,8 +97,11 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/storage" component={ResourcesFrame} />
             <Route path="/panel/surveys" component={SurveyFrame} exact/>
+            <Route path="/panel/tasks/manage-task/:id" component={TaskNewEdit} />
+            <Route path="/panel/tasks/manage-task" component={TaskNewEdit} />
+            <Route path="/panel/tasks" component={TaskFrame} exact/>
             <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
-            <Route path="/panel/surveys/manage-survey/" component={SurveyNewEdit} exact/>
+            <Route path="/panel/surveys/manage-survey" component={SurveyNewEdit} exact/>
             <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
             <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
@@ -111,9 +116,9 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
             <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
             <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
-            <Route path="/panel/*">
+            {/* <Route path="/panel/*">
                 <Redirect push to="/panel"/>
-           </Route>
+           </Route> */}
 
           </Switch>
 

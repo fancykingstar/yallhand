@@ -66,7 +66,13 @@ class NavItems extends React.Component {
         />  
         <br />
         </React.Fragment>
-    
+       <NavItem
+          id="tasks"
+          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
+          label="Tasks"
+          active={UIStore.sideNav.activePrimary === "tasks"}
+        />  
+        <br />
 
 
         <NavItem
@@ -93,6 +99,7 @@ class NavItems extends React.Component {
           active={UIStore.sideNav.activePrimary === "storage"}
         />
         <br/>
+        
 
       {/* {UserStore.user.invitedBy !== "admin"?"":
       <React.Fragment>

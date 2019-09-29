@@ -60,17 +60,15 @@ class ActionsForm extends React.Component {
                             <Row form>
                                 <Col md={3}>
                                     <FormGroup>
-                                        <Label for="colleague">Select Colleague</Label>
+                                        <Label for="colleague">Question Raised By</Label>
                                         <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
-                                            <option>Dylan Spencer</option>
-                                            <option>Dylan Spencer2</option>
-                                            <option>Dylan Spencer3</option>
-                                            <option>Dylan Spencer4</option>
-                                            <option>Dylan Spencer5</option>
+                                            <option>One employee</option>
+                                            <option>Multiple employees</option>
+                                            <option>Management</option>
                                         </Input>
                                     </FormGroup>
                                 </Col>
-                                <Col md={3}>
+                                {/* <Col md={3}>
                                     <FormGroup>
                                         <Label for="props_for">Give props for</Label>
                                         <Input type="select" name="props_for" id="props_for" onChange={this.handleInputChange.bind(this)}>
@@ -81,28 +79,28 @@ class ActionsForm extends React.Component {
                                             <option>Teamwork5</option>
                                         </Input>
                                     </FormGroup>
-                                </Col>
+                                </Col> */}
                                 <Col>
                                     <FormGroup>
-                                        <Label for="description">Describe (optional)</Label>
+                                        <Label for="description">Question</Label>
                                         <InputGroup>
                                             <Input placeholder="Enter your message here…" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
-                                            <InputGroupAddon addonType="append">
-                                                <MoodIcon className="right-icon" />
-                                            </InputGroupAddon>
+                                            {/* <InputGroupAddon addonType="append">
+                                                <QuestionIcon className="right-icon" />
+                                            </InputGroupAddon> */}
                                         </InputGroup>
 
                                     </FormGroup>
                                 </Col>
                             </Row>
-                            <Row>
+                            {/* <Row>
                                 <Col>
                                     <FormGroup check className="pretty-checkbox">
                                         <Input type="checkbox" name="no_feed" id="no_feed" onChange={this.handleInputChange.bind(this)} />
                                         <div className="state"><Label for="no_feed" check>Private (don’t add to feed)</Label></div>
                                     </FormGroup>
                                 </Col>
-                            </Row>
+                            </Row> */}
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.hideActionForm.bind(this)}>Cancel</Button>

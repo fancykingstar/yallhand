@@ -9,10 +9,14 @@ import Sidebar from '../components/Sidebar'
 import ImageBox from '../components/ImageBox';
 import IconBox from "../components/IconBox";
 import {Survey} from "../components/Survey";
+import {Task} from "../components/Task";
+
+import ActionSlider from "../components/ActionsSlider";
 
 import {AnnouncementsStore} from "../../../Stores/AnnouncementsStore";
 import {PoliciesStore} from "../../../Stores/PoliciesStore";
 import {SurveyStore} from "../../../Stores/SurveyStore";
+import {TaskStore} from "../../../Stores/TaskStore";
 
 
 // import Star from '../../assets/images/star.svg';
@@ -26,6 +30,7 @@ class Home extends React.Component {
       super(props);
       this.state = {
          SurveyData: [],
+         TaskData: [],
          Announcements: [],
          faqs: [],
          suggestedActions: []
@@ -34,13 +39,14 @@ class Home extends React.Component {
    componentDidMount() {
       this.setState({
          SurveyData: SurveyStore.allSurveys,
+         TaskData: TaskStore.allTasks,
          Announcements: AnnouncementsStore.allAnnouncements,
          faqs: PoliciesStore.allPolicies,
          suggestedActions: PostData.suggestedActions
       })
    }
    render() { 
-      const { SurveyData, Announcements, faqs, suggestedActions } = this.state
+      const { SurveyData, TaskData, Announcements, faqs, suggestedActions } = this.state
       const settings = {
          dots: false,
          infinite: false,
@@ -104,7 +110,7 @@ class Home extends React.Component {
                   slidesToShow: 1,
                }
             }
-         ]
+         ] 
       };
       return (
          <Layout pageTitle="Home" >
@@ -116,6 +122,10 @@ class Home extends React.Component {
                            <h4>Featured</h4>
                         </div>
                         <div className="page_content shadow">
+
+                        {(TaskData.length) ? TaskData.map((item, index) => {
+                              return <Task data={item} index={index}/>
+                           }) : ('')}
 
                            {(SurveyData.length) ? SurveyData.map((item, index) => {
                               return <Survey data={item} index={index}/>
@@ -153,8 +163,9 @@ class Home extends React.Component {
                            </div>
                         </div>
 
-                        {/* <div>
-                           <div className="section_title shadow">
+                        
+                        
+                           {/* <div className="section_title shadow">
                               <h4>Suggested Actions</h4>
                            </div>
                            <div className="page_content shadow">
@@ -169,8 +180,8 @@ class Home extends React.Component {
                                        title={item.label} />
                                  })}
                               </div>
-                           </div>
-                        </div> */}
+                           </div> */}
+                     
                      </Col>
 {/* 
                      <Col lg={{ width: 1280, size: 3, order: 2 }} md={{ size: 12, order: 1 }} xs={{ size: 12, order: 1 }}>
@@ -178,7 +189,9 @@ class Home extends React.Component {
                      </Col> */}
                   </Row>
                </Container>
+               <ActionSlider/>
             </div>
+ 
          </Layout>
       );
    }

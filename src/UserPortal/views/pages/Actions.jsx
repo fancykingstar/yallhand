@@ -191,7 +191,7 @@ class Actions extends React.Component {
          <Layout pageTitle="Actions" >
             <div className="home_container">
                {/** Featured actions */}
-               <Container>
+               {/* <Container>
                   <div className="section_title shadow">
                      <h4>Featured</h4>
                   </div>
@@ -210,7 +210,7 @@ class Actions extends React.Component {
                         </Slider>
                      </div>
                   </div>
-               </Container>
+               </Container> */}
                {/** General Actions */}
                <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
                   <Container className="actions-container">
@@ -248,7 +248,7 @@ class Actions extends React.Component {
                   </Container>
                </Slider>
                {/** Company Actions */}
-               <Slider ref={sliderCompany => (this.sliderCompany = sliderCompany)} {...settings_components_slide}>
+               {/* <Slider ref={sliderCompany => (this.sliderCompany = sliderCompany)} {...settings_components_slide}>
                   <Container>
                      <div className="section_title shadow">
                         <h4>Company Actions</h4>
@@ -284,7 +284,7 @@ class Actions extends React.Component {
                         selectedActionData={this.state.selectedActionDataCompany}
                      />
                   </Container>
-               </Slider>
+               </Slider> */}
             </div>
          </Layout>
       );
