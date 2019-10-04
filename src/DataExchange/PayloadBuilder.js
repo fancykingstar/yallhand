@@ -5,7 +5,9 @@ import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore";
 import { TeamStore } from "../Stores/TeamStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
+import { generateID } from "../SharedCalculations/GenerateID";
 import _ from "lodash";
+
 
 
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
@@ -345,32 +347,31 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
 
   ///POLICIES (FAQs) & ANNOUNCEMENT
-  export const content = (type) => {
-    const buildObj = {
-      teamID: DataEntryStore.content.teamID,
-      chanID: UIStore.sideNav.activeChannel,
-      label: DataEntryStore.contentmgmt.label,
-      img: "",
-      everPublished: DataEntryStore.content.stage === "published" ? true : false,
-      reviewAlert: AccountStore.account.reviewAlert,
-      keywords: [],
+
+  export const content = (obj) => {
+    const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+    return {
+      chanID: !chanID? "All": chanID,
+      label,
       accountID: accountID(),
+      img,
+      everPublished: stage === "published",
+      reviewAlert: 0,
+      keywords: [],
       variations: [
         {
-        variationID: UIStore.content.variationID,
-        stage: DataEntryStore.content.stage,
-        teamID: DataEntryStore.content.teamID,
-        label: "",
+        variationID: generateID(),
+        stage: !stage? "draft": stage,
+        teamID: !teamID? "global": teamID,
+        label: teamID === !teamID && !tagID? "": label,
+        tags: tagID? [tagID]:[],
+        contentRAW,
+        contentHTML,
         userID: userID(),
-        updated: now(),
-        tags: DataEntryStore.content.tagID === "" || DataEntryStore.content.tagID === "none" ? [] : [DataEntryStore.content.tagID],
-        contentRAW: DataEntryStore.draftContentRAW,
-        contentHTML: DataEntryStore.draftContentHTML
+        updated: now()
         }
       ]      
     };
-
-    return buildObj
   }
 
   export const contentEdit = (type) => {

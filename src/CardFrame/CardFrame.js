@@ -2,6 +2,7 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { Header, Image} from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
+import { LazyImg } from "../SharedUI/LazyImg"; 
 
 import MUIDataTable from "mui-datatables";
 import "./style.css";
@@ -43,7 +44,7 @@ export class CardFrame extends React.Component {
       
     const columns = ["","Title", "Last Updated", "Channel","State"];
 
-    const data = PoliciesStore.allPolicies.map(pol => [<img style={{height: 75, width: 120, objectFit: pol.img? "cover":"contain" }} src={pol.img? pol.img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"} size="tiny"/>,pol.label, UTCtoFriendly(pol.updated), ChannelStore._getLabel(pol.chanID), pol.state])
+    const data = PoliciesStore.allPolicies.map(pol => [<LazyImg style={{height: 75, width: 120, objectFit: pol.img? "cover":"contain" }} src={pol.img? pol.img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"} size="tiny"/>,pol.label, UTCtoFriendly(pol.updated), ChannelStore._getLabel(pol.chanID), pol.state])
     
     const options = {
       elevation: 1,

@@ -140,3 +140,44 @@ body {
     }
   }
   
+
+  .yh-table {
+    .header {
+      padding: 10px 0 10px;
+      border-top: 1px solid #E6EAEE;
+      border-bottom: 1px solid #E6EAEE;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,.04);
+      background-color: #F5F8FA;
+      color: rgb(126, 131, 138);
+      font-family: Rubik;
+    }
+
+
+    .rowe {
+      padding: 10px 0;
+      border-bottom: 1px solid #E6EAEE;
+      vertical-align: middle;
+
+      td {
+        vertical-align: middle;
+      }
+    }
+
+    tbody {
+      tr:hover {
+        background-color: rgba(196, 232, 255, 0.304);
+      }
+  }
+
+    .softFont {
+      color:  rgb(94, 98, 111) !important;
+    }
+
+    .yh-table-action {
+      display: none;
+    }
+
+    .yh-table-action-wrapper:hover .yh-table-action {
+      display: inline-block;
+    }
+  }

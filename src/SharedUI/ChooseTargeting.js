@@ -32,7 +32,7 @@ export class ChooseTargeting extends React.Component {
     };
 
     const options =
-      TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
+      (TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
         { text: "To Everyone", value: "all" },
         { text: "To Selected Teams/Tags", value: "teams" },
         { text: "To Select Users", value: "users" }
@@ -41,7 +41,9 @@ export class ChooseTargeting extends React.Component {
       ([
         { text: "To Everyone", value: "all" },
         { text: "To Select Users", value: "users" }
-      ]);
+      ])).filter(opt => 
+          this.props.NoSelectUsers? opt.value !== "users": true
+        );
 
 
     const targetOptions =

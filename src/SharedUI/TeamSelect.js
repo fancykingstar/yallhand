@@ -20,6 +20,7 @@ export class TeamSelect extends React.Component {
       <Fragment>
         {TeamStore.structure.length !== 1 ?
           <Form.Dropdown
+            fluid
             {...val}
             search
             selection

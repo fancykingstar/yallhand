@@ -60,7 +60,7 @@ class SurveyFrame extends React.Component {
               <Icon name="plus" /> Create New...{" "}
             </Button>
           </div>
-        </MenuContainer>
+        </MenuContainer> 
         <span>
   </span>      
         <div style={{ marginTop: 15 }}>

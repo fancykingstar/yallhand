@@ -107,6 +107,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
             <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
+            <Route path="/panel/announcements/announcement-variation" component={NewEditVariation} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />
             <Route path="/panel/email" component={EmailFrame} />
@@ -116,9 +117,9 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
             <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
             <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
-            {/* <Route path="/panel/*">
+            <Route path="/panel/*">
                 <Redirect push to="/panel"/>
-           </Route> */}
+           </Route>
 
           </Switch>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
-import { Menu, Icon } from "semantic-ui-react";
+import { Dropdown, Icon } from "semantic-ui-react";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "../style.css";
 
@@ -42,16 +42,18 @@ export class PublishControls extends React.Component {
       restore: "Restore"
     };
 
+
     return (
-      <div className={UIStore.responsive.isMobile? "PubControlsH" : "PubControlsV"}>
-        <Menu compact icon="labeled" vertical={UIStore.responsive.isMobile? false : true} size="mini" inverted>
-          <Menu.Item style={{color: "#2fc7f8"}}>Currently: {stage.charAt(0).toUpperCase() + stage.substring(1)}</Menu.Item>
-          {actionOptions[stage].map(opt => <Menu.Item key={"pubctrl" + giveMeKey()} name={opt} onClick={this.handleItemClick}>
-            <Icon name={iconKey[opt]} size="small" />
-            {displayText[opt]}
-          </Menu.Item>)}
-        </Menu>
-      </div>
+
+      <Dropdown 
+      button style={{backgroundColor: "#267EA3", color: "#FFFFFF"}} text="Update">
+      <Dropdown.Menu>
+      {actionOptions[stage].map(opt =>
+        <Dropdown.Item key={"pubctrl" + giveMeKey()} text={displayText[opt]} icon={iconKey[opt]} name={opt} onClick={this.handleItemClick}  />
+      )}
+      </Dropdown.Menu>
+      </Dropdown>
+
     );
   }
 }
