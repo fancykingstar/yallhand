@@ -195,9 +195,9 @@ export const userUpdate = () => {
 
 
 ///CHANNELS
-export const channel = () => {
+export const channel = (label) => {
   const buildObj = {
-    "label": DataEntryStore.channel.label
+    label
   }
   return _.extend({}, base(), buildObj)
 }
@@ -374,25 +374,52 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     };
   }
 
-  export const contentEdit = (type) => {
-    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
-    const buildObj = {
-        variationID: UIStore.content.variationID,
-        stage: DataEntryStore.content.stage,
-        teamID: DataEntryStore.content.teamID,
-        label: DataEntryStore.content.label,
-        userID: userID(),
-        updated: now(),
-        tags: DataEntryStore.content.tagID === ""  || DataEntryStore.content.tagID === "none"? [] : [DataEntryStore.content.tagID],
-        contentRAW: DataEntryStore.draftContentRAW,
-        contentHTML: DataEntryStore.draftContentHTML   
-    }
-    const newVariations = parent.variations.filter(vari => vari.variationID !== UIStore.content.variationID)
-    newVariations.push(buildObj)
-    const patchObj = {accountID: accountID(), variations: newVariations}
-    patchObj[type + "ID"] = UIStore.content[type + "ID"]
-    if(DataEntryStore.content.stage === "published"){patchObj.everPublished = true}
-    return patchObj
+  export const contentEdit = (obj, mode, contentID, variID) => {
+    // const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+    let updatedFields = {};
+    Object.keys(obj).forEach((key, i) => { if(obj[key]) updatedFields[key] = obj[key]});
+
+    let newContentValues = {}
+    if (updatedFields.img) newContentValues.img = updatedFields.img;
+    if (updatedFields.chanID) newContentValues.chanID = updatedFields.chanID;
+    newContentValues[`${mode}ID`] = contentID;
+
+    let newVariValues = {};
+    if (updatedFields.label) newVariValues.label = updatedFields.label;
+    if (updatedFields.contentRAW) newVariValues.contentRAW = updatedFields.contentRAW;
+    if (updatedFields.contentHTML) newVariValues.contentHTML = updatedFields.contentHTML;
+    if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
+    if (updatedFields.tagID) newVariValues.tags = [updatedFields.tagID];
+    if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
+
+    const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));
+    const variations = parent.variations.slice();
+    const editedVari = variations.filter(i=>i.variationID === variID)[0];
+    const otherVaris = variations.filter(i=> i.variationID !== variID);
+    
+    newContentValues.variations = [...otherVaris, ...[Object.assign(editedVari, newVariValues)]]
+    if(updatedFields === "published") newContentValues.everPublished = true;
+
+    return newContentValues;
+
+    // const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
+    // const buildObj =  {
+    //     variationID: generateID(),
+    //     stage: !stage? "draft": stage,
+    //     teamID: !teamID? "global": teamID,
+    //     label: teamID === !teamID && !tagID? "": label,
+    //     tags: tagID? [tagID]:[],
+    //     contentRAW,
+    //     contentHTML,
+    //     userID: userID(),
+    //     updated: now()
+    //   }
+    // const newVariations = parent.variations.filter(vari => vari.variationID !== UIStore.content.variationID)
+    // newVariations.push(buildObj)
+    // const patchObj = {accountID: accountID(), variations: newVariations}
+    // patchObj[type + "ID"] = UIStore.content[type + "ID"]
+    // if(DataEntryStore.content.stage === "published"){patchObj.everPublished = true}
+    // return patchObj
   }
   
   export const contentPatch = (newObj) => {

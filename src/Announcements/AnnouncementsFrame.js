@@ -55,12 +55,13 @@ class AnnouncementsFrame extends React.Component {
       DataEntryStore.set("contentmgmt", "keywords",  announcement.keywords)
       DataEntryStore.set("contentmgmt", "reviewAlert",  announcement.reviewAlert)
       this.props.history.push(
-        "/panel/announcements/manage-announcement/" + UIStore.content.announcementID
+        `/panel/announcements/${UIStore.content.announcementID}`
+        // "/panel/announcements/manage-announcement/" + UIStore.content.announcementID
       );
     };
 
     const createContent = () => {
-      this.props.history.push(this.mode === "policy"? "/panel/faqs/policy-variation" : "/panel/announcements/announcement-variation")
+      this.props.history.push(this.mode === "policy"? "/panel/faqs/policy-variation" :  `/panel/announcements/content/new`)
       // DataEntryStore.set("content", "contentRAW", null)
       // DataEntryStore.set("content", "isNew", true);
       // DataEntryStore.set("content", "stage", "draft");

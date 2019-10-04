@@ -41,6 +41,7 @@ class VariationContent extends React.Component {
       tagID: "",
       stage: "",
       img: "",
+      imgData: "",
       chanID: "",
       resourceID: "",
       _options: "",
@@ -52,16 +53,16 @@ class VariationContent extends React.Component {
 
   changeStage(stage) {
     const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
-    const {mode, isNew} = this.props.data;
+    const {mode, isNewContent, contentID, variID} = this.props.data;
 
     this.setState({stage});
 
     const isPolicy = mode === "policy";
-    const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
+    const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
     const typeId = `${mode}ID`;
     
-    if (isNew) {
-      (isPolicy ? createPolicy(content(mode)) : createAnnouncement(content(this.state))).then(res => {
+    if (isNewContent) {
+      (isPolicy ? createPolicy(content(this.state)) : createAnnouncement(content(this.state))).then(res => {
         if (isPolicy) PoliciesStore.pushPolicies(res);
         else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
@@ -71,10 +72,13 @@ class VariationContent extends React.Component {
       });
     }
     else {
-      if (isPolicy) modifyPolicy(contentEdit(mode));
-      else modifyAnnouncement(contentEdit(mode));
-      this.reset();
-        history.push(`${path}${UIStore.content[mode + "ID"]}`);
+
+      console.log("modified", contentEdit(this.state, mode, contentID, variID));
+
+      // if (isPolicy) modifyPolicy(contentEdit(this.state, mode, contentID, variID));
+      // else modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
+      // this.reset();
+        // history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
 
@@ -88,7 +92,7 @@ class VariationContent extends React.Component {
 
   render() {
     const { DataEntryStore, UIStore } = this.props;
-    const {content, isNew, mode} = this.props.data;
+    const {content, isNewContent, mode} = this.props.data;
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
@@ -105,8 +109,8 @@ class VariationContent extends React.Component {
     const displayOptions = _options && 
       {
         "attach": attachFiles,
-        "image": <FeaturedImage mode={mode} defaultImgUrl={DataEntryStore.contentmgmt.img} imgData={DataEntryStore.contentmgmt.imgData} output={val => DataEntryStore.set("contentmgmt", "bundle", val)} />,
-        "channel": <Channel mode={mode} defaultChannel={DataEntryStore.contentmgmt.settingsChannel} />
+        "image": <FeaturedImage mode={mode} defaultImgUrl={content.img} imgData={content.imgData} output={val => this.setState({img: val.img, imgData: val.imgData? val.imgData: ""})} />,
+        "channel": <Channel mode={mode} defaultChannel={content.chanID} output={val => this.setState({chanID: val})} />
 
       }[_options]
 
@@ -118,7 +122,7 @@ class VariationContent extends React.Component {
           />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
-          {DataEntryStore.content.isNew ? "Creating" : "Editing"} {this.props.mode.charAt(0).toUpperCase() + this.props.mode.slice(1)} 
+          {DataEntryStore.content.isNew ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
 
         <TextField
@@ -131,7 +135,7 @@ class VariationContent extends React.Component {
               shrink: true,
             }}
             onChange={e=>this.setState({label: e.target.value})}
-            defaultValue={isNew? "" : content.variations[0].label? content.variations[0].label : content.label }
+            defaultValue={isNewContent? "" : content.variations[0].label? content.variations[0].label : content.label }
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
@@ -143,7 +147,7 @@ class VariationContent extends React.Component {
              <div style={{ paddingTop: "10px" }}>
               <ChooseTargeting 
                 NoSelectUsers 
-                label={this.props.mode} 
+                label={mode} 
                 echostate={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tagID": ""}:{"teamID": val.sendToTeamID, "tagID": val.sendToTagID})}
                 />
             </div>
@@ -151,7 +155,7 @@ class VariationContent extends React.Component {
           </Row>
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
-            <PublishControls stage={isNew? "draft" : content.variations[0].stage} onClick={val => this.changeStage(val)} />
+            <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : content.variations[0].stage} onClick={val => this.changeStage(val)} />
             <CommonOptions handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
             </Col>
           </Row>

@@ -62,7 +62,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
             <Form.Select
               fluid
               id=""
-              label="Add this content to which email campaign"
+              label="Add to email campaign"
               options={campaigns}
               defaultValue={"new"}
               onChange={(e, val) => handleSelect(val.value)}

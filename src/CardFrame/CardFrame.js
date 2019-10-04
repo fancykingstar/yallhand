@@ -1,19 +1,47 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Image} from "semantic-ui-react";
+import { Header, Button, Icon} from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 import { LazyImg } from "../SharedUI/LazyImg"; 
 
+import styled from "styled-components";
+
 import MUIDataTable from "mui-datatables";
-import "./style.css";
+
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
+import "./style.css";
 
 
 @inject("PoliciesStore", "AccountStore", "UIStore", "DataEntryStore", "ChannelStore")
 @observer
 export class CardFrame extends React.Component {
+  getMuiTheme = () => createMuiTheme({
+    overrides: {
+      MUIDataTable: {
+        root: {
+          backgroundColor: "#FF000"
+        },
+        paper: {
+          boxShadow: "none",
+          border: "2px solid #e3e8ee",
+          borderRadius: 8
+        }
+      }}}
+  );
   render() {
     const { PoliciesStore, UIStore, DataEntryStore, ChannelStore } = this.props;
+
+    const MenuContainer = styled.div`
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    paddingbottom: 30px;
+    @media (max-width: 580px) {
+      justify-content: center;
+      flex-direction: column;
+    }
+  `;
 
     const handleClick = val => {
       UIStore.set("content", "policyID", val.policyID)
@@ -25,9 +53,14 @@ export class CardFrame extends React.Component {
       DataEntryStore.set("contentmgmt", "keywords",  policy.keywords)
       DataEntryStore.set("contentmgmt", "reviewAlert",  policy.reviewAlert)
       this.props.history.push(
-        "/panel/faqs/manage-policy/" + UIStore.content.policyID
+        // "/panel/faqs/manage-policy/" + UIStore.content.policyID
+        `/panel/faqs/${UIStore.content.policyID}`
       );
     };
+
+    const createContent = () => {
+      this.props.history.push("/panel/faqs/content/new")
+    }
 
     // const filteredByChannel =
     //   UIStore.sideNav.activeChannel === "All"
@@ -60,7 +93,7 @@ export class CardFrame extends React.Component {
     };
     
     return (
-        <React.Fragment>
+       <React.Fragment>
         <div>
         
         <Header as="h2"
@@ -71,20 +104,31 @@ export class CardFrame extends React.Component {
             Add frequently asked questions and answers
           </Header.Subheader>
         </Header>
-
+        <MenuContainer>
+          <div style={{ textAlign: "center" }}>
+            <Button color="blue" onClick={()=>createContent()}>
+              {" "}
+              <Icon name="plus" /> Create New...{" "}
+            </Button>
+          </div>
+          
+        </MenuContainer> 
           <div style={{ marginTop: 15 }}>
-      <MUIDataTable
-        // title={"Employee List"}
-        data={data}
-        columns={columns}
-        options={options}
-      />
-  
-    </div>
-   
-  </div>
+              <MuiThemeProvider theme={this.getMuiTheme()}>
+          <MUIDataTable
+            // title={"Employee List"}
+            data={data}
+            columns={columns}
+            options={options}
+          />
+       </MuiThemeProvider>
+       </div> </div>
   </React.Fragment>
     );
   }
 }
 export default withRouter(CardFrame);
+
+
+
+
