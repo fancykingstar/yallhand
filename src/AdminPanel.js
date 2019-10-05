@@ -1,12 +1,11 @@
 import React from "react";
-
-import ManageContent from "./SharedUI/ManageContent/ManageContent"
-import Header from "./Header/Header";
 import { Responsive, Transition } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
 import { Switch, Route, Redirect } from "react-router-dom";
+
+import Header from "./Header/Header";
+import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import { SideBar } from "./SideBar/SideBar";
-import CardFrame from "./CardFrame/CardFrame";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
 import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
@@ -14,7 +13,6 @@ import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
 import TaskNewEdit from "./Tasks/TasksNewEdit";
-// import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
