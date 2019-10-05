@@ -14,6 +14,9 @@ import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
+
+import { log } from "./DataExchange/Up";
+import { ItsLog } from "./DataExchange/PayloadBuilder";
 // import "./App.css";
 // import "./UserPortal/assets/css/normalize.scss";
 
@@ -45,8 +48,10 @@ class AppRoute extends React.Component {
         const loggedOutRoutes = ['/', '/register', '/forgot'];
         const loggedInRoutes = ['/panel', '/portal'];
         this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
+        if ( isAuthenticated ) log(ItsLog(true,{"event": "click", "type":"login"}));
         // if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
         // else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
+        
       }
       fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
         mode: 'no-cors',

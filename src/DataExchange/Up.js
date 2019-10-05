@@ -310,10 +310,10 @@ export const modifyPolicy = (payload) => {
   )
 }
 
-export const modifyAnnouncement = (payload) => {
+export const modifyAnnouncement = (payload, toastEnabled) => {
     return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
-    true,{"event": "update", "type":"policy"}
+    true,{"event": "update", "type":"policy"}, toastEnabled
 )
 }
 

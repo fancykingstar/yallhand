@@ -1,11 +1,12 @@
 import React from 'react';
-import { Col } from 'reactstrap';
+import {withRouter} from 'react-router';
+import { Col, Button } from 'reactstrap';
 import search_icon from "../../assets/images/search_icon.svg";
 import Typography from '@material-ui/core/Typography';
-
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {UserStore} from '../../../Stores/UserStore';
+
 
 class Header extends React.Component {
    constructor(props){
@@ -36,14 +37,19 @@ class Header extends React.Component {
                            </IconButton>
                            <Typography variant="h4" className="page-title" noWrap>{pageTitle}</Typography>
                         </div>
+                           {UserStore.user.isAdmin &&
+                                  <div>
+                                    <Button onClick={()=> this.props.history.push('/panel')}>Admin Panel</Button>
+                                  </div>
+                           }
                         <div className="header_right">
                            <div className="header_search">
-                              {/* <form>
+                              <form>
                                  <div className="search_div">
                                     <input type="text" name="search" placeholder="Search"></input>
                                     <button><img src={search_icon} alt="" /></button>
                                  </div>
-                              </form> */}
+                              </form>
                               <div className="header_select">
                                  <select>
                                     <option>{user? user.displayName: ""}</option>
@@ -62,4 +68,4 @@ class Header extends React.Component {
    }
 }
 
-export default Header;
+export default withRouter(Header);

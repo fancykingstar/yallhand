@@ -92,7 +92,7 @@ class VariationContent extends React.Component {
 
   render() {
     const { DataEntryStore, UIStore } = this.props;
-    const {content, isNewContent, mode} = this.props.data;
+    const {content, isNewContent, isNewVari, mode} = this.props.data;
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
@@ -156,7 +156,7 @@ class VariationContent extends React.Component {
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
             <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : content.variations[0].stage} onClick={val => this.changeStage(val)} />
-            <CommonOptions handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
+            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
             </Col>
           </Row>
           <Row>

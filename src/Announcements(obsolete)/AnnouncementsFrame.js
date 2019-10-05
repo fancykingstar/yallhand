@@ -11,28 +11,64 @@ import MUIDataTable from "mui-datatables";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import CustomToolbarSelect from "./CustomToolbarSelect";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { modifyAnnouncement } from "../DataExchange/Up";
 
 import "./style.css";
 import { cpus } from "os";
+import { lastOfType } from "glamor";
 
 @inject("AnnouncementsStore", "AccountStore", "UIStore", "DataEntryStore", "ChannelStore")
 @observer
 class AnnouncementsFrame extends React.Component {
   getMuiTheme = () => createMuiTheme({
     overrides: {
-      MUIDataTable: {
+      MUIDataTableBodyCell: {
         root: {
-          backgroundColor: "#FF000"
+          fontFamily: "Lato",
+          fontSize: "1em",
+        }
+      },
+      MUIDataTableBodyRow: {
+        root: {
+         position: "relative"
+        }
+      },
+      MUIDataTableSelectCell: {
+      //   fixedHeader: {
+      //     position: "relative"
+      //   },
+      //   headerCell: {
+      //     position: "relative"
+      //   }
+      // },
+      // MUIDataTableHeadCell: {
+      //   fixedHeader: {
+      //     position: "relative"
+      //   }
+      },
+      MUIDataTable: {
+        
+        root: {
+          backgroundColor: "#FF000",
         },
         paper: {
           boxShadow: "none",
           border: "2px solid #e3e8ee",
-          borderRadius: 8
+          borderRadius: 8,
         }
       }}}
   );
+
+
+ 
+   
+  
+
+
   render() {
-    const { AnnouncementsStore,UIStore, DataEntryStore, ChannelStore } = this.props;
+    const { AnnouncementsStore,UIStore, DataEntryStore, ChannelStore, AccountStore } = this.props;
+
+    
 
     const MenuContainer = styled.div`
     margin-top: 10px;
@@ -88,19 +124,26 @@ class AnnouncementsFrame extends React.Component {
     //   <FeedItem key={"announcement" + giveMeKey()} data={announcement} clicked={handleClick} />
     // ));
 
+    const handleFeatured = (action, tableinfo) => {
+      const accountID = AccountStore.account.accountID;
+      tableinfo.data.forEach(i => {
+        const announcementID = AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID;
+        modifyAnnouncement({accountID, announcementID, featured: action==="feature"}, false)
+      })
+    }
  
       
     const columns = ["","Title", "Last Updated", "Channel","State"];
 
     const data = AnnouncementsStore.allAnnouncements.map(annc => [
       <LazyImg style={{height: 75, width: 120, objectFit: annc.img? "cover":"contain" }}  alt="" height={75} width={120} img={annc.img} src={annc.img? annc.img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"} />
-    ,annc.label, UTCtoFriendly(annc.updated), ChannelStore._getLabel(annc.chanID), annc.state === "ok"? "published" : annc.state])
+    , annc.label, UTCtoFriendly(annc.updated), ChannelStore._getLabel(annc.chanID), annc.state === "ok"? "published" : annc.state])
     
     const options = {
       elevation: 1,
       selectableRows: "multiple",
       customToolbarSelect: selectedRows => (
-        <CustomToolbarSelect data={AnnouncementsStore.allAnnouncements} selectedRows={selectedRows} handleClick={(e, v)=> console.log("from handleClick", e, v)} />
+        <CustomToolbarSelect data={AnnouncementsStore.allAnnouncements} selectedRows={selectedRows} handleClick={(e, v)=> handleFeatured(e, v)} />
       ),
       filter:true,
       filterType: 'dropdown',
