@@ -1,5 +1,7 @@
 import React from 'react';
+import {inject, observer} from "mobx-react";
 import { RenderHTMLContent } from '../../helpers/Helpers';
+import { Transition } from "semantic-ui-react";
 
 import IconBox from "./IconBox";
 
@@ -7,17 +9,32 @@ import Star from '../../assets/images/star.svg';
 import AskManagement from '../../assets/images/actions/askManagement.svg';
 import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
 
-import {AccountStore} from "../../../Stores/AccountStore";
+
+import { sentiment } from "../../../DataExchange/PayloadBuilder"
+import { createSentiment } from "../../../DataExchange/Up"
 
 
 import { Col, Row } from 'reactstrap';
 import UTCtoFriendly from '../../../SharedCalculations/UTCtoFriendly';
 
+@inject("UIStore", "AccountStore", "UserStore")
+@observer
 class PostDetails extends React.Component {
 
     render() {
-        const { post } = this.props
+        const { UIStore, AccountStore, post } = this.props;
+
         const vari = post && post.variations[0];
+
+        const handleClick = (val) => {
+            this.props.update({sentiment: true});
+            // UIStore.set("portal", "sentimentComplete", true)
+            // if(!UserStore.user.isAdmin){
+                createSentiment( sentiment(val, this.props.mode, this.props.post[this.props.mode==="announcement"? "announcementID":"policyID"], vari.variationID) ).then(r =>  r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
+            // }
+    
+        }
+
         return (
             <div className="outerContentDetail">
                 <span className="borderGradian"></span>
@@ -46,14 +63,17 @@ class PostDetails extends React.Component {
                         <a href="#/" className="selectPdf">Checklist.pdf</a> */}
 
                         <div className="emojisRows">
-                            <p>This makes you feel</p>
+                        {this.props.sentiment?
+                        <p>👍Thanks for your feedback</p>
+                            :
+                            <><p>This makes you feel</p>
                             <div className="emojiBox-outer">
                                 <div className="emojiBox">
-                                    <a href="#/"><img alt="" src={require("../../assets/images/emoji1.png")} /></a>
-                                    <a href="#/"><img alt="" src={require("../../assets/images/emoji2.png")} /></a>
-                                    <a href="#/"><img alt="" src={require("../../assets/images/emoji3.png")} /></a>
+                                   <a><img onClick={e => handleClick(2)} alt="" src={require("../../assets/images/emoji3.png")} /></a>
+                                   <a><img onClick={e => handleClick(1)} alt="" src={require("../../assets/images/emoji2.png")} /></a>
+                                   <a><img onClick={e => handleClick(0)} alt="" src={require("../../assets/images/emoji1.png")} /></a>
                                 </div>
-                            </div>
+                            </div></>}
                         </div>
                         {/* <Row className="content-detail-action">
                             <Col sm={6} md={4}><IconBox

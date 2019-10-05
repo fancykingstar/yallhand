@@ -11,6 +11,7 @@ import Directory from './views/pages/Directory';
 import ContentDetail from './views/pages/ContentDetail';
 import ContentList from "./views/pages/ContentList";
 import SurveyList from "./views/pages/SurveyList";
+import PortalSearchResults from "./views/pages/PortalSearchResults";
 
 
 import history from './helpers/history';
@@ -35,9 +36,14 @@ export class UserPortal extends React.Component {
     if (location.search && location.search.indexOf('data=') > -1) apiCall_pixel(`1x1pixel.gif${location.search}`);
   }
     render() {
+      const {UIStore} = this.props;
         return (
+            
             <div className="UserPortal">
                 {/* <Router history={history}> */}
+                {!UIStore._adminLoadingComplete || !this.state.loaded ? (
+      <div />
+    ) : (
                     <Switch location={this.props.location}>
                         {/* <Router history={history}> */}
                             <Route path="/portal" exact component={Home} />
@@ -45,6 +51,7 @@ export class UserPortal extends React.Component {
                             <Route path="/portal/announcements" exact component={ContentList} />
                             <Route path="/portal/learn" exact component={ContentList} />
                             <Route path="/portal/surveys" exact component={SurveyList} />
+                            <Route path="/portal/search" component={PortalSearchResults} exact />
                             {/* <Route path="/directory" exact component={Directory} />
                             <Route path="/content-detail/" exact component={ContentDetail} /> */}
 
@@ -52,7 +59,7 @@ export class UserPortal extends React.Component {
                             <Route path="/portal/learn-detail/:id" render={props => <ContentDetail {...props} mode="policy" />} exact />
 
                         {/* </Router> */}
-                    </Switch>
+                    </Switch>)}
                 {/* </Router> */}
             </div>
         );

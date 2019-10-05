@@ -1,0 +1,339 @@
+.PortalSideNav ::placeholder {
+    color: #2dbffe !important;
+    font-size: 1.3em;
+  }
+
+
+.PortalContainerNavMobile {
+    position: fixed;
+    margin-top: 40px;
+    z-index: 50;
+    border: 0 none;
+  }
+
+.SearchControls {
+    padding-top: 30px;
+    line-height: 100px;
+    min-height: 30px;
+    min-width: 500px;
+    margin: auto;
+    display: inline-block;
+    
+}
+.PortalUserProfile {
+    margin-top: 5px;
+    width: 220px;
+    height: 35px;
+
+}
+
+.PortalUserSettingsDropdown{
+    color: #17b0e4;
+    width: 18px;
+    margin-right: 15px;
+    padding-top: 7px;
+    float: right;
+    margin-top: 0px;
+}
+
+  .PortalUserSettingsTrigger {
+    position: fixed;
+    margin-left: -180px;
+    height: 20px;
+    width: 200px;
+  }
+
+.portalUserName {
+    margin-top: 6px;
+    margin-left: 15px;
+}
+
+.portalUserNameText {
+    padding-top: 4px;
+}
+
+.SideBarFrame { 
+    width: 245px;
+    
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    background-color: #2b2a2a;
+    border-right: 2px solid #00a3e0;
+}
+
+.SideBarFrameMobile {
+  margin-top: -40px;
+  padding-top: 10px;
+  background-color: #2b2a2a;
+  width: 75vw;
+  height: 100vh;
+  z-index: 50;
+  overflow-y: auto;
+}
+
+.WorkspaceNamePortal {
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    color: rgb(255, 255, 255, .5)
+  }
+
+
+.WorkspacePortalLogoLrg {
+  
+    margin: auto;
+    margin-top: 50px;
+    height: 80px;
+    width: 80px;
+    border: solid;
+    border-width: 2px;
+    border-color: #2dbffe;
+    -webkit-border-radius: 10%;
+    -moz-border-radius: 10%;
+    border-radius: 10%;
+    /* background-image: url("../Assets/Graphics/temp.png"); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  
+}
+
+.WorkspacePortalLogoSm {
+    margin: auto;
+    margin-top: 5px;
+    height: 30px;
+    width: 30px;
+    border: solid;
+    border-width: 2px;
+    border-color: #bdbdbd;
+    -webkit-border-radius: 10%;
+    -moz-border-radius: 10%;
+    border-radius: 10%;
+    /* background-image: url("../Assets/Graphics/temp.png"); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  
+}
+
+.PortalSideNav {
+    height: 100%;
+    padding-left: 3px;
+    background-color: #2b2a2a;
+    
+}
+
+.Content{
+    height: 100%;
+    width: 100%;
+    /* margin: 30px; */
+    font-size: 1.3em;
+    color: #00334d;
+    letter-spacing: .01em;
+
+}
+
+.PortalContentText {
+  width: 100%;
+  line-height: 1.4em;
+}
+
+.Content h1 {
+  font-size: 3em !important;
+  color: #00334d !important;
+}
+
+.Content li {
+  list-style-position: inside;
+  line-height: 1.4em;
+  /* margin-left: -40px; */
+}
+
+
+  .PortalCard {
+    color: rgb(45, 45, 45);
+    width: 319px;
+    height: 196px;
+    /* background-color:#EEEEEE; */
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+    -webkit-box-shadow: 0px 0px 2px 0px #545454;
+    -moz-box-shadow:    0px 0px 2px 0px #545454;
+    box-shadow:         0px 0px 2px 0px #545454;
+    position: relative;
+  
+}
+.PortalCard:before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+
+    /* background-image: url('../MockData/img/testimg1.jpeg'); */
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    opacity: 0.25;
+
+    -webkit-border-radius: 17px 17px 17px 17px;
+    -moz-border-radius: 17px 17px 17px 17px;
+    border-radius: 17px 17px 17px 17px;
+}
+
+.PortalCard:hover {
+    -webkit-box-shadow: 0px 0px 2px 0px #2FC7F8;
+    -moz-box-shadow:    0px 0px 2px 0px #2FC7F8;
+    box-shadow:         0px 0px 5px 2px #2FC7F8;
+}
+
+.PreviewText {
+    overflow: hidden;
+    position: relative; 
+    line-height: 1.2em;
+    max-height: 3.6em; 
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+  }
+  .PreviewText:before { 
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  .PreviewText:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
+  }
+
+  .NoResultsContainer {
+    width: 100%;
+    height: calc(100vh - 60px);
+    display: table;
+  }
+
+  .NoResultsMessage {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+
+  .PortalSearchContainer {
+    width: 100%;
+    padding: 10px;
+}
+
+.PortalSearchForm {
+    /* background-color: rgba(129, 129, 129, 0.37);
+    background-color: rgba(212, 212, 212, 0.37); */
+    -webkit-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+    border-radius: 5px;
+
+}
+
+.AnncList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.AnncWrapper {
+  flex-grow: 1;
+  flex-shrink:1;
+  position: relative;
+  min-height: 350px;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 0;
+  -webkit-box-shadow: 0px 0px 2px 0px #545454;
+  -moz-box-shadow:    0px 0px 2px 0px #545454;
+  box-shadow:         0px 0px 2px 0px #545454;
+
+  align-items:center;
+
+
+}
+
+
+.AnncWrapper:hover {
+  -webkit-box-shadow: 0px 0px 2px 0px #2FC7F8;
+  -moz-box-shadow:    0px 0px 2px 0px #2FC7F8;
+  box-shadow:         0px 0px 5px 2px #2FC7F8;
+}
+
+
+
+.AnncSingle {
+  width:100%;
+  height:100%;
+
+
+}
+
+.AnncContent {
+  color: #FFFFFF;
+}
+
+.AnncContentAlt {
+  z-index: 5;
+}
+
+.AnncContentAlt h1,
+.AnncContentAlt h4,
+.AnncContentAlt p
+{
+  
+  color: #FFFFFF;
+  display: inline-block;
+
+}
+
+.AnncContent p {
+  font-size: 1.3em;
+}
+
+.AnncContentAlt p {
+  font-size: 1.3em;
+}
+
+
+.AnncPortalalpha {
+  margin: -10px;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  opacity: 0.15;
+  position: absolute;   
+  filter: blur(1px);
+  background-size:     cover;                     
+  background-repeat:   no-repeat;
+  background-position: center center;  
+  z-index: -1;
+
+}
+
+.AnncTS {
+  /* position: absolute; */
+  bottom: 0;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 1.2em;
+
+}
