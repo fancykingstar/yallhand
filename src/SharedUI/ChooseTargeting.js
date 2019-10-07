@@ -10,13 +10,20 @@ import { TagSelect } from "../SharedUI/TagSelect";
 export class ChooseTargeting extends React.Component {
     constructor(props){
         super(props);
-        this.state={sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []}
+        this.state={};
     }
+    reset() {
+      this.setState({sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []});
+    }
+  componentDidMount(){
+    this.reset();
+  }
   render(){
     const { DataEntryStore, AccountStore, TeamStore } = this.props;
 
     const updateState = async (val) => {
-        await this.setState(val);
+        if(val.sendTargetType === "all") await this.reset()
+        else await this.setState(val);
         // await updateState({valid: Boolean(this.state.q.trim() && this.state.resType 
         //   && (this.state.resConfig === "custom"? this.state.resChoices.length > 1 : true))});
         this.props.echostate(this.state);

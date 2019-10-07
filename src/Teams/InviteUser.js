@@ -14,8 +14,6 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
 
   const setField = (content) => {
     props.updateFields(content, props.id);
-    console.log(EligibleUsersByTeamTag(teamID, tagID==="none"? "": tagID));
-
   }
 
   const removeRow = () => {

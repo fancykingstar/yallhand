@@ -7,6 +7,7 @@ import { TeamStore } from "../Stores/TeamStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 import { generateID } from "../SharedCalculations/GenerateID";
 import _ from "lodash";
+import { EligibleUsersByTeamTag } from "../SharedCalculations/EligibleUsersByTeamTag";
 
 
 
@@ -480,14 +481,22 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return buildObj
   }
 
-  export const survey = ( surveyItems, label, targetType, anonymous, deadline ) => {
+  export const survey = ( data ) => {
+    const {surveyItems, active, label, anonymous, deadline, sendToTeamID, sendToTagID, sendTargetType, sendToUsers } = data;
+    const generateInstances = () => {
+      if(sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
+      else if(sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+      else if (sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    }
     const buildObj = {
       surveyItems,
       label,
-      targetType,
-    "stage": "draft",
+      sendTargetType,
       anonymous,
-      deadline
+      deadline,
+      instances: generateInstances(),
+      responses_by_instance: [],
+      active,
     };
     return _.extend({}, base(), buildObj)
   };
