@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react"
 
 import LayoutHeader from "../views/components/Header";
 import LayoutFooter from "../views/components/Footer";
@@ -8,7 +8,14 @@ import { Link } from "react-router-dom";
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { Drawer, AppBar, List, CssBaseline, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Home as HomeIcon, TouchApp as TouchAppIcon, Event as EventIcon, Help as HelpIcon } from '@material-ui/icons';
+import {
+    Home as HomeIcon,
+    TouchApp as TouchAppIcon,
+    Event as EventIcon,
+    Close as CloseIcon,
+    Search as SearchIcon,
+    Help as HelpIcon
+} from '@material-ui/icons';
 import { FaRegFileAlt } from "react-icons/fa";
 
 import Announcements from '../assets/images/announcements.svg';
@@ -16,10 +23,12 @@ import Surveys from '../assets/images/surveys.svg';
 import MySaved from '../assets/images/my-saved.svg';
 import Directory from '../assets/images/Directory.svg';
 
+import search_icon from "../assets/images/search_icon.svg";
+
 import logo_img from "../assets/images/logo.png";
 import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
-import {AccountStore} from "../../Stores/AccountStore";
+import { AccountStore } from "../../Stores/AccountStore";
 
 
 // import 'bootstrap/dist/css/bootstrap.css';
@@ -32,7 +41,7 @@ const useStyles = makeStyles(theme => ({
         display: 'block',
     },
     appBar: {
-        position: 'absolute',
+        position: 'fixed',
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -40,7 +49,7 @@ const useStyles = makeStyles(theme => ({
         }),
     },
     appBarShift: {
-        position: 'absolute',
+        position: 'fixed',
         background: 'transparent',
         zIndex: theme.zIndex.drawer + 1,
         marginLeft: drawerWidth,
@@ -95,12 +104,21 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DefaultLayout = ({ ...props }) => {
+    const mobileWidth = 992;
+    var sOpen = false;
+    const [scrollY, setScrollY] = useState(0);
     const { width } = useWindowDimensions();
 
     const classes = useStyles();
+
+    const [state, setState] = React.useState({
+        searchTerm: ''
+    })
+
     const [open, setOpen] = React.useState(true);
+    const [focus, setFocus] = React.useState(false);
     const [mopen, setMopen] = React.useState(false);
-    if (width <= 992 && open !== false) {
+    if (width <= mobileWidth && open !== false) {
         setOpen(false);
     }
     function handleDrawerToggle() {
@@ -109,32 +127,65 @@ const DefaultLayout = ({ ...props }) => {
     function handleDrawerToggleMobile() {
         setMopen(!mopen);
     }
-
+    function handleChange(evt) {
+        setState({ searchTerm: evt.target.value });
+    }
+    function handleClearClick() {
+        setState({ searchTerm: '' });
+    }
+    function handleSearchClick() {
+        var sopen = width <= mobileWidth ? mopen : open;
+        if (sopen === false) {
+            (width <= mobileWidth) ? handleDrawerToggleMobile() : handleDrawerToggle();
+            setFocus(true);
+        } else {
+            console.log('submit form');
+            console.log('searchTerm', state.searchTerm)
+        }
+    }
+    useEffect(() => {
+        function watchScroll() {
+            window.addEventListener("scroll", logit);
+        }
+        watchScroll();
+        // Remove listener (like componentWillUnmount)
+        return () => {
+            window.removeEventListener("scroll", logit);
+        };
+    });
+    function logit() {
+        setScrollY(window.pageYOffset);
+    }
+    const focusUsernameInputField = input => {
+        if (input && focus) {
+            input.focus();
+        }
+    };
     const account = AccountStore.account;
 
     return (
-        <div className={clsx(classes.root, "topBorderBefore", (((width <= 992) ? !mopen : !open) ? "menuClosed" : 'menuOpen'))}>
+        <div className={clsx(classes.root, "topBorderBefore", (((width <= mobileWidth) ? !mopen : !open) ? "menuClosed" : 'menuOpen'), (scrollY > 50) ? 'menuSticky' : '')}>
             <CssBaseline />
             <AppBar
                 className={clsx(classes.appBar, {
-                    [classes.appBarShift]: (width <= 992) ? mopen : open,
-                }, (((width <= 992) ? !mopen : !open) ? "appBarShiftClose" : ''), "topappbar")}
+                    [classes.appBarShift]: (width <= mobileWidth) ? mopen : open,
+                }, (((width <= mobileWidth) ? !mopen : !open) ? "appBarShiftClose" : ''), "topappbar")}
             >
-                <LayoutHeader pageTitle={props.pageTitle} toggleMenu={(width <= 992) ? handleDrawerToggleMobile : handleDrawerToggle} />
+                <LayoutHeader pageTitle={props.pageTitle} toggleMenu={(width <= mobileWidth) ? handleDrawerToggleMobile : handleDrawerToggle} />
             </AppBar>
             <Drawer
                 variant="permanent"
                 className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: (width <= 992) ? mopen : open,
-                    [classes.drawerClose]: (width <= 992) ? !mopen : !open
+                    [classes.drawerOpen]: (width <= mobileWidth) ? mopen : open,
+                    [classes.drawerClose]: (width <= mobileWidth) ? !mopen : !open
                 }, "drawer")}
                 classes={{
                     paper: clsx({
-                        [classes.drawerOpen]: (width <= 992) ? mopen : open,
-                        [classes.drawerClose]: (width <= 992) ? !mopen : !open,
+                        [classes.drawerOpen]: (width <= mobileWidth) ? mopen : open,
+                        [classes.drawerClose]: (width <= mobileWidth) ? !mopen : !open,
                     }),
                 }}
-                open={(width <= 992) ? mopen : open}
+                open={(width <= mobileWidth) ? mopen : open}
             >
                 <div className="menuHeader">
                     <h2 className="menu-header "><img src={account.img} alt="org logo" />{account.label}</h2>
@@ -183,8 +234,23 @@ const DefaultLayout = ({ ...props }) => {
 
                 </div>
                 <div className="menu-footer">
-                    <img src={menu_footer_logo_img} alt="yallhands" />
-                    {/* yallhands */}
+                    <form className="menu-search">
+                        <div className="search_div">
+                            <input ref={focusUsernameInputField}
+                                type="text" id="search" name="search" placeholder="Search"
+                                value={state.searchTerm}
+                                onChange={handleChange} />
+                            <button type="button" onClick={handleSearchClick}><SearchIcon /></button>
+                            {(state.searchTerm !== '') ? (
+                                <button className="clearInput" type="button" onClick={handleClearClick}><CloseIcon /></button>
+                            ) : ('')}
+                        </div>
+                    </form>
+
+                    <div className="menu-footer-logo">
+                        <img src={menu_footer_logo_img} alt="yallhands" />
+                        {/* yallhands */}
+                    </div>
                 </div>
             </Drawer>
             <main className={clsx(classes.content, "main-content-container")}>
@@ -194,7 +260,7 @@ const DefaultLayout = ({ ...props }) => {
                 </div>
                 <LayoutFooter />
             </main>
-        </div>
+        </div >
     );
 }
 export default DefaultLayout;

@@ -1,24 +1,34 @@
 import React from 'react';
 import { Col } from 'reactstrap';
-import search_icon from "../../assets/images/search_icon.svg";
-import Typography from '@material-ui/core/Typography';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
+import user_icon from "../../assets/images/user_icon.svg";
+
+import Typography from '@material-ui/core/Typography';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import {UserStore} from '../../../Stores/UserStore';
+import { UserStore } from '../../../Stores/UserStore';
 
 class Header extends React.Component {
-   constructor(props){
+   constructor(props) {
       super(props);
-      this.state={user: null}
+      this.state = { user: null, profileMenuOpen: false }
+      this.toggleProfileMenu = this.toggleProfileMenu.bind(this);
    }
-   componentDidMount(){
+   componentDidMount() {
 
-      this.setState({user: UserStore.user})
+      this.setState({ user: UserStore.user })
+   }
+   toggleProfileMenu() {
+      this.setState(prevState => ({
+         profileMenuOpen: !prevState.profileMenuOpen
+      }));
    }
    render() {
       const pageTitle = this.props.pageTitle;
       const user = this.state.user;
+      console.log(user);
       return (
          <div className="page-header">
             <div className="container">
@@ -45,11 +55,23 @@ class Header extends React.Component {
                                  </div>
                               </form> */}
                               <div className="header_select">
-                                 <select>
-                                    <option>{user? user.displayName: ""}</option>
-                                    {/* <option>Edward1</option>
-                                    <option>Edward2</option> */}
-                                 </select>
+                                 <Dropdown isOpen={this.state.profileMenuOpen} toggle={this.toggleProfileMenu}>
+                                    <DropdownToggle tag="a" caret>
+                                       {user ? <img src={user.img} alt="" /> : <AccountCircleIcon />}
+                                       {user ? user.displayName : "User"}
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                       <DropdownItem header>Header</DropdownItem>
+                                       <DropdownItem disabled>Action</DropdownItem>
+                                       <DropdownItem>Another Action</DropdownItem>
+                                       <DropdownItem divider />
+                                       <DropdownItem>Another Action</DropdownItem>
+                                    </DropdownMenu>
+                                 </Dropdown>
+                                 {/* <select>
+                                    <option>{user ? user.displayName : ""}</option>
+                                    
+                                 </select> */}
                               </div>
                            </div>
                         </div>
@@ -57,7 +79,7 @@ class Header extends React.Component {
                   </Col>
                </div>
             </div>
-         </div>
+         </div >
       );
    }
 }

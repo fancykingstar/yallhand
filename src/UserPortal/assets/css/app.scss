@@ -36,28 +36,45 @@ body{font-family: 'Rubik', sans-serif;}
     }
 }
 
-.header_inner{padding: 8px 0;display: flex;justify-content: space-between;align-items: center;}
+.header_inner{padding: 10px 0;display: flex;justify-content: space-between;align-items: center;}
 .header_search{display: flex;justify-content: space-between;align-items: center;}
-.search_div{
-    position: relative;margin-right: 40px;
-    input{border:1px solid #d6dbe0;max-width: 240px;border-radius: 4px;padding: 3px 5px 3px 30px;}
-    button{position: absolute;top: 50%;transform: translateY(-50%);left: 5px;background: none;border: none;cursor: pointer;}
-    button img{max-width: 18px;}
-}
+
 .header_select{
     position: relative;
+    .dropdown-toggle{
+        cursor: pointer;
+        padding-right: 25px;
+    }
+    .dropdown-toggle img {
+        width: 32px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+    .dropdown-toggle::after{
+        position: absolute;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 1px solid #777;
+        top: 44%;
+        transform: translateY(-50%) rotate(45deg);
+        border-top: 0;
+        border-left: 0;right: 5px;
+    }
+
     select{-webkit-appearance: none;border: none;font-family: 'Rubik', sans-serif;font-size: 14px;color: #0f141a;padding: 5px 20px 5px 5px;    outline: none;line-height: normal;}
 }
-.header_select:after{
-    position: absolute;
-    content: "";
-    width: 8px;
-    height: 8px;
-    border: 1px solid #777;
-    top: 44%;
-    transform: translateY(-50%) rotate(45deg);
-    border-top: 0;
-	border-left: 0;right: 5px;}
+// .header_select:after{
+//     position: absolute;
+//     content: "";
+//     width: 8px;
+//     height: 8px;
+//     border: 1px solid #777;
+//     top: 44%;
+//     transform: translateY(-50%) rotate(45deg);
+//     border-top: 0;
+// 	border-left: 0;right: 5px;}
 .shadow{ box-shadow: 0 2px 6px 2px rgba(72, 74, 77, 0.2);}	
 
 .home_container{
@@ -426,8 +443,9 @@ body{font-family: 'Rubik', sans-serif;}
     
 }
 .all-staff-box{
-    padding-left: 8px;
-    padding-right: 8px;
+    // padding-left: 8px;
+    // padding-right: 8px;
+    float: left;
 }
 .align-right{
     margin-left: auto;
@@ -460,8 +478,11 @@ body{font-family: 'Rubik', sans-serif;}
     .contentBigImage{
         margin-bottom: 32px;
         img{
+            
             margin: auto;
             max-height: 600px;
+            width: 100%;
+            object-fit: cover;
         }
     }
 }

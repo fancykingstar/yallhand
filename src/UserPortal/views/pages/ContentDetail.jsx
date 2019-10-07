@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
-import {inject, observer} from "mobx-react";
+import { inject, observer } from "mobx-react";
 
 import { Row } from 'reactstrap';
 
@@ -22,13 +22,13 @@ class ContentDetail extends React.Component {
          PostData: '',
          qaData: []
       }
-      const {AnnouncementsStore, PoliciesStore} = this.props;
+      const { AnnouncementsStore, PoliciesStore } = this.props;
       console.log("construct", AnnouncementsStore.allAnnouncements.length)
    }
    componentDidMount() {
-      const {AnnouncementsStore, PoliciesStore} = this.props;
-      const urlData = {path:  this.props.match.url, id: this.props.match.params.id}
-      const content = urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
+      const { AnnouncementsStore, PoliciesStore } = this.props;
+      const urlData = { path: this.props.match.url, id: this.props.match.params.id }
+      const content = urlData.path.includes("announcement") ? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
       this.setState({
          Announcements: ContentData.suggested,
          PostData: content,
@@ -44,8 +44,8 @@ class ContentDetail extends React.Component {
          <Layout>
             <div className="">
                <div className="">
-                  <PostDetails post={PostData} />
-{/* 
+                  {PostData ? (<PostDetails post={PostData} />) : ("")}
+                  {/* 
                   <div className="page_content_bg">
                      <div className="smallContainer">
                         <QuestionAnswer qaData={qaData} />

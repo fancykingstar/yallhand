@@ -32,7 +32,8 @@ class ActionSlider extends React.Component {
          colleague: 'Dylan Spencer',
          props_for: 'Teamwork',
          description: '',
-         checked: true
+         checked: true,
+         minHeight: "300px"
       }
    }
    componentDidMount() {
@@ -41,7 +42,7 @@ class ActionSlider extends React.Component {
          generalActions: ActionsData.general,
          CompanyActions: ActionsData.company,
          ActionsData: ActionsData
-      })
+      });
    }
 
    showActionForm(item) {
@@ -167,34 +168,36 @@ class ActionSlider extends React.Component {
       };
       const settings_components_slide = {
          dots: false,
-         draggable: false,
+         // draggable: false,
          arrows: false,
          infinite: false,
          speed: 500,
          swipeToSlide: false,
+         // swipe: false,
          slidesToShow: 1,
          slidesToScroll: 1,
+
          afterChange: () =>
             this.setState(state => ({ updateCount: state.updateCount + 1 })),
          beforeChange: (current, next) => this.setState({ slideIndex: next })
       };
 
       return (
-   
-        <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
-        <Container className="actions-container">
-           <div className="section_title shadow">
-              <h4>General Actions</h4>
-           </div>
-           <div className="page_content actions shadow">
-              <div className="announce_component faq_announce slick-align-left">
-                 <Slider {...settings_multi}>
-                 <IconBox
-                          key={"AA"}
-                          micon="star"
-                          user_img={Star}
-                          title={"Open Enrollment: Ask Anything"} showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                    {/* {(generalActions) ? generalActions.map((item, index) => {
+         <div id="actions-slider" className=" actions-slides">
+            <Slider ref={slider => (this.slider = slider)} {...settings_components_slide} >
+               <Container className="actions-container"  >
+                  <div className="section_title shadow">
+                     <h4>General Actions</h4>
+                  </div>
+                  <div className="page_content  actions-slides actions shadow" >
+                     <div className="announce_component faq_announce slick-align-left">
+                        <Slider {...settings_multi}>
+                           <IconBox
+                              key={"AA"}
+                              micon="star"
+                              user_img={Star}
+                              title={"Open Enrollment: Ask Anything"} showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
+                           {/* {(generalActions) ? generalActions.map((item, index) => {
                        var img = item.img;
                        if (index === 0) { img = Star; }
                        if (index === 1 || index === 4) { img = RefereCandidate; }
@@ -209,19 +212,20 @@ class ActionSlider extends React.Component {
                           title={item.label} showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
                     }) : ('')} */}
 
-                 </Slider>
-              </div>
-           </div>
-        </Container>
-        <Container elevation={4} className="action-form">
-           <ActionsForm
-              showActionForm={this.showActionForm.bind(this)}
-              hideActionForm={this.hideActionForm.bind(this)}
-              selectedActionData={this.state.selectedActionData}
-           />
-        </Container>
-     </Slider>
-  
+                        </Slider>
+                     </div>
+                  </div>
+
+               </Container>
+               <Container id="action-form" elevation={4} className="action-form">
+                  <ActionsForm
+                     showActionForm={this.showActionForm.bind(this)}
+                     hideActionForm={this.hideActionForm.bind(this)}
+                     selectedActionData={this.state.selectedActionData}
+                  />
+               </Container>
+            </Slider>
+         </div>
       );
    }
 }
