@@ -1,66 +1,97 @@
 import React from "react";
-import { Header } from "semantic-ui-react";
-import {AccountStore} from "../Stores/AccountStore";
-import {EmailStore} from "../Stores/EmailStore";
-import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
-import TimeAgo from 'react-timeago';
-import MUIDataTable from "mui-datatables";
+import {inject, observer} from "mobx-react"
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import {giveMeKey} from "../SharedCalculations/GiveMeKey"
+import { Table, Header,Icon} from "semantic-ui-react";
+import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 
-
-import _ from "lodash";
+@inject("AccountStore", "EmailStore", "TeamStore", "UIStore")
+@observer
 export class CampaignAnalytics extends React.Component {
   constructor(props){
-    super(props);
-    this.state={showModal: false, campaign: ""}
+    super(props)
+    const {AccountStore} = this.props
+    this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
+    this.sort = (controller, direction) => {
+      const param = controller
+      if(direction === "Lowest") {
+        if(param === "clicks") AccountStore.loadAnalyticData_campaigns(AccountStore.analyticData_campaigns.slice().sort((a,b) => (this.clickRate(a) > this.clickRate(b)? 1 : -1)))
+        else AccountStore.loadAnalyticData_campaigns(AccountStore.analyticData_campaigns.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
+      }
+
+
+      else {
+        if(param === "clicks") AccountStore.loadAnalyticData_campaigns(AccountStore.analyticData_campaigns.slice().sort((a,b) => (this.clickRate(a) < this.clickRate(b)? 1 : -1)))
+        else AccountStore.loadAnalyticData_campaigns(AccountStore.analyticData_campaigns.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
+          }
   }
-    render() {
+  }
+  componentDidMount(){
+    this.sort("sent", "Highest")
+  }
+  render() {
+    const {AccountStore, EmailStore, UIStore} = this.props
 
-        const clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
-       
-        const handleClick = (campaign) => {this.setState({showModal:true, campaign})}
 
-        const columns = ["Name", "Sent", "Views (All/Unique)", "Open Rate", "Click Rate"];
-        const data = AccountStore.analyticData_campaigns.map(camp => {
-            return [camp.subject, UTCtoFriendly(camp.sent), `${camp.total_views}/${camp.unique_views}`, camp.open_rate + "%", clickRate(camp)]
-        })
-        
-            
-        const options = {
-        elevation: 1,
-        selectableRows: "none",
-        filter:true,
-        filterType: 'dropdown',
-        print: false,
-        responsive: "scrollMaxHeight",
-        viewColumns: false,
-        download: true,
-        onRowClick: (i, data) => handleClick(EmailStore._getCampaign(AccountStore.analyticData_campaigns[data.rowIndex].campaignID))
-        };
-        return(
-            <React.Fragment>
-            <div>
-            
-            <Header
-            as="h2"
-            content="Email Campaign Performance"
-            />
-  
-              <div style={{ marginTop: 15 }}>
-          <MUIDataTable
-            // title={"Employee List"}
-            data={data}
-            columns={columns}
-            options={options}
-          />
-          {/* {CampaignDetails(this.state.showModal, this.state.campaign)} */}
-          <CampaignDetails open={this.state.showModal} onClose={() => this.setState({showModal: false})} source={this.state.campaign} />
-          
-        </div>
+    
+
+    const searchFilter = (all) => {
+      if(UIStore.search.campaignsSearchValue === "") return all
+      else return all.filter(i => i.subject.toLowerCase().includes(UIStore.search.campaignsSearchValue.toLowerCase()))
+  }
+
+
+    const outbounds = searchFilter(AccountStore.analyticData_campaigns).map(camp => {
+      const campaign = EmailStore._getCampaign(camp.campaignID)
+
+      if(!campaign) return null
+      return (
+        <Table.Row key={"camp" + giveMeKey()}>
+          <Table.Cell style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>
+              {camp.subject}
+          </Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{UTCtoFriendly(camp.sent)}</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{`${camp.total_views}/${camp.unique_views}`}</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{camp.open_rate}%</Table.Cell>
+          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{this.clickRate(camp)}%</Table.Cell>
+          <Table.Cell></Table.Cell>
+          <Table.Cell> 
+                    {CampaignDetails(campaign)}
+            </Table.Cell>
+          </Table.Row>
+        )
+      })
+
+    return (
+      <div>
+        <Header
+          as="h2"
+          content="Email Campaign Performance"
+        />
+                   <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/></div>
+     
+          <Table basic="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell><div style={{paddingBottom: 20}}>Name</div></Table.HeaderCell>
+                <Table.HeaderCell>Sent<br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("sent", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("sent", "Lowest")}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Views (All/Unique) <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("total_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("total_views", "Lowest")}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Open Rate <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("open_rate", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("open_rate", "Lowest")}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Click Rate <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("clicks", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("clicks", "Lowest")}/></span></Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
+                <Table.HeaderCell />
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+                {outbounds}
+            </Table.Body>
+          </Table>
+
+   
        
       </div>
-      </React.Fragment>
-        )
-    }
+    );
+  }
 }
-
