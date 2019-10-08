@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
-import {inject, observer} from "mobx-react";
+import { inject, observer } from "mobx-react";
 
 import { Row } from 'reactstrap';
 
@@ -61,8 +61,8 @@ class ContentDetail extends React.Component {
          <Layout>
             <div className="">
                <div className="">
-                  <PostDetails post={PostData} mode={mode} sentiment={sentiment} update={(e)=>this.setState(e)}/>
-{/* 
+                  {PostData ? (<PostDetails post={PostData} />) : ("")}
+                  {/* 
                   <div className="page_content_bg">
                      <div className="smallContainer">
                         <QuestionAnswer qaData={qaData} />
