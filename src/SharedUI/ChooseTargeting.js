@@ -10,13 +10,20 @@ import { TagSelect } from "../SharedUI/TagSelect";
 export class ChooseTargeting extends React.Component {
     constructor(props){
         super(props);
-        this.state={sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []}
+        this.state={};
     }
+    reset() {
+      this.setState({sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []});
+    }
+  componentDidMount(){
+    this.reset();
+  }
   render(){
     const { DataEntryStore, AccountStore, TeamStore } = this.props;
 
     const updateState = async (val) => {
-        await this.setState(val);
+        if(val.sendTargetType === "all") await this.reset()
+        else await this.setState(val);
         // await updateState({valid: Boolean(this.state.q.trim() && this.state.resType 
         //   && (this.state.resConfig === "custom"? this.state.resChoices.length > 1 : true))});
         this.props.echostate(this.state);
@@ -32,7 +39,7 @@ export class ChooseTargeting extends React.Component {
     };
 
     const options =
-      TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
+      (TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
         { text: "To Everyone", value: "all" },
         { text: "To Selected Teams/Tags", value: "teams" },
         { text: "To Select Users", value: "users" }
@@ -41,7 +48,9 @@ export class ChooseTargeting extends React.Component {
       ([
         { text: "To Everyone", value: "all" },
         { text: "To Select Users", value: "users" }
-      ]);
+      ])).filter(opt => 
+          this.props.NoSelectUsers? opt.value !== "users": true
+        );
 
 
     const targetOptions =

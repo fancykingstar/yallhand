@@ -140,7 +140,11 @@ export class Invite extends React.Component  {
         <Header as="h2" style={{padding: 0, margin: 0}} content="Onboard Users" subheader="Send invite for new user to join organization"/>
         <Segment>
           {this.displayUserInvites()}
-          <Button onClick={this.handleClick}> + </Button>
+   
+          <div style={{ paddingBottom: "10px" }}>
+          <Button primary circular icon="plus" onClick={() => this.handleClick()} />
+        </div>
+     
           <div> 
             <span> start user{" "} 
               <Dropdown 

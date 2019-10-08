@@ -9,6 +9,7 @@ import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
 import {survey} from "../DataExchange/PayloadBuilder";
 import {createSurvey} from "../DataExchange/Up";
+import moment from "moment";
 import _ from "lodash";
 
 @inject("SurveyStore")
@@ -20,10 +21,10 @@ class SurveyNewEdit extends React.Component {
       surveyItems: [this.reset()], 
       label: "",
       targetType: "all",
-      targetsConfig: {} ,
-      deadline: "",
-      stage: "inactive",
+      deadline: 0,
+      active: false,
       anonymous: false,
+      sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []
     }
   };
 
@@ -38,12 +39,13 @@ class SurveyNewEdit extends React.Component {
         resChoices: [],
         scaleLabels_lo: "Least Favorable",
         scaleLabels_hi: "Most Favorable",
-        valid: false
+        valid: false,
     };
   };
 
+
+
   validate = () => {
-    console.log(JSON.stringify(this.state))
     const {label, targetType, targetConfig, deadline, surveyItems} = this.state;
     const review = {
       general: Boolean(label && surveyItems.length && deadline),
@@ -62,7 +64,6 @@ class SurveyNewEdit extends React.Component {
   }
 
   shiftRow = (direction, index) => {
-    console.log(direction, index)
     let questionList = this.state.surveyItems;
     const val = questionList[index];
     questionList.splice(index, 1);
@@ -98,24 +99,21 @@ class SurveyNewEdit extends React.Component {
       add={this.addItem}
       />
     })
-  }
+  } 
 
   addItem = () => {
-    console.log(this.state.surveyItems);
     this.setState({ surveyItems: [...this.state.surveyItems, this.reset()]});
-    console.log(this.state.surveyItems);
   }
 
-  saveSurvey = () => {
-    const {surveyItems, label, targetType, anonymous} = this.state;
-    createSurvey(survey(surveyItems, label, targetType, anonymous));
+  saveSurvey = (active=null) => {
+    if (active) this.setState({active});
+    createSurvey(survey("survey",this.state));
   }
 
-  componentDidMount(){
+  componentDidMount(active=null){
     const {SurveyStore} = this.props;
     const id = this.props.match.params.id;
     const loadSurvey = this.props.match.params.id? SurveyStore.allSurveys.filter(i=>i.surveyID === id)[0] : false;
-    console.log("id", id, "survey", SurveyStore.allSurveys)
     if(loadSurvey) this.setState(loadSurvey);
   }
   
@@ -123,6 +121,7 @@ class SurveyNewEdit extends React.Component {
   render() {
     const launch = (
       <Button
+        onClick={e => this.saveSurvey(true)}
         disabled={
          !this.validate()
         }
@@ -140,34 +139,17 @@ class SurveyNewEdit extends React.Component {
     const stop = <Button>Stop</Button>;
     const cancel = (
       <Button
-        onClick={e => this.setState({ items: this.state.items.reverse() })}
+        // onClick={e => this.setState({ items: this.state.items.reverse() })}
       >
         Cancel
       </Button>
     );
-    const actions = {
-      inactive: (
-        <React.Fragment>
-          {launch}
-          {save}
-          {cancel}
-        </React.Fragment>
-      ),
-      active: (
-        <React.Fragment>
-          {save}
-          {stop}
-          {archive}
-        </React.Fragment>
-      )
-    };
-
-
+    const actions = this.state.active? 
+     ( <React.Fragment> {save} {stop} {archive} </React.Fragment> ) : ( <React.Fragment> {launch} {save} {cancel} </React.Fragment> );
 
     return (
-      <div>
+      <div> 
         <BackButton/>
-        {/* {JSON.stringify(this.state.surveyItems)} */}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Survey builder
           <Header.Subheader>
@@ -183,22 +165,23 @@ class SurveyNewEdit extends React.Component {
             />
           </Form>
           <div style={{ paddingTop: "10px" }}>
-            <ChooseTargeting label="Survey" echostate={val=>this.setState({targetsConfig:val})}/>
+            <ChooseTargeting label="Survey" echostate={val=>this.setState(val)}/>
           </div>
           <div style={{ paddingTop: "10px" }}>
             <span style={{ fontWeight: 800 }}>Deadline</span>
           </div>
           <div style={{ marginTop: "-5px" }}>
             <DateTimeSelect
-              value={e => this.setState({ deadline: e })}
+              value={e => this.setState({ deadline: moment(e).valueOf() })}
               includeTime
+              defaultValue={this.state.deadline? this.state.deadline : ""}
             />
           </div>
           <div style={{margin: "5px 0 5px"}}>
           <span style={{fontWeight: 800}}>Anonymous Responses </span><br/>
           <Checkbox size toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
           </div>
-          <div>{actions[this.state.stage]}</div>
+          <div>{actions}</div>
         </Segment>
         {this.displaySurveyItems()}
         <div style={{ padding: "20px 0 20px" }}>

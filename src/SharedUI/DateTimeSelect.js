@@ -13,13 +13,15 @@ export class DateTimeSelect extends React.Component {
     const remainder = 15 - (now.minute() % 15);
 
     this.state = {
-      currentDate: ""
+      currentDate:  ""
       // moment(now).add(remainder, "minutes")
     }
   }
   
   validTimeConstraints () {
-    if(moment().isSame(this.state.currentDate, 'day')) {
+    const {currentDate} = this.state.currentDate
+    if (typeof(currentDate) === "number") this.setState({currentDate: moment(this.state.currentDate)});
+    if(currentDate && this.state.currentmoment().isSame(currentDate, 'day')) {
       return {
         hours: {
           min: this.state.currentDate.hours(),
@@ -46,17 +48,22 @@ export class DateTimeSelect extends React.Component {
     this.props.value(newDateTime)
   }
 
+  static getDerivedStateFromProps(props, state) { 
+    if(props.defaultValue) return { currentDate: props.defaultValue }
+    return null
+ }  
+
   render() {
     const yesterday = moment().subtract( 1, 'day' );
 
     const validDates = ( current )=> current.isAfter( this.props.notToday === undefined? yesterday: moment() );
+
 
     return ( 
         <React.Fragment>
           <DateTime 
           isValidDate={validDates}
           timeConstraints={this.validTimeConstraints()}
-          // defaultValue={this.state.currentDate}
           inputProps={{ placeholder: 'Choose date and time' }}
           value={this.state.currentDate}
           onChange={e => this.updateDate(e)}

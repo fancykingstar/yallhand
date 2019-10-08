@@ -4,21 +4,12 @@ import { withRouter } from "react-router-dom";
 import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
-
-import {sample} from "./sample";
 import { SurveyStore } from "../Stores/SurveyStore";
+import { AccountStore} from "../Stores/AccountStore";
+import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
-@inject("SurveyStore")
-@observer
 class SurveyFrame extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { UIFilter: "active" };
-  }
-  // componentDidMount(){
-  //   const {SurveyStore} = this.props;
-  //   SurveyStore.loadSurveys([sample]);
-  // }
+  
   render() {
     const MenuContainer = styled.div`
       display: flex;
@@ -30,14 +21,16 @@ class SurveyFrame extends React.Component {
       }
     `;
 
-    const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
-
-    const data = SurveyStore.allSurveys.map(survey => [survey.label, survey.updated, survey.userID, survey.stage])
-    
     const handleClick = (survey) => {
       this.props.history.push(`/panel/surveys/manage-survey/${survey? survey.surveyID: ""}` );
 
     }
+    
+    const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
+
+    const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.stage])
+    
+
 
     const options = {
       elevation: 1,
@@ -67,10 +60,11 @@ class SurveyFrame extends React.Component {
               <Icon name="plus" /> Create New...{" "}
             </Button>
           </div>
-        </MenuContainer>
+        </MenuContainer> 
+        <span>
+  </span>      
         <div style={{ marginTop: 15 }}>
           <MUIDataTable
-            // title={"Employee List"}
             data={data}
             columns={columns}
             options={options}

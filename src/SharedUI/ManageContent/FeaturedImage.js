@@ -5,6 +5,7 @@ import { S3Upload } from "../../DataExchange/S3Upload";
 import { GenerateFileName } from "../../SharedCalculations/GenerateFileName";
 import { modifyAnnouncement, modifyPolicy } from "../../DataExchange/Up";
 import { featuredImgEdit } from "../../DataExchange/PayloadBuilder";
+import { Row, Col, } from 'reactstrap';
 import _ from "lodash";
 import "./style.css";
 import { apiCall } from "../../DataExchange/Fetch";
@@ -70,7 +71,8 @@ export class FeaturedImage extends React.Component {
       )
         .then(result => {
           if (result !== null) { 
-            DataEntryStore.set("contentmgmt", "img", result.file.location) 
+            if(this.props.output) this.props.output({img: result.file.location})
+            else DataEntryStore.set("contentmgmt", "img", result.file.location) 
           }
         })
         .then(() => {
@@ -84,12 +86,15 @@ export class FeaturedImage extends React.Component {
 
     const setUnsplash = async () => {
       await requestDownload();
-      DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
-      DataEntryStore.set("contentmgmt", "imgData", this.state.retrievedImg);
-      if (this.props.mode) await this.props.mode === "policy"
-              ? modifyPolicy(featuredImgEdit("policy"))
-              : modifyAnnouncement(featuredImgEdit("announcement"));
-      DataEntryStore.reset("featuredImage");
+      if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg}) 
+      else {
+        DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+        DataEntryStore.set("contentmgmt", "imgData", this.state.retrievedImg);
+        if (this.props.mode) await this.props.mode === "policy"
+                ? modifyPolicy(featuredImgEdit("policy"))
+                : modifyAnnouncement(featuredImgEdit("announcement"));
+        DataEntryStore.reset("featuredImage");
+      }
       UIStore.set("modal", "getUnsplash", false)
     }
 
@@ -179,6 +184,8 @@ export class FeaturedImage extends React.Component {
           {this.props.label === undefined ? "Featured Image" : this.props.label}
         </Header>
         <br />
+        {preview}
+        <br/>
         <Form>
           <Form.Group>
             <Form.Input
@@ -195,16 +202,16 @@ export class FeaturedImage extends React.Component {
               }
               onClick={e => handleSubmit(e)}
             >
-              Upload Image
+              Upload
             </Form.Button>
             <Form.Button
               onClick={e => UIStore.set("modal", "getUnsplash", true)}
             >
-              Search Unsplash...
+              Stock...
             </Form.Button>
           </Form.Group>
         </Form>
-        {preview}
+  
         <Message hidden={UIStore.message.featuredImage === ""} error>
           {UIStore.message.featuredImage}
         </Message>

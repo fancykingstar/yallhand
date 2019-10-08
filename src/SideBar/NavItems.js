@@ -3,7 +3,6 @@ import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom"
 import  NavItem  from "./NavItem";
 import {syncAdminNav} from "../SharedCalculations/SyncAdminNav"
-import "./style.css";
 
 @inject("UIStore", "UserStore")
 @observer
@@ -67,7 +66,13 @@ class NavItems extends React.Component {
         />  
         <br />
         </React.Fragment>
-    
+       <NavItem
+          id="tasks"
+          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
+          label="Tasks"
+          active={UIStore.sideNav.activePrimary === "tasks"}
+        />  
+        <br />
 
 
         <NavItem
@@ -88,14 +93,15 @@ class NavItems extends React.Component {
         <br />
 
         <NavItem
-          id="resources"
-          icon="cubes"
-          label="Resources"
-          active={UIStore.sideNav.activePrimary === "resources"}
-
+          id="storage"
+          icon="cloud"
+          label="Storage"
+          active={UIStore.sideNav.activePrimary === "storage"}
         />
+        <br/>
+        
 
-      {UserStore.user.invitedBy !== "admin"?"":
+      {/* {UserStore.user.invitedBy !== "admin"?"":
       <React.Fragment>
         <br/>
       <NavItem
@@ -114,7 +120,7 @@ class NavItems extends React.Component {
         />  
    
         </React.Fragment>
-    }
+    } */}
       </div>
 
       

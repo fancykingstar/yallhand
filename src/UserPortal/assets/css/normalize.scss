@@ -1,0 +1,20 @@
+@font-face {
+	font-family: 'Conv_GothamRounded-Medium';
+	src: url('../fonts/GothamRounded-Medium.eot');
+	src: local('☺'), url('../fonts/GothamRounded-Medium.woff') format('woff'), url('../fonts/GothamRounded-Medium.ttf') format('truetype'), url('../fonts/GothamRounded-Medium.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 992px,
+  lg: 1282px,
+  xl: 1400px
+) !default;
+
+
+// import slick styles
+@import "slick/slick";
+@import "slick/slick-theme";

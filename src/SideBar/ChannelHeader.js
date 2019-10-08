@@ -8,7 +8,6 @@ import { channel } from "../DataExchange/PayloadBuilder";
 import { departments } from "../TemplateData/departments";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import { StdInputValidation } from "../SharedCalculations/StdInputValidation"
-import "./style.css";
 
 @inject("UIStore", "DataEntryStore", "ChannelStore")
 @observer

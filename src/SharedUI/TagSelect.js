@@ -25,6 +25,7 @@ export class TagSelect extends React.Component {
       <Fragment>
         {TeamStore.tags.length !== 0 ?
           <Form.Dropdown
+            fluid
             {...val}
             search
             selection
