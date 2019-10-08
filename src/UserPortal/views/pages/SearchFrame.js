@@ -1,24 +1,11 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Input, Icon } from "semantic-ui-react";
-import { QLogo } from "../../../Assets/Graphics/QLogo";
-import search_icon from "../../assets/images/search_icon.svg";
-import { AppBar, Tabs, Tab } from '@material-ui/core';
-import Layout from '../../layouts/DefaultLayout';
-import {
-  initSearchObj,
-  stupidSearch
-} from "../../../SharedCalculations/StupidSearch";
-// import "./style.css";
+import { Icon } from "semantic-ui-react";
+import { Event as EventIcon, Close as CloseIcon, Search as SearchIcon, } from '@material-ui/icons';
+import { initSearchObj, stupidSearch } from "../../../SharedCalculations/StupidSearch";
 
-@inject(
-  "UIStore",
-  "AnnouncementsStore",
-  "PoliciesStore",
-  "ResourcesStore",
-  "AccountStore"
-)
+@inject( "UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore" )
 @observer
 class SearchFrame extends React.Component {
   constructor(props) {
@@ -78,72 +65,40 @@ class SearchFrame extends React.Component {
       outline: "none"
     };
 
-    const searchOrClear = () =>
-      this.props.location.pathname.includes("search") ||
-      UIStore.search.portalSearchValue !== "" ? (
-        <button
-          style={invisiButton}
-          onClick={e => {
-            UIStore.set("search", "portalSearchValue", "");
-            this.props.history.goBack();
-          }}
-        >
-          <Icon style={{ color: "#2dbffe" }} name="remove circle" />
-        </button>
-      ) : (
-        <button style={invisiButton} onClick={e => submitSearch(e)}>
-          <Icon style={{ color: "#2dbffe" }} name="search" />{" "}
-        </button>
-      );
-
     const submitSearch = e => {
       e.preventDefault();
       this.props.history.push("/portal/search");
     };
 
+    const clearSearch = () => {
+      UIStore.set("search", "portalSearchValue", "");
+      this.props.history.goBack();
+    }
+
     return (
 
+      <form className="menu-search">
+      <div className="search_div">
+          <input 
+              value={UIStore.search.portalSearchValue}
+              type="text"
+              name="search"
+              placeholder="Search"
+              onChange={e => UIStore.set("search", "portalSearchValue", e.target.value) }
+              onFocus={() => this.setState({ searchFocused: true })}
+              onBlur={() => this.setState({ searchFocused: false })}
+              onKeyDown={e => {
+                if (e.key === "Enter") submitSearch(e);
+              }}
+              />
+          <button type="button" onClick={()=>submitSearch(e)}><SearchIcon /></button>
+          {(UIStore.portalSearchValue !== '') ? (
+              <button className="clearInput" type="button" onClick={()=>clearSearch()}><CloseIcon /></button>
+          ) : ('')}
+      </div>
+  </form>
 
-            <form>
-              <div className="search_div">
-                <input
-                  onFocus={() => this.setState({ searchFocused: true })}
-                  onBlur={() => this.setState({ searchFocused: false })}
-                  onKeyDown={e => {
-                    if (e.key === "Enter") submitSearch(e);
-                  }}
-                  onChange={e =>
-                    UIStore.set("search", "portalSearchValue", e.target.value)
-                  }
-                  value={UIStore.search.portalSearchValue}
-                  type="text"
-                  name="search"
-                  placeholder="Search"
-                ></input>
 
-                <button>
-                  <img src={search_icon} alt="" />
-                </button>
-              </div>
-            </form>
-   
-
-      // <div className="PortalSearchContainer">
-      //   <div className="PortalSearchForm" style={{backgroundColor: this.state.searchFocused? "rgba(185, 185, 185, 0.37)":"rgba(129, 129, 129, 0.37)"}}>
-      // <Input
-      //   value={UIStore.search.portalSearchValue}
-      //   onChange={(e, val) => UIStore.set("search", "portalSearchValue", val.value)}
-      //   fluid icon
-      //   placeholder="Search...">
-      //     <input
-      //     onFocus={() => this.setState({searchFocused: true})}
-      //     onBlur={() => this.setState({searchFocused: false})}
-      //     onKeyDown={e => {if(e.key === "Enter") submitSearch(e)}}
-      //     style={{background: "transparent", border: "none", color: "#FFFFFF"}}
-      //     />
-      //     {searchOrClear()}
-      //   </Input>
-      // </div></div>
     );
   }
 }

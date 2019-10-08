@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Icon } from "semantic-ui-react";
 import { inject, observer } from "mobx-react";
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 @inject("UIStore")
 @observer
@@ -20,17 +20,23 @@ class NavItem extends React.Component {
     }
     
     return (
-        <div
-          className={active}
-          onClick={e => handleClick(this.props.id)}
-        >
-          <div className="NavItemIcon">
-            {typeof(this.props.icon) !== "string"? this.props.icon: <Icon name={this.props.icon} />}
-          </div>
-          <div className="NavItemText">
-            <h4>{this.props.label}</h4>
-          </div>
-        </div>
+        // <div
+        //   className={active}
+        //   onClick={e => handleClick(this.props.id)}
+        // >
+        //   <div className="NavItemIcon">
+        //     {typeof(this.props.icon) !== "string"? this.props.icon: <Icon name={this.props.icon} />}
+        //   </div>
+        //   <div className="NavItemText">
+        //     <h4>{this.props.label}</h4>
+        //   </div>
+        // </div>
+        <ListItem button key="files">
+            <ListItemIcon>
+              {/* <FaRegFileAlt /> */}
+              </ListItemIcon>
+             <ListItemText primary="Files" />
+        </ListItem>
     );
   }
 }

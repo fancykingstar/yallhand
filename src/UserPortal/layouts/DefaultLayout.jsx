@@ -17,11 +17,14 @@ import {
     Help as HelpIcon
 } from '@material-ui/icons';
 import { FaRegFileAlt } from "react-icons/fa";
+import SearchFrame from "../views/pages/SearchFrame";
 
 import Announcements from '../assets/images/announcements.svg';
 import Surveys from '../assets/images/surveys.svg';
 import MySaved from '../assets/images/my-saved.svg';
 import Directory from '../assets/images/Directory.svg';
+import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
+
 
 import search_icon from "../assets/images/search_icon.svg";
 
@@ -214,7 +217,7 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemText primary="Faqs" />
                         </ListItem>
                         <ListItem button key="surveys" component={Link} to='/portal/surveys'>
-                            <ListItemIcon><img src={Surveys} alt="" /></ListItemIcon>
+                            <ListItemIcon><BallotRoundedIcon/></ListItemIcon>
                             <ListItemText primary="Surveys" />
                         </ListItem>
                         {/* <ListItem button key="directory" component={Link} to="directory">
@@ -236,22 +239,8 @@ const DefaultLayout = ({ ...props }) => {
                 </div>
                 <div className="menu-footer">
 
-                    <form className="menu-search">
-                        <div className="search_div">
-                            <input ref={focusUsernameInputField}
-                                type="text" id="search" name="search" placeholder="Search"
-                                value={state.searchTerm}
-                                onChange={handleChange} />
-                            <button type="button" onClick={handleSearchClick}><SearchIcon /></button>
-                            {(state.searchTerm !== '') ? (
-                                <button className="clearInput" type="button" onClick={handleClearClick}><CloseIcon /></button>
-                            ) : ('')}
-                        </div>
-                    </form>
-
-                    <div className="menu-footer-logo">
-                                    <QLogo />
-                    </div>
+                <SearchFrame/>
+                        <div className="menu-footer-logo" style={{visibility: !open? "hidden":"visible"}}> <QLogo /> </div>
                 </div>
             </Drawer>
             <main className={clsx(classes.content, "main-content-container")}>
