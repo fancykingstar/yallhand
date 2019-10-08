@@ -44,7 +44,7 @@ class Store {
   loadTasks(allTasks) {
     return new Promise((resolve, reject) => {
       this.allTasks = allTasks
-    //   this.allTasks.length === 0 ? reject(false) : resolve(true)
+      this.allTasks.length === 0 ? reject(false) : resolve(true)
     })
   }
 

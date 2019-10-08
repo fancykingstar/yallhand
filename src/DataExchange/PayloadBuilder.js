@@ -481,7 +481,9 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return buildObj
   }
 
-  export const survey = ( data ) => {
+  ///SURVEYS AND TASKS
+
+  export const survey = ( type, data ) => {
     const {surveyItems, active, label, anonymous, deadline, sendToTeamID, sendToTagID, sendTargetType, sendToUsers } = data;
     const generateInstances = () => {
       if(sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
@@ -490,6 +492,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     }
     const buildObj = {
       surveyItems,
+      type,
       label,
       sendTargetType,
       anonymous,
@@ -501,17 +504,17 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return _.extend({}, base(), buildObj)
   };
 
-  export const task = ( taskItems, label, targetType, anonymous, deadline ) => {
-    const buildObj = {
-      taskItems,
-      label,
-      targetType,
-    "stage": "draft",
-      anonymous,
-      deadline
-    };
-    return _.extend({}, base(), buildObj)
-  };
+  // export const task = ( taskItems, label, targetType, anonymous, deadline ) => {
+  //   const buildObj = {
+  //     taskItems,
+  //     label,
+  //     targetType,
+  //   "stage": "draft",
+  //     anonymous,
+  //     deadline
+  //   };
+  //   return _.extend({}, base(), buildObj)
+  // };
 
 
 

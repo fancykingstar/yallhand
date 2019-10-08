@@ -107,7 +107,7 @@ class SurveyNewEdit extends React.Component {
 
   saveSurvey = (active=null) => {
     if (active) this.setState({active});
-    createSurvey(survey(this.state));
+    createSurvey(survey("survey",this.state));
   }
 
   componentDidMount(active=null){

@@ -17,7 +17,8 @@ import MySaved from '../assets/images/my-saved.svg';
 import Directory from '../assets/images/Directory.svg';
 
 import logo_img from "../assets/images/logo.png";
-import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
+import {QLogo} from "../../Assets/Graphics/QLogo";
+// import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
 import {AccountStore} from "../../Stores/AccountStore";
 
@@ -183,7 +184,8 @@ const DefaultLayout = ({ ...props }) => {
 
                 </div>
                 <div className="menu-footer">
-                    <img src={menu_footer_logo_img} alt="yallhands" />
+                    <QLogo />
+                    {/* <img src={menu_footer_logo_img} alt="yallhands" /> */}
                     {/* yallhands */}
                 </div>
             </Drawer>

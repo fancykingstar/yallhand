@@ -44,9 +44,9 @@ export class Task extends React.Component {
         const update = (item, val) => {
             const newItem = Object.assign(item, {executed: val})
             console.log("newItem", newItem)
-            let restOfState = this.state.data.taskItems.filter(i => i._id !== item._id);
+            let restOfState = this.state.data.surveyItems.filter(i => i._id !== item._id);
             restOfState.push(newItem);
-            const newState = Object.assign(this.state, {taskItems: restOfState});
+            const newState = Object.assign(this.state, {surveyItems: restOfState});
             this.setState(newState);
         }
 
@@ -96,17 +96,17 @@ export class Task extends React.Component {
             </div>
             <div className="survey_group_questions">
                 <List>
-                    {this.state.data.taskItems.filter(task => !task.executed).map((task, i) => tasklistitem(task, i, false))}
+                    {this.state.data.surveyItems.filter(task => !task.executed).map((task, i) => tasklistitem(task, i, false))}
                     
                 </List>
-                {!this.state.data.taskItems.filter(task => task.executed).length? null :
+                {!this.state.data.surveyItems.filter(task => task.executed).length? null :
                 <>
                 <Divider/>
                 <List >
                 <ListSubheader component="div" id="nested-list-subheader">
                     Completed
                     </ListSubheader>
-                    {this.state.data.taskItems.filter(task => task.executed).map((task, i) => tasklistitem(task, i, true))}
+                    {this.state.data.surveyItems.filter(task => task.executed).map((task, i) => tasklistitem(task, i, true))}
                 </List>
                 </>
                 }

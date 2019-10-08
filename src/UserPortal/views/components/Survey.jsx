@@ -2,18 +2,23 @@ import React from 'react';
 import * as constants from "../../constants/constants.js";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
-import { Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Col, Row, Form, FormGroup, Label, Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import {SliderScale} from "./Responses/Slider";
 import {StarRating} from "./Responses/StarRating";
 import {Binary} from "./Responses/Binary";
 import {MultiChoice} from "./Responses/MultiChoice";
 import { ItemExtra } from 'semantic-ui-react';
 import TimeAgo from 'react-timeago';
+import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
+import Collapse from '@material-ui/core/Collapse';
+import { cpus } from 'os';
+
 
 
 export class Survey extends React.Component {
     constructor(props){
         super(props);
+        this.state={show: true}
     }
     render() {
         // const box_type = (this.props.box_type) ? this.props.box_type : 'announce';
@@ -43,6 +48,7 @@ export class Survey extends React.Component {
         }
 
         return (
+            <Collapse in={this.state.show}>
             <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
             <div className="inner_page_content_title">
                <h5>{this.props.data.label}</h5>
@@ -55,8 +61,14 @@ export class Survey extends React.Component {
                   {answerOptions(answerKey(item), item)}
                </div>
             })}
+        <div style={{padding: "25px 25px 15px 25px"}}>
+        <Button outline color="primary" size="sm" onClick={()=>this.setState({show:false})}>
+        Submit <DoneRoundedIcon fontSize="small"/>
+      </Button>
+        </div>
         </div>
          </div>
+         </Collapse>
         )
     }
 }

@@ -18,14 +18,9 @@ export class SideBar extends React.Component {
           whenClicked={val => UIStore.set("sideNav", "activePrimary", val)}
         />
         {/* <ChannelContainer /> */}
-        <div className="PoweredByFrame">
-          <div className="PoweredByText">
-            <div style={{ float: "left", paddingTop: 7, paddingLeft: 12 }}>
-              <QLogo />
-            </div>
-            <div>yallhands</div>
-          </div>
-        </div>
+        <div className="PoweredByFrame" style={{borderTop: "1px solid #383838"}}> 
+          <div style={{marginLeft: 50, marginTop: 9}}><QLogo width="110px" /></div>
+         </div>
       </div>
     );
   }
