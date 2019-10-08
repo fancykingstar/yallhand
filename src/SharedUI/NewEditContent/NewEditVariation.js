@@ -15,67 +15,37 @@ class NewEditVariation extends React.Component {
     this.state = {
       loaded: false,
       mode: match.path.includes("announcements")? "announcement":"policy",
-      isNew: _.isEmpty(match.params),
-      id: this.isNew? "": match.params.id,
+      contentID: match.params.contentID !== "content"? match.params.contentID:"", 
+      variID: match.params.variID !== "new"? match.params.variID:"",
+      isDupe: match.params.variID && match.params.options === "d",
       content: {}
     }
   }
 
   async loadContent() {
-    const {id, mode, isNew} = this.state;
-    if(!id) {
-      this.setState({loaded:true});
+    const {mode, variID, contentID, isDupe} = this.state;
+    if(!variID) {
+      this.setState({loaded:true, isNewContent: true, isNewVari: true});
       return
     }
     const { UIStore, PoliciesStore, AnnouncementsStore, DataEntryStore } = this.props;
-    const isLoaded = mode === "announcement"? AnnouncementsStore._SearchVariation(id): PoliciesStore._SearchVariation(id);
-    await this.setState({content: isLoaded, loaded:true})
-    if(id && isEmpty(this.state.content)) this.props.history.push("/panel/announcements");
+    const isLoaded = mode === "announcement"? AnnouncementsStore._SearchVariation(variID): PoliciesStore._SearchVariation(variID);
+    await this.setState({content: isLoaded, loaded:true, isNewContent: Boolean(!contentID), isNewVari: Boolean(!variID)});
+    if((variID && isEmpty(isLoaded)) || (!isDupe && this.props.match.params.options ) ) this.props.history.push(`/panel/${mode === "announcement"? "announcements":"faqs"}`);
   }
-
-  changeStage(stage) {
-    const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
-    const { isNew } = DataEntryStore.content;
-    const { mode } = this;
-    DataEntryStore.set("content", "stage", stage)
-    if (stage === "published") {
-      const historyMode = contentHistory(mode, UIStore.content[`${mode}ID`], isNew ? content(mode) : contentEdit(mode))
-      createHistory(historyMode)
-    }
-    const isPolicy = mode === "policy";
-    const path = isPolicy ? '/panel/faqs/manage-policy/' : '/panel/announcements/manage-announcement/';
-    const typeId = `${mode}ID`;
-    if (isNew) {
-      (isPolicy ? createPolicy(content(mode)) : createAnnouncement(content(mode))).then(res => {
-        if (isPolicy) PoliciesStore.pushPolicies(res);
-        else AnnouncementsStore.pushAnnouncements(res);
-        const id = res[typeId];
-        UIStore.set("content", typeId, id);
-        history.push(`${path}${res[id]}`);
-      });
-    }
-    else {
-      if (isPolicy) modifyPolicy(contentEdit(mode));
-      else modifyAnnouncement(contentEdit(mode));
-      if (isNew) DataEntryStore.set("content", "isNew", false);
-      history.push(`${path}${UIStore.content[mode + "ID"]}`);
-    }
-  }
-
   componentDidMount() {
-    const {isNew, loaded, id, content} = this.state;
     this.loadContent();
-
   };
 
   render() {
-    const {loaded, content, mode} = this.state;
-
+    const {loaded} = this.state;
+    console.log("new edit state", this.state)
     return (
       <div>
+
           {loaded &&
              <>
-             <VariationContent mode={mode} data={this.state}/>
+             <VariationContent data={this.state}/>
              </>
           }
       </div>

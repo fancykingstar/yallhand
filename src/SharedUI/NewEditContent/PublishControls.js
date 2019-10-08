@@ -46,8 +46,9 @@ export class PublishControls extends React.Component {
     return (
 
       <Dropdown 
-      button style={{backgroundColor: "#267EA3", color: "#FFFFFF"}} text="Update">
+      button style={{backgroundColor: "#2185D0", color: "#FFFFFF"}} text="Stage...">
       <Dropdown.Menu>
+      <Dropdown.Header>{`Now: ${this.props.unsavedWarning? "Unsaved":""} ${stage}`}</Dropdown.Header>
       {actionOptions[stage].map(opt =>
         <Dropdown.Item key={"pubctrl" + giveMeKey()} text={displayText[opt]} icon={iconKey[opt]} name={opt} onClick={this.handleItemClick}  />
       )}

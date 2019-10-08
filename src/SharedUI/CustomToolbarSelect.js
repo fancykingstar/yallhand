@@ -49,11 +49,11 @@ class CustomToolbarSelect extends React.Component {
            {this.hasFeatured()?  <StarBorderIcon className={classes.starIcon} />: <StarIcon className={classes.starIcon} />}
           </IconButton>
         </Tooltip>
-        <Tooltip title={this.hasPublished()? "Archive":"Delete"}>
+        {/* <Tooltip title={this.hasPublished()? "Archive":"Delete"}>
           <IconButton className={classes.iconStyle} onClick={()=>this.handleClick("archive")}>
            {this.hasPublished()? <ArchiveIcon className={classes.archiveIcon} /> :   <DeleteIcon className={classes.deleteIcon} />}
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
        
       </div>
     );

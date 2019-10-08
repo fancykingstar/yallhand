@@ -72,14 +72,7 @@ class Forgot extends React.Component {
           <div className="ContainerLogin">
             <div className="Login forgot">
               <div className="LoginWorkspace">
-                <div style={{width: "100%", textAlign: "center"}}><QLogo fill="#797777" width="48px" height="60px" /></div>
-                <div style={{width: "100%"}}>
-                  <Grid.Column width={13}>
-                    <div style={{lineHeight: "48px", textAlign: "center", fontSize: "2.8em"}} >
-                      yallhands
-                    </div>
-                  </Grid.Column>
-                </div>
+              <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}> <QLogo blue width="200"/> </div> 
               </div>
               <div className="ERM">Employee Relationship Management</div>
               <Divider />

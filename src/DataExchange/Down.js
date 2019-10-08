@@ -145,12 +145,13 @@ export const history = async () => {
   return result
 }
 
-export const surveys= async (accountID) => {
+export const surveys = async (accountID) => {
   const result = await apiCall_noBody(`surveys/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-  SurveyStore.loadSurveys(result);
+  await SurveyStore.loadSurveys(result.filter(i=>i.type==="survey"));
+  await TaskStore.loadTasks(result.filter(i=>i.type==="task"));
 }
 
-export const tasks= async (accountID) => {
-  const result = await apiCall_noBody(`tasks/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-  TaskStore.loadTasks(result);
-}
+// export const tasks= async (accountID) => {
+//   const result = await apiCall_noBody(`tasks/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
+//   TaskStore.loadTasks(result);
+// }

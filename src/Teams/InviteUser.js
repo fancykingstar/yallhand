@@ -2,21 +2,18 @@ import React from 'react';
 import {inject, observer} from 'mobx-react';
 import { Form, Icon } from "semantic-ui-react";
 import { Input } from "../SharedUI/Input";
-import TextField from '@material-ui/core/TextField';
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
-import { Col, Row, 
-  // Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon 
-} from 'reactstrap';
+import { Col, Row, } from 'reactstrap';
+import { EligibleUsersByTeamTag} from "../SharedCalculations/EligibleUsersByTeamTag";
 
 export const InviteUser = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, boss, isAdmin } = props.info;
   const { multipleRows } = props
 
   const setField = (content) => {
-    props.updateFields(content, props.id)
-
+    props.updateFields(content, props.id);
   }
 
   const removeRow = () => {

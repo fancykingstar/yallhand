@@ -8,7 +8,7 @@ import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
 import {task} from "../DataExchange/PayloadBuilder";
-import {createTask} from "../DataExchange/Up";
+import {createSurvey} from "../DataExchange/Up";
 import {TaskStore} from "../Stores/TaskStore";
 import moment from "moment";
 import _ from "lodash";
@@ -105,8 +105,8 @@ class TaskNewEdit extends React.Component {
   }
 
   SaveTask = () => {
-    const {taskItems, label, targetType, anonymous, deadline} = this.state;
-    createTask(task(taskItems, label, targetType, anonymous, deadline));
+    const {surveyItems, label, targetType, anonymous, deadline} = this.state;
+    createSurvey(survey("task",{surveyItems, label, targetType, anonymous, deadline}));
   }
 
 //   componentDidMount(){

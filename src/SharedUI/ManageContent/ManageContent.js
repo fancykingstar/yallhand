@@ -27,10 +27,11 @@ class ManageContent extends React.Component {
   constructor(props) {
     super(props);
     const {UIStore} = this.props
-    this.mode = this.props.location.pathname.includes("policy")
+    this.mode = this.props.location.pathname.includes("faq")
       ? "policy"
       : "announcement";
         UIStore.reset("content")
+
   }
   componentWillUnmount() {
     const {DataEntryStore} = this.props
@@ -43,11 +44,11 @@ class ManageContent extends React.Component {
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
-        this.props.match.params.id !== UIStore.content.policyID ||
+        this.props.match.params.contentID !== UIStore.content.policyID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.id))) {
-          UIStore.set("content", "policyID", this.props.match.params.id);
+        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.contentID))) {
+          UIStore.set("content", "policyID", this.props.match.params.contentID);
           const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
@@ -72,11 +73,11 @@ class ManageContent extends React.Component {
     } else if (this.mode === "announcement") {
       if (
         UIStore.content.announcementID === "" ||
-        this.props.match.params.id !== UIStore.content.announcementID ||
+        this.props.match.params.contentID !== UIStore.content.announcementID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.id))) {
-          UIStore.set("content", "announcementID", this.props.match.params.id);
+        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.contentID))) {
+          UIStore.set("content", "announcementID", this.props.match.params.contentID);
           const obj = Object.assign(
             {},
             AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
@@ -111,7 +112,7 @@ class ManageContent extends React.Component {
 
   render() {
 
-    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore } = this.props;
+    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore, match } = this.props;
     const teamList = TeamStore.structureSelect;
     const tagList = TeamStore.tagsSelect;
 
@@ -179,11 +180,11 @@ class ManageContent extends React.Component {
 
         this.mode === "policy" ?
         this.props.history.push(
-            "/panel/faqs/policy-variation/" + vari.variationID
+            `/panel/faqs/${match.params.contentID}/${vari.variationID}`
           )
         :
         this.props.history.push(
-            "/panel/announcements/announcement-variation/" + vari.variationID
+          `/panel/announcements/${match.params.contentID}/${vari.variationID}`
 
           );
 
@@ -202,11 +203,11 @@ class ManageContent extends React.Component {
 
           this.mode === "policy" ?
           this.props.history.push(
-            "/panel/faqs/policy-variation/" + UIStore.content.variationID
+            `/panel/faqs/${match.params.contentID}/${vari.variationID}/d`
           )
           :
           this.props.history.push(
-            "/panel/announcements/announcement-variation/" + UIStore.content.variationID
+            `/panel/announcements/${match.params.contentID}/${vari.variationID}/d`
           )
       }
 
@@ -220,11 +221,11 @@ class ManageContent extends React.Component {
 
           this.mode === "policy" ?
           this.props.history.push(
-            "/panel/faqs/policy-variation/" + UIStore.content.variationID
+            `/panel/faqs/${match.params.contentID}/new`
           )
           :
           this.props.history.push(
-            "/panel/announcements/announcement-variation/" + UIStore.content.variationID
+            `/panel/announcements/${match.params.contentID}/new`
           )
 
       };
@@ -259,7 +260,7 @@ class ManageContent extends React.Component {
                   subheader={DataEntryStore.contentmgmt.label}
                 />
                 <Segment>
-                  <div style={{ maxWidth: 600 }}>
+                  <div>
                     <Header>Available Variations</Header>
                     <br />
                     <SelectVariation
@@ -304,7 +305,7 @@ class ManageContent extends React.Component {
                   mode={this.mode}
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
                   imgData={DataEntryStore.contentmgmt.imgData}
-                  output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
+                  // output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
                 />
                 <Channel 
                   mode={this.mode}
@@ -340,7 +341,7 @@ class ManageContent extends React.Component {
 
     }
 
-    return <div style={{ maxWidth: 700 }}>{UIStore.content.variationID === ""? <div/> : manageContent()}</div>;
+    return <div>{UIStore.content.variationID === ""? <div/> : manageContent()}</div>;
   }
 }
 export default withRouter(ManageContent);

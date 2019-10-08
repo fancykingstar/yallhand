@@ -26,7 +26,8 @@ import Directory from '../assets/images/Directory.svg';
 import search_icon from "../assets/images/search_icon.svg";
 
 import logo_img from "../assets/images/logo.png";
-import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
+import {QLogo} from "../../Assets/Graphics/QLogo";
+// import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
 import { AccountStore } from "../../Stores/AccountStore";
 
@@ -234,6 +235,7 @@ const DefaultLayout = ({ ...props }) => {
 
                 </div>
                 <div className="menu-footer">
+
                     <form className="menu-search">
                         <div className="search_div">
                             <input ref={focusUsernameInputField}
@@ -248,8 +250,7 @@ const DefaultLayout = ({ ...props }) => {
                     </form>
 
                     <div className="menu-footer-logo">
-                        <img src={menu_footer_logo_img} alt="yallhands" />
-                        {/* yallhands */}
+                                    <QLogo />
                     </div>
                 </div>
             </Drawer>
