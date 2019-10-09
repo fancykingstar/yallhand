@@ -1,7 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom"
-import  NavItem  from "./NavItem";
 import {syncAdminNav} from "../SharedCalculations/SyncAdminNav"
 import { ListItem, ListItemIcon, ListItemText, List } from '@material-ui/core';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
@@ -13,6 +12,7 @@ import TocRoundedIcon from '@material-ui/icons/TocRounded';
 import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
+import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
 
 @inject("UIStore", "UserStore")
 @observer
@@ -24,16 +24,19 @@ class NavItems extends React.Component {
 
   render() {
     const { UIStore, UserStore } = this.props;
+    
+    const isActive = (val) =>  UIStore.sideNav.activePrimary === val? {backgroundColor: "rgba(87, 193, 222, 0.4)"}  : {visibility: "visible"}
+
     const superAdmin = UserStore.user.isSuperAdmin === true?   
-    <NavItem
-    id="superadmin"
-    icon="chess queen"
-    label="Super Admin"
-    active={UIStore.sideNav.activePrimary === "superadmin"}
-  /> : null
+    <ListItem style={isActive("superadmin")} button onClick={e => handleClick("superadmin")}>
+    <ListItemIcon>
+        <BuildRoundedIcon/>
+    </ListItemIcon>
+    <ListItemText primary="Super Admin" />
+    </ListItem>
+  : null
 
-  const isActive = (val) =>  UIStore.sideNav.activePrimary === val? {backgroundColor: "rgba(87, 193, 222, 0.4)"}  : {visibility: "visible"}
-
+ 
 
   const handleClick = (id) => {
     id === "dashboard"? this.props.history.push("/panel") : this.props.history.push("/panel/" + id)
@@ -43,8 +46,9 @@ class NavItems extends React.Component {
 
     return (
       <div className="Container menu-content">
-      {/* {superAdmin} */}
+   
       <List>
+          {superAdmin}
           <ListItem style={isActive("dashboard")} button onClick={e => handleClick("dashboard")}>
             <ListItemIcon>
                   <HomeRoundedIcon/>
@@ -102,104 +106,6 @@ class NavItems extends React.Component {
 
 
       </List>
-      {/* <NavItem
-          id="dashboard"
-          icon="dashboard"
-          label="Dashboard"
-          active={}
-        /> 
-
-        <br />
-        <NavItem
-          id="teams"
-          icon="group"
-          label="Teams"
-          active={UIStore.sideNav.activePrimary === "teams"}
-        />
-
-        <br />
-
-        <NavItem
-          id="faqs"
-          icon="question"
-          label="FAQs"
-          active={UIStore.sideNav.activePrimary === "faqs"}
-        />
-
-        <br />
- 
-        <NavItem
-          id="announcements"
-          icon="bullhorn"
-          label="Announcements"
-          active={UIStore.sideNav.activePrimary === "announcements"}
-        />
-
-
-      <React.Fragment>
-      <NavItem
-          id="surveys"
-          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-vote-yea"/>}
-          label="Surveys"
-          active={UIStore.sideNav.activePrimary === "surveys"}
-        />  
-        <br />
-        </React.Fragment>
-       <NavItem
-          id="tasks"
-          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
-          label="Tasks"
-          active={UIStore.sideNav.activePrimary === "tasks"}
-        />  
-        <br />
-
-
-        <NavItem
-          id="email"
-          icon="mail"
-          label="Email Campaigns"
-          active={UIStore.sideNav.activePrimary === "email"}
-        />
-
-        <br />
-
-        <NavItem
-          id="analytics"
-          icon="chart bar outline"
-          label="Analytics"
-          active={UIStore.sideNav.activePrimary === "analytics"}
-        />
-        <br />
-
-        <NavItem
-          id="storage"
-          icon="cloud"
-          label="Storage"
-          active={UIStore.sideNav.activePrimary === "storage"}
-        />
-        <br/>
-         */}
-
-      {/* {UserStore.user.invitedBy !== "admin"?"":
-      <React.Fragment>
-        <br/>
-      <NavItem
-          id="tasks"
-          icon={<i style={{paddingRight: 5,color: "#2fc7f8"}} className="fas fa-tasks"/>}
-          label="Tasks"
-          active={UIStore.sideNav.activePrimary === "tasks"}
-        />  
-        <br />
-        <NavItem
-          id="automations"
-          icon={<i style={{paddingRight: 2,color: "#2fc7f8"}} className="fas fa-robot"/>}
-
-          label="Automations"
-          active={UIStore.sideNav.activePrimary === "automations"}
-        />  
-   
-        </React.Fragment>
-    } */}
       </div>
 
       

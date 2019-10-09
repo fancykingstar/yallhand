@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {UserStore} from '../../../Stores/UserStore';
+import {UIStore} from "../../../Stores/UIStore";
+import { deleteUser } from "../../../DataExchange/Fetch";
 
 
 class Header extends React.Component {
@@ -15,6 +17,15 @@ class Header extends React.Component {
       this.state = { user: null, profileMenuOpen: false }
       this.toggleProfileMenu = this.toggleProfileMenu.bind(this);
    }
+
+   logout () {
+      const { UserStore, UIStore } = this.props
+      deleteUser()
+      if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
+      UserStore.isAuthenticated = false;
+      this.props.history.push("/");
+    }
+
    componentDidMount() {
 
       this.setState({ user: UserStore.user })
@@ -60,11 +71,9 @@ class Header extends React.Component {
                                        {user ? user.displayName : "User"}
                                     </DropdownToggle>
                                     <DropdownMenu right>
-                                       <DropdownItem header>Header</DropdownItem>
-                                       <DropdownItem disabled>Action</DropdownItem>
-                                       <DropdownItem>Another Action</DropdownItem>
-                                       <DropdownItem divider />
-                                       <DropdownItem>Another Action</DropdownItem>
+                                       <DropdownItem header>{UserStore.user.displayName_full}</DropdownItem>
+                                       <DropdownItem onClick={()=>this.props.history.push("/portal/settings")}>Settings...</DropdownItem>
+                                       <DropdownItem onClick={()=>this.logout()}>Log Out</DropdownItem>
                                     </DropdownMenu>
                                  </Dropdown>
                               </div>

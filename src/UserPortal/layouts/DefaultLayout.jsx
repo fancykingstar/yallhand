@@ -24,6 +24,7 @@ import Surveys from '../assets/images/surveys.svg';
 import MySaved from '../assets/images/my-saved.svg';
 import Directory from '../assets/images/Directory.svg';
 import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
+import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 
 
 import search_icon from "../assets/images/search_icon.svg";
@@ -225,9 +226,9 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemText primary="Directory" />
                         </ListItem> */}
 
-                        <ListItem button key="files">
-                            <ListItemIcon><FaRegFileAlt /></ListItemIcon>
-                            <ListItemText primary="Files" />
+                        <ListItem button key="storage" component={Link} to='/portal/storage'>
+                            <ListItemIcon><CloudRoundedIcon /></ListItemIcon>
+                            <ListItemText primary="Storage" />
                         </ListItem>
 
                         {/* <ListItem button key="mysaved">

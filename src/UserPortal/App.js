@@ -12,7 +12,8 @@ import ContentDetail from './views/pages/ContentDetail';
 import ContentList from "./views/pages/ContentList";
 import SurveyList from "./views/pages/SurveyList";
 import PortalSearchResults from "./views/pages/PortalSearchResults";
-
+import Settings from "./views/pages/Settings";
+import Storage from "./views/pages/Storage";
 
 import history from './helpers/history';
 
@@ -52,6 +53,8 @@ export class UserPortal extends React.Component {
                             <Route path="/portal/learn" exact component={ContentList} />
                             <Route path="/portal/surveys" exact component={SurveyList} />
                             <Route path="/portal/search" component={PortalSearchResults} exact />
+                            <Route path="/portal/settings" component={Settings} exact />
+                            <Route path="/portal/storage" component={Storage} exact />
                             {/* <Route path="/directory" exact component={Directory} />
                             <Route path="/content-detail/" exact component={ContentDetail} /> */}
 
