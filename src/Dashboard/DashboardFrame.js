@@ -1,8 +1,8 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import { withRouter } from "react-router-dom"
-import { Segment, Grid, Header, Icon, Statistic, Dropdown, Button, Modal } from "semantic-ui-react";
-
+import { Segment, Header, Icon, Statistic, Dropdown, Button, Modal, Grid } from "semantic-ui-react";
+import { Col, Row, Container } from "reactstrap";
 
 import { Scheduled } from "./Scheduled"
 import Notifications from "./Notifications"
@@ -47,14 +47,13 @@ class DashboardFrame extends React.Component {
 
   render() {
     const {AccountStore, AnnouncementsStore, PoliciesStore,  UIStore, UserStore} = this.props
-    const createAnnc = () => {
-      this.setState({createContent: "announcement"})
-      UIStore.set("modal", "createContent", true)
-    }
 
-    const createFAQ = () => {
-      this.setState({createContent: "policy"})
-      UIStore.set("modal", "createContent", true)
+
+    const create = (type) => {
+      if(type === "faq") this.props.history.push('panel/faqs/content/new')
+      else if(type === "announcement") this.props.history.push('panel/announcements/content/new')
+      else if(type === "survey") this.props.history.push('/panel/surveys/manage-survey')
+      else if(type === "task") this.props.history.push('/panel/tasks/manage-task')
     }
 
     const onboardUser = () => {
@@ -178,42 +177,28 @@ class DashboardFrame extends React.Component {
         />
         <div className="dashboardShortcuts">
           <Segment>
-            <Grid stackable columns={4}>
-              <Grid.Row>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createEmail()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="mail"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Send Email</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createAnnc()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="bullhorn"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create Announcement</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createFAQ()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="question"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create FAQ</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column 
-                onClick={e => onboardUser()}
-                >
-                <div style={{width: 155, margin: "auto"}}>
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="user outline"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Onboard User</h4></div>
-                </div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
+            <Container>
+              <Row>
+                <Col md={2} className="text-center">
+                <div onClick={() => createEmail()} > <div><Button circular color="blue" size="medium" icon="mail"/></div><h4>Send Email</h4> </div>
+                </Col>
+                <Col md={2} className="text-center" >
+                  <div onClick={() => create("announcement")} > <div><Button circular color="blue" size="medium" icon="bullhorn"/></div><h4>Create Announcement</h4> </div>
+                </Col>
+                <Col md={2} className="text-center">
+                <div onClick={() => create("faq")} > <div><Button circular color="blue" size="medium" icon="question"/></div><h4>Create FAQ</h4> </div>
+                </Col>
+                <Col md={2} className="text-center">
+                <div onClick={() => create("survey")} > <div><Button circular color="blue" size="medium" icon="edit outline"/></div><h4>Create Survey</h4> </div>
+                </Col>
+                <Col className="text-center">
+                <div onClick={() => create("task")} > <div><Button circular color="blue" size="medium" icon="tasks"/></div><h4>Create Task</h4> </div>
+                </Col>
+                <Col md={2} className="text-center" >
+                <div onClick={() => onboardUser()} > <div><Button circular color="blue" size="medium" icon="user outline"/></div><h4>Onboard User</h4> </div>
+                </Col>
+              </Row>
+            </Container>
           </Segment>
         </div>
         <div style={{paddingTop: 10}}>

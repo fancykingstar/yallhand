@@ -8,6 +8,7 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import CustomToolbarSelect from "./CustomToolbarSelect";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { modifyAnnouncement } from "../DataExchange/Up";
+import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import styled from "styled-components";
 import "./style.css";
 
@@ -148,7 +149,7 @@ class ContentListingPage extends React.Component {
             : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"
         }
       />,
-      item.label,
+      <><p>{item.label}</p>{item.featured &&<StarRoundedIcon fontSize="small"/>}</>,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
       item.state === "ok" ? "published" : item.state

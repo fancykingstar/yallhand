@@ -1,10 +1,10 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Workspace } from "./Workspace";
-import UserProfile from "./UserProfile";
-import { ChannelContainer } from "./ChannelContainer";
-import NavItems from "./NavItems";
 import { QLogo } from "../Assets/Graphics/QLogo";
+import UserProfile from "./UserProfile";
+import NavItems from "./NavItems";
+
 @inject("UIStore")
 @observer
 export class SideBar extends React.Component {
@@ -17,7 +17,6 @@ export class SideBar extends React.Component {
         <NavItems
           whenClicked={val => UIStore.set("sideNav", "activePrimary", val)}
         />
-        {/* <ChannelContainer /> */}
         <div className="PoweredByFrame" style={{borderTop: "1px solid #404040"}}> 
           <div style={{marginLeft: 50, marginTop: 9}}><QLogo width="110px" /></div>
          </div>
