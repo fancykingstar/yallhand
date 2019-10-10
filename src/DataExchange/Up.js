@@ -376,7 +376,7 @@ export const createSurvey = (payload) => {
 }
 
 export const modifySurvey = (payload) => {
-  processTemplate(true, "surveys/" + payload.surveyID, "PATCH", payload, "surveys", 
+  return processTemplate(true, "surveys/" + payload.surveyID, "PATCH", payload, "surveys", 
   `Your ${payload.type} has been updated 🛠`, 
   true,{"event": "update", "type":"survey"}
 )

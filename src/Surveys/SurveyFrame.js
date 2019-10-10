@@ -28,7 +28,7 @@ class SurveyFrame extends React.Component {
     
     const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
 
-    const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.stage])
+    const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.active? "Active":"Inactive"])
     
 
 

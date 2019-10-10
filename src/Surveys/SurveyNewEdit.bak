@@ -7,8 +7,8 @@ import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
-import {survey} from "../DataExchange/PayloadBuilder";
-import {createSurvey} from "../DataExchange/Up";
+import {survey, surveyEdit} from "../DataExchange/PayloadBuilder";
+import {createSurvey, modifySurvey} from "../DataExchange/Up";
 import moment from "moment";
 import _ from "lodash";
 
@@ -48,9 +48,8 @@ class SurveyNewEdit extends React.Component {
   validate = () => {
     const {label, targetType, targetConfig, deadline, surveyItems} = this.state;
     const review = {
-      general: Boolean(label && surveyItems.length && deadline),
-      target: Boolean(targetType === "all"? true : _.isEmpty(targetConfig)? false: true),
-      surveyitems: Boolean(surveyItems.filter(i => !i.valid).length === 0)
+      general: Boolean(label && surveyItems.length),
+      // surveyitems: Boolean(surveyItems.filter(i => !i.valid).length === 0)
     }
     return Object.values(review).filter(i=>!i).length === 0
   }
@@ -105,9 +104,12 @@ class SurveyNewEdit extends React.Component {
     this.setState({ surveyItems: [...this.state.surveyItems, this.reset()]});
   }
 
-  saveSurvey = (active=null) => {
-    if (active) this.setState({active});
-    createSurvey(survey("survey",this.state));
+  saveSurvey = async (active=null) => {
+    if (active) await this.setState({active});
+    if (this.state.surveyID) modifySurvey(surveyEdit("survey",this.state))
+    else {
+     createSurvey(survey("survey",this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+    }
   }
 
   componentDidMount(active=null){
@@ -135,17 +137,17 @@ class SurveyNewEdit extends React.Component {
         Save
       </Button>
     );
-    const archive = <Button>archive</Button>;
-    const stop = <Button>Stop</Button>;
+
+    const stop = <Button negative onClick={()=> modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: "survey"})}>Stop</Button>;
     const cancel = (
       <Button
-        // onClick={e => this.setState({ items: this.state.items.reverse() })}
+        onClick={e => this.props.history.push('/panel/surveys')}
       >
         Cancel
       </Button>
     );
     const actions = this.state.active? 
-     ( <React.Fragment> {save} {stop} {archive} </React.Fragment> ) : ( <React.Fragment> {launch} {save} {cancel} </React.Fragment> );
+     ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> );
 
     return (
       <div> 
@@ -164,23 +166,27 @@ class SurveyNewEdit extends React.Component {
               onChange={(e, val) => this.setState({ label: val.value })}
             />
           </Form>
-          <div style={{ paddingTop: "10px" }}>
-            <ChooseTargeting label="Survey" echostate={val=>this.setState(val)}/>
-          </div>
-          <div style={{ paddingTop: "10px" }}>
-            <span style={{ fontWeight: 800 }}>Deadline</span>
-          </div>
-          <div style={{ marginTop: "-5px" }}>
-            <DateTimeSelect
-              value={e => this.setState({ deadline: moment(e).valueOf() })}
-              includeTime
-              defaultValue={this.state.deadline? this.state.deadline : ""}
-            />
-          </div>
-          <div style={{margin: "5px 0 5px"}}>
-          <span style={{fontWeight: 800}}>Anonymous Responses </span><br/>
-          <Checkbox size toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
-          </div>
+              {!this.state.active &&
+              <>
+              <div style={{ paddingTop: "10px" }}>
+                <ChooseTargeting label="Survey" echostate={val=>this.setState(val)}/>
+              </div>
+              <div style={{ paddingTop: "10px" }}>
+                <span style={{ fontWeight: 800 }}>Deadline</span>
+              </div>
+              <div style={{ marginTop: "-5px" }}>
+                <DateTimeSelect
+                  value={e => this.setState({ deadline: moment(e).valueOf() })}
+                  includeTime
+                  defaultValue={this.state.deadline? this.state.deadline : ""}
+                />
+              </div>
+              <div style={{margin: "5px 0 5px"}}>
+              <span style={{fontWeight: 800}}>Anonymous Responses </span><br/>
+              <Checkbox size toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
+              </div>
+              </>
+              }
           <div>{actions}</div>
         </Segment>
         {this.displaySurveyItems()}

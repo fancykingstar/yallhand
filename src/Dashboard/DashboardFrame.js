@@ -183,16 +183,16 @@ class DashboardFrame extends React.Component {
                 <div onClick={() => createEmail()} > <div><Button circular color="blue" size="medium" icon="mail"/></div><h4>Send Email</h4> </div>
                 </Col>
                 <Col md={2} className="text-center" >
-                  <div onClick={() => create("announcement")} > <div><Button circular color="blue" size="medium" icon="bullhorn"/></div><h4>Create Announcement</h4> </div>
+                  <div onClick={() => create("announcement")} > <div><Button circular color="blue" size="medium" icon="bullhorn"/></div><h4>New Announcement</h4> </div>
                 </Col>
                 <Col md={2} className="text-center">
-                <div onClick={() => create("faq")} > <div><Button circular color="blue" size="medium" icon="question"/></div><h4>Create FAQ</h4> </div>
+                <div onClick={() => create("faq")} > <div><Button circular color="blue" size="medium" icon="question"/></div><h4>New FAQ</h4> </div>
                 </Col>
                 <Col md={2} className="text-center">
-                <div onClick={() => create("survey")} > <div><Button circular color="blue" size="medium" icon="edit outline"/></div><h4>Create Survey</h4> </div>
+                <div onClick={() => create("survey")} > <div><Button circular color="blue" size="medium" icon="edit outline"/></div><h4>New Survey</h4> </div>
                 </Col>
                 <Col className="text-center">
-                <div onClick={() => create("task")} > <div><Button circular color="blue" size="medium" icon="tasks"/></div><h4>Create Task</h4> </div>
+                <div onClick={() => create("task")} > <div><Button circular color="blue" size="medium" icon="tasks"/></div><h4>New Task</h4> </div>
                 </Col>
                 <Col md={2} className="text-center" >
                 <div onClick={() => onboardUser()} > <div><Button circular color="blue" size="medium" icon="user outline"/></div><h4>Onboard User</h4> </div>

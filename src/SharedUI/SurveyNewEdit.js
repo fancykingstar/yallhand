@@ -2,7 +2,8 @@ import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { Segment, Button, Form, Header, Checkbox } from "semantic-ui-react";
-import { TaskItem } from "./TaskItem";
+import { TaskItem } from "../Tasks/TaskItem";
+import { SurveyItem }from "../Surveys/SurveyItem";
 import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
@@ -12,9 +13,9 @@ import {createSurvey, modifySurvey} from "../DataExchange/Up";
 import moment from "moment";
 import _ from "lodash";
 
-@inject("TaskStore")
+@inject("TaskStore", "SurveyStore")
 @observer
-class TasksNewEdit extends React.Component {
+class SurveyNewEdit extends React.Component {
     constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +30,8 @@ class TasksNewEdit extends React.Component {
   };
 
   reset () {
-    return {
+    return this.props.mode === "survey"? 
+    ({
         _id: giveMeKey(),
         q: "",
         resType: "scale",
@@ -40,7 +42,13 @@ class TasksNewEdit extends React.Component {
         scaleLabels_lo: "Least Favorable",
         scaleLabels_hi: "Most Favorable",
         valid: false,
-    };
+    })
+    :
+    ({
+        _id: giveMeKey(),
+        q: ""
+    })
+
   };
 
 
@@ -84,20 +92,37 @@ class TasksNewEdit extends React.Component {
   }
 
   displaySurveyItems = () => {
-    return this.state.surveyItems.map((question, index) => {
-      return <TaskItem
-      multipleRows={this.checkMultiRow()} 
-      info={question} 
-      key={index} 
-      index={index} 
-      _id={question._id}
-      updateFields={this.updateFields} 
-      removeRow={this.removeRow} 
-      shiftRow={this.shiftRow}
-      checked={question.resRequired}
-      add={this.addItem}
-      />
-    })
+    return this.props.mode === "survey"?
+        this.state.surveyItems.map((question, index) => {
+            return <SurveyItem
+            multipleRows={this.checkMultiRow()} 
+            info={question} 
+            key={index} 
+            index={index} 
+            _id={question._id}
+            updateFields={this.updateFields} 
+            removeRow={this.removeRow} 
+            shiftRow={this.shiftRow}
+            checked={question.resRequired}
+            add={this.addItem}
+        />
+        })
+    :
+    this.state.surveyItems.map((question, index) => {
+        return <TaskItem
+        multipleRows={this.checkMultiRow()} 
+        info={question} 
+        key={index} 
+        index={index} 
+        _id={question._id}
+        updateFields={this.updateFields} 
+        removeRow={this.removeRow} 
+        shiftRow={this.shiftRow}
+        checked={question.resRequired}
+        add={this.addItem}
+        newLine={() => {if(index + 1 === this.state.surveyItems.length) this.addItem()}}
+        />
+      })
   } 
 
   addItem = () => {
@@ -106,16 +131,17 @@ class TasksNewEdit extends React.Component {
 
   saveSurvey = async (active=null) => {
     if (active) await this.setState({active});
-    if (this.state.surveyID) modifySurvey(surveyEdit("survey",this.state))
+    if (this.state.surveyID) modifySurvey(surveyEdit(this.props.mode,this.state))
     else {
-     createSurvey(survey("survey",this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+     createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
     }
   }
 
   componentDidMount(active=null){
-    const {TaskStore} = this.props;
+    const {TaskStore, SurveyStore} = this.props;
     const id = this.props.match.params.id;
-    const loadSurvey = this.props.match.params.id? TaskStore.allTasks.filter(i=>i.surveyID === id)[0] : false;
+    const source = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks;
+    const loadSurvey = this.props.match.params.id? source.filter(i=>i.surveyID === id)[0] : false;
     if(loadSurvey) this.setState(loadSurvey);
   }
   
@@ -138,7 +164,7 @@ class TasksNewEdit extends React.Component {
       </Button>
     );
 
-    const stop = <Button negative onClick={()=> modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: "survey"})}>Stop</Button>;
+    const stop = <Button negative onClick={()=> modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode})}>Stop</Button>;
     const cancel = (
       <Button
         onClick={e => this.props.history.push('/panel/surveys')}
@@ -153,15 +179,15 @@ class TasksNewEdit extends React.Component {
       <div> 
         <BackButton/>
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
-          Task builder
+          {this.props.mode==="survey"? "Survey builder" :"Task builder"}
           <Header.Subheader>
-            Configure and send task lists to your employees
+            Configure and send {this.props.mode==="survey"? "surveys":"task lists"} to your employees
           </Header.Subheader>
         </Header>
         <Segment>
           <Form>
             <Form.Input
-              label="Survey Title (Required)"
+              label="Title (Required)"
               value={this.state.label}
               onChange={(e, val) => this.setState({ label: val.value })}
             />
@@ -197,4 +223,4 @@ class TasksNewEdit extends React.Component {
     );
   }
 }
-export default withRouter(TasksNewEdit);
+export default withRouter(SurveyNewEdit);

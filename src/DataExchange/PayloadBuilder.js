@@ -482,14 +482,16 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   }
 
   ///SURVEYS AND TASKS
+  const generateInstances = (data) => {
+    const {sendTargetType, deadline, sendToTagID, sendToTeamID} = data;
+    if(data.sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
+    else if(data.sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+  }
 
   export const survey = ( type, data ) => {
     const {surveyItems, active, label, anonymous, deadline, sendToTeamID, sendToTagID, sendTargetType, sendToUsers } = data;
-    const generateInstances = () => {
-      if(sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
-      else if(sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
-      else if (sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
-    }
+
     const buildObj = {
       surveyItems,
       type,
@@ -497,24 +499,33 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       sendTargetType,
       anonymous,
       deadline,
-      instances: generateInstances(),
+      instances: active? generateInstances(data):[],
       responses_by_instance: [],
       active,
     };
     return _.extend({}, base(), buildObj)
   };
 
-  // export const task = ( taskItems, label, targetType, anonymous, deadline ) => {
-  //   const buildObj = {
-  //     taskItems,
-  //     label,
-  //     targetType,
-  //   "stage": "draft",
-  //     anonymous,
-  //     deadline
-  //   };
-  //   return _.extend({}, base(), buildObj)
-  // };
+  export const surveyEdit = ( type, data ) => {
+    const objkeys = Object
+      .keys(data)
+      .filter(i=>i[0] !== "_" && data[i])
+    let buildObj = {type};
+    objkeys.forEach(i => {
+      if(i === "sendToUsers" && !data.sendToUsers.length) return
+      else if(i === "active" && data[i]) {
+        buildObj.active = true;  
+        buildObj.instances = generateInstances(data);
+      }
+      else buildObj[i] = data[i];
+    })
+    return _.extend({}, base(), buildObj)
+
+  }
+
+
+
+
 
 
 

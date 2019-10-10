@@ -12,15 +12,18 @@ import TimeAgo from 'react-timeago';
 import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
 import Collapse from '@material-ui/core/Collapse';
 import { cpus } from 'os';
+import { apiCall } from '../../../DataExchange/Fetch.js';
 
 
 
 export class Survey extends React.Component {
     constructor(props){
         super(props);
-        this.state={show: true}
+        this.state={}
     }
     render() {
+        const {label, surveyID, instances} = this.props.data;
+        const instanceID = instances[0].instanceID;
         // const box_type = (this.props.box_type) ? this.props.box_type : 'announce';
         // var classes = (box_type === "announce") ? "announce_box " : (box_type === "suggession") ? "suggession_box" : '';
         // classes += " " + this.props.main_class;
@@ -28,7 +31,6 @@ export class Survey extends React.Component {
             let record = {}
             record[survey._id] = val;
             this.setState(record);
-            console.log(this.state);
         }
 
         const answerOptions = (type, data) => ({
@@ -47,11 +49,22 @@ export class Survey extends React.Component {
             else return item.resType === "multichoice"? item.multiConfig : item.scaleConfig;
         }
 
+        const submit = () => {
+            const updated = Date.now();
+            let buildObj = {};
+            Object.keys(this.state).forEach(i => buildObj[i] = {updated, response: this.state[i]});
+            const payload = {surveyID, instanceID, buildObj};
+            console.log("payload", JSON.stringify(payload))
+            apiCall('surveys/response', 'POST', payload).then(r=>r.json()).then(res => {
+                this.setState({completed:true});
+            })
+        }
+
         return (
-            <Collapse in={this.state.show}>
+            <Collapse ref="showSurvey" in={!this.state.completed}>
             <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
             <div className="inner_page_content_title">
-               <h5>{this.props.data.label}</h5>
+               <h5>{label}</h5>
                <p><TimeAgo date={this.props.data.updated} /></p>
             </div>
             <div className="survey_group_questions">
@@ -62,7 +75,7 @@ export class Survey extends React.Component {
                </div>
             })}
         <div style={{padding: "25px 25px 15px 25px"}}>
-        <Button outline color="primary" size="sm" onClick={()=>this.setState({show:false})}>
+        <Button outline color="primary" size="sm" onClick={()=>submit()}>
         Submit <DoneRoundedIcon fontSize="small"/>
       </Button>
         </div>

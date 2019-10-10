@@ -1,4 +1,5 @@
 import { observable, action, computed } from "mobx";
+import {calculateAnalytics} from "../SharedCalculations/CalculateSurveyAnalytics";
 import _ from "lodash";
 
 class Store {
@@ -43,8 +44,9 @@ class Store {
 
   loadTasks(allTasks) {
     return new Promise((resolve, reject) => {
-      this.allTasks = allTasks
-      this.allTasks.length === 0 ? reject(false) : resolve(true)
+      this.allTasks = calculateAnalytics(allTasks);
+      resolve(true)
+      // this.allTasks.length === 0 ? reject(false) : resolve(true)
     })
   }
 

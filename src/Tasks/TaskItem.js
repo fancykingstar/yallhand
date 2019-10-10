@@ -7,12 +7,12 @@ import _ from "lodash";
 
 
 export const TaskItem = inject("DataEntryStore")(observer((props) => {
-  const { task_label, _id} = props.info;
+  const { q, _id} = props.info;
 
   const setField = (content) => {
     const isValid = 
     Object.values({
-      task_label: Boolean(task_label.trim().length !== 0),
+      q: Boolean(q.trim().length !== 0),
     }).filter(i => !i).length === 0;
     const obj = Object.assign(content, {valid: isValid})
     props.updateFields(obj, props.index) 
@@ -36,8 +36,9 @@ export const TaskItem = inject("DataEntryStore")(observer((props) => {
           fullWidth
           label="Task Description"
           placeholder="Enter a task question here"
-          value={task_label}
-          onChange={e => setField({ task_label: e.target.value }) }
+          value={q}
+          onKeyDown={(e)=> {if(e.keyCode ==13) props.newLine()}}
+          onChange={e => setField({ q: e.target.value }) }
           margin="normal"
         />
     

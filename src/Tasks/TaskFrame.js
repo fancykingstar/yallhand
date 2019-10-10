@@ -22,7 +22,7 @@ class TaskFrame extends React.Component {
     `;
 
     const handleClick = (task) => {
-      this.props.history.push(`/panel/tasks/manage-task/${task? task.taskID: ""}` );
+      this.props.history.push(`/panel/tasks/manage-task/${task? task.surveyID: ""}` );
 
     }
     

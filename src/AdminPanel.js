@@ -7,12 +7,13 @@ import Header from "./Header/Header";
 import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import { SideBar } from "./SideBar/SideBar";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
-import SurveyNewEdit from "./Surveys/SurveyNewEdit";
+// import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
-import TaskNewEdit from "./Tasks/TasksNewEdit";
+// import TaskNewEdit from "./Tasks/TasksNewEdit";
+import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -101,11 +102,15 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/storage" component={ResourcesFrame} />
             <Route path="/panel/surveys" component={SurveyFrame} exact/>
-            <Route path="/panel/tasks/manage-task/:id" component={TaskNewEdit} />
-            <Route path="/panel/tasks/manage-task" component={TaskNewEdit} />
+            <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
+            <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
+            {/* <Route path="/panel/tasks/manage-task/:id" component={TaskNewEdit} />
+            <Route path="/panel/tasks/manage-task" component={TaskNewEdit} /> */}
             <Route path="/panel/tasks" component={TaskFrame} exact/>
-            <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
-            <Route path="/panel/surveys/manage-survey" component={SurveyNewEdit} exact/>
+            {/* <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
+            <Route path="/panel/surveys/manage-survey" component={SurveyNewEdit} exact/> */}
+            <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
+            <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/base-settings" component={BaseSettings} />

@@ -61,7 +61,7 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
         const a = await load.sentiments(accountID);
 
 
-        const surveys = await load.surveys(accountID);
+        const surveys = await load.surveys(accountID, userID);
 
 
         // const tasks = await load.tasks(accountID);

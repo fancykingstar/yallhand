@@ -9,6 +9,7 @@ import { UIStore } from "../Stores/UIStore";
 import Slider from "react-slick";
 
 import {SurveyStore} from "../Stores/SurveyStore";
+import {TaskStore} from "../Stores/TaskStore";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import TimeAgo from 'react-timeago'
 
@@ -29,7 +30,8 @@ export class SurveyAnalytics extends React.Component {
  
   getPercentage = (array, val) => {
     const total = array.reduce(function(acc, val) { return acc + val; }, 0);
-    return parseFloat(val/total * 100).toFixed(1);
+    const result = parseFloat(val/total * 100).toFixed(1);
+    return result ==="NaN"? "0": result;
   }
 
   rowSelected = (survey) => {
@@ -40,7 +42,7 @@ export class SurveyAnalytics extends React.Component {
 
   componentDidMount(){
     this.sort("_updated", "Highest");
-    const data = SurveyStore.allSurveys
+    const data = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks
     this.setState({data});
   }
 
@@ -84,7 +86,7 @@ export class SurveyAnalytics extends React.Component {
           <Table.Cell >{survey._noStart}</Table.Cell>
           <Table.Cell >{survey._partial}</Table.Cell>
           <Table.Cell >{survey._completed}</Table.Cell>
-          <Table.Cell >{survey.instances.length === 0 || !Math.max(...survey.instances.map(i=>i.deadline)) ? "No Current Deadlines" : <TimeAgo date={Math.max(...survey.instances.map(i=>i.deadline))} />}</Table.Cell>
+          <Table.Cell >{survey.instances.length === 0 || !Math.max(...survey.instances.map(i=>i.deadline)) ? "None" : <TimeAgo date={Math.max(...survey.instances.map(i=>i.deadline))} />}</Table.Cell>
           </Table.Row>
         )
       })
@@ -128,7 +130,7 @@ export class SurveyAnalytics extends React.Component {
            <div>
            <Header
           as="h2"
-          content="Survey Performance"
+          content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
         />
                    <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
      
@@ -137,10 +139,10 @@ export class SurveyAnalytics extends React.Component {
               <Table.Row>
                 <Table.HeaderCell>Title</Table.HeaderCell>
                 <Table.HeaderCell>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Question Count <span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Survey Count <span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Not Started <span><SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Partially Completed <span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Querys<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Not Started<span><SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell></Table.HeaderCell>
@@ -191,10 +193,7 @@ export class SurveyAnalytics extends React.Component {
                   </List.Item>
                 </List>
               </Segment>
-        
-              <Segment>
-              {surveyDetail && questionDetails(surveyDetail.surveyItems)}
-              </Segment>
+              {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems)} </Segment> }
           </div>
 
           </Slider>

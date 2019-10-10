@@ -145,10 +145,12 @@ export const history = async () => {
   return result
 }
 
-export const surveys = async (accountID) => {
-  const result = await apiCall_noBody(`surveys/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-  await SurveyStore.loadSurveys(result.filter(i=>i.type==="survey"));
-  await TaskStore.loadTasks(result.filter(i=>i.type==="task"));
+export const surveys = async (accountID, userID) => {
+  const admin = UserStore.user.isAdmin;
+  await apiCall('surveys/find', 'POST', admin? {accountID}:{accountID, userID}).then(r => r.json()).then(result => {
+    SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
+    TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
+  });
 }
 
 // export const tasks= async (accountID) => {

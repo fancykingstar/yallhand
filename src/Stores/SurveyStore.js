@@ -47,7 +47,8 @@ class Store {
   loadSurveys(allSurveys) {
     return new Promise((resolve, reject) => {
       this.allSurveys = calculateAnalytics(allSurveys);
-      this.allSurveys.length === 0 ? reject(false) : resolve(true)
+      resolve(true)
+      // this.allSurveys.length === 0 ? reject(false) : resolve(true)
     })
   }
 
