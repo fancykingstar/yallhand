@@ -91,9 +91,9 @@ class SearchFrame extends React.Component {
                 if (e.key === "Enter") submitSearch(e);
               }}
               />
-          <button type="button" onClick={()=>submitSearch(e)}><SearchIcon /></button>
+          <button type="button" onClick={(e)=>submitSearch(e)}><SearchIcon /></button>
           {(UIStore.portalSearchValue !== '') ? (
-              <button className="clearInput" type="button" onClick={()=>clearSearch()}><CloseIcon /></button>
+              <button style={{visibility: UIStore.search.portalSearchValue? "visible":"hidden", }} className="clearInput" type="button" onClick={()=>clearSearch()}><CloseIcon /></button>
           ) : ('')}
       </div>
   </form>

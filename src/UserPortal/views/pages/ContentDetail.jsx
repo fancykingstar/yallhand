@@ -13,8 +13,6 @@ import {apiCall_noBody }from "../../../DataExchange/Fetch";
 import {ItsLog} from "../../../DataExchange/PayloadBuilder";
 import {log} from "../../../DataExchange/Up";
 
-// import { AnnouncementsStore } from "../../../Stores/AnnouncementsStore";
-// import { PoliciesStore} from "../../../Stores/PoliciesStore";
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore")
 @observer
@@ -29,26 +27,40 @@ class ContentDetail extends React.Component {
          sentiment: false
       }
    }
+
+   async load() {
+      const {AnnouncementsStore, PoliciesStore} = this.props;
+      const urlData = await {path:  this.props.match.url, id: this.props.match.params.id};
+      const mode = await urlData.path.includes("announcement")? "announcement" : "policy";
+      const content = await urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
+      return await this.setState({
+         PostData: content,
+         // qaData: ContentData.questionAnswer,
+         contentID: content[`${mode}ID`],
+         mode
+      });
+   }
+
    componentDidMount() {
       const {AnnouncementsStore, PoliciesStore, UserStore} = this.props;
-      const urlData = {path:  this.props.match.url, id: this.props.match.params.id}
-      const content = urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
-      this.setState({
-         Announcements: ContentData.suggested,
-         PostData: content,
-         qaData: ContentData.questionAnswer,
-         mode: urlData.path.includes("announcement")? "announcement" : "policy"
-      });
+
+      this.load().then(r => {
+         apiCall_noBody(
+            `sentiments/usersentiment/${UserStore.user.userID}/${this.state.contentID}/${this.state.mode}ID`, "GET")
+            .then(result => {
+               console.log(result)
+               this.setState({sentiment: Boolean(result.length)})});
+               if(!UserStore.user.isAdmin){ 
+                  log(ItsLog(false, {"type": this.state.mode, "contentID": this.state.contentID, "variationID": this.state.PostData.variations[0].variationID})) 
+                     }
+            });
 
       document.body.classList.add('page_content_white');
       document.body.classList.remove('page_content_bg');
 
-         // if(!UserStore.user.isAdmin){ 
-      log(ItsLog(false, {"type": this.props.mode, "contentID": this.props.match.params.id, "variationID": content.variations[0].variationID})) 
-            // }
+         
 
-      apiCall_noBody(`sentiments/usersentiment/${UserStore.user.userID}/${this.state.mode === "policy"? content.policyID : content.announcementID}/${this.state.mode === "policy"? "policyID":"announcementID"}`, "GET")
-      .then(result => this.setState({sentiment: result.length}));
+
       
       // if(UIStore.portal.viewedContent.includes(content[this.props.mode + "ID"]) === false){
       //    UIStore.set("portal", "viewedContent", [...UIStore.portal.viewedContent, content[this.props.mode + "ID"]])
@@ -56,12 +68,12 @@ class ContentDetail extends React.Component {
    }
 
    render() {
-      const { PostData, Announcements, qaData, mode, sentiment } = this.state;
+      const { PostData } = this.state;
       return (
          <Layout>
             <div className="">
                <div className="">
-                  {PostData ? (<PostDetails post={PostData} />) : ("")}
+                  {PostData ? (<PostDetails data={this.state} update={payload=>this.setState(payload)}/>) : ("")}
                   {/* 
                   <div className="page_content_bg">
                      <div className="smallContainer">

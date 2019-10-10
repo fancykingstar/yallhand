@@ -28,7 +28,7 @@ class TaskFrame extends React.Component {
     
     const columns = ["Task Title", "Last Updated", "Created By", "Stage"];
 
-    const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.stage])
+    const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.active? "Active":"Inactive"])
     
 
 
@@ -42,6 +42,7 @@ class TaskFrame extends React.Component {
       responsive: "scrollMaxHeight",
       viewColumns: false,
       download: false,
+
       onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.rowIndex])
     };
 

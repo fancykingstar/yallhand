@@ -1,52 +1,37 @@
 import React from 'react';
+import {inject, observer} from "mobx-react";
 import { Container, Row, Col } from 'reactstrap';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
-
 import Layout from '../../layouts/DefaultLayout';
-
 import Sidebar from '../components/Sidebar'
 import ImageBox from '../components/ImageBox';
 import IconBox from "../components/IconBox";
 import { Survey } from "../components/Survey";
 import { Task } from "../components/Task";
-
 import ActionSlider from "../components/ActionsSlider";
-
-import { AnnouncementsStore } from "../../../Stores/AnnouncementsStore";
-import { PoliciesStore } from "../../../Stores/PoliciesStore";
-import { SurveyStore } from "../../../Stores/SurveyStore";
-import { TaskStore } from "../../../Stores/TaskStore";
-
-
-// import Star from '../../assets/images/star.svg';
 import Star from '@material-ui/icons/Star';
-
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 
+@inject("AnnouncementsStore","PoliciesStore", "SurveyStore", "TaskStore")
+@observer
 class Home extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         SurveyData: [],
-         TaskData: [],
-         Announcements: [],
-         faqs: [],
          suggestedActions: []
       }
    }
    componentDidMount() {
+      const {AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore} = this.props;
       this.setState({
-         SurveyData: SurveyStore.allSurveys,
-         TaskData: TaskStore.allTasks,
-         Announcements: AnnouncementsStore.allAnnouncements,
-         faqs: PoliciesStore.allPolicies,
          suggestedActions: PostData.suggestedActions
       })
    }
    render() {
-      const { SurveyData, TaskData, Announcements, faqs, suggestedActions } = this.state
+      const {AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore} = this.props;
+      const {  suggestedActions } = this.state
       const settings = {
          dots: false,
          infinite: false,
@@ -129,11 +114,11 @@ class Home extends React.Component {
                         </div>
                         <div className="page_content shadow">
 
-                           {(TaskData.length) ? TaskData.map((item, index) => {
+                           {(TaskStore.allTasks.length) ? TaskStore.allTasks.map((item, index) => {
                               return <Task data={item} index={index} />
                            }) : ('')}
 
-                           {(SurveyData.length) ? SurveyData.map((item, index) => {
+                           {(SurveyStore.allSurveys.length) ? SurveyStore.allSurveys.map((item, index) => {
                               return <Survey data={item} index={index} />
                            }) : ('')}
 
@@ -141,7 +126,7 @@ class Home extends React.Component {
                               <h6>Announcements</h6>
                               <div className="slider_wrap announce_main_box">
                                  <Slider {...settings}>
-                                    {Announcements.map((item, index) => {
+                                    {AnnouncementsStore.allAnnouncements.map((item, index) => {
                                        return <ImageBox
                                           url={`/portal/announcement/${item.announcementID}`}
                                           main_class={"auto-col"}
@@ -155,7 +140,7 @@ class Home extends React.Component {
                                  <h6>FAQs</h6>
                                  <div className="slider_wrap announce_main_box">
                                     <Slider {...settings}>
-                                       {faqs.map((item, index) => {
+                                       {PoliciesStore.allPolicies.map((item, index) => {
                                           return <ImageBox
                                              url={`/portal/learn-detail/${item.policyID}`}
                                              key={index}

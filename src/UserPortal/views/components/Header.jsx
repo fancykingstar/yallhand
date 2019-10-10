@@ -56,11 +56,6 @@ class Header extends React.Component {
                            </IconButton>
                            <Typography variant="h4" className="page-title" noWrap>{pageTitle}</Typography>
                         </div>
-
-                                  <div>
-                                    <Button size="sm" onClick={()=> this.props.history.push('/panel')}>Admin Panel</Button>
-                                  </div>
-        
                         <div className="header_right">
                            <div className="header_search">
                              {/* <SearchFrame/> */}

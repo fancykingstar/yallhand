@@ -161,13 +161,13 @@ class PortalSearchResults extends React.Component {
     </Item.Group>
     </React.Fragment>
 
-    const people = filteredPeople().length === 0? null : 
-    <div style={{paddingBottom: 10}}>
-    <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">People</Header>
-    <Card.Group>
-        {peopleResults(filteredPeople())}
-        </Card.Group>
-    </div>
+    // const people = filteredPeople().length === 0? null : 
+    // <div style={{paddingBottom: 10}}>
+    // <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">People</Header>
+    // <Card.Group>
+    //     {peopleResults(filteredPeople())}
+    //     </Card.Group>
+    // </div>
 
 
 
@@ -189,7 +189,7 @@ class PortalSearchResults extends React.Component {
     <div style={filteredPeople().length !==0? {paddingBottom: 10} : null}>
     {content}
     {resources}
-    {people}
+    {/* {people} */}
   
     </div></div>
     :

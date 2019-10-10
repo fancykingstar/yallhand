@@ -25,6 +25,7 @@ import MySaved from '../assets/images/my-saved.svg';
 import Directory from '../assets/images/Directory.svg';
 import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 
 
 import search_icon from "../assets/images/search_icon.svg";
@@ -116,9 +117,9 @@ const DefaultLayout = ({ ...props }) => {
 
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
-        searchTerm: ''
-    })
+    // const [state, setState] = React.useState({
+    //     searchTerm: ''
+    // })
 
     const [open, setOpen] = React.useState(true);
     const [focus, setFocus] = React.useState(false);
@@ -132,20 +133,20 @@ const DefaultLayout = ({ ...props }) => {
     function handleDrawerToggleMobile() {
         setMopen(!mopen);
     }
-    function handleChange(evt) {
-        setState({ searchTerm: evt.target.value });
-    }
-    function handleClearClick() {
-        setState({ searchTerm: '' });
-    }
+    // function handleChange(evt) {
+    //     setState({ searchTerm: evt.target.value });
+    // }
+    // function handleClearClick() {
+    //     setState({ searchTerm: '' });
+    // }
     function handleSearchClick() {
         var sopen = width <= mobileWidth ? mopen : open;
         if (sopen === false) {
             (width <= mobileWidth) ? handleDrawerToggleMobile() : handleDrawerToggle();
             setFocus(true);
         } else {
-            console.log('submit form');
-            console.log('searchTerm', state.searchTerm)
+            // console.log('submit form');
+            // console.log('searchTerm', state.searchTerm)
         }
     }
     useEffect(() => {
@@ -197,6 +198,13 @@ const DefaultLayout = ({ ...props }) => {
                 </div>
                 <div className="menu-content">
                     <List>
+                        {
+                            account.isAdmin && 
+                            <ListItem button key="home" component={Link} to="/panel">
+                            <ListItemIcon><ArrowBackRoundedIcon /></ListItemIcon>
+                            <ListItemText primary="Leave Portal View" />
+                            </ListItem>
+                        }
                         <ListItem button key="home" component={Link} to="/portal">
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
@@ -240,7 +248,7 @@ const DefaultLayout = ({ ...props }) => {
                 </div>
                 <div className="menu-footer">
 
-                <SearchFrame/>
+                <SearchFrame/> 
                         <div className="menu-footer-logo" style={{visibility: !open? "hidden":"visible"}}> <QLogo /> </div>
                 </div>
             </Drawer>

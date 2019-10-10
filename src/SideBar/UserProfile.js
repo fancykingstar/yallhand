@@ -51,7 +51,7 @@ class UserProfile extends React.Component {
       }
     }
     return (
-      <div className="UserProfile">
+      <div className="UserProfile" style={{zIndex: "110"}}>
         <div className="UserSettingsDropdown" >
           <Dropdown icon="chevron down" trigger={<div className="UserSettingsTrigger"/>} >
             <Dropdown.Menu>

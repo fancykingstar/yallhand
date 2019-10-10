@@ -13,6 +13,7 @@ import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
 import Collapse from '@material-ui/core/Collapse';
 import { cpus } from 'os';
 import { apiCall } from '../../../DataExchange/Fetch.js';
+import { UserStore } from "../../../Stores/UserStore";
 
 
 
@@ -49,13 +50,17 @@ export class Survey extends React.Component {
             else return item.resType === "multichoice"? item.multiConfig : item.scaleConfig;
         }
 
-        const submit = () => {
+        const submit = async () => {
+            if (UserStore.user.isAdmin) {
+                this.setState({completed:true});
+                return
+            }
             const updated = Date.now();
-            let buildObj = {};
-            Object.keys(this.state).forEach(i => buildObj[i] = {updated, response: this.state[i]});
-            const payload = {surveyID, instanceID, buildObj};
-            console.log("payload", JSON.stringify(payload))
-            apiCall('surveys/response', 'POST', payload).then(r=>r.json()).then(res => {
+            let response = {};
+            await Object.keys(this.state).forEach(i => response[i] = {updated, response: this.state[i]});
+            const payload = {surveyID, instanceID, response};
+            await apiCall('surveys/response', 'POST', payload).then(res => {
+                console.log("res",res)
                 this.setState({completed:true});
             })
         }
