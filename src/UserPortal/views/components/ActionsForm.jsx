@@ -15,44 +15,46 @@ class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            colleague: 'Dylan Spencer',
-            props_for: 'Teamwork',
-            description: '',
-            no_feed: false
+            formData: {
+                colleague: 'Dylan Spencer',
+                props_for: 'Teamwork',
+                description: '',
+                no_feed: false
+            }
         }
     }
 
     handleInputChange(evt) {
         const value =
             evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-        this.setState({
+
+        var formData = {
+            ...this.state.formData,
             [evt.target.name]: value
-        });
+        }
+
+        this.setState(formData);
 
     }
     handleActionFormSubmit(e) {
         e.preventDefault();
-        console.log('colleague', this.state.colleague);
-        console.log('props_for', this.state.props_for);
-        console.log('description', this.state.description);
-        console.log('no_feed', this.state.no_feed);
+        this.props.onSubmit(this.state.formData);
     }
     render() {
-        const { selectedActionData } = this.props;
-
         return (
-
             <>
                 <div className="section_title shadow">
-                    {console.log(selectedActionData)}
-                    <h4><IconButton
-                        color="inherit"
-                        aria-label="back to actions"
-                        edge="start"
-                        onClick={this.props.hideActionForm.bind(this)}
-                    >
-                        <KeyboardBackspaceIcon fontSize="inherit" />
-                    </IconButton><Svg class="small-icon" src={selectedActionData.img} default={Star} /> {selectedActionData.label}</h4>
+                    <h4>
+                        <IconButton
+                            color="inherit"
+                            aria-label="back to actions"
+                            edge="start"
+                            onClick={this.props.onCancel.bind(this)}
+                        ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
+                        {(this.props.iconImage) ?
+                            <Svg class="small-icon" src={this.props.iconImage} default={Star} /> :
+                            ('')}
+                        {this.props.title}</h4>
                 </div>
                 <div className="page_content actions shadow">
                     <div className="announce_component faq_announce slick-align-left">
@@ -103,7 +105,7 @@ class ActionsForm extends React.Component {
                             </Row> */}
                             <Row className="text-right form-buttons">
                                 <Col>
-                                    <Button onClick={this.props.hideActionForm.bind(this)}>Cancel</Button>
+                                    <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
                                     <Button color="primary">Submit</Button>
                                 </Col>
                             </Row>

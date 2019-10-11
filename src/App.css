@@ -41,7 +41,7 @@ h1 h2 h3 h4 h5 span {
   /* height: 100vh;
   width: 100vw; */
 
-  height: 100vh; /* was 100% */
+  height: calc(100vh - 40px); /* was 100% */
   background-color: #F9F9F9; 
   overflow-y: auto;
   /* z-index: 0; */
@@ -129,6 +129,9 @@ pre {
   display: none;
 }
 
+.public-DraftEditor-content{
+  min-height: 45vh;
+}
 @media screen and (max-width: 767px) {
   .close-field.desktop {
     display: none!important;

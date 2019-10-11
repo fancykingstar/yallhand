@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, AppBar, List, CssBaseline, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Drawer, AppBar, List, CssBaseline, ListItem, ListItemIcon, ListItemText, Grid } from '@material-ui/core';
 import {
     Home as HomeIcon,
     TouchApp as TouchAppIcon,
@@ -31,7 +31,7 @@ import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import search_icon from "../assets/images/search_icon.svg";
 
 import logo_img from "../assets/images/logo.png";
-import {QLogo} from "../../Assets/Graphics/QLogo";
+import { QLogo } from "../../Assets/Graphics/QLogo";
 // import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
 import { AccountStore } from "../../Stores/AccountStore";
@@ -195,15 +195,28 @@ const DefaultLayout = ({ ...props }) => {
                 open={(width <= mobileWidth) ? mopen : open}
             >
                 <div className="menuHeader">
-                    <h2 className="menu-header "><img src={account.img} alt="org logo" />{account.label}</h2>
+                    <h2 className="menu-header ">
+                        {((width <= mobileWidth) ? mopen : open) ? (
+                            <Grid container direction="row" justify="center" alignItems="center">
+                                <Grid item xs={3}><img className="org-logo" src={account.img} alt="org logo" /></Grid>
+                                <Grid item xs={9}><span className="org-name">{account.label} biger name company</span></Grid>
+                            </Grid>
+                        ) : (
+                                <Grid container direction="row" justify="center" alignItems="center">
+                                    <Grid item ><img className="org-logo" src={account.img} alt="org logo" /></Grid>
+
+                                </Grid>
+                            )}
+
+                    </h2>
                 </div>
                 <div className="menu-content">
                     <List>
                         {
-                            UserStore.user.isAdmin && 
+                            UserStore.user.isAdmin &&
                             <ListItem button key="home" component={Link} to="/panel">
-                            <ListItemIcon><ArrowBackRoundedIcon /></ListItemIcon>
-                            <ListItemText primary="Leave Portal View" />
+                                <ListItemIcon><ArrowBackRoundedIcon /></ListItemIcon>
+                                <ListItemText primary="Leave Portal View" />
                             </ListItem>
                         }
                         <ListItem button key="home" component={Link} to="/portal">
@@ -227,7 +240,7 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemText primary="Faqs" />
                         </ListItem>
                         <ListItem button key="surveys" component={Link} to='/portal/surveys'>
-                            <ListItemIcon><BallotRoundedIcon/></ListItemIcon>
+                            <ListItemIcon><BallotRoundedIcon /></ListItemIcon>
                             <ListItemText primary="Surveys" />
                         </ListItem>
                         {/* <ListItem button key="directory" component={Link} to="directory">
@@ -249,8 +262,8 @@ const DefaultLayout = ({ ...props }) => {
                 </div>
                 <div className="menu-footer">
 
-                <SearchFrame/> 
-                        <div className="menu-footer-logo" style={{visibility: !open? "hidden":"visible"}}> <QLogo /> </div>
+                    <SearchFrame />
+                    <div className="menu-footer-logo" style={{ visibility: !open ? "hidden" : "visible" }}> <QLogo /> </div>
                 </div>
             </Drawer>
             <main className={clsx(classes.content, "main-content-container")}>
