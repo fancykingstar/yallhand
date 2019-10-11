@@ -53,7 +53,7 @@ export class Register extends React.Component {
     return (
       <React.Fragment>
         <Form>
-          <Form.Input label="Invite Code" value={this.state.code} onChange={(e) => this.handleChange(e)}/>  
+          <Form.Input style={{fontWeight: 200}} label="Invite Code" value={this.state.code} onChange={(e) => this.handleChange(e)}/>  
           <div className="field">
             <GoogleLogin
               className="ui small icon primary left labeled button"

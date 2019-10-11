@@ -5,11 +5,11 @@ import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { getContentObj } from "../SharedCalculations/GetContentObj"
 import { Table, Header, Button, Segment, Icon } from "semantic-ui-react";
 import { deleteSchedule } from "../DataExchange/Up";
-
+// import { scheduled } from "../DataExchange/Down";
+ 
 @inject("ScheduleStore", "EmailStore", "UserStore", "AccountStore")
 @observer
 export class Scheduled extends React.Component {
-
   render() {
       const {ScheduleStore, EmailStore, AccountStore} = this.props
 

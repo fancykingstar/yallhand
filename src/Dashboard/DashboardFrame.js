@@ -1,7 +1,9 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
 import { withRouter } from "react-router-dom"
-import { Segment, Grid, Header, Icon, Statistic, Dropdown, Button, Modal } from "semantic-ui-react";
+import { Segment, Header, Icon, Statistic, Dropdown, Button, Modal, Grid } from "semantic-ui-react";
+import { Col, Row, Container } from "reactstrap";
+
 import { Scheduled } from "./Scheduled"
 import Notifications from "./Notifications"
 import { Line, Doughnut } from 'react-chartjs-2';
@@ -12,7 +14,7 @@ import {DateRange} from "../SharedUI/DateRange"
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 import _ from "lodash";
-import "./style.css";
+// import "./style.css";
 
 @inject("AccountStore", "AnnouncementsStore", "PoliciesStore", "TeamStore", "EmailStore", "UIStore", "UserStore")
 @observer
@@ -36,23 +38,22 @@ class DashboardFrame extends React.Component {
   }
 
   componentDidMount(){
+    const {UIStore} = this.props;
     this.getData()
     window.scrollTo(0, 0);
-    // this.setState({
-    //   dateRange: "Or choose a date range"
-    // })
+    UIStore.set("dropdown", "dashboardOverview", 30);
   }
+
 
   render() {
     const {AccountStore, AnnouncementsStore, PoliciesStore,  UIStore, UserStore} = this.props
-    const createAnnc = () => {
-      this.setState({createContent: "announcement"})
-      UIStore.set("modal", "createContent", true)
-    }
 
-    const createFAQ = () => {
-      this.setState({createContent: "policy"})
-      UIStore.set("modal", "createContent", true)
+
+    const create = (type) => {
+      if(type === "faq") this.props.history.push('panel/faqs/content/new')
+      else if(type === "announcement") this.props.history.push('panel/announcements/content/new')
+      else if(type === "survey") this.props.history.push('/panel/surveys/manage-survey')
+      else if(type === "task") this.props.history.push('/panel/tasks/manage-task')
     }
 
     const onboardUser = () => {
@@ -155,7 +156,6 @@ class DashboardFrame extends React.Component {
     }
 
     const updateData = (source, val1) => {
-      console.log(source, val1)
       if(source === "dropdown" && val1 !== "custom")  {
         UIStore.set("dropdown", "dashboardOverview", val1)
         this.getData(Date.now() - 2592000000 * {30:1, 60:2, 90:3}[val1])
@@ -176,43 +176,29 @@ class DashboardFrame extends React.Component {
           subheader="Activities and Information Overview"
         />
         <div className="dashboardShortcuts">
-          <Segment width="100%">
-            <Grid stackable columns={4}>
-              <Grid.Row>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createEmail()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="mail"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Send Email</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createAnnc()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="bullhorn"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create Announcement</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column>
-                <div style={{width: 155, margin: "auto"}}
-                onClick={e => createFAQ()}
-                >
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="question"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Create FAQ</h4></div>
-                </div>
-                </Grid.Column>
-                <Grid.Column 
-                onClick={e => onboardUser()}
-                >
-                <div style={{width: 155, margin: "auto"}}>
-                <div style={{width: 50, margin: "auto"}} ><Button circular color="blue" size="huge" icon="user outline"/></div>
-                <div style={{width: "auto", margin: "auto", textAlign: "center"}}>   <h4 style={{padding: 0}}>Onboard User</h4></div>
-                </div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
+          <Segment>
+            <Container>
+              <Row>
+                <Col md={2} className="text-center">
+                <div onClick={() => createEmail()} > <div><Button circular color="blue" size="medium" icon="mail"/></div><h4>Send Email</h4> </div>
+                </Col>
+                <Col md={2} className="text-center" >
+                  <div onClick={() => create("announcement")} > <div><Button circular color="blue" size="medium" icon="bullhorn"/></div><h4>New Announcement</h4> </div>
+                </Col>
+                <Col md={2} className="text-center">
+                <div onClick={() => create("faq")} > <div><Button circular color="blue" size="medium" icon="question"/></div><h4>New FAQ</h4> </div>
+                </Col>
+                <Col md={2} className="text-center">
+                <div onClick={() => create("survey")} > <div><Button circular color="blue" size="medium" icon="edit outline"/></div><h4>New Survey</h4> </div>
+                </Col>
+                <Col className="text-center">
+                <div onClick={() => create("task")} > <div><Button circular color="blue" size="medium" icon="tasks"/></div><h4>New Task</h4> </div>
+                </Col>
+                <Col md={2} className="text-center" >
+                <div onClick={() => onboardUser()} > <div><Button circular color="blue" size="medium" icon="user outline"/></div><h4>Onboard User</h4> </div>
+                </Col>
+              </Row>
+            </Container>
           </Segment>
         </div>
         <div style={{paddingTop: 10}}>
@@ -242,8 +228,8 @@ class DashboardFrame extends React.Component {
           </div>
         </Segment>
         <br/>
-     
-        <Grid columns="three" divided stackable>
+     <br/>
+        <Grid className="grid-adjustment" columns="three" divided stackable>
           <Grid.Row>
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
@@ -271,7 +257,11 @@ class DashboardFrame extends React.Component {
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
-                <Grid divided>
+                <Grid className="grid-adjustment" divided>
+                {/* <Grid.Row>
+                  <Grid.Column width={13}> <p>"hi there"</p> </Grid.Column>
+                  <Grid.Column> <h4><CountUp duration={1} decimals={0} end={Math.floor(Math.random() * 627) + 3} /></h4> </Grid.Column>
+                </Grid.Row> */}
                 {topContent.length === 0? <span>No Data</span> : topContent}
                 </Grid>
               </Segment>
@@ -280,7 +270,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <div style={{marginTop: 0, paddingTop: 0, paddingBottom: 5}}>   <h4>All Sentiment Surveys</h4></div>
                 <div style={{paddingBottom: 10}}> 
-                  <Grid columns="equal">
+                  <Grid className="grid-adjustment" columns="equal">
                     <Grid.Row>
                       <Grid.Column>
                         <Icon style={{color:'#B908FA'}} name="smile outline"/>{Number.isNaN(sentimentPercentage(2))? 0 : sentimentPercentage(2)}% 

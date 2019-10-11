@@ -12,6 +12,7 @@ import { Keywords } from "./Keywords";
 import { ReviewAlerts } from "./ReviewAlerts";
 import { Schedule } from "./Schedule";
 import { History } from "./History";
+import { Channel } from "./Channel";
 import { generateID } from "../../SharedCalculations/GenerateID";
 import Settings from "./Settings";
 
@@ -26,15 +27,16 @@ class ManageContent extends React.Component {
   constructor(props) {
     super(props);
     const {UIStore} = this.props
-    this.mode = this.props.location.pathname.includes("policy")
+    this.mode = this.props.location.pathname.includes("faq")
       ? "policy"
       : "announcement";
         UIStore.reset("content")
+
   }
   componentWillUnmount() {
     const {DataEntryStore} = this.props
     DataEntryStore.reset("contentmgmt")
-   
+
   }
 
   componentDidMount() {
@@ -42,11 +44,11 @@ class ManageContent extends React.Component {
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
-        this.props.match.params.id !== UIStore.content.policyID ||
+        this.props.match.params.contentID !== UIStore.content.policyID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.id))) {
-          UIStore.set("content", "policyID", this.props.match.params.id);
+        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.contentID))) {
+          UIStore.set("content", "policyID", this.props.match.params.contentID);
           const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
@@ -71,11 +73,11 @@ class ManageContent extends React.Component {
     } else if (this.mode === "announcement") {
       if (
         UIStore.content.announcementID === "" ||
-        this.props.match.params.id !== UIStore.content.announcementID ||
+        this.props.match.params.contentID !== UIStore.content.announcementID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.id))) {
-          UIStore.set("content", "announcementID", this.props.match.params.id);
+        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.contentID))) {
+          UIStore.set("content", "announcementID", this.props.match.params.contentID);
           const obj = Object.assign(
             {},
             AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
@@ -108,9 +110,11 @@ class ManageContent extends React.Component {
     }
   }
 
-  render() {    
-    
-    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore } = this.props;
+  render() {
+
+    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore, match } = this.props;
+    const teamList = TeamStore.structureSelect;
+    const tagList = TeamStore.tagsSelect;
 
     console.log(DataEntryStore.contentmgmt.imgData);
 
@@ -129,7 +133,7 @@ class ManageContent extends React.Component {
           <Dropdown.Item text='Publish' icon="rocket" onClick={e=>updateStage("published")}/>
           <Dropdown.Item text='Archive' icon="archive" onClick={e=>updateStage("archived")}/>
         </React.Fragment> ,
-        "published": 
+        "published":
         <React.Fragment>
           <Dropdown.Item text='Unpublish' icon="remove circle" onClick={e=>updateStage("draft")}/>
           <Dropdown.Item text='Archive' icon="archive"  onClick={e=>updateStage("archived")}/>
@@ -142,11 +146,11 @@ class ManageContent extends React.Component {
       return options[vari().stage]
     }
 
-    const obj = this.mode === "policy" ? 
-    PoliciesStore._getPolicy(UIStore.content.policyID) 
+    const obj = this.mode === "policy" ?
+    PoliciesStore._getPolicy(UIStore.content.policyID)
     : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
 
-    const variations = () => {     
+    const variations = () => {
         return obj.variations.map(variation => ({
           key: variation.variationID,
           value: variation.variationID,
@@ -154,9 +158,9 @@ class ManageContent extends React.Component {
           text: TeamStore.teamKey[variation.teamID],
           type: variation.type
         }));
-      } 
-      
-    
+      }
+
+
 
     const handleEdit = e => {
       e.preventDefault();
@@ -176,15 +180,15 @@ class ManageContent extends React.Component {
 
         this.mode === "policy" ?
         this.props.history.push(
-            "/panel/faqs/policy-variation/" + vari.variationID
+            `/panel/faqs/${match.params.contentID}/${vari.variationID}`
           )
-        : 
+        :
         this.props.history.push(
-            "/panel/announcements/announcement-variation/" + vari.variationID
-            
+          `/panel/announcements/${match.params.contentID}/${vari.variationID}`
+
           );
-       
-      } 
+
+      }
 
       const handleCreateDupe = () => {
         const vari = this.mode === "policy"?
@@ -199,14 +203,14 @@ class ManageContent extends React.Component {
 
           this.mode === "policy" ?
           this.props.history.push(
-            "/panel/faqs/policy-variation/" + UIStore.content.variationID
+            `/panel/faqs/${match.params.contentID}/${vari.variationID}/d`
           )
           :
           this.props.history.push(
-            "/panel/announcements/announcement-variation/" + UIStore.content.variationID
+            `/panel/announcements/${match.params.contentID}/${vari.variationID}/d`
           )
       }
-      
+
 
       const handleCreateNew = e => {
         e.preventDefault();
@@ -214,16 +218,16 @@ class ManageContent extends React.Component {
           DataEntryStore.set("content", "contentRAW", null)
           DataEntryStore.set("content", "isNew", false);
           DataEntryStore.set("content", "stage", "draft");
-          
+
           this.mode === "policy" ?
           this.props.history.push(
-            "/panel/faqs/policy-variation/" + UIStore.content.variationID
+            `/panel/faqs/${match.params.contentID}/new`
           )
           :
           this.props.history.push(
-            "/panel/announcements/announcement-variation/" + UIStore.content.variationID
+            `/panel/announcements/${match.params.contentID}/new`
           )
-        
+
       };
       const handleChange = val => {
         UIStore.set("content", "variationID", val)
@@ -235,7 +239,7 @@ class ManageContent extends React.Component {
           :
           AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)
       }
-      
+
       const manageContent = () => {
         if(this.mode === "policy" && UIStore.content.policyID === "")
           {
@@ -243,7 +247,7 @@ class ManageContent extends React.Component {
           }
 
         else if(this.mode === "announcement" && UIStore.content.announcementID === "")
-        {return <div/>}    
+        {return <div/>}
 
         else{
             return(
@@ -256,72 +260,88 @@ class ManageContent extends React.Component {
                   subheader={DataEntryStore.contentmgmt.label}
                 />
                 <Segment>
-                  <div style={{ maxWidth: 600 }}>
+                  <div>
                     <Header>Available Variations</Header>
                     <br />
                     <SelectVariation
                       variations={variations()}
                       defaultVal={UIStore.content.variationID}
                       whenChanged={handleChange}
-                    />  
-                        <Dropdown 
-                        button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
-                    <Dropdown.Menu>
-                      <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
-                      <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
-                      <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
-                      <Dropdown.Divider /> 
-                    {publishOptions()}
-                    </Dropdown.Menu>
-                    </Dropdown>
+                    />
+                    {tagList.length > 0 && teamList.length > 1 ?
+                      <Dropdown
+                      button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
+                      <Dropdown.Menu>
+                        <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
+                        {TeamStore.tags.length * TeamStore.structure.length === variations.length? null :
+                        <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>}
+                        <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
+                        <Dropdown.Divider />
+                      {publishOptions()}
+                      </Dropdown.Menu>
+                      </Dropdown>
+                      :
+                      <Dropdown
+                      button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
+                      <Dropdown.Menu>
+                        <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
+                        <Dropdown.Divider />
+                      {publishOptions()}
+                      </Dropdown.Menu>
+                      </Dropdown>
+                    }
                     <div>
-                      
+
                     </div>
-                
+
                   </div>
                   <br/>
-                   <ManageVariationData 
-                   variation={vari()} 
+                   <ManageVariationData
+                   variation={vari()}
                    type={this.mode}
-                /> 
+                />
                 </Segment>
                 <FeaturedImage
                   mode={this.mode}
                   defaultImgUrl={DataEntryStore.contentmgmt.img}
                   imgData={DataEntryStore.contentmgmt.imgData}
-                  output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
+                  // output={val => DataEntryStore.set("contentmgmt", "bundle", val)}
+                />
+                <Channel 
+                  mode={this.mode}
+                  defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
                 />
 
                 {DataEntryStore.contentmgmt.everPublished?
-                <AddToEmail 
+                <AddToEmail
                   mode={this.mode}
                   />: null}
-      
+
                 <Keywords mode={this.mode} />
                 <ReviewAlerts
                   defaultVal={DataEntryStore.contentmgmt.reviewAlert}
                   mode={this.mode}
                 />
-                <Schedule 
-                state={obj.state} 
+                <Schedule
+                state={obj.state}
                 mode={this.mode}
                  />
                 <History mode={this.mode} />
-                <Settings 
-                mode={this.mode} 
+                <Settings
+                mode={this.mode}
                 defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
                 />
-      
+
                 <br />
               </React.Fragment>
             )
         }
-        
-  
+
+
 
     }
 
-    return <div style={{ maxWidth: 700 }}>{UIStore.content.variationID === ""? <div/> : manageContent()}</div>;
+    return <div>{UIStore.content.variationID === ""? <div/> : manageContent()}</div>;
   }
 }
 export default withRouter(ManageContent);

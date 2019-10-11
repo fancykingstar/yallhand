@@ -1,26 +1,42 @@
 import React from "react";
-import "./App.css";
 import { observer, inject } from "mobx-react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { AdminPanel } from "./AdminPanel";
-import UserPortal from "./UserPortal/UserPortal";
+// import UserPortal from "./UserPortal/UserPortal";
+import {UserPortal} from "./UserPortal/App";
 import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
-import FullStory from 'react-fullstory';
+// import FullStory from 'react-fullstory';
 import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
 
+import { log } from "./DataExchange/Up";
+import { ItsLog } from "./DataExchange/PayloadBuilder";
+// import "./App.css";
+// import "./UserPortal/assets/css/normalize.scss";
 
 @inject("UIStore", "UserStore")
 @observer
 class AppRoute extends React.Component {
+  componentDidCatch(error, info) {
+    console.log(error);
+    // alert(error);
+    // Display fallback UI
+    // this.setState({ hasError: true });
+    // You can also log the error to an error reporting service
+    // logErrorToMyService(error, info);
+  }
   constructor(props){
     super(props);
     const { UserStore, UIStore } = this.props;
     const { location } = this.props;
+    this.state = {shouldRedirect: false, redirect: "/"}
+
     this.state = {shouldRedirect: false, redirect: "/"}
     if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
     else if (!UIStore._adminLoadingComplete) {
@@ -33,8 +49,10 @@ class AppRoute extends React.Component {
         const loggedOutRoutes = ['/', '/register', '/forgot'];
         const loggedInRoutes = ['/panel', '/portal'];
         this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
+        if ( isAuthenticated ) log(ItsLog(true,{"event": "click", "type":"login"}));
         if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
         else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
+        
       }
       fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
         mode: 'no-cors',
@@ -45,9 +63,17 @@ class AppRoute extends React.Component {
 
   render() {
     const {UIStore} = this.props;
+
+    const theme = createMuiTheme({
+      typography: {
+        fontFamily: 'Lato, Arial',
+      }
+    });
+
     return (
       <div className="App">
-        <FullStory org="JJAMV"/>
+        <ThemeProvider theme={theme}>
+        {/* <FullStory org="JJAMV"/> */}
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
         {this.state.shouldRedirect && <Switch><Redirect push to={this.state.redirect}/></Switch>}
@@ -67,6 +93,7 @@ class AppRoute extends React.Component {
         transition={Slide}
         closeButton={false}
         />
+        </ThemeProvider>
       </div>
     );
   }

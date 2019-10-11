@@ -6,7 +6,6 @@ import { isEmpty } from '../SharedValidations/InputValidations'
 import { Dropdown, Image, Button, Modal, Form } from "semantic-ui-react";
 import { deleteUser, apiCall } from "../DataExchange/Fetch"
 import { withRouter } from "react-router-dom"
-import "./style.css";
 import { AccountStore } from "../Stores/AccountStore";
 
 @inject("UserStore", "UIStore", "DataEntryStore")
@@ -52,7 +51,7 @@ class UserProfile extends React.Component {
       }
     }
     return (
-      <div className="UserProfile">
+      <div className="UserProfile" style={{zIndex: "110"}}>
         <div className="UserSettingsDropdown" >
           <Dropdown icon="chevron down" trigger={<div className="UserSettingsTrigger"/>} >
             <Dropdown.Menu>

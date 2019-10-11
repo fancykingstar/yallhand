@@ -1,3 +1,4 @@
+
 body {
   /* color: rgb(51, 51, 51);  */
   font-family: 'Nunito', sans-serif; 
@@ -40,7 +41,7 @@ h1 h2 h3 h4 h5 span {
   /* height: 100vh;
   width: 100vw; */
 
-  height: 100%;
+  height: calc(100vh - 40px); /* was 100% */
   background-color: #F9F9F9; 
   overflow-y: auto;
   /* z-index: 0; */
@@ -114,3 +115,30 @@ pre {
   font-weight: 800
 }
 
+.form-row {
+  display: flex;
+  align-items: center;
+}
+
+
+.close-field {
+  margin-top: 30px;
+}
+
+.close-field.mobile {
+  display: none;
+}
+
+.public-DraftEditor-content{
+  min-height: 45vh;
+}
+@media screen and (max-width: 767px) {
+  .close-field.desktop {
+    display: none!important;
+  }
+  .close-field.mobile {
+    display: block;
+    width: 100%;
+    text-align: right;
+  }
+}

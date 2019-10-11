@@ -23,15 +23,22 @@ export class TagSelect extends React.Component {
 
     return (
       <Fragment>
-        <Form.Dropdown
-          {...val}
-          search
-          selection
-          label={label}
-          style={style}
-          options={tagsElement}
-          onChange={(e, val) => this.props.outputVal(val.value)}
-          placeholder={placeholder !== undefined ? placeholder : ""} />
+        {TeamStore.tags.length !== 0 ?
+          <Form.Dropdown
+            fluid
+            {...val}
+            search
+            selection
+            label={label}
+            style={style}
+            options={tagsElement}
+            onChange={(e, val) => this.props.outputVal(val.value)}
+            placeholder={placeholder !== undefined ? placeholder : ""}
+          />
+          :
+          null
+        }
+
       </Fragment>
     )
   }

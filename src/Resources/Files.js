@@ -117,7 +117,7 @@ export class Files extends React.Component {
            <Header
       style={{padding: 0, margin: 0}}
       as="h2"
-      content="Manage Files"
+      content="Storage"
       subheader="Manage files and control access across your teams"
     /><br/>
 

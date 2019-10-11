@@ -21,11 +21,11 @@ export class Teams extends React.Component {
     const { TeamStore } = this.props;
     const { DataEntryStore } = this.props;
     const { UIStore } = this.props;
-    const handleAdd = () => { 
+    const handleAdd = () => {
       if (!DataEntryStore.teamEditFields.tagsSaveDisabled) {
         createTeam(team()).then(() => {document.getElementById('teamInput').value = ""})
 
-       
+
       }
     };
     const handleEdit = data => {
@@ -72,21 +72,25 @@ export class Teams extends React.Component {
           <Header as="h3" content="Add New" />
           <Form>
             <Form.Group inline widths="equal" style={{ paddingRight: 10 }}>
-              <Form.Input
-                fluid
-                error={DataEntryStore.teamEditFields.teamsSaveDisabled}
-                label="Label"
-                onChange={(e, val) => handleLabelInput(val.value)}
-                id="teamInput"
-                placeholder="e.g. New York or Warehouse"
-              />
-              <Form.Select
-                fluid
-                label="Subteam Of (optional)"
-                defaultValue={"global"}
-                options={TeamStore._getTeamsAsOptions}
-                onChange={(e, { value }) => handleTeamChange(value)}
-              />
+                <Form.Input
+                  fluid
+                  error={DataEntryStore.teamEditFields.teamsSaveDisabled}
+                  label="Label"
+                  onChange={(e, val) => handleLabelInput(val.value)}
+                  id="teamInput"
+                  placeholder="e.g. New York or Warehouse"
+                />
+              {TeamStore.structureSelect.length > 1 ?
+                <Form.Select
+                  fluid
+                  label="Subteam Of (optional)"
+                  defaultValue={"global"}
+                  options={TeamStore._getTeamsAsOptions}
+                  onChange={(e, { value }) => handleTeamChange(value)}
+                />
+                :
+                null
+              }
               <Form.Button
                 disabled={
                   DataEntryStore.teamEditFields.teamsSaveDisabled ||

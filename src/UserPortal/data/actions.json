@@ -1,0 +1,119 @@
+{
+    "featured": [  
+        {
+        "label": "Give props to a colleague",
+        "img": "https://yallhandsgeneral.s3.amazonaws.com/noun_Star_899838.svg"
+    },
+    {
+        "label": "Request metrocard benefit",
+        "img": "https://yallhandsgeneral.s3.amazonaws.com/noun_Star_899838.svg"
+    },
+    {
+        "label": "Report something anonymously",
+        "img": "https://yallhandsgeneral.s3.amazonaws.com/noun_Star_899838.svg"
+    },
+    {
+        "label": "Ask management anything",
+        "img": "https://yallhandsgeneral.s3.amazonaws.com/noun_Star_899838.svg"
+    },
+    {
+        "label": "Request for reimbursement",
+        "img": "https://yallhandsgeneral.s3.amazonaws.com/noun_Star_899838.svg"
+    }
+	],
+    "general": [
+        {
+            "label": "Give props to colleague",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Refer candidate to recruiting",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Ask management anything",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Make anonymous report",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Request a compensation review",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Give props to colleague",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Refer candidate to recruiting",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Ask management anything",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Make anonymous report",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        },
+        {
+            "label": "Request a compensation review",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg"
+        }
+    ],
+    "company": [
+        {
+            "label": "Give props to colleague",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "Operations"
+        },
+        {
+            "label": "Refer candidate to recruiting",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        },
+        {
+            "label": "Ask management anything",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "Operations"
+        },
+        {
+            "label": "Make anonymous report",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        },
+        {
+            "label": "Request a compensation review",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        },
+        {
+            "label": "Give props to colleague",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "Operations"
+        },
+        {
+            "label": "Refer candidate to recruiting",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        },
+        {
+            "label": "Ask management anything",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "Operations"
+        },
+        {
+            "label": "Make anonymous report",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        },
+        {
+            "label": "Request a compensation review",
+            "img":"https://yallhandsgeneral.s3.amazonaws.com/24px.svg",
+            "category": "HR"
+        }
+    ]
+}
+

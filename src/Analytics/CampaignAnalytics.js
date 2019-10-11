@@ -48,12 +48,8 @@ export class CampaignAnalytics extends React.Component {
       if(!campaign) return null
       return (
         <Table.Row key={"camp" + giveMeKey()}>
-          <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>
-            <Header>
-              <Header.Content>
+          <Table.Cell style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>
               {camp.subject}
-              </Header.Content>
-            </Header>
           </Table.Cell>
           <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{UTCtoFriendly(camp.sent)}</Table.Cell>
           <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{`${camp.total_views}/${camp.unique_views}`}</Table.Cell>
@@ -75,10 +71,10 @@ export class CampaignAnalytics extends React.Component {
         />
                    <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/></div>
      
-          <Table padded="very" basic="very">
+          <Table basic="very">
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell rowSpan='2'>Name</Table.HeaderCell>
+                <Table.HeaderCell><div style={{paddingBottom: 20}}>Name</div></Table.HeaderCell>
                 <Table.HeaderCell>Sent<br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("sent", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("sent", "Lowest")}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Views (All/Unique) <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("total_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("total_views", "Lowest")}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Open Rate <br/><span> <Icon size="small" name="arrow up" onClick={e => this.sort("open_rate", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => this.sort("open_rate", "Lowest")}/></span></Table.HeaderCell>
