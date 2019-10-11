@@ -26,7 +26,10 @@ class Store {
   }
 
   _getLabel(id) {
-    return id === "All"? "All": this._getChannel(id).label
+    if(id === "All") return "All"
+    const chan = this._getChannel(id);
+    return chan? chan.label : "Other"
+
   }
   @computed
   get _channelSelect() {
