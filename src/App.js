@@ -24,6 +24,7 @@ import { ItsLog } from "./DataExchange/PayloadBuilder";
 @observer
 class AppRoute extends React.Component {
   componentDidCatch(error, info) {
+    console.log(error);
     // alert(error);
     // Display fallback UI
     // this.setState({ hasError: true });
@@ -37,8 +38,8 @@ class AppRoute extends React.Component {
     this.state = {shouldRedirect: false, redirect: "/"}
 
     this.state = {shouldRedirect: false, redirect: "/"}
-    // if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
-    // else if (!UIStore._adminLoadingComplete) {
+    if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
+    else if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
       const loadthings = async ()=>{
@@ -49,15 +50,15 @@ class AppRoute extends React.Component {
         const loggedInRoutes = ['/panel', '/portal'];
         this.setState({redirect: isAuthenticated ? (UserStore.user.isAdmin ? "/panel" : "/portal") : "/"});
         if ( isAuthenticated ) log(ItsLog(true,{"event": "click", "type":"login"}));
-        // if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
-        // else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
+        if (!path.includes(this.state.redirect)) this.setState({shouldRedirect: true});
+        else if (this.state.redirect !== path || path.includes("/portal/")) this.setState({shouldRedirect: (isAuthenticated ? loggedOutRoutes : loggedInRoutes).some(route => route.indexOf(path) > -1)});
         
       }
       fetch(process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL + "ping" : "http://127.0.0.1:3000/ping", {
         mode: 'no-cors',
         }).then(() => loadthings())
       .catch(() => toast.error("Unable to connect to Yallhands...", {hideProgressBar: true, autoClose: false, closeOnClick: false}) )
-      // }
+      }
     }
 
   render() {

@@ -10,7 +10,8 @@ import embed from "embed-video";
 import draftToHtml from "draftjs-to-html";
 
 import './style.css'
-import _ from "lodash";
+// import _ from "lodash";
+import {debounce, isEmpty} from "lodash";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 @inject("DataEntryStore", "AccountStore")
@@ -19,7 +20,7 @@ export class Wysiwyg extends React.Component {
     constructor(props) {
         super(props);
             if (!this.props.loadContent
-              || typeof(this.props.loadContent) === 'object' && _.isEmpty(this.props.loadContent))
+              || typeof(this.props.loadContent) === 'object' && isEmpty(this.props.loadContent))
               {
                 this.state = {editorState: EditorState.createEmpty(), raw: null, html: null};
               } else {
@@ -32,43 +33,45 @@ export class Wysiwyg extends React.Component {
         }
         this.onChange = editorState => this.setState({editorState});
 
-        this.handleReturn = (e) => {
-      const { editorState } = this.state;
-      if (e.key === 'Enter') {
-        console.log("entered")
-        this.setState({ editorState: RichUtils.insertSoftNewline(editorState) });
-        return 'handled';
-    }
-    return 'not-handled';
-  }
+  //       this.handleReturn = (e) => {
+  //     const { editorState } = this.state;
+  //     if (e.key === 'Enter') {
+  //       console.log("entered")
+  //       this.setState({ editorState: RichUtils.insertSoftNewline(editorState) });
+  //       return 'handled';
+  //   }
+  //   return 'not-handled';
+  // }
 
         
       }
 
+
+    passContent() {
+        const contentState = this.state.editorState.getCurrentContent();
+        this.setState({
+            raw: convertToRaw(contentState),
+            html: draftToHtml(convertToRaw(contentState))
+        });
+        this.props.output(this.state);
+      };
    
+
+    editorStateChanged = (newEditorState) => {
+      debounce(() => this.passContent(), 1000)();
+      this.setState({editorState: newEditorState});
+
+    };
 
     render(){
         const {AccountStore} = this.props
         const uploadContentImg = async (file) => 
-             await S3Upload("public-read", "quadrance-files/central", GenerateFileName(AccountStore.account, file.name), file)
+             await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
-                return result !== null ? { data: { link: result.Location}} : null
+                return result !== null ? { data: { link: result.file.location}} : null
               } )
 
-        const editorStateChanged = (newEditorState) => {
-            this.setState({editorState: newEditorState});
-            passContent();
-          };
 
-        const passContent = () => {
-            const contentState = this.state.editorState.getCurrentContent();
-            this.setState({
-                raw: convertToRaw(contentState),
-                html: draftToHtml(convertToRaw(contentState))
-            });
-            this.props.output(this.state);
-            console.log(this.state)
-          };
 
        
           
@@ -122,7 +125,7 @@ export class Wysiwyg extends React.Component {
             //   wrapperClassName="Wrapped"
             //   editorClassName="WysiwygWrapped"
               editorState={this.state.editorState}
-              onEditorStateChange={editorStateChanged}
+              onEditorStateChange={this.editorStateChanged}
               toolbar={toolbarConfig}
               // handleReturn={this.handleReturn}
               editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5,margin: 0}}   

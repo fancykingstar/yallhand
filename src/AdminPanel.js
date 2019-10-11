@@ -34,6 +34,11 @@ import "./CSS/styles.scss";
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
+  // constructor(props){
+  //   super(props);
+  //   const { UserStore } = this.props;
+  //   if (!UserStore.user.isAdmin) this.props.history.push('/portal');
+  // }
   componentDidMount() {
     const { UserStore, UIStore } = this.props;
     if (!UIStore._adminLoadingComplete) {
@@ -71,7 +76,7 @@ export class AdminPanel extends React.Component {
 
     const superAdminPath = UserStore.user !== null && UserStore.user.isSuperAdmin !== undefined && UserStore.user.isSuperAdmin === true? <Route path="/panel/superadmin" component={SuperAdminFrame} exact /> : null
 
-    const loadingDisplay = !UIStore._adminLoadingComplete ? (
+    const loadingDisplay = !UIStore.adminLoadingComplete.all ? (
       <div />
     ) : (
       <React.Fragment>
@@ -104,11 +109,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/surveys" component={SurveyFrame} exact/>
             <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
-            {/* <Route path="/panel/tasks/manage-task/:id" component={TaskNewEdit} />
-            <Route path="/panel/tasks/manage-task" component={TaskNewEdit} /> */}
             <Route path="/panel/tasks" component={TaskFrame} exact/>
-            {/* <Route path="/panel/surveys/manage-survey/:id" component={SurveyNewEdit} exact/>
-            <Route path="/panel/surveys/manage-survey" component={SurveyNewEdit} exact/> */}
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>
@@ -122,16 +123,6 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/superadmin/edit-user" component={EditUsers} exact/>
             <Route path="/panel/superadmin/create-user" component={CreateUsers} exact/>
             <Route path="/panel/superadmin/analytics" component = {props => <Analytics accounts={accountOptions()} {...props}/>} exact/>
-
-                {/* <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
-            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/> */}
-             {/* <Route path="/panel/announcements" component={AnnouncementsFrame} exact/> */}
-              {/* <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact /> */}
-              {/* <Route path="/panel/announcements/announcement-variation" component={NewEditVariation} /> */}
-            {/* <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
-            <Route path="/panel/announcements/announcement-variation" component={NewEditVariation} /> */}
-                     {/* <Route path="/panel/faqs" component={CardFrame} exact /> */}
-
             <Route path="/panel/*">
                 <Redirect push to="/panel"/>
            </Route>

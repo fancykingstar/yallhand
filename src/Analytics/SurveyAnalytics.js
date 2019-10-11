@@ -112,6 +112,7 @@ export class SurveyAnalytics extends React.Component {
               <Table.HeaderCell>Count</Table.HeaderCell>
             </Table.Header>
           <Table.Body>
+            {JSON.stringify(surveyItem._responses)}
           {Object.keys(surveyItem._responses).map(res =>
             <Table.Row>
               <Table.Cell collapsing >{surveyItem.scaleConfig==="star"? <Rating icon='star' disabled defaultRating={res} maxRating={5} /> : res}</Table.Cell>

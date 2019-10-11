@@ -29,7 +29,8 @@ export class Task extends React.Component {
         const instanceID = instances[0].instanceID;
         const completed = () => {
             if(!responses_by_instance.length) return [];
-            const anyRs = responses_by_instance.filter(i=>i.instanceID === instanceID)[0].data;
+            let anyRs = responses_by_instance.filter(i=>i.instanceID === instanceID);
+            anyRs = !anyRs.length? {} : anyRs[0].data;
             return Object.keys(anyRs).filter(r => anyRs[r].response);
         }
         

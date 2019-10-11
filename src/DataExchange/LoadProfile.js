@@ -52,7 +52,7 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
         const campaigns = await load.campaigns(accountID);
 
   
-        const scheduled = await load.scheduled(accountID);
+        const scheduled = await load.scheduled(accountID); 
    
   
         const logs = await load.logs(accountID, userID);

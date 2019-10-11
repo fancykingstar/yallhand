@@ -111,11 +111,11 @@ export const SurveyItem = inject("DataEntryStore")(observer((props) => {
           }}
           style={{ width: 200 }}
         >
-          <MenuItem value="Scale10">Scale on 1-10</MenuItem>
-          <MenuItem value="Scale5">Scale on 1-5</MenuItem>
+          <MenuItem value="scale10">Scale on 1-10</MenuItem>
+          <MenuItem value="scale5">Scale on 1-5</MenuItem>
           <MenuItem value="star">5-Star Rating ⭐️</MenuItem>
         </Select>
-        {scaleConfig === "Scale10" || scaleConfig === "Scale5"?  ScaleLabels : null}
+        {scaleConfig === "scale10" || scaleConfig === "scale5"?  ScaleLabels : null}
       </FormControl>
     
     const ResponseConfig =

@@ -51,7 +51,7 @@ class VariationContent extends React.Component {
   hasBeenChanged() { return Boolean(Object.values(this.state).filter(i=>i).length) }
   
 
-  changeStage(stage) {
+  async changeStage(stage) {
     const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
     const {mode, isNewContent, contentID, variID} = this.props.data;
 
@@ -73,12 +73,12 @@ class VariationContent extends React.Component {
     }
     else {
 
-      console.log("modified", contentEdit(this.state, mode, contentID, variID));
+      // console.log("modified", contentEdit(this.state, mode, contentID, variID));
 
-      // if (isPolicy) modifyPolicy(contentEdit(this.state, mode, contentID, variID));
-      // else modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
-      // this.reset();
-        // history.push(`${path}${UIStore.content[mode + "ID"]}`);
+      if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
+      else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
+      this.reset();
+        history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
 
@@ -139,8 +139,8 @@ class VariationContent extends React.Component {
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations? content.variations[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
-
+        <Wysiwyg loadContent={content.variations? content.variations[0].contentRAW: {}} border output={e=>console.log("variContet",e.html)}/>
+        {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
         <div>
           <Row>
             <Col>

@@ -35,6 +35,7 @@ import {QLogo} from "../../Assets/Graphics/QLogo";
 // import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
 
 import { AccountStore } from "../../Stores/AccountStore";
+import { UserStore } from "../../Stores/UserStore";
 
 
 // import 'bootstrap/dist/css/bootstrap.css';
@@ -199,7 +200,7 @@ const DefaultLayout = ({ ...props }) => {
                 <div className="menu-content">
                     <List>
                         {
-                            account.isAdmin && 
+                            UserStore.user.isAdmin && 
                             <ListItem button key="home" component={Link} to="/panel">
                             <ListItemIcon><ArrowBackRoundedIcon /></ListItemIcon>
                             <ListItemText primary="Leave Portal View" />

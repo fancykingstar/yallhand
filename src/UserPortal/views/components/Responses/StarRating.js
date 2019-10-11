@@ -6,7 +6,7 @@ export class StarRating extends React.Component {
         const {minLabel, maxLabel} = this.props; 
     return(
         <>
-       <Rating icon='star'defaultRating={3} size="large" maxRating={5} clearable onRate={(e, val)=> this.props.output(val.rating)} />
+       <Rating icon='star' size="large" maxRating={5} clearable onRate={(e, val)=> this.props.output(val.rating)} />
       </>
     )
     }

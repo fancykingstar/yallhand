@@ -34,10 +34,25 @@ class Storage extends React.Component {
 
     const allResources = [...ResourcesStore.fileResources, ...ResourcesStore.urlResources]
 
+    const downloadFile = (S3Key, label) => {
+        const ext = "." + S3Key.split(".")[1]
+        S3Download("gramercy", S3Key, label, ext)
+     }
+    
 
     const resources = allResources.map(resource => (
         <Table.Row key={"portalResources" + giveMeKey()}>
-          <Table.Cell>{resource.type !== undefined? <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" onClick={e => downloadFilePortal(resource.S3Key.split("gramercy/")[1], resource.label, resource.resourceID)}>{resource.label}</p> : <a href={resource.prefix + resource.url} onClick={e => log(ItsLog(false, {"type": "url", "id": resource.resourceID, "variation": ""}))} target="_blank">{resource.label}</a>}</Table.Cell>       
+          <Table.Cell>
+          
+          {resource.type !== undefined? 
+          
+          <p style={{cursor: "pointer", color: "#1D7E9D"}} as="a" 
+        //   onClick={e => downloadFilePortal(resource.S3Key.split("gramercy/")[1], 
+          onClick={e => downloadFile(resource.S3Key, resource.label)}>{resource.label}</p> 
+          
+          : 
+          <a href={resource.prefix + resource.url} onClick={e => log(ItsLog(false, {"type": "url", "id": resource.resourceID, "variation": ""}))} target="_blank">{resource.label}</a>}</Table.Cell>       
+              
               <Table.Cell>
               {resource.type !== undefined? <span>File <Icon name="file outline"/></span> :  <span>URL <Icon name="linkify"/></span>}
               </Table.Cell> 

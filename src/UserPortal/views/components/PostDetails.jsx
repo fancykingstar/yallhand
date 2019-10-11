@@ -23,7 +23,7 @@ import UTCtoFriendly from '../../../SharedCalculations/UTCtoFriendly';
 class PostDetails extends React.Component {
 
     render() {
-        const { AccountStore } = this.props;
+        const { AccountStore, UserStore } = this.props;
         const {mode, contentID} = this.props.data;
         const post = this.props.data.PostData;
         const vari = post && post.variations[0];

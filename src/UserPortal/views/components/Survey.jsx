@@ -38,10 +38,10 @@ export class Survey extends React.Component {
             scale10: <SliderScale max={10} minLabel={data.scaleLabels_lo} maxLabel={data.scaleLabels_hi} output={val=>recordResponse(val, data)} />,
             scale5: <SliderScale max={5} minLabel={data.scaleLabels_lo} maxLabel={data.scaleLabels_hi} output={val=>recordResponse(val, data)} />,
             star: <StarRating output={val=>recordResponse(val, data)} />,
-            text: <Input placeholder="Enter your response…" type="text" name="description" id="description" output={e=>recordResponse(e.target.value, data)} />,
+            text: <Input placeholder="Enter your response…" type="text" name="description" id="description" onChange={e=>recordResponse(e.target.value, data)} />,
             yesno: <Binary negLabel="No" posLabel="Yes" output={val=>recordResponse(val, data)}  />,
             truefalse: <Binary negLabel="False" posLabel="True" output={val=>recordResponse(val, data)}  />,
-            thumbsupdown: <Binary thumbs={true} output={e=>recordResponse(val, data)}  />,
+            thumbsupdown: <Binary thumbs={true} output={val=>recordResponse(val, data)}  />,
             custom: <MultiChoice answeroptions={data.resChoices} output={val=>recordResponse(val, data)}/>
         }[type]) ;
 
@@ -60,7 +60,6 @@ export class Survey extends React.Component {
             await Object.keys(this.state).forEach(i => response[i] = {updated, response: this.state[i]});
             const payload = {surveyID, instanceID, response};
             await apiCall('surveys/response', 'POST', payload).then(res => {
-                console.log("res",res)
                 this.setState({completed:true});
             })
         }
