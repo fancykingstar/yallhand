@@ -19,29 +19,33 @@
         _completed: surveysCompleted(false, survey),
         _deadline: survey.instances.length === 0? "No Current Deadlines" : Math.max(...survey.instances.map(i=>i.deadline))
       }
-      console.log("analytic check",surveyAnalytics)
       const allResponseData = survey.responses_by_instance.map(i => i.data);
       let newSurveyItems = [];
+      
       survey.surveyItems.forEach(surveyItem=>{
         let allItemResponses = allResponseData
           .filter(itemResponse => Object.keys(itemResponse)[0] === surveyItem._id)
-          .map(itemResponse => Object.values(itemResponse)[0])
-          .map(itemResponse => Object.values(itemResponse)[0])
-          .map(itemResponse => itemResponse.response);
+          .map(itemResponse => Object.values(itemResponse))
+          // .map(itemResponse => {
+          //   return itemResponse.map(r=>r.response)
+          // })
+          // .map(itemResponse => itemResponse.response);
+
+
+        console.log("test", allItemResponses)
 
         let responses = _.countBy(allItemResponses); //{val: count}
-       
+
 
         Object.keys(responses).forEach(res => responses[res] = {count: responses[res], percentage: getPercentage( Object.values(responses) ,responses[res])})
         const newSurveyItem = Object.assign(surveyItem, {_responses: responses})
         newSurveyItems.push(newSurveyItem);
       })
-      
-      surveyAnalytics.surveyItems = newSurveyItems;
+      ///
+      surveyAnalytics.responses = newSurveyItems;
       updatedSurveys.push(Object.assign(survey, surveyAnalytics))
-
-
     })
+
     return updatedSurveys;
   }
 
