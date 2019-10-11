@@ -74,18 +74,9 @@ class Actions extends React.Component {
       this.sliderCompany.slickGoTo(0);
       this.setState({ showActionFormCompany: false });
    }
-   handleInputChange(evt) {
-      const value =
-         evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-      this.setState({
-         [evt.target.name]: value
-      });
-   }
-   handleActionFormSubmit(e) {
-      e.preventDefault();
-      console.log('colleague', this.state.colleague);
-      console.log('props_for', this.state.props_for);
-      console.log('description', this.state.description);
+   
+   handleActionFormSubmit(data) {
+      console.log(data);
    }
    render() {
       const { FeaturedActions, generalActions, CompanyActions } = this.state
@@ -244,6 +235,11 @@ class Actions extends React.Component {
                         showActionForm={this.showActionForm.bind(this)}
                         hideActionForm={this.hideActionForm.bind(this)}
                         selectedActionData={this.state.selectedActionData}
+
+                        title={this.state.selectedActionData.label}
+                        iconImage={this.state.selectedActionData.label}
+                        onSubmit={this.handleActionFormSubmit}
+                        onCancel={this.hideActionForm.bind(this)}
                      />
                   </Container>
                </Slider>
@@ -282,6 +278,11 @@ class Actions extends React.Component {
                         showActionForm={this.showActionFormCompany.bind(this)}
                         hideActionForm={this.hideActionFormCompany.bind(this)}
                         selectedActionData={this.state.selectedActionDataCompany}
+
+                        title={this.state.selectedActionDataCompany.label}
+                        iconImage={this.state.selectedActionDataCompany.label}
+                        onSubmit={this.handleActionFormSubmit}
+                        onCancel={this.hideActionFormCompany.bind(this)}
                      />
                   </Container>
                </Slider> */}

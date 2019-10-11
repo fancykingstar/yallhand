@@ -1,5 +1,5 @@
 import React from 'react';
-import {inject, observer} from "mobx-react";
+import { inject, observer } from "mobx-react";
 import { Container, Row, Col } from 'reactstrap';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
@@ -14,7 +14,7 @@ import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 
-@inject("AnnouncementsStore","PoliciesStore", "SurveyStore", "TaskStore")
+@inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
 class Home extends React.Component {
    constructor(props) {
@@ -24,14 +24,14 @@ class Home extends React.Component {
       }
    }
    componentDidMount() {
-      const {AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore} = this.props;
+      const { AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore } = this.props;
       this.setState({
          suggestedActions: PostData.suggestedActions
       })
    }
    render() {
-      const {AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore} = this.props;
-      const {  suggestedActions } = this.state
+      const { AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore } = this.props;
+      const { suggestedActions } = this.state
       const settings = {
          dots: false,
          infinite: false,
@@ -108,7 +108,7 @@ class Home extends React.Component {
             <div className="home_container">
                <Container>
                   <Row>
-                     <Col lg={{ width: 1280, size: 9, order: 1 }} md={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
+                     <Col lg={{ width: 1280, size: 12, order: 1 }} md={{ size: 12, order: 2 }} xs={{ size: 12, order: 2 }}>
                         <div className="section_title shadow">
                            <h4>Featured</h4>
                         </div>

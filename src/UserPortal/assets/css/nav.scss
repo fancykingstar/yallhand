@@ -65,6 +65,7 @@
 .menuClosed .menuHeader:before{
     background-size: calc(#{$closedDrawerWidth} + 15px);
 }
+
 .page-header {
     background: #fff;
     color: #000;
@@ -100,9 +101,11 @@
         color: #fff;
         img {
           display: inline;
-          margin-right: 16px;
           width: 40px;
           border-radius: 7px;
+        }
+        .org-name{
+            white-space: pre-line;
         }
     }
     

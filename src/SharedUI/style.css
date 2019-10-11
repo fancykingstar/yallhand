@@ -94,9 +94,7 @@
 .public-DraftEditor-content {
     overflow-y: auto !important;
     max-height: 240px !important;
-
-
-
+    min-height: 45vh !important;
 }
 
 .draftJsEmojiPlugin__emojiSelectButton__3sPol {
