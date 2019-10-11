@@ -24,6 +24,10 @@ class Store {
   _getChannel(id) {
     return this.allChannels.filter(chan => chan.chanID === id)[0] 
   }
+
+  _getLabel(id) {
+    return id === "All"? "All": this._getChannel(id).label
+  }
   @computed
   get _channelSelect() {
     const options =  ChannelStore.allChannels.map(chan =>({"key": "chan" + chan.label, "text": chan.label, "value": chan.chanID}))

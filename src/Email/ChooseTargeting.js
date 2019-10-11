@@ -5,11 +5,11 @@ import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGrou
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 
-@inject("DataEntryStore", "AccountStore")
+@inject("DataEntryStore", "AccountStore", "TeamStore")
 @observer
 export class ChooseTargeting extends React.Component {
   render(){
-    const { DataEntryStore, AccountStore } = this.props;
+    const { DataEntryStore, AccountStore, TeamStore } = this.props;
 
     const addUser = (user, allUsers, key) => {
       if (
@@ -19,6 +19,18 @@ export class ChooseTargeting extends React.Component {
         DataEntryStore.set("emailCampaign", key, newArry);
       }
     };
+
+    const options =
+      TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
+        { text: "To Everyone", value: "all" },
+        { text: "To Selected Teams/Tags", value: "teams" },
+        { text: "To Select Users", value: "users" }
+      ])
+      :
+      ([
+        { text: "To Everyone", value: "all" },
+        { text: "To Select Users", value: "users" }
+      ]);
 
 
     const targetOptions =
@@ -90,15 +102,11 @@ export class ChooseTargeting extends React.Component {
     return (
         <div style={{ minWidth: 400 }}>
           <span style={{fontSize: ".9em"}}>
-          Send Email{" "}
+          Send {this.props.label? this.props.label: "Email"}{" "}
             <Dropdown
               inline
               onChange={(e, val) =>  DataEntryStore.set("emailCampaign", "sendTargetType", val.value)}
-              options={[
-                { text: "To Everyone", value: "all" },
-                { text: "To Selected Teams/Tags", value: "teams" },
-                { text: "To Select Users", value: "users" }
-              ]}
+              options={options}
               value={DataEntryStore.emailCampaign.sendTargetType}
             />
           </span>
@@ -109,4 +117,3 @@ export class ChooseTargeting extends React.Component {
 
   }
 }
-

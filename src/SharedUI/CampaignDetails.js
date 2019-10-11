@@ -22,31 +22,34 @@ const automationText = (campaign) => {
   return delay(campaign.delay) + event
 }
 
-export const CampaignDetails = (campaign) => 
-<Modal trigger={ <Button basic>Details</Button>}>
-<Modal.Header>{campaign.subject}</Modal.Header>
+
+
+export const CampaignDetails = (props) => 
+!props.source? null :
+<Modal closeIcon open={props.open} onClose={(e)=> props.onClose(e)}>
+<Modal.Header>{props.source.subject}</Modal.Header>
 <Modal.Content>
   <Modal.Description>
-  {campaign.img === "" ? 
+  {props.source.img === "" ? 
     null :
     <React.Fragment>
       <h4>Featured Image</h4>
-      <div className="imgPreview"> <img alt="featured visual" src={campaign.img} /></div>
+      <div className="imgPreview"> <img alt="featured visual" src={props.source.img} /></div>
     </React.Fragment>}
-    {!campaign.isTriggered?"":
+    {!props.source.isTriggered?"":
     <React.Fragment>
     <h4>Automation Event</h4>
-    <p>{automationText(campaign.eventTrigger)}</p>
+    <p>{automationText(props.source.eventTrigger)}</p>
     </React.Fragment>
   }
   <h4>Recipients</h4>
-  <p>{getCampaignRecipients(campaign.campaignID)}</p>
+  <p>{getCampaignRecipients(props.source.campaignID)}</p>
   <h4>Content</h4>
-    <div style={campaign.draftContentHTML === ""? {display: "none"} : {paddingTop: 5, fontSize: "1em"}}>
-      <span dangerouslySetInnerHTML={{ __html: campaign.draftContentHTML }} />
+    <div style={props.source.draftContentHTML === ""? {display: "none"} : {paddingTop: 5, fontSize: "1em"}}>
+      <span dangerouslySetInnerHTML={{ __html: props.source.draftContentHTML }} />
     </div>
-    <div style={campaign.content.length === 0? {display: "none"} : {paddingTop: 5}}>
-      <span style={{fontWeight: 800, fontSize: "1em"}}>Selected Content: {campaign.content.map(y => <a key={"template link" + giveMeKey()} href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
+    <div style={props.source.content.length === 0? {display: "none"} : {paddingTop: 5}}>
+      <span style={{fontWeight: 800, fontSize: "1em"}}>Selected Content: {props.source.content.map(y => <a key={"template link" + giveMeKey()} href={y.policyID !== undefined? "panel/faqs/manage-policy/" + y.policyID :  "panel/announcements/manage-announcement/" + y.announcementID } target="_blank">{getContentObj(y).label}</a>)}</span>
     </div>
   </Modal.Description>
 </Modal.Content>

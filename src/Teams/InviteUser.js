@@ -1,59 +1,69 @@
 import React from 'react';
 import {inject, observer} from 'mobx-react';
 import { Form, Icon } from "semantic-ui-react";
+import { Input } from "../SharedUI/Input";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
+import { Col, Row, } from 'reactstrap';
+import { EligibleUsersByTeamTag} from "../SharedCalculations/EligibleUsersByTeamTag";
 
 export const InviteUser = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, boss, isAdmin } = props.info;
   const { multipleRows } = props
 
   const setField = (content) => {
-    props.updateFields(content, props.id)
-
+    props.updateFields(content, props.id);
   }
 
   const removeRow = () => {
     props.removeRow(props.id)
   }
 
+  const resPadding = {paddingTop: 10}
+
   return( 
-    <Form widths="equal">
-      <Form.Group className="form-row" > 
-        {
-          multipleRows && 
-            <div className="close-field mobile">
-              <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
-            </div>
-          }
-        <Form.Input label="Email"  placeholder="jane@placethatwework.co" onChange={(e, v) => setField({email: v.value})}/>
-        <TeamSelect label="Choose Team:" value={teamID} outputVal={e => setField({teamID: e.value, teamName: e.text})}/>
-        <TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => setField({tagID: e})}/>
-        <Form.Dropdown
+    <>
+    <Row className="row align-items-center" style={{paddingBottom: multipleRows? "20px": 0}}>
+           <Col xl style={resPadding}>
+            <Input placeholder="jane@placethatwework.co" label="Email Address:" onChange={(e, v) => setField({email: v.value})}/>
+           </Col>
+           <Col xl style={resPadding}><TeamSelect label="Choose Team:" value={teamID} outputVal={e => setField({teamID: e.value, teamName: e.text})}/></Col>
+           <Col xl style={resPadding}><TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => setField({tagID: e})}/></Col>
+       <Col xl style={resPadding}><Form.Dropdown
           label="Reports to (optional):"
+          fluid
           search
           selection
           value={boss}
           onChange={(e, val) => setField({boss:val.value})}
           options={AccountStore._getUsersSelectOptions()}
-        />
-        {
+        /></Col>
+         {
           multipleRows && 
-            <div className="close-field desktop">
+            <Col xs="1" style={resPadding}>
+              <div style={{paddingTop: 25}}>
               <Icon disabled name='times circle close-icon' onClick={removeRow}></Icon>
-            </div>
+              </div>
+            </Col>
           }
-      </Form.Group>
-      {
+
+    
+       </Row>
+                {
         !multipleRows && 
+        <Row>
+          <Col style={resPadding}>
           <div style={{float: "right"}}>
             <Form.Checkbox checked={isAdmin} 
             onChange={() => setField({isAdmin: !isAdmin})} 
             label="Admin"/>
           </div>
+          </Col>
+          </Row>
       }
-      
-    </Form>
+
+    
+     </>
   )
 }))

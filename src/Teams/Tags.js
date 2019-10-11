@@ -21,7 +21,7 @@ export class Tags extends React.Component {
     const { TeamStore } = this.props;
     const { DataEntryStore } = this.props;
     const { UIStore } = this.props;
-   
+
 
     const handleAdd = () => {
       if (!DataEntryStore.teamEditFields.tagsSaveDisabled) {
@@ -81,13 +81,18 @@ export class Tags extends React.Component {
                 id="tagInput"
                 onChange={(e, val) => handleLabelInput(val.value)}
               />
-              <Form.Select
-                fluid
-                options={TeamStore._getTagsAsEditOptions}
-                label="Extends Tag (optional)"
-                defaultValue={"self"}
-                onChange={(e, { value }) => handleTagChange(value)}
-              />
+              {TeamStore.tagsSelect.length > 1 ?
+                <Form.Select
+                  fluid
+                  options={TeamStore._getTagsAsEditOptions}
+                  label="Extends Tag (optional)"
+                  defaultValue={"self"}
+                  onChange={(e, { value }) => handleTagChange(value)}
+                />
+                :
+                null
+              }
+
               <Form.Button
                 disabled={
                   DataEntryStore.teamEditFields.tagsSaveDisabled ||

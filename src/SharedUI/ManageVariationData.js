@@ -40,25 +40,25 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
           //      <Grid.Column width={8}>
           <React.Fragment>
                     <div>
-                  <div className="Form">
+                  <div >
                 <span>Alternate Variation Title: </span><span style={valStyle} className="lightText">{props.variation.label !== "" ? props.variation.label : "None"}</span>
               </div>
-                <div className="Form">
+                <div >
                 <span>Required User Tags: </span><span style={valStyle}>{tagsDisplay}</span>
               </div>
-              <div className="Form">
+              <div >
                 <span>Last Updated: </span> <span style={valStyle}>{UTCtoFriendly(props.variation.updated, UserStore.user.timezone)}</span>
               </div>
-              <div className="Form">
+              <div >
                 <span>Stage: </span> <span style={valStyle}>{props.variation.stage}</span>
               </div>
-              <div className="Form">
+              <div >
                 <span>Resource URLs: </span> <span style={valStyle} className="lightText">{urlsDisplay}</span>
               </div>
-              <div className="Form">
+              <div >
                 <span>Attached Files: </span> <span style={valStyle} className="lightText">{filesDisplay}</span>
               </div>
-              <div style={{paddingBottom: 10}} className="Form">
+              <div style={{paddingBottom: 10}} >
                 <span>Owner: </span>
                 <Label color="blue" horizontal>
                   {AccountStore._getDisplayName(props.variation.userID)}

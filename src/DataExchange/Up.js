@@ -24,10 +24,13 @@ const refresh = {
   announcements: () => reload.announcements(accountID()),
   files: () => reload.files(accountID()),
   campaigns: () => reload.campaigns(accountID()),
-  account: () => reload.account(accountID())
+  account: () => reload.account(accountID()),
+  surveys: () => reload.surveys(accountID()),
+  // tasks: () => reload.tasks(accountID()),
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
+  console.log("payload", JSON.stringify(payload))
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
@@ -307,10 +310,10 @@ export const modifyPolicy = (payload) => {
   )
 }
 
-export const modifyAnnouncement = (payload) => {
+export const modifyAnnouncement = (payload, toastEnabled) => {
     return processTemplate(true, "announcements/" + payload.announcementID, "PATCH", payload, "announcements", 
     "Your policy has been updated 🛠", 
-    true,{"event": "update", "type":"policy"}
+    true,{"event": "update", "type":"policy"}, toastEnabled
 )
 }
 
@@ -364,6 +367,47 @@ export const modifyAccount = (payload, toast=true) => {
 )
 }
 
+///SURVEYS
+export const createSurvey = (payload) => {
+  return processTemplate(true, "surveys", "POST", payload, "surveys", 
+      `Your new ${payload.type} has been created 🙌`, 
+      true,{"event": "create", "type":"survey"}
+  )
+}
+
+export const modifySurvey = (payload) => {
+  return processTemplate(true, "surveys/" + payload.surveyID, "PATCH", payload, "surveys", 
+  `Your ${payload.type} has been updated 🛠`, 
+  true,{"event": "update", "type":"survey"}
+)
+}
+
+export const deleteSurvey = (surveyID) => {
+  processTemplate(false, "surveys/" + surveyID, "DELETE", {}, "surveys", 
+  `Selected surveys deleted 👋`, 
+  true,{"event": "delete", "type":"survey"})
+}
+
+///TASKS
+// export const createTask = (payload) => {
+//   return processTemplate(true, "tasks", "POST", payload, "tasks", 
+//       "Your new task has been created 🙌", 
+//       true,{"event": "create", "type":"task"}
+//   )
+// }
+
+// export const modifyTask = (payload) => {
+//   processTemplate(true, "tasks/" + payload.taskID, "PATCH", payload, "tasks", 
+//   "Your tasks has been updated 🛠", 
+//   true,{"event": "update", "type":"task"}
+// )
+// }
+
+// export const deleteTask = (taskID) => {
+//   processTemplate(false, "tasks/" + taskID, "DELETE", {}, "tasks", 
+//   "Selected tasks deleted 👋", 
+//   true,{"event": "delete", "type":"task"})
+// }
 
 
 

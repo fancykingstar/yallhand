@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 import { Provider } from "mobx-react";
@@ -12,10 +11,12 @@ import { ResourcesStore } from "./Stores/ResourcesStore";
 import { TeamStore } from "./Stores/TeamStore";
 import { AnnouncementsStore } from "./Stores/AnnouncementsStore";
 import { DataEntryStore } from "./Stores/DataEntryStore";
-import { UIStore } from "./Stores/UIStore"
-import { AccountStore } from "./Stores/AccountStore"
-import { EmailStore } from "./Stores/EmailStore"
-import { ScheduleStore } from "./Stores/ScheduleStore"
+import { UIStore } from "./Stores/UIStore";
+import { AccountStore } from "./Stores/AccountStore";
+import { EmailStore } from "./Stores/EmailStore";
+import { ScheduleStore } from "./Stores/ScheduleStore";
+import { SurveyStore } from "./Stores/SurveyStore";
+import { TaskStore } from "./Stores/TaskStore";
 
 const Root = (
   <Provider
@@ -30,6 +31,8 @@ const Root = (
     AccountStore={AccountStore}
     EmailStore={EmailStore}
     ScheduleStore={ScheduleStore}
+    SurveyStore={SurveyStore}
+    TaskStore={TaskStore}
   >
     <BrowserRouter>
       <App />

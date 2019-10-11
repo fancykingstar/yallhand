@@ -157,20 +157,7 @@ class Store {
     }
 
     @observable adminLoadingComplete = {
-        account: false,
-        users: false,
-        user: false,
-        policies: false,
-        channels: false,
-        files: false,
-        urls: false,
-        structure: false,
-        tags: false,
-        announcements: false,
-        campaigns: false,
-        scheduled: false,
-        logs: false,
-        sentiments: false
+        all: false
     }
 
     @observable sideNav = {

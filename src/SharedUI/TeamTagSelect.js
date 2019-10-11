@@ -1,8 +1,8 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Form } from "semantic-ui-react";
-import { ToastContainer, 
-  // toast 
+import { ToastContainer,
+  // toast
 } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,7 +24,7 @@ export class TeamTagSelect extends React.Component {
     const defaultTeam = this.props.defaultTeam;
     const defaultTag = this.props.defaultTag;
     // const invalidCombos = DataEntryStore.isNewObj ? [] :
-    //   DataEntryStore.isNewVariation ? 
+    //   DataEntryStore.isNewVariation ?
     //   PoliciesStore._currentObj.variations.map(vari => ({
     //       team: vari.teamID,
     //       tags: vari.tags
@@ -58,7 +58,7 @@ export class TeamTagSelect extends React.Component {
       //       this.setState({ error: false });
       //       DataEntryStore.togglePreventSave(false)
       //     }
-         
+
       //   }
       // }
       // );
@@ -67,34 +67,42 @@ export class TeamTagSelect extends React.Component {
     return (
       <React.Fragment>
         <ToastContainer />
-        <Form.Dropdown
-          label="Teams"
-          placeholder="Choose a team"
-          {...multi}
-          // {...isfluid}
-          // focus
-          error={this.state.error}
-          search
-          selection
-          options={teamList}
-          defaultValue={defaultTeam}
-          onChange={(e, val) => checkValid("team", val.value)}
-          style={{ minWidth: 200 }}
-        />
-        <Form.Dropdown
-          label="Tags (optional)"
-          placeholder="Tags"
-          // isfluid
-          error={this.state.error}
-          {...multi}
-          // {...isfluid}
-          search
-          selection
-          options={tagList}
-          defaultValue={defaultTag.length === 0 ? "none" : defaultTag}
-          onChange={(e, val) => checkValid("tag", val.value)}
-          style={{ minWidth: 200 }}
-        />
+        {teamList.length > 1 ?
+          <Form.Dropdown
+            label="Teams"
+            placeholder="Choose a team"
+            {...multi}
+            // {...isfluid}
+            // focus
+            error={this.state.error}
+            search
+            selection
+            options={teamList}
+            defaultValue={defaultTeam}
+            onChange={(e, val) => checkValid("team", val.value)}
+            style={{ minWidth: 200 }}
+          />
+          :
+          null
+        }
+        {tagList.length > 0 ?
+          <Form.Dropdown
+            label="Tags (optional)"
+            placeholder="Tags"
+            // isfluid
+            error={this.state.error}
+            {...multi}
+            // {...isfluid}
+            search
+            selection
+            options={tagList}
+            defaultValue={defaultTag.length === 0 ? "none" : defaultTag}
+            onChange={(e, val) => checkValid("tag", val.value)}
+            style={{ minWidth: 200 }}
+          />
+          :
+          null
+        }
       </React.Fragment>
     );
   }

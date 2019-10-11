@@ -1,16 +1,20 @@
 import React from "react";
-
-import ManageContent from "./SharedUI/ManageContent/ManageContent"
-import Header from "./Header/Header";
 import { Responsive, Transition } from "semantic-ui-react"
 import { inject, observer } from "mobx-react";
 import { Switch, Route, Redirect } from "react-router-dom";
+
+import Header from "./Header/Header";
+import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import { SideBar } from "./SideBar/SideBar";
-import { CardFrame } from "./CardFrame/CardFrame";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
+// import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
-import AnnouncementsFrame from "./Announcements/AnnouncementsFrame";
+import SurveyFrame from "./Surveys/SurveyFrame";
+import TaskFrame from "./Tasks/TaskFrame";
+// import TaskNewEdit from "./Tasks/TasksNewEdit";
+import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
+import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
@@ -24,10 +28,17 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+import "./CSS/styles.scss";
+
 
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
+  // constructor(props){
+  //   super(props);
+  //   const { UserStore } = this.props;
+  //   if (!UserStore.user.isAdmin) this.props.history.push('/portal');
+  // }
   componentDidMount() {
     const { UserStore, UIStore } = this.props;
     if (!UIStore._adminLoadingComplete) {
@@ -65,12 +76,12 @@ export class AdminPanel extends React.Component {
 
     const superAdminPath = UserStore.user !== null && UserStore.user.isSuperAdmin !== undefined && UserStore.user.isSuperAdmin === true? <Route path="/panel/superadmin" component={SuperAdminFrame} exact /> : null
 
-    const loadingDisplay = !UIStore._adminLoadingComplete ? (
+    const loadingDisplay = !UIStore.adminLoadingComplete.all ? (
       <div />
     ) : (
       <React.Fragment>
       <Header />
-      <div className="SideAndAction">
+      <div id="SideAndAction" className="SideAndAction">
         <Responsive {...Responsive.onlyComputer} fireOnMount={true} onUpdate={(e, val) => checkMobile(val.getWidth())}>
         <SideBar />
         </Responsive>
@@ -85,16 +96,24 @@ export class AdminPanel extends React.Component {
 
         <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
-            <Route path="/panel/faqs" component={CardFrame} exact />
-            <Route path="/panel/faqs/manage-policy/:id" component={ManageContent} exact />
-            <Route path="/panel/faqs/policy-variation/:id" render={props => <NewEditVariation {...props} mode="policy" /> }/>
+            <Route path="/panel/announcements" render={props => <ContentListingPage {...props} mode="announcement" />} exact />
+            <Route path="/panel/announcements/:contentID" component={ManageContent} exact />
+            <Route path="/panel/announcements/:contentID/:variID" component={NewEditVariation} exact />
+            <Route path="/panel/announcements/:contentID/:variID/:options" component={NewEditVariation} exact />
+            <Route path="/panel/faqs" render={props => <ContentListingPage {...props} mode="policy" />} exact />
+            <Route path="/panel/faqs/:contentID" component={ManageContent} exact />
+            <Route path="/panel/faqs/:contentID/:variID" component={NewEditVariation} exact />
+            <Route path="/panel/faqs/:contentID/:variID/:options" component={NewEditVariation} exact />
             <Route path="/panel/teams" component={TeamFrame} />
-            <Route path="/panel/resources" component={ResourcesFrame} />
-            <Route path="/panel/announcements" component={AnnouncementsFrame} exact/>
+            <Route path="/panel/storage" component={ResourcesFrame} />
+            <Route path="/panel/surveys" component={SurveyFrame} exact/>
+            <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
+            <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
+            <Route path="/panel/tasks" component={TaskFrame} exact/>
+            <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
+            <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
-            <Route path="/panel/announcements/manage-announcement/:id" component={ManageContent} exact />
-            <Route path="/panel/announcements/announcement-variation/:id" render={props => <NewEditVariation {...props} mode="announcement" />} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />
             <Route path="/panel/email" component={EmailFrame} />

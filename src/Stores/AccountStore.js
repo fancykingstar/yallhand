@@ -111,6 +111,7 @@ class Store {
       userID: "*",
       displayName_full: "Yallhands Admin",
       displayName: "Yallhands",
+      img: "https://yallhandsgeneral.s3.amazonaws.com/yh-avatar.png",
     }
     return ID === "*" ? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
   }

@@ -22,6 +22,7 @@ class Store {
     emailCampaign: this.emailCampaign,
     supportTicket: this.supportTicket,
     channel: this.channel,
+    survey: this.survey,
     tempContent: this.tempContent,
     content: this.content,
     contentmgmt: this.contentmgmt,
@@ -177,6 +178,11 @@ class Store {
     //content search 
     contentResults: [],
     contentValue: ""
+  }
+
+  @observable survey = {
+    saveAttempt: false,
+    surveyItems: []
   }
 
   @observable channel = {
@@ -349,6 +355,12 @@ class Store {
       }
     })
     return reset
+  }
+
+  deleteChild(parent,key){
+    console.log(JSON.stringify(this.keys[parent]))
+    delete this.keys[parent][key];
+    console.log(JSON.stringify(this.keys[parent]))
   }
 
 

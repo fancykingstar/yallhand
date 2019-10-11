@@ -5,7 +5,10 @@ import { UIStore } from "../Stores/UIStore"
 import { UserStore } from "../Stores/UserStore";
 import { TeamStore } from "../Stores/TeamStore"
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
+import { generateID } from "../SharedCalculations/GenerateID";
 import _ from "lodash";
+import { EligibleUsersByTeamTag } from "../SharedCalculations/EligibleUsersByTeamTag";
+
 
 
 const accountID = () => AccountStore.account && AccountStore.account.accountID ? AccountStore.account.accountID : '';
@@ -193,9 +196,9 @@ export const userUpdate = () => {
 
 
 ///CHANNELS
-export const channel = () => {
+export const channel = (label) => {
   const buildObj = {
-    "label": DataEntryStore.channel.label
+    label
   }
   return _.extend({}, base(), buildObj)
 }
@@ -345,53 +348,79 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
 
   ///POLICIES (FAQs) & ANNOUNCEMENT
-  export const content = (type) => {
-    const buildObj = {
-      teamID: DataEntryStore.content.teamID,
-      chanID: UIStore.sideNav.activeChannel,
-      label: DataEntryStore.contentmgmt.label,
-      img: "",
-      everPublished: DataEntryStore.content.stage === "published" ? true : false,
-      reviewAlert: AccountStore.account.reviewAlert,
-      keywords: [],
+
+  export const content = (obj) => {
+    const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+    return {
+      chanID: !chanID? "All": chanID,
+      label,
       accountID: accountID(),
+      img,
+      everPublished: stage === "published",
+      reviewAlert: 0,
+      keywords: [],
       variations: [
         {
-        variationID: UIStore.content.variationID,
-        stage: DataEntryStore.content.stage,
-        teamID: DataEntryStore.content.teamID,
-        label: "",
+        variationID: generateID(),
+        stage: !stage? "draft": stage,
+        teamID: !teamID? "global": teamID,
+        label: teamID === !teamID && !tagID? "": label,
+        tags: tagID? [tagID]:[],
+        contentRAW,
+        contentHTML,
         userID: userID(),
-        updated: now(),
-        tags: DataEntryStore.content.tagID === "" || DataEntryStore.content.tagID === "none" ? [] : [DataEntryStore.content.tagID],
-        contentRAW: DataEntryStore.draftContentRAW,
-        contentHTML: DataEntryStore.draftContentHTML
+        updated: now()
         }
       ]      
     };
-
-    return buildObj
   }
 
-  export const contentEdit = (type) => {
-    const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
-    const buildObj = {
-        variationID: UIStore.content.variationID,
-        stage: DataEntryStore.content.stage,
-        teamID: DataEntryStore.content.teamID,
-        label: DataEntryStore.content.label,
-        userID: userID(),
-        updated: now(),
-        tags: DataEntryStore.content.tagID === ""  || DataEntryStore.content.tagID === "none"? [] : [DataEntryStore.content.tagID],
-        contentRAW: DataEntryStore.draftContentRAW,
-        contentHTML: DataEntryStore.draftContentHTML   
-    }
-    const newVariations = parent.variations.filter(vari => vari.variationID !== UIStore.content.variationID)
-    newVariations.push(buildObj)
-    const patchObj = {accountID: accountID(), variations: newVariations}
-    patchObj[type + "ID"] = UIStore.content[type + "ID"]
-    if(DataEntryStore.content.stage === "published"){patchObj.everPublished = true}
-    return patchObj
+  export const contentEdit = (obj, mode, contentID, variID) => {
+    // const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+    let updatedFields = {};
+    Object.keys(obj).forEach((key, i) => { if(obj[key]) updatedFields[key] = obj[key]});
+
+    let newContentValues = {}
+    if (updatedFields.img) newContentValues.img = updatedFields.img;
+    if (updatedFields.chanID) newContentValues.chanID = updatedFields.chanID;
+    newContentValues[`${mode}ID`] = contentID;
+
+    let newVariValues = {};
+    if (updatedFields.label) newVariValues.label = updatedFields.label;
+    if (updatedFields.contentRAW) newVariValues.contentRAW = updatedFields.contentRAW;
+    if (updatedFields.contentHTML) newVariValues.contentHTML = updatedFields.contentHTML;
+    if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
+    if (updatedFields.tagID) newVariValues.tags = [updatedFields.tagID];
+    if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
+
+    const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));
+    const variations = parent.variations.slice();
+    const editedVari = variations.filter(i=>i.variationID === variID)[0];
+    const otherVaris = variations.filter(i=> i.variationID !== variID);
+    
+    newContentValues.variations = [...otherVaris, ...[Object.assign(editedVari, newVariValues)]]
+    if(updatedFields === "published") newContentValues.everPublished = true;
+
+    return newContentValues;
+
+    // const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
+    // const buildObj =  {
+    //     variationID: generateID(),
+    //     stage: !stage? "draft": stage,
+    //     teamID: !teamID? "global": teamID,
+    //     label: teamID === !teamID && !tagID? "": label,
+    //     tags: tagID? [tagID]:[],
+    //     contentRAW,
+    //     contentHTML,
+    //     userID: userID(),
+    //     updated: now()
+    //   }
+    // const newVariations = parent.variations.filter(vari => vari.variationID !== UIStore.content.variationID)
+    // newVariations.push(buildObj)
+    // const patchObj = {accountID: accountID(), variations: newVariations}
+    // patchObj[type + "ID"] = UIStore.content[type + "ID"]
+    // if(DataEntryStore.content.stage === "published"){patchObj.everPublished = true}
+    // return patchObj
   }
   
   export const contentPatch = (newObj) => {
@@ -451,6 +480,53 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     
     return buildObj
   }
+
+  ///SURVEYS AND TASKS
+  const generateInstances = (data) => {
+    const {sendTargetType, deadline, sendToTagID, sendToTeamID} = data;
+    if(data.sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
+    else if(data.sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+  }
+
+  export const survey = ( type, data ) => {
+    const {surveyItems, active, label, anonymous, deadline, sendToTeamID, sendToTagID, sendTargetType, sendToUsers } = data;
+
+    const buildObj = {
+      surveyItems,
+      type,
+      label,
+      sendTargetType,
+      anonymous,
+      deadline,
+      instances: active? generateInstances(data):[],
+      responses_by_instance: [],
+      active,
+    };
+    return _.extend({}, base(), buildObj)
+  };
+
+  export const surveyEdit = ( type, data ) => {
+    const objkeys = Object
+      .keys(data)
+      .filter(i=>i[0] !== "_" && data[i])
+    let buildObj = {type};
+    objkeys.forEach(i => {
+      if(i === "sendToUsers" && !data.sendToUsers.length) return
+      else if(i === "active" && data[i]) {
+        buildObj.active = true;  
+        buildObj.instances = generateInstances(data);
+      }
+      else buildObj[i] = data[i];
+    })
+    return _.extend({}, base(), buildObj)
+
+  }
+
+
+
+
+
 
 
   
