@@ -199,7 +199,7 @@ const DefaultLayout = ({ ...props }) => {
                         {((width <= mobileWidth) ? mopen : open) ? (
                             <Grid container direction="row" justify="center" alignItems="center">
                                 <Grid item xs={3}><img className="org-logo" src={account.img} alt="org logo" /></Grid>
-                                <Grid item xs={9}><span className="org-name">{account.label} biger name company</span></Grid>
+                                <Grid item xs={9}><span className="org-name">{account.label}</span></Grid>
                             </Grid>
                         ) : (
                                 <Grid container direction="row" justify="center" alignItems="center">
@@ -223,10 +223,10 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
-                        {/* <ListItem button key="actions" component={Link} to="actions">
+                        <ListItem button key="actions" component={Link} to="/portal/actions">
                             <ListItemIcon><TouchAppIcon /></ListItemIcon>
                             <ListItemText primary="Actions" />
-                        </ListItem> */}
+                        </ListItem>
                         {/* <ListItem button key="events">
                             <ListItemIcon><EventIcon /></ListItemIcon>
                             <ListItemText primary="Events" />
