@@ -7,7 +7,7 @@ import MUIDataTable from "mui-datatables";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import CustomToolbarSelect from "./CustomToolbarSelect";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { modifyAnnouncement } from "../DataExchange/Up";
+import { modifyAnnouncement, modifyPolicy } from "../DataExchange/Up";
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import styled from "styled-components";
 import "./style.css";
@@ -118,15 +118,12 @@ class ContentListingPage extends React.Component {
       );
     };
 
-    const handleFeatured = (action, tableinfo) => {
+    const handleFeatured = async (action, tableinfo) => {
       const accountID = AccountStore.account.accountID;
-      tableinfo.data.forEach(i => {
-        const IDval =
-          AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID;
-        modifyAnnouncement(
-          { accountID, announcementID, featured: action === "feature" },
-          false
-        );
+      tableinfo.data.forEach(async i => {
+        const ID = mode === "announcement" ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID:PoliciesStore.allPolicies[i.dataIndex].policyID;
+        if (mode === "announcement") await modifyAnnouncement( { accountID, announcementID: ID, featured: action === "feature" }, false );
+        else await modifyPolicy({ accountID, policyID: ID, featured: action === "feature" }, false )
       });
     };
 

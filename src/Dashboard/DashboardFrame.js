@@ -66,7 +66,7 @@ class DashboardFrame extends React.Component {
       UIStore.set("menuItem", "emailFrame", "send email")
     }
 
-    const mockDoughnut = () => UserStore.user.invitedBy !=="admin"?[AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ]: [11, 31, 58]
+    const getDoughnut = () => [AccountStore.dashboardData.sentiment_total[0], AccountStore.dashboardData.sentiment_total[1], AccountStore.dashboardData.sentiment_total[2] ];
     const doughnutData =  {
       labels: [
         'Negative',
@@ -74,12 +74,12 @@ class DashboardFrame extends React.Component {
         'Positive'
     ],
       datasets: [{
-          data: AccountStore.dashboardData.sentiment_total === undefined? null : mockDoughnut(),
-          backgroundColor: ["#FF6384", "#0BCDFD","#B908FA"]
+          data: AccountStore.dashboardData.sentiment_total === undefined? null : getDoughnut(),
+          backgroundColor: ["#e84393", "#0BCDFD","#B908FA"]
       }],
 
   };
-  const mockRates = {open: 96.4, click: 73.2}
+  // const mockRates = {open: 96.4, click: 73.2}
   const openRate = AccountStore.dashboardData.total_recipient_count === undefined? 0 : Math.round(AccountStore.dashboardData.total_email_views.length / AccountStore.dashboardData.total_recipient_count * 100)
   const clickRate =AccountStore.dashboardData.total_email_views === undefined? 0 : Math.round(AccountStore.dashboardData.total_recipient_click / AccountStore.dashboardData.total_email_views.length * 100)
   const getLabel = (data) => {
@@ -91,27 +91,10 @@ class DashboardFrame extends React.Component {
    catch(error) {
        label = ""
    }
-//    else {return "No label available"}
+
    return label === "" || label === undefined? "obsoleted data" : label
 }
-    let mockIndex = -1
-    let mockIndex2 = -1
-    let mockOpens = (val) => {
-      mockIndex++;
-      return     {0: 199, 1: 205, 2: 208, 3: 225, 4: 260, 5: 105, 6: 104, 7: 68, 8: 70, 9: 72, 10: 301, 11: 321, 12: 333, 13: 296, 14: 280, 15: 260, 16: 255, 17: 200, 18: 198, 19: 154, 20: 99, 21: 101, 22: 111, 23: 115, 24: 125, 25: 190, 26: 270, 27: 277, 28: 290, 29: 200, 30: 205}[mockIndex]
-    } 
-    let mockOpens2 = (val) => {
-      mockIndex2++;
-      return     {0: 160, 1: 180, 2: 181, 3: 230, 4: 270, 5: 121, 6: 98, 7: 70, 8: 70, 9: 57, 10: 241, 11: 270, 12: 415, 13: 391, 14: 200, 15: 205, 16: 255, 17: 215, 18: 209, 19: 190, 20: 144, 21: 179, 22: 198, 23: 164, 24: 178, 25: 140, 26: 270, 27: 221, 28: 200, 29: 176, 30: 166}[mockIndex2]
-    } 
 
-    const realOrMock = (val) => UserStore.user.invitedBy === "admin"? 
-      mockOpens(mockIndex)
-     : val
-
-     const realOrMock2 = (val) => UserStore.user.invitedBy === "admin"? 
-      mockOpens2(mockIndex2)
-     : val
     const data =  
     {
       
@@ -120,15 +103,29 @@ class DashboardFrame extends React.Component {
         {
           label: 'Email opens',
           fill: false,
-          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: realOrMock(i.email_count)})),
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.email_count})),
           borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 2
         },
         {
           label: 'Portal Views',
           fill: false,
-          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: realOrMock2(i.portal_count)})),
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.portal_count})),
           borderColor: 'rgba(11, 205, 253, 1)',
+          borderWidth: 2
+        },
+        {
+          label: 'Survey Responses',
+          fill: false,
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.survey_count})),
+          borderColor: '#6610f2',
+          borderWidth: 2
+        },
+        {
+          label: 'Tasks Activity',
+          fill: false,
+          data: AccountStore.dashboardData.length === 0? [] : AccountStore.dashboardData.counts_by_date.map(i => ({x: i.date_friendly, y: i.task_count})),
+          borderColor: '#ff9f1a',
           borderWidth: 2
         },
       ]
@@ -217,7 +214,11 @@ class DashboardFrame extends React.Component {
         </div>
       
         <Segment>
-          {" "}<Icon style={{color:"#FF6384"}} name="square"/>Email Views <Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views
+          {" "}
+          <Icon style={{color:"#e84393"}} name="square"/>Email Views 
+          <Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views
+          <Icon style={{color:'#6610f2'}} name="square"/>Survey Responses
+          <Icon style={{color:'#ff9f1a'}} name="square"/>Task Activity
           <div style={{paddingTop: 10, minHeight: 200}}>
             <Line
             data={data}
@@ -238,13 +239,13 @@ class DashboardFrame extends React.Component {
                   <div style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}>
                     <Statistic.Group widths={1}>
                       <Statistic>
-                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(openRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.open  :openRate} />%</Statistic.Value>
+                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(openRate)? 0: openRate} />%</Statistic.Value>
                         <Statistic.Label>Open Rate 
                         {/* <Icon name="arrow up" color="blue"/>+1% */}
                         </Statistic.Label>
                       </Statistic>
                       <Statistic style={{paddingTop: 10}}>
-                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(clickRate)? 0: UserStore.user.invitedBy==="admin"? mockRates.click  :clickRate} />%</Statistic.Value>
+                        <Statistic.Value><CountUp duration={1} decimals={1} end={Number.isNaN(clickRate)? 0: clickRate} />%</Statistic.Value>
                         <Statistic.Label>Click Rate 
                           {/* <Icon name="arrow up" color="blue"/>+1% */}
                           </Statistic.Label>
@@ -279,7 +280,7 @@ class DashboardFrame extends React.Component {
                         <Icon style={{color:'#0BCDFD'}} name="meh outline"/>{Number.isNaN(sentimentPercentage(1))? 0 : sentimentPercentage(1)}% 
                       </Grid.Column>
                       <Grid.Column>
-                        <Icon style={{color:"#FF6384"}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
+                        <Icon style={{color:"#e84393"}} name="frown outline"/>{Number.isNaN(sentimentPercentage(0))? 0 : sentimentPercentage(0)}% 
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>

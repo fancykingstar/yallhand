@@ -200,7 +200,7 @@ export class SurveyAnalytics extends React.Component {
               <Table.Row>
                 <Table.HeaderCell>Title</Table.HeaderCell>
                 <Table.HeaderCell>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Querys<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell>Queries<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Not Started<span><SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
