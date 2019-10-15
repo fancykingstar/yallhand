@@ -20,16 +20,37 @@ import _ from "lodash";
         _completed: surveysCompleted(false, survey),
         _deadline: survey.instances.length === 0? "No Current Deadlines" : Math.max(...survey.instances.map(i=>i.deadline))
       }
-      
 
-      
+      ///SurveyItems
+      let calculatedSurveyItems = [];
+      survey.surveyItems.forEach(surveyItem => {
+        const id = surveyItem._id;
+
+        //Collect Responses
+        let allResponses = []; ///returns an array of responses [{id: {response:}}]
+        let responsesByUser= {};
+        survey.responses_by_instance.forEach(instance => {
+        Object.keys(instance.data)
+          .filter(res => res === id)
+          .forEach(res => {
+          const r = instance.data[res].response;
+          allResponses.push(r);
+          if(responsesByUser[r])  responsesByUser[r] = [...responsesByUser[r], ...[survey.instances.filter(i=>i.instanceID === instance.instanceID)[0].userID]];
+          else responsesByUser[r] = [survey.instances.filter(i=>i.instanceID === instance.instanceID)[0].userID];
+        })
+        
+      });
+      const counts = _.countBy(allResponses);
+      let results = {};
+      Object.keys(counts).forEach(res => {
+        results[res] = {count: counts[res],percentage: getPercentage(Object.values(counts), counts[res]), users: responsesByUser[res]}
+      })
+      calculatedSurveyItems.push(Object.assign(surveyItem, {_responses: results}))
+      })
+      surveyAnalytics.surveyItems = calculatedSurveyItems;
       calculatedSurveys.push(Object.assign(survey, surveyAnalytics));
-
-      
+      console.log(calculatedSurveys);
     })
-
-
-
     return  calculatedSurveys;
   }
 

@@ -2,7 +2,7 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header,Icon, Segment, List, Rating} from "semantic-ui-react";
+import { Table, Header,Icon, Segment, List, Rating, Modal} from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { UIStore } from "../Stores/UIStore";
@@ -10,6 +10,7 @@ import Slider from "react-slick";
 
 import {SurveyStore} from "../Stores/SurveyStore";
 import {TaskStore} from "../Stores/TaskStore";
+import {AccountStore} from "../Stores/AccountStore";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import TimeAgo from 'react-timeago'
 
@@ -17,7 +18,7 @@ import TimeAgo from 'react-timeago'
 export class SurveyAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: ""}
+    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false}
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     this.sort = (controller, direction) => {
       const param = controller
@@ -91,18 +92,13 @@ export class SurveyAnalytics extends React.Component {
         )
       })
 
-      const userList = (list) => 
-      <Accordion>
-        <Accordion.Title> Users </Accordion.Title>
-        <Accordion.Content>
+      const userList = (userIDs) => 
             <List>
-                {list.map(user => <List.Item>{user}</List.Item>)}
+                {userIDs.map(userID => <List.Item>{AccountStore._getDisplayName(userID)}</List.Item>)}
             </List>
-        </Accordion.Content>
-      </Accordion>
 
-      const questionDetails = (surveyItems) => surveyItems.map(surveyItem => 
-      <>
+      const questionDetails = (surveyItems, anon) => surveyItems.map(surveyItem => 
+      <div style={{paddingTop: 30, paddingBottom: 30}}>
       <h5>{surveyItem.q}</h5>
       {surveyItem.resType === "scale" && surveyItem.scaleConfig !== "star"? `1=${surveyItem.scaleLabels_lo} ${surveyItem.scaleConfig.includes(10)? "10":"5"}=${surveyItem.scaleLabels_hi}`:null}
         <Table compact basic='very'>
@@ -114,15 +110,35 @@ export class SurveyAnalytics extends React.Component {
           <Table.Body>
           {Object.keys(surveyItem._responses).map(res =>
             <Table.Row>
-              <Table.Cell collapsing >{surveyItem.scaleConfig==="star"? <Rating icon='star' disabled defaultRating={res} maxRating={5} /> : res}</Table.Cell>
-              <Table.Cell collapsing >{surveyItem._responses[res].percentage}%</Table.Cell>
-              <Table.Cell collapsing><p>{`(${surveyItem._responses[res].count}) responses `}</p></Table.Cell>
+               <Modal closeIcon open={this.state.displayUsers} onClose={()=>this.setState({displayUsers: false})}>
+                 <Modal.Header>
+                   Users with selected response
+                 </Modal.Header>
+                 <Modal.Content>
+                 {userList(this.state.userList)}
+                 </Modal.Content>
+             
+              </Modal>
+              {surveyItem.scaleConfig==="star" && surveyItem.resType === "scale" && <Table.Cell width={4} collapsing ><Rating icon='star' disabled defaultRating={res} maxRating={5} /></Table.Cell>}
+              {surveyItem.scaleConfig!=="star" && surveyItem.resType === "scale" && <Table.Cell width={4} collapsing >{res}</Table.Cell>}
+              {surveyItem.resType === "multichoice" && surveyItem.multiConfig === "thumbsupdown" && <Table.Cell width={4} collapsing >{res? "👍":"👎"}</Table.Cell> }
+              {surveyItem.resType === "multichoice" && surveyItem.multiConfig === "truefalse" && <Table.Cell width={4} collapsing >{res? "True":"False"}</Table.Cell> }
+              {surveyItem.resType === "multichoice" && surveyItem.multiConfig === "yesno" && <Table.Cell width={4} collapsing >{res? "Yes":"No"}</Table.Cell> }
+              {surveyItem.resType === "multichoice" && surveyItem.multiConfig === "custom" && <Table.Cell width={4} collapsing >{res}</Table.Cell> }
+              {surveyItem.resType === "text" && <Table.Cell width={4} collapsing >{res}</Table.Cell> }
+              <Table.Cell width={4} collapsing >{surveyItem._responses[res].percentage}%</Table.Cell>
+              {anon?
+              <Table.Cell width={4} collapsing><p>{`(${surveyItem._responses[res].count}) responses `}</p></Table.Cell>
+              :
+              <Table.Cell width={4} onClick={()=>this.setState({displayUsers: true, userList: surveyItem._responses[res].users})} collapsing><p style={{color: "#2fc7f8"}}>{`(${surveyItem._responses[res].count}) responses `}</p></Table.Cell>
+              }
+           
             </Table.Row>
           )}
           </Table.Body>
         </Table>
 
-      </>
+      </div>
       )
     return (
       <div>
@@ -133,7 +149,7 @@ export class SurveyAnalytics extends React.Component {
           content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
         />
                    <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
-     
+         
           <Table selectable basic="very" >
             <Table.Header>
               <Table.Row>
@@ -172,7 +188,7 @@ export class SurveyAnalytics extends React.Component {
                     <List.Content>
                       <List.Header>Not Started</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._noStart)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} Surveys)`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} ${surveyDetail._noStart === 1? "Survey":"Surveys"})`}</p>
                     </List.Content>
                   </List.Item>
                   <List.Item>
@@ -180,7 +196,7 @@ export class SurveyAnalytics extends React.Component {
                     <List.Content>
                       <List.Header>Partially Completed</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._partial)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} Surveys)`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} ${surveyDetail._partial === 1? "Survey":"Surveys"})`}</p>
                     </List.Content>
                   </List.Item>
                   <List.Item>
@@ -188,12 +204,12 @@ export class SurveyAnalytics extends React.Component {
                     <List.Content>
                       <List.Header>Completed</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._completed)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} Surveys)`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} ${surveyDetail._completed === 1? "Survey":"Surveys"})`}</p>
                     </List.Content>
                   </List.Item>
                 </List>
               </Segment>
-              {/* {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems)} </Segment> } */}
+              {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment> }
           </div>
 
           </Slider>
