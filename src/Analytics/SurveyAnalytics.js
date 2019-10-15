@@ -140,6 +140,51 @@ export class SurveyAnalytics extends React.Component {
 
       </div>
       )
+
+      const taskDetails = (surveyItems, anon) => 
+        <div style={{paddingTop: 30, paddingBottom: 30}}>
+         <Table compact basic='very'>
+          <Table.Header>
+                <Table.HeaderCell>Task</Table.HeaderCell>
+                <Table.HeaderCell>Participation Rate</Table.HeaderCell>
+                <Table.HeaderCell>Completed</Table.HeaderCell>
+                <Table.HeaderCell>Awaiting</Table.HeaderCell>
+              </Table.Header>
+            <Table.Body>
+            {surveyItems.map(surveyItem => 
+            // {Object.keys(surveyItem._responses).map(res =>
+              <Table.Row>
+                 <Modal closeIcon open={this.state.displayUsers} onClose={()=>this.setState({displayUsers: false})}>
+                   <Modal.Header>
+                     Users who completed this task
+                   </Modal.Header>
+                   <Modal.Content>
+                   {userList(this.state.userList)}
+                   </Modal.Content>
+               
+                </Modal>
+
+                <Table.Cell width={4} collapsing >{surveyItem.q}</Table.Cell>
+                <Table.Cell width={4} collapsing >{surveyItem._participation_percent}%</Table.Cell>
+                {anon?
+                <Table.Cell width={4} collapsing><p>{`(${surveyItem._responses.true.count}) responses `}</p></Table.Cell>
+                :
+                <Table.Cell width={4} onClick={()=>this.setState({displayUsers: true, userList: surveyItem._responses.true.users})} collapsing><p style={{color: "#2fc7f8"}}>{`(${surveyItem._responses.true.count}) responses `}</p></Table.Cell> 
+                }
+                  {anon?
+                <Table.Cell width={4} collapsing><p>{`(${surveyItem._inactive_users.length}) responses `}</p></Table.Cell>
+                :
+                <Table.Cell width={4} onClick={()=>this.setState({displayUsers: true, userList: surveyItem._inactive_users})} collapsing><p style={{color: "#2fc7f8"}}>{`(${surveyItem._inactive_users.length}) responses `}</p></Table.Cell> 
+                }
+             
+              </Table.Row>
+            )}
+            </Table.Body>
+          </Table>
+  
+        </div>
+        
+
     return (
       <div>
          <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
@@ -188,28 +233,27 @@ export class SurveyAnalytics extends React.Component {
                     <List.Content>
                       <List.Header>Not Started</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._noStart)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} ${surveyDetail._noStart === 1? "Survey":"Surveys"})`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._noStart === 1? "":"s"})`}</p>
                     </List.Content>
                   </List.Item>
                   <List.Item>
-                    {/* <Image avatar src='/images/avatar/small/christian.jpg' /> */}
                     <List.Content>
                       <List.Header>Partially Completed</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._partial)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} ${surveyDetail._partial === 1? "Survey":"Surveys"})`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._partial === 1? "":"s"})`}</p>
                     </List.Content>
                   </List.Item>
                   <List.Item>
-                    {/* <Image avatar src='/images/avatar/small/matt.jpg' /> */}
                     <List.Content>
                       <List.Header>Completed</List.Header>
                       {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._completed)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} ${surveyDetail._completed === 1? "Survey":"Surveys"})`}</p>
+                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._completed === 1? "":"s"})`}</p>
                     </List.Content>
                   </List.Item>
                 </List>
               </Segment>
-              {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment> }
+              {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
+              {surveyDetail && this.props.mode === "task" && <Segment> {taskDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
           </div>
 
           </Slider>

@@ -1,4 +1,5 @@
 import _ from "lodash";
+import {AccountStore} from "../Stores/AccountStore";
 
   export const calculateAnalytics = (allSurveys) => {
     const surveysNoStart = (survey) => survey.instances.length - survey.responses_by_instance.length;
@@ -38,18 +39,24 @@ import _ from "lodash";
           if(responsesByUser[r])  responsesByUser[r] = [...responsesByUser[r], ...[survey.instances.filter(i=>i.instanceID === instance.instanceID)[0].userID]];
           else responsesByUser[r] = [survey.instances.filter(i=>i.instanceID === instance.instanceID)[0].userID];
         })
-        
       });
       const counts = _.countBy(allResponses);
       let results = {};
       Object.keys(counts).forEach(res => {
-        results[res] = {count: counts[res],percentage: getPercentage(Object.values(counts), counts[res]), users: responsesByUser[res]}
+        results[res] = {
+          count: counts[res],
+          percentage: getPercentage(Object.values(counts), counts[res]), 
+          users: responsesByUser[res],
+        }
       })
-      calculatedSurveyItems.push(Object.assign(surveyItem, {_responses: results}))
+      const _participation_percent = getPercentage([survey.instances.length], allResponses.length)
+      const _inactive_users = survey.instances
+        .filter(inst => !survey.responses_by_instance.map(x=>x.instanceID).includes(inst.instanceID))
+        .map(inst => inst.userID);
+      calculatedSurveyItems.push(Object.assign(surveyItem, {_responses: results, _participation_percent, _inactive_users}))
       })
       surveyAnalytics.surveyItems = calculatedSurveyItems;
       calculatedSurveys.push(Object.assign(survey, surveyAnalytics));
-      console.log(calculatedSurveys);
     })
     return  calculatedSurveys;
   }
