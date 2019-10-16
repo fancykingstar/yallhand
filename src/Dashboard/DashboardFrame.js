@@ -215,10 +215,16 @@ class DashboardFrame extends React.Component {
       
         <Segment>
           {" "}
-          <Icon style={{color:"#e84393"}} name="square"/>Email Views 
-          <Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views
-          <Icon style={{color:'#6610f2'}} name="square"/>Survey Responses
-          <Icon style={{color:'#ff9f1a'}} name="square"/>Task Activity
+          <Row>
+            <Col sm={2}><Icon style={{color:"#e84393"}} name="square"/>Email Views </Col>
+            <Col sm={2}><Icon style={{color:'#0BCDFD'}} name="square"/>Portal Views</Col>
+            <Col sm={2}><Icon style={{color:'#6610f2'}} name="square"/>Survey Responses</Col>
+            <Col sm={2}><Icon style={{color:'#ff9f1a'}} name="square"/>Task Activity</Col>
+          </Row>
+         
+    
+    
+ 
           <div style={{paddingTop: 10, minHeight: 200}}>
             <Line
             data={data}

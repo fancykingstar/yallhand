@@ -18,13 +18,17 @@ import TimeAgo from 'react-timeago'
 export class SurveyAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false}
+    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[]}
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
-    this.sort = (controller, direction) => {
-      const param = controller
-      if(direction === "Lowest") { this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1); }
-      else { this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1); } } 
+    this.sort = (param) => {
+      
+      if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
+      else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
+      if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
+      else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }  
   }
+  
+}
 
   // surveysNoStart = (survey) => survey.instances.length - survey.responses_by_instance.length;
   // surveysCompleted = (partially, survey) => survey.responses_by_instance.length? survey.responses_by_instance.filter(i=>partially? !i.completed: i.completed).length : 0
@@ -78,7 +82,7 @@ export class SurveyAnalytics extends React.Component {
     const rows = searchFilter(data).map(survey => {
       return (
         <Table.Row key={"survey" + giveMeKey()} onClick={e => this.rowSelected(survey)}>
-          <Table.Cell style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  >
+          <Table.Cell width={4} style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  >
               {survey.label}
           </Table.Cell>
           <Table.Cell >{survey.instances.length === 0? "Never" : <TimeAgo date={Math.max(...survey.instances.map(i=>i.sent))} />}</Table.Cell>
@@ -194,18 +198,18 @@ export class SurveyAnalytics extends React.Component {
           content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
         />
                    <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
-         
+          <div style={{overflowX: "auto", width: "100%"}}>
           <Table selectable basic="very" >
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Title</Table.HeaderCell>
-                <Table.HeaderCell>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Queries<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Not Started<span><SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Queries<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}><span>Not Started<SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
+                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
                 <Table.HeaderCell></Table.HeaderCell>
                 <Table.HeaderCell />
               </Table.Row>
@@ -215,8 +219,10 @@ export class SurveyAnalytics extends React.Component {
                 {rows}
             </Table.Body>
           </Table>
-
           </div>
+          </div>
+
+          
           <div>
           <Icon
                 name="arrow circle left"

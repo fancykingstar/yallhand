@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {AccountStore} from "../Stores/AccountStore";
+import {sortByUTC} from "./SortByUTC";
 
   export const calculateAnalytics = (allSurveys) => {
     const surveysNoStart = (survey) => survey.instances.length - survey.responses_by_instance.length;
@@ -58,6 +58,6 @@ import {AccountStore} from "../Stores/AccountStore";
       surveyAnalytics.surveyItems = calculatedSurveyItems;
       calculatedSurveys.push(Object.assign(survey, surveyAnalytics));
     })
-    return  calculatedSurveys;
+    return sortByUTC(calculatedSurveys, "newest");
   }
 
