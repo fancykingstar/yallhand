@@ -33,21 +33,22 @@ class ContentListingPage extends React.Component {
         },
         MUIDataTableBodyRow: {
           root: {
-            position: "relative"
+            zIndex: "1 !important"
           }
         },
         MUIDataTableSelectCell: {
-          //   fixedHeader: {
-          //     position: "relative"
-          //   },
-          //   headerCell: {
-          //     position: "relative"
-          //   }
-          // },
-          // MUIDataTableHeadCell: {
-          //   fixedHeader: {
-          //     position: "relative"
-          //   }
+            fixedHeader: {
+              zIndex: "1 !important"
+            },
+            headerCell: {
+              zIndex: "1 !important"
+            }
+          },
+          MUIDataTableHeadCell: {
+            fixedHeader: {
+              // position: "relative"
+              zIndex: "1 !important"
+            }
         },
         MUIDataTable: {
           root: {

@@ -34,7 +34,7 @@ export class PortalSelect extends React.Component {
       const portalPreview = TeamStore.tags.length !== 0 ?  previewPortalMenu : previewPortalMenuNoDepth
       
     return(
-      <div style={{zIndex: "10"}}>
+      <div className="portal-preview-dropdown">
         <Dropdown text='User Portal View' pointing className='link item' direction="left">
         <Dropdown.Menu>
         {portalPreview}
