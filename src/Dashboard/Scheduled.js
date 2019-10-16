@@ -7,11 +7,11 @@ import { Table, Header, Button, Segment, Icon } from "semantic-ui-react";
 import { deleteSchedule } from "../DataExchange/Up";
 // import { scheduled } from "../DataExchange/Down";
  
-@inject("ScheduleStore", "EmailStore", "UserStore", "AccountStore")
+@inject("ScheduleStore", "EmailStore", "UserStore", "AccountStore", "SurveyStore")
 @observer
 export class Scheduled extends React.Component {
   render() {
-      const {ScheduleStore, EmailStore, AccountStore} = this.props
+      const {ScheduleStore, EmailStore, AccountStore, SurveyStore} = this.props
 
       const cancel = (id) => {
         deleteSchedule(id)
@@ -19,10 +19,12 @@ export class Scheduled extends React.Component {
 
       const displayTask = (task) => 
         ({"send campaign": `Send ${task.data.label} ${!task.userID? `to ${AccountStore._getUser(task.data.userID).displayName_full} (Email Automation)`:""}`,
-          "onboard user": `Onboard ${AccountStore.allUsers.filter(i=>i.id === task.data.id)[0].email}`,
+          "onboard user": `Onboard ${task.task === "onboard user" && AccountStore.allUsers.filter(i=>i.id === task.data.id)[0].email}`,
           "offboard user": `Offboard ${AccountStore._getUser(task.data.userID).displayName_full}`,
           "publish content": `Publish ${getContentObj(task.data).label}`,
-          "unpublish content": `Unpublish ${getContentObj(task.data).label}`
+          "unpublish content": `Unpublish ${getContentObj(task.data).label}`,
+          "end survey": `End survey ${SurveyStore._getSurvey(task.data.id).label}`,
+          "end task": `End task ${SurveyStore._getSurvey(task.data.id).label}`,
       }[task.task])
 
       const scheduled = ScheduleStore.allScheduled.map(task =>   <Table.Row key={"sched" + giveMeKey()}>

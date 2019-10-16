@@ -15,7 +15,7 @@ class ImageBox extends React.Component {
                     <div className="announce_img">
                         <a className="settings_icon" href="#/"><img src={constants.SETTING_ICON} alt="setting" /></a>
                         {/* <a className="link_announce" href={((this.props.url) && this.props.url !== '') ? this.props.url : "#/"}> */}
-                            <img src={this.props.user_img} alt={this.props.title} />
+                            {this.props.user_img && <img src={this.props.user_img} alt={this.props.title} />}
                             <div className="announce_title">
                                 <h4>{this.props.title}</h4>
                             </div>

@@ -54,7 +54,7 @@ class Store {
 
 
   _getSurvey(ID) {
-    this.allUsers.filter(survey => survey.surveyID === ID)[0]
+    return this.allSurveys.filter(survey => survey.surveyID === ID)[0]
   }
 
 

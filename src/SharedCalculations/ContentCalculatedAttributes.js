@@ -1,3 +1,5 @@
+import {sortByUTC} from "./SortByUTC";
+
 const addPolicyState = (policy) => {
     const stages = new Set(policy.variations.map(pol => pol.stage));
     if (stages.has("published") && stages.size === 1) {
@@ -29,7 +31,7 @@ export const addCalculatedAttributes = (allContentItems) => {
       currentPolicy["admins"] = [...new Set(admins)]
       updatedContentItems.push(currentPolicy);
     }
-    return updatedContentItems;
+    return sortByUTC(updatedContentItems, "highest"); 
   }
 
   

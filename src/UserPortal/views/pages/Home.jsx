@@ -13,6 +13,7 @@ import ActionSlider from "../components/ActionsSlider";
 import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
+import {sortByUTC} from "../../../SharedCalculations/SortByUTC";
 
 @inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
@@ -20,14 +21,33 @@ class Home extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         suggestedActions: []
+         suggestedActions: [],
+         annc: [], //featured
+         faqs: [], //featured
       }
    }
+
+   loadFeatured(featured, all, stateKey){
+      if(featured.length) this.setState(stateKey==="annc"? {annc: featured}:{faqs: featured});
+      else {
+         const recent = all.length < 7? all : sortByUTC(all, "newest").slice(0, 6)
+         this.setState(stateKey==="annc"? {annc: recent}:{faqs: recent});
+      }
+   }
+
    componentDidMount() {
-      const { AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore } = this.props;
+      const { AnnouncementsStore, PoliciesStore } = this.props;
       this.setState({
          suggestedActions: PostData.suggestedActions
       })
+      
+      const featured_annc = AnnouncementsStore.allAnnouncements.filter(annc=>annc.featured);
+      const featured_faq = PoliciesStore.allPolicies.filter(annc=>annc.featured);
+      this.loadFeatured(featured_annc, AnnouncementsStore.allAnnouncements, "annc");
+      this.loadFeatured(featured_faq, PoliciesStore.allPolicies, "faqs");
+
+
+
    }
    render() {
       const { AnnouncementsStore, PoliciesStore, SurveyStore, TaskStore } = this.props;
@@ -126,7 +146,7 @@ class Home extends React.Component {
                               <h6>Announcements</h6>
                               <div className="slider_wrap announce_main_box">
                                  <Slider {...settings}>
-                                    {AnnouncementsStore.allAnnouncements.map((item, index) => {
+                                    {this.state.annc.map((item, index) => {
                                        return <ImageBox
                                           url={`/portal/announcement/${item.announcementID}`}
                                           main_class={"auto-col"}
@@ -140,7 +160,7 @@ class Home extends React.Component {
                                  <h6>FAQs</h6>
                                  <div className="slider_wrap announce_main_box">
                                     <Slider {...settings}>
-                                       {PoliciesStore.allPolicies.map((item, index) => {
+                                       {this.state.faqs.map((item, index) => {
                                           return <ImageBox
                                              url={`/portal/learn-detail/${item.policyID}`}
                                              key={index}

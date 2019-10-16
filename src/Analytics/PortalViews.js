@@ -2,32 +2,36 @@ import React from "react"
 import {inject, observer} from "mobx-react"
 import { Segment, Header, Menu, Icon, Table, Modal } from "semantic-ui-react"
 import { SearchBox } from "../SharedUI/SearchBox"
-import _ from 'lodash'
-import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import {SortingChevron} from "../SharedUI/SortingChevron";
+import _ from 'lodash'
 
 @inject("UIStore", "AccountStore", "PoliciesStore", "AnnouncementsStore", "ResourcesStore", "TeamStore")
 @observer
 export class PortalViews extends React.Component {
+    constructor(props){
+        super(props);
+        this.state={data: [], sortsToggled:[]};
+    }
+    componentDidMount(){
+        const {AccountStore} = this.props;
+        this.setState({data: AccountStore.analyticData_portal})
+    }
     render(){
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
 
-        const sort = (controller, direction) => {
-            const param = controller
-            if(direction === "Lowest") {
-            AccountStore.loadAnalyticData_portal(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] > b[param])? 1 : -1))
+        const sort = (param) => {
+
+            if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
+            else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
+            if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
+            else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }  
             }
 
-
-            else {
-                AccountStore.loadAnalyticData_portal(AccountStore.analyticData_portal.slice().sort((a,b) => (a[param] < b[param])? 1 : -1))
-                }
             
-        }
-
-
-            const getLabel = (data) => {
-            let label = ""
+        const getLabel = (data) => {
+        let label = ""
            try {
            if(data.type === "announcement"){label = AnnouncementsStore._getAnnouncement(data.contentID).label}
            else if(data.type === "policy"){label = PoliciesStore._getPolicy(data.contentID).label}
@@ -53,8 +57,8 @@ export class PortalViews extends React.Component {
             <Table.HeaderCell rowSpan='2'>Label</Table.HeaderCell>
             {vari?
             <Table.HeaderCell textAlign="center" rowSpan='2'>Audience</Table.HeaderCell>: null}
-            <Table.HeaderCell textAlign="center" rowSpan='2'>Total Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("total_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => sort("total_views", "Lowest")}/></span>} </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center" rowSpan='2'>Unique Views {vari? null : <span> <Icon size="small" name="arrow up" onClick={e => sort("unique_views", "Highest")}/> <Icon size="small" name="arrow down" onClick={e => sort("unique_views", "Lowest")}/></span>} </Table.HeaderCell>
+            <Table.HeaderCell style={{whiteSpace:"nowrap"}} textAlign="center" rowSpan='2'>Total Views {vari? null : <span> <SortingChevron onClick={e => sort("total_views", e)}/></span>} </Table.HeaderCell>
+            <Table.HeaderCell style={{whiteSpace:"nowrap"}} textAlign="center" rowSpan='2'>Unique Views {vari? null :  <span> <SortingChevron onClick={e => sort("unique", e)}/></span>} </Table.HeaderCell>
             {UIStore.menuItem.analyticsHeader === "announcements" || UIStore.menuItem.analyticsHeader === "faqs"?
             <Table.HeaderCell textAlign="center"colSpan='3' textAlign="center">Feedback</Table.HeaderCell>: null}
         </Table.Row>
@@ -119,8 +123,7 @@ export class PortalViews extends React.Component {
                 </Modal>
             }
         
-        const displayResults = searchFilter(AccountStore.analyticData_portal.slice()) 
-        // .filter(log => getLabel(log) !== "obsoleted data")
+        const displayResults = searchFilter(this.state.data) 
         .map(log => 
             <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
