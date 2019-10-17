@@ -1,5 +1,9 @@
 import React from 'react';
 import { Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import Star from '../../assets/images/star.svg';
+import { Svg } from "../../helpers/Helpers";
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 class ActionsForm extends React.Component {
     constructor(props) {
@@ -32,19 +36,33 @@ class ActionsForm extends React.Component {
     render() {
         return (
             <>
-                <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
-                    <Row form>
-                        <Col md={3}>
-                            <FormGroup>
-                                <Label for="colleague">Question Raised By</Label>
-                                <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
-                                    <option>One employee</option>
-                                    <option>Multiple employees</option>
-                                    <option>Management</option>
-                                </Input>
-                            </FormGroup>
-                        </Col>
-                        {/* <Col md={3}>
+                <div className="section_title shadow">
+                    <h4><IconButton
+                        color="inherit"
+                        aria-label="back to actions"
+                        edge="start"
+                        onClick={this.props.onCancel.bind(this)}
+                    ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
+                        {(this.props.actionDetail.label) ?
+                            <Svg class="small-icon" src={this.props.actionDetail.img} default={Star} /> :
+                            ('')}
+                        {this.props.actionDetail.label}</h4>
+                </div>
+                <div className="page_content actions shadow">
+                    <div className="announce_component faq_announce slick-align-left">
+                        <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
+                            <Row form>
+                                <Col md={3}>
+                                    <FormGroup>
+                                        <Label for="colleague">Question Raised By</Label>
+                                        <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
+                                            <option>One employee</option>
+                                            <option>Multiple employees</option>
+                                            <option>Management</option>
+                                        </Input>
+                                    </FormGroup>
+                                </Col>
+                                {/* <Col md={3}>
                                     <FormGroup>
                                         <Label for="props_for">Give props for</Label>
                                         <Input type="select" name="props_for" id="props_for" onChange={this.handleInputChange.bind(this)}>
@@ -56,20 +74,20 @@ class ActionsForm extends React.Component {
                                         </Input>
                                     </FormGroup>
                                 </Col> */}
-                        <Col>
-                            <FormGroup>
-                                <Label for="description">Question</Label>
-                                <InputGroup>
-                                    <Input placeholder="Enter your message here…" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
-                                    {/* <InputGroupAddon addonType="append">
+                                <Col>
+                                    <FormGroup>
+                                        <Label for="description">Question</Label>
+                                        <InputGroup>
+                                            <Input placeholder="Enter your message here…" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
+                                            {/* <InputGroupAddon addonType="append">
                                                 <QuestionIcon className="right-icon" />
                                             </InputGroupAddon> */}
-                                </InputGroup>
+                                        </InputGroup>
 
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    {/* <Row>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            {/* <Row>
                                 <Col>
                                     <FormGroup check className="pretty-checkbox">
                                         <Input type="checkbox" name="no_feed" id="no_feed" onChange={this.handleInputChange.bind(this)} />
@@ -77,13 +95,15 @@ class ActionsForm extends React.Component {
                                     </FormGroup>
                                 </Col>
                             </Row> */}
-                    <Row className="text-right form-buttons">
-                        <Col>
-                            <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
-                            <Button color="primary">Submit</Button>
-                        </Col>
-                    </Row>
-                </Form>
+                            <Row className="text-right form-buttons">
+                                <Col>
+                                    <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
+                                    <Button color="primary">Submit</Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </div>
+                </div>
             </>
         );
     }

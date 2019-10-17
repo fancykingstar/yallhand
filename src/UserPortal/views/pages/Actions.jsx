@@ -4,9 +4,7 @@ import Layout from '../../layouts/DefaultLayout';
 
 import Slider from "react-slick";
 import IconBox from "../components/IconBox";
-import { Svg } from "../../helpers/Helpers";
-import IconButton from '@material-ui/core/IconButton';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+
 import ActionsForm from "../components/ActionsForm";
 
 
@@ -216,6 +214,7 @@ class Actions extends React.Component {
                            <Slider {...settings_multi}>
                               {(generalActions) ? generalActions.map((item, index) => {
                                  var img = item.img;
+                                 // set default img if not return from data
                                  if (index === 0) { img = Star; }
                                  if (index === 1 || index === 4) { img = RefereCandidate; }
                                  if (index === 2 || index === 7) { img = AskManagement; }
@@ -224,38 +223,20 @@ class Actions extends React.Component {
                                  if (index === 6 || index >= 8) { img = reportSomething; }
                                  return <IconBox
                                     key={index}
-                                    micon="star"
                                     user_img={img}
-                                    title={item.label} showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
+                                    title={item.label}
+                                    showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
                               }) : ('')}
-
                            </Slider>
                         </div>
                      </div>
                   </Container>
                   <Container elevation={4} className="action-form">
-                     <div className="section_title shadow">
-                        <h4>
-                           <IconButton
-                              color="inherit"
-                              aria-label="back to actions"
-                              edge="start"
-                              onClick={this.hideActionForm.bind(this)}
-                           ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
-                           {(this.state.selectedActionData.label) ?
-                              <Svg class="small-icon" src={this.state.selectedActionData.img} default={Star} /> :
-                              ('')}
-                           {this.state.selectedActionData.label}</h4>
-                     </div>
-                     <div className="page_content actions shadow">
-                        <div className="announce_component faq_announce slick-align-left">
-                           <ActionsForm
-                              onSubmit={this.handleActionFormSubmit}
-                              onCancel={this.hideActionForm.bind(this)}
-                           />
-                        </div>
-                     </div>
-
+                     <ActionsForm
+                        onSubmit={this.handleActionFormSubmit}
+                        onCancel={this.hideActionForm.bind(this)}
+                        actionDetail={this.state.selectedActionData}
+                     />
                   </Container>
                </Slider>
                {/** Company Actions */}
@@ -289,27 +270,11 @@ class Actions extends React.Component {
                      </div>
                   </Container>
                   <Container elevation={4} className="action-form">
-                     <div className="section_title shadow">
-                        <h4>
-                           <IconButton
-                              color="inherit"
-                              aria-label="back to actions"
-                              edge="start"
-                              onClick={this.hideActionFormCompany.bind(this)}
-                           ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
-                           {(this.state.selectedActionDataCompany.label) ?
-                              <Svg class="small-icon" src={this.state.selectedActionDataCompany.img} default={Star} /> :
-                              ('')}
-                           {this.state.selectedActionDataCompany.label}</h4>
-                     </div>
-                     <div className="page_content actions shadow">
-                        <div className="announce_component faq_announce slick-align-left">
-                           <ActionsForm
-                              onSubmit={this.handleActionFormSubmit}
+                     <ActionsForm
+                        onSubmit={this.handleActionFormSubmit}
                               onCancel={this.hideActionFormCompany.bind(this)}
-                           />
-                        </div>
-                     </div>
+                        actionDetail={this.state.selectedActionDataCompany}
+                     />
                   </Container>
                </Slider> */}
             </div>
