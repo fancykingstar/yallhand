@@ -37,15 +37,14 @@ class Store {
     else{return {}}
   }
 
-  _SearchVariation(variationID){
-    if(!variationID) return {}
-    let found = {}
-    this.allAnnouncements.forEach(contentmgmt => {
-      const vari = contentmgmt.variations.filter(vari => vari.variationID===variationID)
-      if(vari.length) found = Object.assign({variations: vari}, contentmgmt);
-    })
-    return found;
+  _searchVariation(id){
+    //get full content by variation ID
+    if(this.allAnnouncements.filter(annc => annc.variations.filter(i=>i.variationID === id).length).length > 0){
+      return Object.assign({}, this.allAnnouncements.filter(annc => Boolean(annc.variations.filter(i=>i.variationID === id).length))[0])
+    }
+    else{return {}}
   }
+
 
   _getAnnouncementIDfromVariation(variationID){
     const filtered = this.allAnnouncements

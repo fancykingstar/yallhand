@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Dropdown, Form } from "semantic-ui-react";
-import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
+import { LabelGroup, validateAdd } from "../SharedUI/LabelGroup";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 
@@ -16,27 +16,25 @@ export class ChooseTargeting extends React.Component {
       this.setState({sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []});
     }
   componentDidMount(){
-    this.reset();
+    if(this.props.input) this.setState(this.props.input);
+    else this.reset();
   }
+
+  static getDerivedStateFromProps(props, state) { 
+    if(props.input) return props.input
+    return null
+ }  
+
+
   render(){
-    const { DataEntryStore, AccountStore, TeamStore } = this.props;
+    const { AccountStore, TeamStore } = this.props;
 
-    const updateState = async (val) => {
-        if(val.sendTargetType === "all") await this.reset()
-        else await this.setState(val);
-        // await updateState({valid: Boolean(this.state.q.trim() && this.state.resType 
-        //   && (this.state.resConfig === "custom"? this.state.resChoices.length > 1 : true))});
-        this.props.echostate(this.state);
+    const echoState = async (val) => {
+        if(val.sendTargetType === "all") await this.reset();
+        this.setState(val);
+        this.props.output(val.sendTargetType === "all"? {sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []} :val);
       }
 
-    const addUser = (user, allUsers, key) => {
-      if (
-        validateAdd(user, allUsers) !== null) {
-        let newArry = this.state.sendToUsers;
-        newArry.push(this.state.selectedUser);
-        updateState({key:newArry});
-      }
-    };
 
     const options =
       (TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
@@ -60,17 +58,17 @@ export class ChooseTargeting extends React.Component {
             <TeamSelect
               label={"Limit Access To Teams"}
               placeholder="choose team..."
-              defaultVal="global"
+              defaultVal={this.state.sendToTeamID? this.state.sendToTeamID:"global"}
               outputVal={val =>
-                updateState({ "sendToTeamID":val.value})
+                echoState({ "sendToTeamID":val.value})
               }
             />
             <TagSelect
               label={"Limit Access By Tag"}
               placeholder="choose tag..."
-              defaultVal={[]}
+              defaultVal={this.state.sendToTagID? [this.state.sendToTagID]:[]}
               outputVal={val =>
-                updateState({ "sendToTagID":val})
+                echoState({ "sendToTagID":val})
               }
             />
           </Form.Group>
@@ -84,18 +82,12 @@ export class ChooseTargeting extends React.Component {
               placeholder="Select User"
               search
               selection
-              onChange={(e, val) => updateState({ "selectedUser": val.value})}
+              onChange={(e, val) => echoState({ "selectedUser": val.value})}
               value={this.state.selectedUser}
               options={AccountStore._getUsersSelectOptions()}
             />
             <Form.Button
-              onClick={e =>
-                addUser(
-                  this.state.selectedUser,
-                  this.state.sendToUsers,
-                  "sendToUsers"
-                )
-              }
+              onClick={() => echoState({sendToUsers: [...this.state.sendToUsers, ...[this.state.selectedUser]]}) }
             >
               Add
             </Form.Button>
@@ -104,17 +96,9 @@ export class ChooseTargeting extends React.Component {
             <LabelGroup
               currentArray={this.state.sendToUsers}
               onRemove={val =>
-                DataEntryStore.set(
-                  "emailCampaign",
-                  "sendToUsers",
-                  labelsOneRemoved(
-                    val,
-                    this.state.sendToUsers
-                  )
-                )
-              }
-              labelprop={"displayName_full"}
-              displayFilter={val => AccountStore._getUser(val)}
+                echoState({sendToUsers: this.state.sendToUsers.filter(u=>u !== val)})}
+                labelprop={"displayName_full"}
+                displayFilter={val => AccountStore._getUser(val)}
             />
           </div>
         </Form>
@@ -125,7 +109,7 @@ export class ChooseTargeting extends React.Component {
           Send {this.props.label? this.props.label: "Email"}{" "}
             <Dropdown
               inline
-              onChange={(e, val) =>  updateState({ "sendTargetType":val.value})}
+              onChange={(e, val) =>  echoState({ "sendTargetType":val.value})}
               options={options}
               value={this.state.sendTargetType}
             />

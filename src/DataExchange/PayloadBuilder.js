@@ -455,7 +455,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   const generateInstances = (data) => {
     const {sendTargetType, deadline, sendToTagID, sendToTeamID} = data;
     if(data.sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
-    else if(data.sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    else if(data.sendTargetType === "users") return data.sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
     else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
   }
 
@@ -469,8 +469,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       sendTargetType,
       anonymous,
       deadline,
-      teamID: sendToTeamID,
-      tags: !sendToTagID || sendToTagID === "none"? [] : [sendToTagID],
+      sendToTeamID,
+      sendToTagID,
       sendToUsers,
       instances: active? generateInstances(data):[],
       responses_by_instance: [],

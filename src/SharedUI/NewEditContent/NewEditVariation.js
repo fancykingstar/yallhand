@@ -29,7 +29,7 @@ class NewEditVariation extends React.Component {
       return
     }
     const { UIStore, PoliciesStore, AnnouncementsStore, DataEntryStore } = this.props;
-    const isLoaded = mode === "announcement"? AnnouncementsStore._SearchVariation(variID): PoliciesStore._SearchVariation(variID);
+    const isLoaded = mode === "announcement"? AnnouncementsStore._searchVariation(variID): PoliciesStore._searchVariation(variID);
     await this.setState({content: isLoaded, loaded:true, isNewContent: Boolean(!contentID), isNewVari: Boolean(!variID)});
     if((variID && isEmpty(isLoaded)) || (!isDupe && this.props.match.params.options ) ) this.props.history.push(`/panel/${mode === "announcement"? "announcements":"faqs"}`);
   }

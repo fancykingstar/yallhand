@@ -15,13 +15,15 @@ import { History } from "./History";
 import { Channel } from "./Channel";
 import { generateID } from "../../SharedCalculations/GenerateID";
 import Settings from "./Settings";
+import { AnnouncementsStore } from "../../Stores/AnnouncementsStore";
+import { PoliciesStore } from "../../Stores/PoliciesStore"
 
 import "./style.css";
 import _ from "lodash";
 import { modifyPolicy, modifyAnnouncement } from "../../DataExchange/Up";
 
 
-@inject( "TeamStore", "DataEntryStore", "PoliciesStore", "UIStore", "AnnouncementsStore", "EmailStore", "AccountStore")
+@inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore")
 @observer
 class ManageContent extends React.Component {
   constructor(props) {
@@ -40,7 +42,7 @@ class ManageContent extends React.Component {
   }
 
   componentDidMount() {
-    const { UIStore, AnnouncementsStore, DataEntryStore, PoliciesStore, AccountStore } = this.props;
+    const { UIStore, DataEntryStore, AccountStore } = this.props;
     if (this.mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
@@ -112,11 +114,9 @@ class ManageContent extends React.Component {
 
   render() {
 
-    const { TeamStore, DataEntryStore, PoliciesStore, AnnouncementsStore, UIStore, AccountStore, match } = this.props;
+    const { TeamStore, DataEntryStore, UIStore, AccountStore, match } = this.props;
     const teamList = TeamStore.structureSelect;
     const tagList = TeamStore.tagsSelect;
-
-    console.log(DataEntryStore.contentmgmt.imgData);
 
     const publishOptions = () => {
       const updateStage = (newStage) => {

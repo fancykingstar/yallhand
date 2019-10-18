@@ -38,7 +38,7 @@ class VariationContent extends React.Component {
       contentRAW: "",
       contentHTML: "",
       teamID: "",
-      tagID: "",
+      tags: [],
       stage: "",
       img: "",
       imgData: "",
@@ -48,7 +48,10 @@ class VariationContent extends React.Component {
       _audience_target: "",})
   }
 
-  hasBeenChanged() { return Boolean(Object.values(this.state).filter(i=>i).length) }
+  hasBeenChanged() { 
+    return false
+    // return Boolean(Object.values(this.state).filter(i=>i).length) 
+  }
   
 
   async changeStage(stage) {
@@ -71,13 +74,14 @@ class VariationContent extends React.Component {
         else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
         this.reset();
-        history.push(`${path}${res[id]}`);
-      });
+        history.push(`${path}${res[id]}`); 
+      })
+
     }
     else {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
-      this.reset();
+      await this.reset();
         history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
@@ -92,7 +96,8 @@ class VariationContent extends React.Component {
 
   render() {
     const { DataEntryStore, UIStore } = this.props;
-    const {content, isNewContent, isNewVari, mode} = this.props.data;
+    const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
+    const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
@@ -121,12 +126,13 @@ class VariationContent extends React.Component {
             message='You have unsaved changes, are you sure you want to leave?'
           />
         <BackButton />
+        {/* {JSON.stringify(this.props.data)} */}
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {DataEntryStore.content.isNew ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
 
         <TextField
-            error={this.state.contentHTML && !this.state.label}
+            error={this.state.contentHTML && !this.state.label && !content.label}
             id="standard-full-width"
             label="Title"
             placeholder="Enter a title for this content..."
@@ -136,11 +142,11 @@ class VariationContent extends React.Component {
               shrink: true,
             }}
             onChange={e=>this.setState({label: e.target.value})}
-            defaultValue={isNewContent? "" : content.variations[0].label? content.variations[0].label : content.label }
+            defaultValue={isNewContent? "" : vari[0].label? vari[0].label : content.label }
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations? content.variations[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
+        <Wysiwyg loadContent={content.variations? vari[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
         {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
         <div>
           <Row>
@@ -149,14 +155,15 @@ class VariationContent extends React.Component {
               <ChooseTargeting 
                 NoSelectUsers 
                 label={mode} 
-                echostate={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tagID": ""}:{"teamID": val.sendToTeamID, "tagID": val.sendToTagID})}
+                input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
+                output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tagID": ""}:{"teamID": val.sendToTeamID, "tagID": val.sendToTagID})}
                 />
             </div>
             </Col>
           </Row>
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
-            <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : content.variations[0].stage} onClick={val => this.changeStage(val)} />
+            <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
             <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
             </Col>
           </Row>

@@ -135,7 +135,7 @@ class SurveyNewEdit extends React.Component {
   updateSurvey = async (active=null) => {
     if (active !== null) await this.setState({active});
     if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
-    else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state))
+    else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
     else {
      await createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
     }
@@ -159,7 +159,7 @@ class SurveyNewEdit extends React.Component {
     const save = ( <Button onClick={e => this.updateSurvey()}> Save </Button> );
     const stop = <Button negative onClick={()=> this.updateSurvey(false)}>Stop</Button>;
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
-    const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> );
+    const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> ); 
     return (
       <div> 
         <BackButton/>
@@ -180,7 +180,7 @@ class SurveyNewEdit extends React.Component {
               {!this.state.active &&
               <>
               <div style={{ paddingTop: "10px" }}>
-                <ChooseTargeting label="Survey" echostate={val=>this.setState(val)}/>
+                <ChooseTargeting label="Survey" output={val=>this.setState(val)} input={this.state}/>
               </div>
               <div style={{ paddingTop: "10px" }}>
                 <span style={{ fontWeight: 800 }}>Deadline</span>
