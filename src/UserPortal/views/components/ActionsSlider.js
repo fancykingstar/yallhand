@@ -5,11 +5,14 @@ import Layout from '../../layouts/DefaultLayout';
 import Slider from "react-slick";
 import IconBox from "../components/IconBox";
 import ActionsForm from "../components/ActionsForm";
+import IconButton from '@material-ui/core/IconButton';
 
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
+import { Svg } from "../../helpers/Helpers";
 import Star from '../../assets/images/star.svg';
 
 import AskManagement from '../../assets/images/actions/askManagement.svg';
@@ -218,14 +221,30 @@ class ActionSlider extends React.Component {
 
                </Container>
                <Container id="action-form" elevation={4} className="action-form">
-                  <ActionsForm
-                     showActionForm={this.showActionForm.bind(this)}
-                     hideActionForm={this.hideActionForm.bind(this)}
-                     selectedActionData={this.state.selectedActionData}
-                  />
+                  <div className="section_title shadow">
+                     <h4>
+                        <IconButton
+                           color="inherit"
+                           aria-label="back to actions"
+                           edge="start"
+                           onClick={this.hideActionForm.bind(this)}
+                        ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
+                        {(this.state.selectedActionData.label) ?
+                           <Svg class="small-icon" src={this.state.selectedActionData.label} default={Star} /> :
+                           ('')}
+                        {this.state.selectedActionData.label}</h4>
+                  </div>
+                  <div className="page_content actions shadow">
+                     <div className="announce_component faq_announce slick-align-left">
+                        <ActionsForm
+                           onSubmit={this.handleActionFormSubmit}
+                           onCancel={this.hideActionForm.bind(this)}
+                        />
+                     </div>
+                  </div>
                </Container>
             </Slider>
-         </div>
+         </div >
       );
    }
 }

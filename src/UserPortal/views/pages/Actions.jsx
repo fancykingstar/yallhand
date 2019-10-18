@@ -4,6 +4,7 @@ import Layout from '../../layouts/DefaultLayout';
 
 import Slider from "react-slick";
 import IconBox from "../components/IconBox";
+
 import ActionsForm from "../components/ActionsForm";
 
 
@@ -74,7 +75,7 @@ class Actions extends React.Component {
       this.sliderCompany.slickGoTo(0);
       this.setState({ showActionFormCompany: false });
    }
-   
+
    handleActionFormSubmit(data) {
       console.log(data);
    }
@@ -213,6 +214,7 @@ class Actions extends React.Component {
                            <Slider {...settings_multi}>
                               {(generalActions) ? generalActions.map((item, index) => {
                                  var img = item.img;
+                                 // set default img if not return from data
                                  if (index === 0) { img = Star; }
                                  if (index === 1 || index === 4) { img = RefereCandidate; }
                                  if (index === 2 || index === 7) { img = AskManagement; }
@@ -221,25 +223,19 @@ class Actions extends React.Component {
                                  if (index === 6 || index >= 8) { img = reportSomething; }
                                  return <IconBox
                                     key={index}
-                                    micon="star"
                                     user_img={img}
-                                    title={item.label} showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
+                                    title={item.label}
+                                    showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
                               }) : ('')}
-
                            </Slider>
                         </div>
                      </div>
                   </Container>
                   <Container elevation={4} className="action-form">
                      <ActionsForm
-                        showActionForm={this.showActionForm.bind(this)}
-                        hideActionForm={this.hideActionForm.bind(this)}
-                        selectedActionData={this.state.selectedActionData}
-
-                        title={this.state.selectedActionData.label}
-                        iconImage={this.state.selectedActionData.label}
                         onSubmit={this.handleActionFormSubmit}
                         onCancel={this.hideActionForm.bind(this)}
+                        actionDetail={this.state.selectedActionData}
                      />
                   </Container>
                </Slider>
@@ -275,14 +271,9 @@ class Actions extends React.Component {
                   </Container>
                   <Container elevation={4} className="action-form">
                      <ActionsForm
-                        showActionForm={this.showActionFormCompany.bind(this)}
-                        hideActionForm={this.hideActionFormCompany.bind(this)}
-                        selectedActionData={this.state.selectedActionDataCompany}
-
-                        title={this.state.selectedActionDataCompany.label}
-                        iconImage={this.state.selectedActionDataCompany.label}
                         onSubmit={this.handleActionFormSubmit}
-                        onCancel={this.hideActionFormCompany.bind(this)}
+                              onCancel={this.hideActionFormCompany.bind(this)}
+                        actionDetail={this.state.selectedActionDataCompany}
                      />
                   </Container>
                </Slider> */}
