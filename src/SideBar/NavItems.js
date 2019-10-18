@@ -53,7 +53,7 @@ class NavItems extends React.Component {
             <ListItemIcon>
                   <HomeRoundedIcon/>
               </ListItemIcon>
-             <ListItemText primary="Dashboard" />
+             <ListItemText primary="Admin Dashboard" />
           </ListItem>
           <ListItem button style={isActive("teams")} button onClick={e => handleClick("teams")} >
             <ListItemIcon>

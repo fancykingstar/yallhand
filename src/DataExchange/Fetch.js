@@ -5,15 +5,18 @@ const api_url = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : 
 
 
 export const getUser = () => {
+
   let user = localStorage.getItem('user')
+  
   const parseUser = () => {
     let parsed = null;
-    try{
-      parsed = JSON.parse(user)
+    try{ parsed = JSON.parse(user) }
+    catch(error){ 
+      parsed = null 
     }
-    catch(error){ }
-  return parsed
+    return parsed
   }
+
   if (user) user = parseUser()
   return user
 }

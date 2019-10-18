@@ -11,6 +11,7 @@ import { schedule } from "../DataExchange/PayloadBuilder"
 import { users } from "../DataExchange/Down";
 import toast  from "../YallToast"
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import * as load from "../DataExchange/Down"
 
 @inject("AccountStore")
 @observer
@@ -22,7 +23,7 @@ export class Invite extends React.Component  {
       dropdown: "today", 
       onBoardDate: ''
     }
-  }
+  };
 
   reset () {
     return {
@@ -44,12 +45,12 @@ export class Invite extends React.Component  {
     if (validation.userId) message = `${email} has already been invited to Join and is registered`
     else message = `${email} has already been invited to Join with code ${validation.code}`
     toast.error(message, {hideProgressBar: true})
-    this.setState(this.reset());
+    // this.reset()
   }
 
   success (email) {
     toast.success(`🎉 ${email} has been invited to Join ✉️`, {hideProgressBar: true})
-    this.setState(this.reset());
+    // this.setState(this.reset());
   } 
 
   handleClick = () => {
@@ -112,28 +113,38 @@ export class Invite extends React.Component  {
     }
   }
 
-  onBoard = async(later = false) => {
-    const {AccountStore} = this.props;
-    for(const userInvite of this.state.userInvites) {
-      let newUser = this.getDataNewUser(userInvite)
-      newUser.now = !later
-      if (later) {
-        newUser.date = moment(this.state.onBoardDate).valueOf();
-        newUser.now = false;
-      }
-      
-      await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
-        if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
-        else res.error ? this.error(res, newUser.email) : this.success(newUser.email)
-      })
-      await users(AccountStore.account.accountID)
-    }
-    this.setState(this.reset());
-  }
 
   render() {
     const dropDownText = [{text: "today ⚡️", value: "today" }, { text: "in the future ⏳", value: "future"}]
     const {dropdown} = this.state
+    const {AccountStore} = this.props;
+
+    const onBoard = async(later = false) => {
+
+      for(const userInvite of this.state.userInvites) {
+        let newUser = this.getDataNewUser(userInvite)
+        newUser.now = !later
+        if (later) {
+          newUser.date = moment(this.state.onBoardDate).valueOf();
+          newUser.now = false;
+        }
+        
+        await apiCall('validations', 'POST', newUser).then((res) => res.json()).then(res => {
+          if(later) createSchedule(schedule(newUser.date, 'onboard user', {id: res.id}))
+          else res.error ? this.error(res, newUser.email) : this.success(newUser.email)
+        })
+        await users(AccountStore.account.accountID)
+      }
+      await load.users(AccountStore.account.accountID);
+      await this.setState({userInvites:[]});
+      const reset = await [this.reset()];
+      await this.setState({
+        userInvites: reset, 
+        dropdown: "today", 
+        onBoardDate: ''
+      });
+
+    }
 
     return(
       <div className="Segment">
@@ -159,13 +170,13 @@ export class Invite extends React.Component  {
             {dropdown === "today" ?
               <Form.Button size="small" content="Onboard Now" icon="street view" primary disabled={this.checkMail()} 
               content="Onboard Now" icon="clock"
-              onClick={e => this.onBoard()}/>
+              onClick={e => onBoard()}/>
              :
               <React.Fragment>
                 <Form.Input label="Choose Date">
                   <DateTimeSelect notToday value={val => this.setState({onBoardDate: val}) } />
                 </Form.Input>
-                <Form.Button onClick={e => this.onBoard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
+                <Form.Button onClick={e => onBoard(true)} size="small" content="Schedule Start Day" icon="clock" disabled={this.checkMail() || this.checkDate()}/>
               </React.Fragment>
             }
             </Form.Group>

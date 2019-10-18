@@ -12,6 +12,10 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 @inject("TeamStore", "UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class Users extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={user: ""};
+  }
   componentWillUnmount(){
     const {UIStore} = this.props;
     UIStore.set("search", "searchUsers", "")
@@ -37,18 +41,6 @@ export class Users extends React.Component {
       return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
     }
 
-    const openEditor = info => {
-      DataEntryStore.reset("userEditFields", {adminConfig: "all"});
-      DataEntryStore.set("userEditFields", "userEdit", AccountStore._getUser(info) );
-      DataEntryStore.set("userEditFields", "isAdmin", userEdit.isAdmin === undefined? false: userEdit.isAdmin);
-      if(userEdit.isAdmin){
-        DataEntryStore.set("userEditFields", "adminTeams", adminLimits.teams)
-        DataEntryStore.set("userEditFields", "adminTags", adminLimits.tags)
-        DataEntryStore.set("userEditFields", "adminChannels", adminLimits.channels)
-      }
-      UIStore.set("modal", "editUser", true);
-    };
-    const handleClose = () => UIStore.set("modal", "editUser", false);
     const filteredDisplay = () => {
       if (search.searchUsers !== "") {
         const results = stupidSearch(search.searchUsersData, search.searchUsers);
@@ -59,7 +51,7 @@ export class Users extends React.Component {
     };
 
     const users = filteredDisplay().map(user => (
-      <Table.Row  disabled={!user.isActive} key={`user${giveMeKey()}`} onClick={() => openEditor(user.userID)}>
+      <Table.Row  disabled={!user.isActive} key={`user${giveMeKey()}`} onClick={() => this.setState({user})}>
         <Table.Cell width={3}>
           <Header disabled={!user.isActive}>
             <Header.Content>
@@ -80,6 +72,9 @@ export class Users extends React.Component {
         <Table.Cell>
           {user.tags.length === 0 ? "None" : getDisplayTags(user.tags, TeamStore.tags)}
         </Table.Cell>
+        <Table.Cell>
+          {user.boss && AccountStore._getDisplayName(user.userID)}
+        </Table.Cell>
       </Table.Row>
     ));
     return (
@@ -92,18 +87,20 @@ export class Users extends React.Component {
           onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)}
           options={[{text: "active", value: "active" }, { text: "offboarded", value: "offboarded"}]} />
         </span>
-        <Table basic="very" selectable fixed columns={8}>
+        <Table basic="very" selectable fixed columns={10}>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell width={3}>Employee</Table.HeaderCell>
-              <Table.HeaderCell width={3}>Email</Table.HeaderCell>
+              <Table.HeaderCell width={2}>Employee</Table.HeaderCell>
+              <Table.HeaderCell width={2}>Email</Table.HeaderCell>
               <Table.HeaderCell width={1}>Team</Table.HeaderCell>
               <Table.HeaderCell width={1}>Tag</Table.HeaderCell>
+              <Table.HeaderCell width={1}>Reports To</Table.HeaderCell>
+             
             </Table.Row>
           </Table.Header>
           <Table.Body>{users}</Table.Body>
         </Table>
-        <UserEdit open={UIStore.modal.editUser} close={handleClose} />
+        <UserEdit data={this.state.user} open={Boolean(this.state.user)} close={()=>this.setState({user: ""})} />
       </div>
     );
   }

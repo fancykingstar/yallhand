@@ -17,7 +17,7 @@ export class ChannelSelect extends React.Component {
     const { ChannelStore } = this.props;
     const { addField, addValue } = this.state;
     const label = this.props.label === "" ? "Channels" : this.props.label
-    const opts = [...[{text: "Add...", value: "add", icon: "plus"}], ...ChannelStore._channelSelect]
+    const opts = [...[{text: "Add...", value: "add", icon: "plus", key: "addchan"}], ...ChannelStore._channelSelect]
 
     const listenForAdd = (val) => {
       if(val==="add") this.setState({addField: true})

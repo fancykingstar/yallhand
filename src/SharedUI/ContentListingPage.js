@@ -9,6 +9,7 @@ import CustomToolbarSelect from "./CustomToolbarSelect";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 import { modifyAnnouncement, modifyPolicy } from "../DataExchange/Up";
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import Chip from '@material-ui/core/Chip';
 import styled from "styled-components";
 import "./style.css";
 
@@ -128,7 +129,17 @@ class ContentListingPage extends React.Component {
       });
     };
 
-    const columns = ["", "Title", "Last Updated", "Channel", "State"];
+    const columns = [ {
+      options: {
+       filter: false,
+       sort: false,
+      }}, {
+      label: "Featured",
+      name: "Featured",
+      options: {
+       filter: false,
+       sort: false,
+      }}, "Title", "Last Updated", "Channel", "State"];
 
     const data = all.map(item => [
       <LazyImg
@@ -147,7 +158,8 @@ class ContentListingPage extends React.Component {
             : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"
         }
       />,
-      <><p>{item.label}</p>{item.featured &&<StarRoundedIcon fontSize="small"/>}</>,
+      item.featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />,
+      item.label,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
       item.state === "ok" ? "published" : item.state

@@ -79,8 +79,8 @@ export class AttachedFiles extends React.Component {
       </ListItemAvatar>
       <ListItemText  primary={<Typography type="body2" style={{ color: '#000000' }}>{attach.label}</Typography>} secondary={UTCtoFriendly(attach.updated)} onClick={e => downloadFile(attach.S3Key.split("gramercy/")[1], attach.label)} />
       <ListItemSecondaryAction>
-      <IconButton edge="end" aria-label="delete">
-        <DeleteIcon onClick={e => removeFileFromContent(attach.resourceID)} />
+      <IconButton edge="end" aria-label="delete" onClick={e => removeFileFromContent(attach.resourceID)}>
+        <DeleteIcon  />
       </IconButton>
     </ListItemSecondaryAction>
     </ListItem>

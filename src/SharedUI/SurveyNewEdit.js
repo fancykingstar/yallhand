@@ -48,7 +48,8 @@ class SurveyNewEdit extends React.Component {
     :
     ({
         _id: giveMeKey(),
-        q: ""
+        q: "",
+        resRequired: true,
     })
 
   };
@@ -126,25 +127,22 @@ class SurveyNewEdit extends React.Component {
         />
       })
   } 
-
+ 
   addItem = () => {
     this.setState({ surveyItems: [...this.state.surveyItems, this.reset()]});
   }
 
   updateSurvey = async (active=null) => {
-    if (active) await this.setState({active});
+    if (active !== null) await this.setState({active});
     if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
     else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state))
     else {
      await createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
     }
-
     if (active !== null) {
-      console.log("active value", active)
-      if(active) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
-      else if(!active) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
+      if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
+      else if(!active && this.state.deadline) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
     }
-    
 
   }
 
@@ -155,37 +153,13 @@ class SurveyNewEdit extends React.Component {
     const loadSurvey = this.props.match.params.id? source.filter(i=>i.surveyID === id)[0] : false;
     if(loadSurvey) this.setState(loadSurvey);
   }
-  
 
   render() {
-    const launch = (
-      <Button
-        onClick={e => this.updateSurvey(true)}
-        disabled={
-         !this.validate()
-        }
-        primary
-      >
-        Launch
-      </Button>
-    );
-    const save = (
-      <Button onClick={e => this.updateSurvey()}>
-        Save
-      </Button>
-    );
-
+    const launch = ( <Button onClick={e => this.updateSurvey(true)} disabled={ !this.validate() } primary > Launch </Button> );
+    const save = ( <Button onClick={e => this.updateSurvey()}> Save </Button> );
     const stop = <Button negative onClick={()=> this.updateSurvey(false)}>Stop</Button>;
-    const cancel = (
-      <Button
-        onClick={e => this.props.history.push('/panel/surveys')}
-      >
-        Cancel
-      </Button>
-    );
-    const actions = this.state.active? 
-     ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> );
-
+    const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
+    const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> );
     return (
       <div> 
         <BackButton/>
@@ -220,7 +194,7 @@ class SurveyNewEdit extends React.Component {
               </div>
               <div style={{margin: "5px 0 5px"}}>
               <span style={{fontWeight: 800}}>Anonymous Responses </span><br/>
-              <Checkbox size toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
+              <Checkbox toggle checked={this.state.anonymous} onChange={()=>this.setState({anonymous: !this.state.anonymous})}/>
               </div>
               </>
               }

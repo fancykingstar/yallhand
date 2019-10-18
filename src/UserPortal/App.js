@@ -36,6 +36,10 @@ export class UserPortal extends React.Component {
     const { location } = this.props;
     if (location.search && location.search.indexOf('data=') > -1) apiCall_pixel(`1x1pixel.gif${location.search}`);
   }
+  componentWillUnmount() {
+    const {UIStore} = this.props;
+    UIStore.set("adminLoadingComplete", "all", false);
+  }
     render() {
       const {UIStore} = this.props;
         return (

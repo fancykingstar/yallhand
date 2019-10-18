@@ -81,7 +81,7 @@ export class SurveyAnalytics extends React.Component {
 
     const rows = searchFilter(data).map(survey => {
       return (
-        <Table.Row key={"survey" + giveMeKey()} onClick={e => this.rowSelected(survey)}>
+        <Table.Row disabled={!survey.instances.length} key={"survey" + giveMeKey()} onClick={e => this.rowSelected(survey)}>
           <Table.Cell width={4} style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  >
               {survey.label}
           </Table.Cell>
@@ -169,11 +169,11 @@ export class SurveyAnalytics extends React.Component {
                 </Modal>
 
                 <Table.Cell width={4} collapsing >{surveyItem.q}</Table.Cell>
-                <Table.Cell width={4} collapsing >{surveyItem._participation_percent}%</Table.Cell>
+                <Table.Cell width={4} collapsing >{surveyItem._participation_percent === "NaN"? "0":surveyItem._participation_percent }%</Table.Cell>
                 {anon?
                 <Table.Cell width={4} collapsing><p>{`(${surveyItem._responses.true.count}) responses `}</p></Table.Cell>
                 :
-                <Table.Cell width={4} onClick={()=>this.setState({displayUsers: true, userList: surveyItem._responses.true.users})} collapsing><p style={{color: "#2fc7f8"}}>{`(${surveyItem._responses.true.count}) responses `}</p></Table.Cell> 
+                <Table.Cell width={4} onClick={()=>this.setState({displayUsers: true, userList: surveyItem._responses.true.users})} collapsing><p style={{color: "#2fc7f8"}}>{`(${surveyItem._responses.true? surveyItem._responses.true.count: "0"}) responses `}</p></Table.Cell> 
                 }
                   {anon?
                 <Table.Cell width={4} collapsing><p>{`(${surveyItem._inactive_users.length}) responses `}</p></Table.Cell>

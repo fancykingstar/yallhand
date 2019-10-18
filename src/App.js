@@ -25,11 +25,6 @@ import { ItsLog } from "./DataExchange/PayloadBuilder";
 class AppRoute extends React.Component {
   componentDidCatch(error, info) {
     console.log(error);
-    // alert(error);
-    // Display fallback UI
-    // this.setState({ hasError: true });
-    // You can also log the error to an error reporting service
-    // logErrorToMyService(error, info);
   }
   constructor(props){
     super(props);

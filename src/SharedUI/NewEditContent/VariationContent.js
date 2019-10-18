@@ -52,8 +52,12 @@ class VariationContent extends React.Component {
   
 
   async changeStage(stage) {
-    const { AnnouncementsStore, PoliciesStore, DataEntryStore, UIStore, history } = this.props;
+    const { AnnouncementsStore, PoliciesStore, UIStore, history } = this.props;
     const {mode, isNewContent, contentID, variID} = this.props.data;
+    if ((!this.state.label || !this.state.contentHTML) && !variID) {
+      toast.error("Whoops, please be sure to have a title and content before saving", {hideProgressBar: true})
+      return;
+    }
 
     this.setState({stage});
 
@@ -67,14 +71,10 @@ class VariationContent extends React.Component {
         else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
         this.reset();
-        // UIStore.set("content", typeId, id);
         history.push(`${path}${res[id]}`);
       });
     }
     else {
-
-      // console.log("modified", contentEdit(this.state, mode, contentID, variID));
-
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       this.reset();
@@ -109,7 +109,7 @@ class VariationContent extends React.Component {
     const displayOptions = _options && 
       {
         "attach": attachFiles,
-        "image": <FeaturedImage mode={mode} defaultImgUrl={content.img} imgData={content.imgData} output={val => this.setState({img: val.img, imgData: val.imgData? val.imgData: ""})} />,
+        "image": <FeaturedImage mode={mode} defaultImgUrl={this.state.img? this.state.img : content.img} imgData={content.imgData} output={val => this.setState({img: val.img, imgData: val.imgData? val.imgData: ""})} />,
         "channel": <Channel mode={mode} defaultChannel={content.chanID} output={val => this.setState({chanID: val})} />
 
       }[_options]
@@ -126,6 +126,7 @@ class VariationContent extends React.Component {
         </Header>
 
         <TextField
+            error={this.state.contentHTML && !this.state.label}
             id="standard-full-width"
             label="Title"
             placeholder="Enter a title for this content..."
@@ -139,7 +140,7 @@ class VariationContent extends React.Component {
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations? content.variations[0].contentRAW: {}} border output={e=>console.log("variContet",e.html)}/>
+        <Wysiwyg loadContent={content.variations? content.variations[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
         {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
         <div>
           <Row>

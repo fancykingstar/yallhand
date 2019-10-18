@@ -19,7 +19,8 @@ import {apiCall_noBody, apiCall} from "./Fetch"
 //get team, tag, channel limits
 const contentFilter = () => UserStore.previewTeam !== "" || UserStore.previewTag !== ""
 
-export const account = async (accountID) => {
+
+export const account = async (accountID) => { 
   const result = await apiCall_noBody("accounts/" + accountID, "GET")
   AccountStore.loadAccount(result.length>0? result[0]: {accountID: "*", img: ""})
   return result
@@ -46,7 +47,7 @@ export const users_and_teams = async (accountID, userID) => {
 
 export const users = async (accountID) => {
   const users = await apiCall_noBody(`users/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}", "now":false}}`, "GET");
+  const inactiveUsers = await apiCall_noBody(`validations?filter={"where":{"userId":"","accountID":"${accountID}"}}`, "GET");
   AccountStore.loadUsers([...users, ...inactiveUsers]);
   return [...users, ...inactiveUsers];
 }
@@ -146,14 +147,8 @@ export const history = async () => {
 }
 
 export const surveys = async (accountID, userID) => {
-  const admin = UserStore.user.isAdmin;
-  await apiCall('surveys/find', 'POST', admin? {accountID}:{accountID, userID}).then(r => r.json()).then(result => {
+  await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}).then(r => r.json()).then(result => {
     SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
     TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
   });
 }
-
-// export const tasks= async (accountID) => {
-//   const result = await apiCall_noBody(`tasks/all?filter={"where":{"accountID":"${accountID}"}}`, "GET");
-//   TaskStore.loadTasks(result);
-// }

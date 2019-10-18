@@ -1,5 +1,6 @@
 import { observable, action, computed } from "mobx";
-import { getDefaultWorkspaceImg } from "../SharedCalculations/GetDefaultWorkspaceImg"
+import { getDefaultWorkspaceImg } from "../SharedCalculations/GetDefaultWorkspaceImg";
+import { getDefaultUserImg } from "../SharedCalculations/GetDefaultUserImg";
 import {UserStore} from "../Stores/UserStore"
 import _ from "lodash";
 
@@ -70,7 +71,12 @@ class Store {
 
   loadUsers(allUsers) {
     return new Promise((resolve, reject) => {
-      this.allUsers = allUsers
+      const usersDefaultImg = allUsers.map(user => {
+        if (user.img) return user 
+        const img = getDefaultUserImg(user.id? user.id :user.userID);
+        return Object.assign(user, {img});
+      });
+      this.allUsers = usersDefaultImg;
       this.allUsers.length === 0 ? reject(false) : resolve(true)
     })
   }
