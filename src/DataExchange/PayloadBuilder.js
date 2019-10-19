@@ -380,7 +380,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.contentRAW) newVariValues.contentRAW = updatedFields.contentRAW;
     if (updatedFields.contentHTML) newVariValues.contentHTML = updatedFields.contentHTML;
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
-    if (updatedFields.tagID) newVariValues.tags = [updatedFields.tagID];
+    if (updatedFields.tags) newVariValues.tags = updatedFields.tags;
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
 
     const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));

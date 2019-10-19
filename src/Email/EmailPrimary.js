@@ -31,7 +31,7 @@ class EmailPrimary extends React.Component {
   }
   componentDidMount() {
     const {DataEntryStore, UIStore} = this.props
-    if(DataEntryStore.emailCampaign.sendContent.lengh > 0 && UIStore.menuItem.sendEmailBody === "message"){UIStore.set("menuItem", "sendEmailBody", "messagecontent")}
+    if(DataEntryStore.emailCampaign.sendContent.length > 0 && UIStore.menuItem.sendEmailBody === "message"){UIStore.set("menuItem", "sendEmailBody", "messagecontent")}
     if(DataEntryStore.emailCampaign.draftHTML !== ""){
       const contentState = convertFromRaw(DataEntryStore.emailCampaign.draftRAW);
       DataEntryStore.setDraft( "editorState", EditorState.createWithContent(contentState) );
@@ -64,10 +64,10 @@ class EmailPrimary extends React.Component {
 
       const sendNow = async () => {
         if(canSubmit()) {
-          const newCamp = await createCampaign(emailCampaign(true, false)).then((res) => res.json())
-          EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[newCamp]])
-          const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
-          AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
+          // const newCamp = await createCampaign(emailCampaign(true, false)).then((res) => res.json())
+          // EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[newCamp]])
+          // const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
+          // AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
           this.props.history.push("/panel/analytics")
           this.resetEmail();
         }
@@ -131,7 +131,24 @@ class EmailPrimary extends React.Component {
           </Header.Subheader>
         </Header>
         <Segment>
-          <div style={{ minWidth: 400 }}> <ChooseTargeting /> </div>
+          <div style={{ minWidth: 400 }}> 
+          
+        <ChooseTargeting
+          // input= {!DataEntryStore.emailCampaign.campaignID? false : {sendTargetType: DataEntryStore.emailCampaign.recipientType, 
+          //            sendToTeamID: DataEntryStore.emailCampaign.teamID,
+          //            sendToTagID: !DataEntryStore.emailCampaign.tags.length? "": DataEntryStore.emailCampaign.tags[0],
+          //            sendToUsers: DataEntryStore.emailCampaign.targetUsers, 
+          //           }}
+          output={val=> 
+            {
+              if(val.sendTargetType) DataEntryStore.set("emailCampaign", "recipientType", val.sendTargetType);
+              if(val.sendToTeamID) DataEntryStore.set("emailCampaign", "teamID", val.sendTargetType);
+              if(val.sendToTagID) DataEntryStore.set("emailCampaign", "tags", val.sendToTeamID === "none"? []: [val.sendToTagID]);
+              if(val.sendToUsers) DataEntryStore.set("emailCampaign", "targetUsers", val.sendToUsers);  
+            }}
+          />
+
+           </div>
           <div style={{ paddingTop: 10, paddingBottom: 10}}>
           <Form>
           <Form.Input label="Email Subject (Required)"

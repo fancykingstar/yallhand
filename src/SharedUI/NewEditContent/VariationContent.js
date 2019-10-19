@@ -126,7 +126,6 @@ class VariationContent extends React.Component {
             message='You have unsaved changes, are you sure you want to leave?'
           />
         <BackButton />
-        {/* {JSON.stringify(this.props.data)} */}
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {DataEntryStore.content.isNew ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
@@ -152,11 +151,11 @@ class VariationContent extends React.Component {
           <Row>
             <Col>
              <div style={{ paddingTop: "10px" }}>
-              <ChooseTargeting 
+              <ChooseTargeting
                 NoSelectUsers 
                 label={mode} 
                 input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
-                output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tagID": ""}:{"teamID": val.sendToTeamID, "tagID": val.sendToTagID})}
+                output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tags": []}: val.sendToTeamID? {teamID:val.sendToTeamID}:{tags: val.sendToTagID==="none"? []:[val.sendToTagID]})}
                 />
             </div>
             </Col>
