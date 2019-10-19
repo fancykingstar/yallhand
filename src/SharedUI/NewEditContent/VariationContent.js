@@ -62,7 +62,7 @@ class VariationContent extends React.Component {
       return;
     }
 
-    this.setState({stage});
+    await this.setState({stage});
 
     const isPolicy = mode === "policy";
     const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
