@@ -103,7 +103,7 @@ pre {
 
 .SideBarContainerMobile {
   position: fixed;
-  z-index: 50;
+  z-index: 150;
   border: 0 none;
 }
 

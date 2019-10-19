@@ -7,8 +7,49 @@ import styled from "styled-components";
 import { TaskStore } from "../Stores/TaskStore";
 import { AccountStore} from "../Stores/AccountStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 class TaskFrame extends React.Component {
+  getMuiTheme = () =>
+    createMuiTheme({
+      overrides: {
+        MUIDataTableBodyCell: {
+          root: {
+            fontFamily: "Lato",
+            fontSize: "1em"
+          }
+        },
+        MUIDataTableBodyRow: {
+          root: {
+            zIndex: "1 !important"
+          }
+        },
+        MUIDataTableSelectCell: {
+            fixedHeader: {
+              zIndex: "1 !important"
+            },
+            headerCell: {
+              zIndex: "1 !important"
+            }
+          },
+          MUIDataTableHeadCell: {
+            fixedHeader: {
+              // position: "relative"
+              zIndex: "1 !important"
+            }
+        },
+        MUIDataTable: {
+          root: {
+            backgroundColor: "#FF000"
+          },
+          paper: {
+            boxShadow: "none",
+            border: "2px solid #e3e8ee",
+            borderRadius: 8
+          }
+        }
+      }
+    });
   
   render() {
     const MenuContainer = styled.div`
@@ -65,11 +106,13 @@ class TaskFrame extends React.Component {
         <span>
   </span>      
         <div style={{ marginTop: 15 }}>
+        <MuiThemeProvider theme={this.getMuiTheme()}>
           <MUIDataTable
             data={data}
             columns={columns}
             options={options}
           />
+          </MuiThemeProvider>
         </div>
       </React.Fragment>
     );

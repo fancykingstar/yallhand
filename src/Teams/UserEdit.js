@@ -1,58 +1,48 @@
 import React from "react";
 import { Button, Header, Image, Modal, Form } from "semantic-ui-react";
-import { inject, observer } from "mobx-react";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AdminEdit } from "./AdminEdit";
-import { modifyUser} from "../DataExchange/Up"
-import { Offboard } from "./Offboard"
-import { userUpdate } from "../DataExchange/PayloadBuilder"
+import { modifyUser} from "../DataExchange/Up";
+import { Offboard } from "./Offboard";
+import {AccountStore} from "../Stores/AccountStore";
 
-@inject("DataEntryStore")
-@observer
+
 export class UserEdit extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={};
+  }
+
   render() {
-    const { DataEntryStore } = this.props;
-    const defaultValues = val =>
-        DataEntryStore.userEditFields.userEdit[val];
-    // const adminSettings =
-    //   DataEntryStore.userEditFields.isAdmin === false ? null : <AdminEdit />;
-    const handleInput = (e, val, type) => {
-      DataEntryStore.userEditFields[type] = val.value;}
-    const handleCancel = () => {
-      DataEntryStore.reset("userEditFields", {adminConfig: "all"});
+    const {img, displayName, displayName_Full, isAdmin, email, teamID, tags, userID, boss} = this.props.data;
+
+    const handleUpdate = async () => {
+      await modifyUser(Object.assign(this.state, {userID}));
       this.props.close()
     }
-    const handleUpdate = () => {
-      modifyUser(userUpdate())
-      .then(() => {
-        DataEntryStore.reset("userEditFields", {adminConfig: "all"});
-        this.props.close()
-      })
-     
-    }
 
-    const displayAvatar = defaultValues("img") === ""? null :
+    const displayAvatar = !img? null :
     <Modal closeIcon trigger={
       <div className="Avatar-Wrap"> 
       <Image
         className="Avatar"
-        src={defaultValues("img")}
+        src={img}
         size="small"
         floated="left"
-        style={defaultValues("img") === "" ? {display: "none"}: {}}
+        style={!img ? {display: "none"}: {}}
       /></div> } basic size="small" >
-    <Modal.Content> <Image src={defaultValues("img")} fluid /> </Modal.Content>
+    <Modal.Content> <Image src={img} fluid /> </Modal.Content>
   </Modal>
 
     return (
-      <Modal open={this.props.open} onClose={handleCancel} size="small">
+      <Modal open={this.props.open} onClose={()=>this.props.close()} size="small">
         <Header as="h2">
           {displayAvatar}
           <Header.Content>
-            {defaultValues("displayName_full") === ""? "Invited User": "Editing User"}
+            {displayName_Full === ""? "Invited User": "Editing User"}
             <Header.Subheader>
-              {defaultValues("displayName_full")}
+              {displayName_Full}
             </Header.Subheader>
           </Header.Content>
         </Header>
@@ -60,49 +50,54 @@ export class UserEdit extends React.Component {
         <Modal.Content>
           <Form size="small">
             <Form.Field>
-              {defaultValues("displayName_full") === ""? null :
+              {!displayName_Full? null :
               <React.Fragment>
               <Form.Input
               label="Full Name"
-              defaultValue={defaultValues("displayName_full")}
-              onChange={(e, val) => handleInput(e, val, "displayName_full")}
+              defaultValue={displayName_Full}
+              onChange={(e, val) => this.setState({displayName_Full: val.value})}
               />
               <Form.Input
               label="Display Name"
-              defaultValue={defaultValues("displayName")}
-              onChange={(e, val) => handleInput(e, val, "displayName")}
+              defaultValue={displayName}
+              onChange={(e, val) => this.setState({displayName: val.value})}
               />
               </React.Fragment>}
               <Form.Input
                 label="Email"
-                defaultValue={defaultValues("email")}
-                onChange={(e, val) => handleInput(e, val, "email")}
+                defaultValue={email}
+                onChange={(e, val) => this.setState({email: val.value})}
               />
               <TeamSelect
                 label=""
-                defaultVal={defaultValues("teamID")}
+                defaultVal={teamID}
                 outputVal={val =>
-                  DataEntryStore.set("userEditFields", "teamID", val.value)}
+                  this.setState({teamID: val.value})}
               />
               <TagSelect
                 label=""
-                defaultVal={defaultValues("tags")}
+                defaultVal={tags}
                 outputVal={val =>
-                  DataEntryStore.set("userEditFields", "tagID", val)
+                  this.setState({tags: val==="none"? [] : [val]})
                 }
               />
+              <Form.Dropdown
+              label="Reports to (optional):"
+              fluid
+              search
+              selection
+              defaultValue={boss}
+              onChange={(e, val) => this.setState({boss:val.value})}
+              options={AccountStore._getUsersSelectOptions()}
+            />
             
               <Form.Group>
          
                 <Form.Radio
                   toggle
-                  checked={DataEntryStore.userEditFields.isAdmin} 
+                  defaultChecked={isAdmin} 
                   onChange={e =>
-                    DataEntryStore.set(
-                      "userEditFields",
-                      "isAdmin",
-                      !DataEntryStore.userEditFields.isAdmin
-                    )
+                    this.setState({isAdmin: !isAdmin})
                   }
                   label="Admin"
                 />
@@ -114,11 +109,11 @@ export class UserEdit extends React.Component {
         <Modal.Actions>
           <div style={{ float: "right" }}>
             {" "}
-           <Offboard/>
+           <Offboard user={userID} account={AccountStore.account.accountID} close={()=>this.props.close()}/>
           </div>
           <div style={{ float: "left", paddingBottom: 10 }}>
-            <Button onClick={e => handleUpdate(e)} primary content="Update" />
-            <Button onClick={e => handleCancel(e)}>Cancel</Button>
+            <Button onClick={() => handleUpdate()} primary content="Update" />
+            <Button onClick={()=>this.props.close()}>Cancel</Button>
           </div>
         </Modal.Actions>
       </Modal>

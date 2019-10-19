@@ -180,16 +180,6 @@ export const user = () => {
   return buildObj
 }
 
-export const userUpdate = () => {
-  const x = Object.assign({}, DataEntryStore.userEditFields)
-  let buildObj = {}
-  Object.keys(x).forEach(key => {
-    if(typeof x[key] === "string" && x[key] !== ""){
-      key === "tagID"? buildObj["tags"] = [x[key]] : buildObj[key] = x[key]
-    }} )
-  buildObj.isAdmin = x.isAdmin
-  return _.extend({}, {"accountID": accountID(), "userID": DataEntryStore.userEditFields.userEdit.userID}, buildObj)
-}
 
 
 
@@ -390,7 +380,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.contentRAW) newVariValues.contentRAW = updatedFields.contentRAW;
     if (updatedFields.contentHTML) newVariValues.contentHTML = updatedFields.contentHTML;
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
-    if (updatedFields.tagID) newVariValues.tags = [updatedFields.tagID];
+    if (updatedFields.tags) newVariValues.tags = updatedFields.tags;
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
 
     const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));
@@ -400,27 +390,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     
     newContentValues.variations = [...otherVaris, ...[Object.assign(editedVari, newVariValues)]]
     if(updatedFields === "published") newContentValues.everPublished = true;
-
-    return newContentValues;
-
-    // const parent = type === "policy" ? Object.assign({}, PoliciesStore._getPolicy(UIStore.content.policyID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(UIStore.content.announcementID))
-    // const buildObj =  {
-    //     variationID: generateID(),
-    //     stage: !stage? "draft": stage,
-    //     teamID: !teamID? "global": teamID,
-    //     label: teamID === !teamID && !tagID? "": label,
-    //     tags: tagID? [tagID]:[],
-    //     contentRAW,
-    //     contentHTML,
-    //     userID: userID(),
-    //     updated: now()
-    //   }
-    // const newVariations = parent.variations.filter(vari => vari.variationID !== UIStore.content.variationID)
-    // newVariations.push(buildObj)
-    // const patchObj = {accountID: accountID(), variations: newVariations}
-    // patchObj[type + "ID"] = UIStore.content[type + "ID"]
-    // if(DataEntryStore.content.stage === "published"){patchObj.everPublished = true}
-    // return patchObj
+    return _.extend({}, base(), newContentValues)
   }
   
   export const contentPatch = (newObj) => {
@@ -429,7 +399,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
 
   export const featuredImgEdit = (type) => {
- 
+
     const buildObj = {
         img: DataEntryStore.contentmgmt.img,    
         imgData: {}
@@ -485,7 +455,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   const generateInstances = (data) => {
     const {sendTargetType, deadline, sendToTagID, sendToTeamID} = data;
     if(data.sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
-    else if(data.sendTargetType === "users") return sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    else if(data.sendTargetType === "users") return data.sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
     else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
   }
 
@@ -493,12 +463,15 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     const {surveyItems, active, label, anonymous, deadline, sendToTeamID, sendToTagID, sendTargetType, sendToUsers } = data;
 
     const buildObj = {
-      surveyItems,
+      surveyItems, 
       type,
       label,
       sendTargetType,
       anonymous,
       deadline,
+      sendToTeamID,
+      sendToTagID,
+      sendToUsers,
       instances: active? generateInstances(data):[],
       responses_by_instance: [],
       active,
@@ -506,19 +479,11 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return _.extend({}, base(), buildObj)
   };
 
-  export const surveyEdit = ( type, data ) => {
-    const objkeys = Object
-      .keys(data)
-      .filter(i=>i[0] !== "_" && data[i])
-    let buildObj = {type};
-    objkeys.forEach(i => {
-      if(i === "sendToUsers" && !data.sendToUsers.length) return
-      else if(i === "active" && data[i]) {
-        buildObj.active = true;  
-        buildObj.instances = generateInstances(data);
-      }
-      else buildObj[i] = data[i];
-    })
+  export const surveyEdit = ( type, data ) => { 
+    let instances = [];
+    if (data.active) instances = generateInstances(data)
+    let buildObj = Object.assign(data, {instances, type});
+    Object.keys(data).forEach(key => {if(key[0] == "_") delete buildObj[key]}) 
     return _.extend({}, base(), buildObj)
 
   }

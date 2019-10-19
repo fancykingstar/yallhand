@@ -7,8 +7,9 @@ import MUIDataTable from "mui-datatables";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
 import CustomToolbarSelect from "./CustomToolbarSelect";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { modifyAnnouncement } from "../DataExchange/Up";
+import { modifyAnnouncement, modifyPolicy } from "../DataExchange/Up";
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
+import Chip from '@material-ui/core/Chip';
 import styled from "styled-components";
 import "./style.css";
 
@@ -33,21 +34,22 @@ class ContentListingPage extends React.Component {
         },
         MUIDataTableBodyRow: {
           root: {
-            position: "relative"
+            zIndex: "1 !important"
           }
         },
         MUIDataTableSelectCell: {
-          //   fixedHeader: {
-          //     position: "relative"
-          //   },
-          //   headerCell: {
-          //     position: "relative"
-          //   }
-          // },
-          // MUIDataTableHeadCell: {
-          //   fixedHeader: {
-          //     position: "relative"
-          //   }
+            fixedHeader: {
+              zIndex: "1 !important"
+            },
+            headerCell: {
+              zIndex: "1 !important"
+            }
+          },
+          MUIDataTableHeadCell: {
+            fixedHeader: {
+              // position: "relative"
+              zIndex: "1 !important"
+            }
         },
         MUIDataTable: {
           root: {
@@ -118,19 +120,26 @@ class ContentListingPage extends React.Component {
       );
     };
 
-    const handleFeatured = (action, tableinfo) => {
+    const handleFeatured = async (action, tableinfo) => {
       const accountID = AccountStore.account.accountID;
-      tableinfo.data.forEach(i => {
-        const IDval =
-          AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID;
-        modifyAnnouncement(
-          { accountID, announcementID, featured: action === "feature" },
-          false
-        );
+      tableinfo.data.forEach(async i => {
+        const ID = mode === "announcement" ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID:PoliciesStore.allPolicies[i.dataIndex].policyID;
+        if (mode === "announcement") await modifyAnnouncement( { accountID, announcementID: ID, featured: action === "feature" }, false );
+        else await modifyPolicy({ accountID, policyID: ID, featured: action === "feature" }, false )
       });
     };
 
-    const columns = ["", "Title", "Last Updated", "Channel", "State"];
+    const columns = [ {
+      options: {
+       filter: false,
+       sort: false,
+      }}, {
+      label: "Featured",
+      name: "Featured",
+      options: {
+       filter: false,
+       sort: false,
+      }}, "Title", "Last Updated", "Channel", "State"];
 
     const data = all.map(item => [
       <LazyImg
@@ -149,7 +158,8 @@ class ContentListingPage extends React.Component {
             : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"
         }
       />,
-      <><p>{item.label}</p>{item.featured &&<StarRoundedIcon fontSize="small"/>}</>,
+      item.featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />,
+      item.label,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
       item.state === "ok" ? "published" : item.state

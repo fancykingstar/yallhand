@@ -14,6 +14,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { cpus } from 'os';
 import { apiCall } from '../../../DataExchange/Fetch.js';
 import { UserStore } from "../../../Stores/UserStore";
+import VisibilityOffRoundedIcon from '@material-ui/icons/VisibilityOffRounded';
 
 
 
@@ -70,8 +71,10 @@ export class Survey extends React.Component {
             <div className="inner_page_content_title">
                <h5>{label}</h5>
                <p><TimeAgo date={this.props.data.updated} /></p>
+      
             </div>
             <div className="survey_group_questions">
+            {this.props.data.anonymous && <div style={{paddingLeft: 20, paddingTop: 10, paddingBottom: 10}}><p style={{fontSize: ".9em", color: "#abacab"}}><VisibilityOffRoundedIcon size="small"/> Responses are anonymous</p></div>}
             {this.props.data.surveyItems.map((item, innerIndex) => {
                return <div className="check_question" key={innerIndex}>
                   <h6>{item.q}</h6>

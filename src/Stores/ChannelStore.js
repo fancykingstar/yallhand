@@ -1,4 +1,5 @@
 import { observable, action, computed } from "mobx";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 
 class Store {
@@ -33,7 +34,7 @@ class Store {
   }
   @computed
   get _channelSelect() {
-    const options =  ChannelStore.allChannels.map(chan =>({"key": "chan" + chan.label, "text": chan.label, "value": chan.chanID}))
+    const options =  ChannelStore.allChannels.map(chan =>({"key": "chan" + giveMeKey(), "text": chan.label, "value": chan.chanID}))
     options.unshift({"key": "allChan", "text": "All", "value": "All"})
     return options
   }

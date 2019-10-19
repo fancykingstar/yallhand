@@ -315,6 +315,10 @@ button.load-more {
 .actions-slides .page_content{
   min-height: 220px;
 }
+.slick-slider .slick-track{
+  transition: transform 0.3s linear;
+  transition-delay: 0.5s;
+}
 .action-form .section_title{
   padding-top: 0;
   padding-bottom: 0;

@@ -73,10 +73,11 @@ export class FeaturedImage extends React.Component {
           if (result !== null) { 
             if(this.props.output) this.props.output({img: result.file.location})
             else DataEntryStore.set("contentmgmt", "img", result.file.location) 
+            DataEntryStore.set("contentmgmt", "imgData", {});
           }
         })
         .then(() => {
-          if (this.props.mode)
+          if (this.props.mode && !this.props.output)
             this.props.mode === "policy"
               ? modifyPolicy(featuredImgEdit("policy"))
               : modifyAnnouncement(featuredImgEdit("announcement"));

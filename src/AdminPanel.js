@@ -7,12 +7,10 @@ import Header from "./Header/Header";
 import ManageContent from "./SharedUI/ManageContent/ManageContent"
 import { SideBar } from "./SideBar/SideBar";
 import NewEditVariation from "./SharedUI/NewEditContent/NewEditVariation";
-// import SurveyNewEdit from "./Surveys/SurveyNewEdit";
 import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
-// import TaskNewEdit from "./Tasks/TasksNewEdit";
 import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
@@ -34,11 +32,6 @@ import "./CSS/styles.scss";
 @inject( "UserStore", "UIStore", )
 @observer
 export class AdminPanel extends React.Component {
-  // constructor(props){
-  //   super(props);
-  //   const { UserStore } = this.props;
-  //   if (!UserStore.user.isAdmin) this.props.history.push('/portal');
-  // }
   componentDidMount() {
     const { UserStore, UIStore } = this.props;
     if (!UIStore._adminLoadingComplete) {

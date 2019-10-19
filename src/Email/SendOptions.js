@@ -41,7 +41,7 @@ class SendOptions extends React.Component {
         EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[camp]])
         UIStore.menuItem.sendEmailOption === "schedule"? this.props.history.push("/panel") : UIStore.set("menuItem", "emailFrame", "automations" )
           }
-        this.resetEmail();
+        // this.resetEmail();
       }
 
     const canSubmit = () => {

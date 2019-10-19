@@ -43,10 +43,6 @@ export class Task extends React.Component {
         const instanceID = instances[0].instanceID;
 
         const submit = async (item, val) => {
-            // if (UserStore.user.isAdmin) {
-            //     this.setState({completed:true});
-            //     return
-            // }
             const updated = Date.now();
             let response = {};
             response[item._id] = {updated, response: val};

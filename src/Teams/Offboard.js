@@ -16,7 +16,7 @@ import moment from "moment"
 
 export const Offboard = inject("UIStore", "DataEntryStore")(
   observer(props => {
-    const { UIStore, DataEntryStore } = props;
+    const { UIStore, DataEntryStore,user, account } = props;
 
     const handleOpen = () => {
       DataEntryStore.set("onOffBoarding", "offBoardingDate", "");
@@ -25,23 +25,22 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
 
     const handleClose = () => {
       UIStore.set("modal", "offboard", false);
+      props.close();
     };
 
     const offboardNow = () => {
-      offBoardUser(DataEntryStore.userEditFields.userEdit.userID, true).then(() => {
+      offBoardUser(user, true).then(() => {
         handleClose()
-        UIStore.set("modal", "editUser", false)
       })
     }
 
     const offboardLater = () => {
-      apiCall("emailcampaigns/trigger", "POST", {userID: DataEntryStore.userEditFields.userEdit.userID, accountID: DataEntryStore.userEditFields.userEdit.accountID, type: "offboard"})
-        createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": DataEntryStore.userEditFields.userEdit.userID}))
+      apiCall("emailcampaigns/trigger", "POST", {userID: user, accountID: account, type: "offboard"})
+      createSchedule(schedule(moment(DataEntryStore.onOffBoarding.offBoardingDate).valueOf(), "offboard user", {"userID": user}))
         .then(() => {
           handleClose() 
-          UIStore.set("modal", "editUser", false)
         });
-    }
+    } 
 
     const setOffBoardDate = day => {
       DataEntryStore.set("onOffBoarding", "offBoardingDate", day);
@@ -49,7 +48,7 @@ export const Offboard = inject("UIStore", "DataEntryStore")(
 
     const deleteInvited = () => {
       //User record from invite will still exist in DynamoDB unless changed
-      deleteUser(DataEntryStore.userEditFields.userEdit.userID).then(() => {
+      deleteUser(user).then(() => {
       handleClose()
       UIStore.set("modal", "editUser", false)
       })

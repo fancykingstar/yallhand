@@ -33,7 +33,7 @@ class TasksNewEdit extends React.Component {
         _id: giveMeKey(),
         q: "",
         resType: "scale",
-        resRequired: false,
+        resRequired: true,
         multiConfig: "custom", 
         scaleConfig: "star",
         resChoices: [],

@@ -1,23 +1,17 @@
 import React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-
 import { Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
-
-import MoodIcon from '@material-ui/icons/Mood';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-
-import { Svg } from "../../helpers/Helpers";
 import Star from '../../assets/images/star.svg';
-
+import { Svg } from "../../helpers/Helpers";
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             formData: {
-                colleague: 'Dylan Spencer',
-                props_for: 'Teamwork',
+                colleague: 'One employee',
+                props_for: '',
                 description: '',
                 no_feed: false
             }
@@ -28,13 +22,12 @@ class ActionsForm extends React.Component {
         const value =
             evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
 
-        var formData = {
-            ...this.state.formData,
-            [evt.target.name]: value
-        }
-
-        this.setState(formData);
-
+        this.setState({
+            formData: {
+                ...this.state.formData,
+                [evt.target.name]: value
+            }
+        });
     }
     handleActionFormSubmit(e) {
         e.preventDefault();
@@ -44,17 +37,16 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title shadow">
-                    <h4>
-                        <IconButton
-                            color="inherit"
-                            aria-label="back to actions"
-                            edge="start"
-                            onClick={this.props.onCancel.bind(this)}
-                        ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
-                        {(this.props.iconImage) ?
-                            <Svg class="small-icon" src={this.props.iconImage} default={Star} /> :
+                    <h4><IconButton
+                        color="inherit"
+                        aria-label="back to actions"
+                        edge="start"
+                        onClick={this.props.onCancel.bind(this)}
+                    ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
+                        {(this.props.actionDetail.label) ?
+                            <Svg class="small-icon" src={this.props.actionDetail.img} default={Star} /> :
                             ('')}
-                        {this.props.title}</h4>
+                        {this.props.actionDetail.label}</h4>
                 </div>
                 <div className="page_content actions shadow">
                     <div className="announce_component faq_announce slick-align-left">
@@ -113,7 +105,6 @@ class ActionsForm extends React.Component {
                     </div>
                 </div>
             </>
-
         );
     }
 }

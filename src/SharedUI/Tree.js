@@ -31,7 +31,7 @@ export const Tree = props => {
           { item[id] !== "global" && item.count !==0 ?<span style={{paddingLeft: 5}}><Label size="small"><Icon name="group"/>{item.count} </Label></span>: null}{" "}
           {!assocContent.filter(i=>i.mode ==="announcement").length? null : <span style={{paddingLeft: 5}}><Label size="small"><Icon size="small" name="bullhorn"/>{assocContent.filter(i=>i.mode ==="announcement").length} </Label></span>}
           {!assocContent.filter(i=>i.mode ==="policy").length? null:<span style={{paddingLeft: 5}}> <Label size="small"><Icon  size="small" name="question"/>{assocContent.filter(i=>i.mode ==="policy").length} </Label></span>}
-          {!assocContent.filter(i=>i.mode ==="file").length? null:<span style={{paddingLeft: 5}}>  <Label size="small">  <Icon size="small" name="cubes"/>{assocContent.filter(i=>i.mode ==="file").length}  </Label> </span>}
+          {!assocContent.filter(i=>i.mode ==="file").length? null:<span style={{paddingLeft: 5}}>  <Label size="small">  <Icon size="small" name="cloud"/>{assocContent.filter(i=>i.mode ==="file").length}  </Label> </span>}
       
         {/* </span> */}
         </React.Fragment>

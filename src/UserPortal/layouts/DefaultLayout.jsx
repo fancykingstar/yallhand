@@ -223,7 +223,7 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
-                        {/* <ListItem button key="actions" component={Link} to="actions">
+                        {/* <ListItem button key="actions" component={Link} to="/portal/actions">
                             <ListItemIcon><TouchAppIcon /></ListItemIcon>
                             <ListItemText primary="Actions" />
                         </ListItem> */}

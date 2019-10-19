@@ -27,7 +27,7 @@ export class Binary extends React.Component {
           color={selected === null || !selected? "secondary" : "default"}
           aria-label="add"
           onClick={()=>this.handleClick(0)}
-          style={{margin: 15}}
+          style={{margin: "0 15px 0"}}
         >
             {thumbs? <ThumbDownIcon /> :negLabel}
         </Fab>
@@ -37,7 +37,7 @@ export class Binary extends React.Component {
           color={selected === null || selected? "primary" : "default"}
           aria-label="add"
           onClick={()=>this.handleClick(1)}
-          style={{margin: 15}}
+          style={{margin: "0 15px 0"}}
         >
             {thumbs? <ThumbUpIcon />: posLabel}
         </Fab>

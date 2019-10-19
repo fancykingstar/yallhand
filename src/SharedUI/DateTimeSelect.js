@@ -13,7 +13,8 @@ export class DateTimeSelect extends React.Component {
     const remainder = 15 - (now.minute() % 15);
 
     this.state = {
-      currentDate:  ""
+      currentDate:  moment(now).add(remainder, "minutes"),
+      toggled: false,
       // moment(now).add(remainder, "minutes")
     }
   }
@@ -43,9 +44,10 @@ export class DateTimeSelect extends React.Component {
 
   updateDate(newDateTime) {
     this.setState({
-      currentDate: newDateTime
+      currentDate: newDateTime,
+      toggled: true
     })
-    this.props.value(newDateTime)
+    this.props.value(newDateTime.valueOf())
   }
 
   static getDerivedStateFromProps(props, state) { 
@@ -53,22 +55,20 @@ export class DateTimeSelect extends React.Component {
     return null
  }  
 
+
   render() {
     const yesterday = moment().subtract( 1, 'day' );
-
     const validDates = ( current )=> current.isAfter( this.props.notToday === undefined? yesterday: moment() );
-
 
     return ( 
         <React.Fragment>
           <DateTime 
           isValidDate={validDates}
           timeConstraints={this.validTimeConstraints()}
-          inputProps={{ placeholder: 'Choose date and time' }}
+          inputProps={{ value: this.state.toggled ? moment(this.state.currentDate).format('MMMM Do YYYY, h:mm a'): "Choose date and time"  }}
           value={this.state.currentDate}
           onChange={e => this.updateDate(e)}
           />
-
       </React.Fragment>
     );
   }

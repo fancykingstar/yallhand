@@ -76,14 +76,12 @@ class Store {
     return filtered.length === 0? {} : filtered[0].policyID 
   }
 
-  _SearchVariation(variationID){
-    if(!variationID) return {}
-    let found = {}
-    this.allPolicies.forEach(contentmgmt => {
-      const vari = contentmgmt.variations.filter(vari => vari.variationID===variationID)
-      if(vari.length) found = Object.assign({variations: vari}, contentmgmt);
-    })
-    return found;
+  _searchVariation(id){
+    //get full content by variation ID
+    if(this.allPolicies.filter(p => p.variations.filter(i=>i.variationID === id).length).length > 0){
+      return Object.assign({}, this.allPolicies.filter(p => Boolean(p.variations.filter(i=>i.variationID === id).length))[0])
+    }
+    else{return {}}
   }
 
   @computed
