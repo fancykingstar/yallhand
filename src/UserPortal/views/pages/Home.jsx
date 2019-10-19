@@ -176,22 +176,22 @@ class Home extends React.Component {
 
 
 
-                        {/* <div className="section_title shadow">
-                              <h4>Suggested Actions</h4>
+                        <div className="section_title shadow">
+                           <h4>Suggested Actions</h4>
+                        </div>
+                        <div className="page_content shadow">
+                           <div className=" suggesion_main_box row">
+                              {suggestedActions.map((item, index) => {
+                                 return <IconBox
+                                    key={index}
+                                    micon="star"
+                                    box_type="image-full-width"
+                                    main_class={"box col-12 col-sm-6 col-md-4"}
+                                    user_img={<Star />}
+                                    title={item.label} />
+                              })}
                            </div>
-                           <div className="page_content shadow">
-                              <div className=" suggesion_main_box row">
-                                 {suggestedActions.map((item, index) => {
-                                    return <IconBox
-                                       key={index}
-                                       micon="star"
-                                       box_type="image-full-width"
-                                       main_class={"box col-12 col-sm-6 col-md-4"}
-                                       user_img={<Star />}
-                                       title={item.label} />
-                                 })}
-                              </div>
-                           </div> */}
+                        </div>
 
                      </Col>
                      {/* 
@@ -200,7 +200,7 @@ class Home extends React.Component {
                      </Col> */}
                   </Row>
                </Container>
-               {/* <ActionSlider /> */}
+               <ActionSlider />
             </div>
 
          </Layout>
