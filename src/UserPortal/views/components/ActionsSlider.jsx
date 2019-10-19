@@ -1,16 +1,13 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import Layout from '../../layouts/DefaultLayout';
 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
 import ActionsForm from "./ActionsForm";
-import IconButton from '@material-ui/core/IconButton';
 
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
-import { Svg } from "../../helpers/Helpers";
 import Star from '../../assets/images/star.svg';
 
 import AskManagement from '../../assets/images/actions/askManagement.svg';
@@ -23,16 +20,8 @@ class ActionSlider extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
-         slideIndex: 0,
-         updateCount: 0,
-         showActionFormBlock: false,
          ActionsData: [],
          selectedActionData: {},
-         colleague: 'Dylan Spencer',
-         props_for: 'Teamwork',
-         description: '',
-         checked: true,
-         minHeight: "300px"
       }
    }
    componentDidMount() {
@@ -46,15 +35,11 @@ class ActionSlider extends React.Component {
 
    showActionForm(item) {
       this.slider.slickGoTo(1);
-      this.setState({
-         showActionFormBlock: true,
-         selectedActionData: item
-      });
+      this.setState({ selectedActionData: item });
    }
 
    hideActionForm() {
       this.slider.slickGoTo(0);
-      this.setState({ showActionFormBlock: false });
    }
 
    handleActionFormSubmit(data) {
@@ -113,28 +98,34 @@ class ActionSlider extends React.Component {
          swipeToSlide: false,
          slidesToShow: 1,
          slidesToScroll: 1,
-         afterChange: () =>
-            this.setState(state => ({ updateCount: state.updateCount + 1 })),
-         beforeChange: (current, next) => this.setState({ slideIndex: next })
       };
 
       return (
-         <div id="actions-slider" className=" actions-slides">
-            <Slider ref={slider => (this.slider = slider)} {...settings_components_slide} >
-               <Container className="actions-container"  >
+         <>
+            {/** General Actions */}
+            < Slider ref={slider => (this.slider = slider)
+            } {...settings_components_slide}>
+               <Container className="actions-container">
                   <div className="section_title shadow">
                      <h4>General Actions</h4>
                   </div>
-                  <div className="page_content  actions-slides actions shadow" >
+                  <div className="page_content actions shadow">
                      <div className="announce_component faq_announce slick-align-left">
-                        <Slider {...settings_multi}>
-                           <IconBox
-                              key={"AA"}
-                              micon="star"
-                              user_img={Star}
-                              title={"Open Enrollment: Ask Anything"} showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                           {(generalActions) ? generalActions.map((item, index) => {
+                        {/* <Slider {...settings_multi}> */}
+                        <IconBox
+                           key={"i1"}
+                           user_img={Star}
+                           title={"Open Enrollment: Ask Anything"}
+                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
+                        {/* <IconBox
+                           key={"AA"}
+                           user_img={Star}
+                           title={"Open Enrollment: Ask Anything"}
+                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
+                         */}
+                        {/* {(generalActions) ? generalActions.map((item, index) => {
                               var img = item.img;
+                              // set default img if not return from data
                               if (index === 0) { img = Star; }
                               if (index === 1 || index === 4) { img = RefereCandidate; }
                               if (index === 2 || index === 7) { img = AskManagement; }
@@ -143,15 +134,13 @@ class ActionSlider extends React.Component {
                               if (index === 6 || index >= 8) { img = reportSomething; }
                               return <IconBox
                                  key={index}
-                                 micon="star"
                                  user_img={img}
-                                 title={item.label} showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
-                           }) : ('')}
-
-                        </Slider>
+                                 title={item.label}
+                                 showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
+                           }) : ('')} */}
+                        {/* </Slider> */}
                      </div>
                   </div>
-
                </Container>
                <Container elevation={4} className="action-form">
                   <ActionsForm
@@ -160,8 +149,8 @@ class ActionSlider extends React.Component {
                      actionDetail={this.state.selectedActionData}
                   />
                </Container>
-            </Slider>
-         </div >
+            </Slider >
+         </>
       );
    }
 }
