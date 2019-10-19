@@ -52,7 +52,7 @@ class Store {
 
 
   _getTask(ID) {
-    this.allUsers.filter(task => task.taskID === ID)[0]
+    this.allTasks.filter(task => task.surveyID === ID)[0]
   }
 
 
