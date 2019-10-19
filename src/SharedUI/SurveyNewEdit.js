@@ -23,6 +23,7 @@ class SurveyNewEdit extends React.Component {
     this.state = {
       surveyItems: [this.reset()], 
       label: "",
+      instances: [],
       targetType: "all",
       deadline: 0,
       active: false,
@@ -57,9 +58,11 @@ class SurveyNewEdit extends React.Component {
 
 
   validate = () => {
-    const {label, targetType, targetConfig, deadline, surveyItems} = this.state;
+    const {label, targetType, targetConfig, deadline, surveyItems, instances} = this.state;
+    console.log("instances", instances)
     const review = {
       general: Boolean(label && surveyItems.length),
+      prevLaunch: Boolean(!instances.length)
       // surveyitems: Boolean(surveyItems.filter(i => !i.valid).length === 0)
     }
     return Object.values(review).filter(i=>!i).length === 0

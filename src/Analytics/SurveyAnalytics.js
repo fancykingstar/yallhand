@@ -74,7 +74,7 @@ export class SurveyAnalytics extends React.Component {
       slidesToScroll: 1,
       afterChange: () =>
         this.setState(state => ({ updateCount: state.updateCount + 1 })),
-      beforeChange: (current, next) => this.setState({ slideIndex: next })
+      beforeChange: (current, next) => this.setState({ slideIndex: next }),
   };
 
 
@@ -190,8 +190,10 @@ export class SurveyAnalytics extends React.Component {
         
 
     return (
+  
       <div>
-         <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
+      
+      <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
            <div>
            <Header
           as="h2"
@@ -262,7 +264,7 @@ export class SurveyAnalytics extends React.Component {
               {surveyDetail && this.props.mode === "task" && <Segment> {taskDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
           </div>
 
-          </Slider>
+         </Slider>
       </div>
     );
   }

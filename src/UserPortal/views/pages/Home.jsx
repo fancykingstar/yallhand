@@ -175,7 +175,7 @@ class Home extends React.Component {
                         </div>
 
 
-
+{/* 
                         <div className="section_title shadow">
                            <h4>Suggested Actions</h4>
                         </div>
@@ -191,7 +191,7 @@ class Home extends React.Component {
                                     title={item.label} />
                               })}
                            </div>
-                        </div>
+                        </div> */}
 
                      </Col>
                      {/* 
@@ -200,7 +200,7 @@ class Home extends React.Component {
                      </Col> */}
                   </Row>
                </Container>
-               <ActionSlider />
+               {/* <ActionSlider /> */}
             </div>
 
          </Layout>
