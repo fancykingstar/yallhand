@@ -154,7 +154,12 @@ class SurveyNewEdit extends React.Component {
     const id = this.props.match.params.id;
     const source = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks;
     const loadSurvey = this.props.match.params.id? source.filter(i=>i.surveyID === id)[0] : false;
-    if(loadSurvey) this.setState(loadSurvey);
+    if(loadSurvey) {
+      if(loadSurvey.surveyItems.length) {
+        loadSurvey.surveyItems.forEach(i=> Object.keys(i).forEach(key=> {if(key[0]==="_") delete i[key]} ))
+      }
+      this.setState(loadSurvey)
+    };
   }
 
   render() {
