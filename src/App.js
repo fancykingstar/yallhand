@@ -8,7 +8,7 @@ import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
 import { loadAdmin } from "./DataExchange/LoadProfile";
-// import FullStory from 'react-fullstory';
+import FullStory from 'react-fullstory';
 import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
 import { getUser } from "./DataExchange/Fetch";
@@ -33,7 +33,7 @@ class AppRoute extends React.Component {
     this.state = {shouldRedirect: false, redirect: "/"}
 
     this.state = {shouldRedirect: false, redirect: "/"}
-    if (getUser() === null && location.pathname !== '/') this.props.history.push('/');
+    if (getUser() === null && (location.pathname !== '/' && !location.pathname.includes('/forgot'))) this.props.history.push('/');
     else if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
@@ -68,7 +68,7 @@ class AppRoute extends React.Component {
     return (
       <div className="App">
         <ThemeProvider theme={theme}>
-        {/* <FullStory org="JJAMV"/> */}
+        <FullStory org="JJAMV"/>
         {UIStore.isScreenLoading && <Spinner />}
         <div className={UIStore.isScreenLoading ? "LoadingDim" : ""}>
         {this.state.shouldRedirect && <Switch><Redirect push to={this.state.redirect}/></Switch>}
@@ -76,8 +76,11 @@ class AppRoute extends React.Component {
           <Route path="/panel" component={AdminPanel} />
           <Route path="/portal" component={UserPortal} />
           <Route path="/register" component={Login} />
+          <Route path="/login" component={Login} exact />
           <Route path="/forgot" component={Forgot} />
           <Route path="/" component={Login} exact />
+       
+          
           <Route path="*"> <Redirect push to={this.state.redirect}/> </Route>
         </Switch>
         </div>

@@ -13,7 +13,7 @@ class Login extends React.Component {
     super(props);
 
     this.state = {
-      view: (props.location.pathname === '/login') ? 'reauth' : 'register',
+      view: (props.location.pathname === '/login' || props.location.pathname === '/') ? 'reauth' : 'register',
       item: {
         code: null
       }
