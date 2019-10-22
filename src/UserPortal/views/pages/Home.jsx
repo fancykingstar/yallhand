@@ -200,7 +200,7 @@ class Home extends React.Component {
                      </Col> */}
                   </Row>
                </Container>
-               {/* <ActionSlider /> */}
+               <ActionSlider />
             </div>
 
          </Layout>
