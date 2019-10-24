@@ -38,18 +38,18 @@ class ContentListingPage extends React.Component {
           }
         },
         MUIDataTableSelectCell: {
-            fixedHeader: {
-              zIndex: "1 !important"
-            },
-            headerCell: {
-              zIndex: "1 !important"
-            }
+          fixedHeader: {
+            zIndex: "1 !important"
           },
-          MUIDataTableHeadCell: {
-            fixedHeader: {
-              // position: "relative"
-              zIndex: "1 !important"
-            }
+          headerCell: {
+            zIndex: "1 !important"
+          }
+        },
+        MUIDataTableHeadCell: {
+          fixedHeader: {
+            // position: "relative"
+            zIndex: "1 !important"
+          }
         },
         MUIDataTable: {
           root: {
@@ -107,7 +107,7 @@ class ContentListingPage extends React.Component {
       DataEntryStore.set("contentmgmt", "reviewAlert", content.reviewAlert);
       this.props.history.push(
         `/panel/${mode === "announcement" ? "announcements" : "faqs"}/${
-          UIStore.content[id]
+        UIStore.content[id]
         }`
       );
     };
@@ -123,23 +123,25 @@ class ContentListingPage extends React.Component {
     const handleFeatured = async (action, tableinfo) => {
       const accountID = AccountStore.account.accountID;
       tableinfo.data.forEach(async i => {
-        const ID = mode === "announcement" ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID:PoliciesStore.allPolicies[i.dataIndex].policyID;
-        if (mode === "announcement") await modifyAnnouncement( { accountID, announcementID: ID, featured: action === "feature" }, false );
-        else await modifyPolicy({ accountID, policyID: ID, featured: action === "feature" }, false )
+        const ID = mode === "announcement" ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID : PoliciesStore.allPolicies[i.dataIndex].policyID;
+        if (mode === "announcement") await modifyAnnouncement({ accountID, announcementID: ID, featured: action === "feature" }, false);
+        else await modifyPolicy({ accountID, policyID: ID, featured: action === "feature" }, false)
       });
     };
 
-    const columns = [ {
+    const columns = [{
       options: {
-       filter: false,
-       sort: false,
-      }}, {
+        filter: false,
+        sort: false,
+      }
+    }, {
       label: "Featured",
       name: "Featured",
       options: {
-       filter: false,
-       sort: false,
-      }}, "Title", "Last Updated", "Channel", "State"];
+        filter: false,
+        sort: false,
+      }
+    }, "Title", "Last Updated", "Channel", "State"];
 
     const data = all.map(item => [
       <LazyImg
@@ -204,7 +206,7 @@ class ContentListingPage extends React.Component {
               </Button>
             </div>
           </MenuContainer>
-          <div style={{ marginTop: 15 }}>
+          <div className="muidatatable-custom" style={{ marginTop: 15 }}>
             <MuiThemeProvider theme={this.getMuiTheme()}>
               <MUIDataTable
                 // title={"Employee List"}

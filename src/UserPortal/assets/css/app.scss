@@ -9,7 +9,9 @@ img{max-width: 100%;display: block;}
 a{text-decoration: none;}
 ul,li{list-style: none;}
 h3{font-size: 32px;font-family: 'Conv_GothamRounded-Medium';}
-
+h3,h4,h5,h6,p{
+    word-wrap: break-word;
+}
 .header_inner h4,
 h4{font-size: 20px;font-family: 'Conv_GothamRounded-Medium';}
 h5{font-size: 16px;font-family: 'Conv_GothamRounded-Medium';    letter-spacing: -0.2px;}
@@ -45,11 +47,19 @@ body{font-family: 'Rubik', sans-serif;}
         cursor: pointer;
         padding-right: 25px;
     }
-    .dropdown-toggle img {
+    .user-avatar-icon{
         width: 32px;
+        height: 32px;
         display: inline-block;
         margin-right: 10px;
         border-radius: 50%;
+        vertical-align: middle;
+        overflow: hidden;
+    }
+    .user-avatar-icon img {
+        object-fit: cover;
+    width: 100%;
+    height: 100%;
     }
     .dropdown-toggle::after{
         position: absolute;

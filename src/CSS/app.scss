@@ -185,6 +185,17 @@ body {
     }
   }
   
-
-
- 
+.muidatatable-custom tbody tr td {
+    position: relative !important;
+    z-index: 0 !important;
+}
+.surveySlider{
+  display: none;
+}
+.surveySlider.slick-initialized {
+  display: block;
+}
+.Hidden .surveySlider .slick-track,
+.Hidden .surveySlider .slick-slide{
+  width: 100vw !important;
+}
