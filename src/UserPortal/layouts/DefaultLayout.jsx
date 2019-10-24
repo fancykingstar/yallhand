@@ -198,12 +198,12 @@ const DefaultLayout = ({ ...props }) => {
                     <h2 className="menu-header ">
                         {((width <= mobileWidth) ? mopen : open) ? (
                             <Grid container direction="row" justify="center" alignItems="center">
-                                <Grid item xs={3}><img className="org-logo" src={account.img} alt="org logo" /></Grid>
+                                <Grid item xs={3}><div className="org-logo-wrap"><img className="org-logo" src={account.img} alt="org logo" /></div></Grid>
                                 <Grid item xs={9}><span className="org-name">{account.label}</span></Grid>
                             </Grid>
                         ) : (
                                 <Grid container direction="row" justify="center" alignItems="center">
-                                    <Grid item ><img className="org-logo" src={account.img} alt="org logo" /></Grid>
+                                    <Grid item ><div className="org-logo-wrap"><img className="org-logo" src={account.img} alt="org logo" /></div></Grid>
 
                                 </Grid>
                             )}
