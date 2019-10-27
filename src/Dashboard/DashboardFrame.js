@@ -167,7 +167,6 @@ class DashboardFrame extends React.Component {
       <div style={{ paddingRight: 10 }}>
         {createcontent}
         <Header
-          style={{padding: 0, margin: 0}}
           as="h2"
           content="Dashboard"
           subheader="Activities and Information Overview"
@@ -265,11 +264,7 @@ class DashboardFrame extends React.Component {
               <Segment style={{minHeight: 300}}>
                 <h4>Most Viewed</h4>
                 <Grid className="grid-adjustment" divided>
-                {/* <Grid.Row>
-                  <Grid.Column width={13}> <p>"hi there"</p> </Grid.Column>
-                  <Grid.Column> <h4><CountUp duration={1} decimals={0} end={Math.floor(Math.random() * 627) + 3} /></h4> </Grid.Column>
-                </Grid.Row> */}
-                {topContent.length === 0? <span>No Data</span> : topContent}
+                {topContent.length === 0?  <Grid.Row> <Grid.Column width={13}> <p>No Data</p> </Grid.Column> </Grid.Row> : topContent}
                 </Grid>
               </Segment>
             </Grid.Column>

@@ -6,7 +6,7 @@ import { Table, Header,Icon, Segment, List, Rating, Modal} from "semantic-ui-rea
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { UIStore } from "../Stores/UIStore";
-import Slider from "react-slick";
+// import Slider from "react-slick";
 
 import {SurveyStore} from "../Stores/SurveyStore";
 import {TaskStore} from "../Stores/TaskStore";
@@ -41,7 +41,7 @@ export class SurveyAnalytics extends React.Component {
 
   rowSelected = (survey) => {
     this.setState({surveyDetail: survey});
-    this.slider.slickGoTo(1);
+    // this.slider.slickGoTo(1);
   }
 
 
@@ -188,83 +188,85 @@ export class SurveyAnalytics extends React.Component {
   
         </div>
         
+    const listView =    
+    <div>
+    <Header
+   as="h2"
+   content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
+    />
+            <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
+   <div style={{overflowX: "auto", width: "100%"}}>
+   <Table selectable basic="very" >
+     <Table.Header>
+       <Table.Row>
+         <Table.HeaderCell>Title</Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Queries<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}><span>Not Started<SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell></Table.HeaderCell>
+         <Table.HeaderCell />
+       </Table.Row>
+     </Table.Header>
+
+     <Table.Body>
+         {rows}
+     </Table.Body>
+   </Table>
+   </div>
+   </div>
+
+   const detailView =  <div>
+   <Icon
+         name="arrow circle left"
+         color="blue"
+         size="large"
+         onClick={() => this.slider.slickGoTo(0)} alt="Go back"
+       />
+       <br/>
+       <Header as="h2" content={surveyDetail && surveyDetail.label}/>
+
+       <Segment>
+       <List horizontal>
+           <List.Item>
+             <List.Content>
+               <List.Header>Not Started</List.Header>
+               {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._noStart)}%`}
+               <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._noStart === 1? "":"s"})`}</p>
+             </List.Content>
+           </List.Item>
+           <List.Item>
+             <List.Content>
+               <List.Header>Partially Completed</List.Header>
+               {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._partial)}%`}
+               <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._partial === 1? "":"s"})`}</p>
+             </List.Content>
+           </List.Item>
+           <List.Item>
+             <List.Content>
+               <List.Header>Completed</List.Header>
+               {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._completed)}%`}
+               <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._completed === 1? "":"s"})`}</p>
+             </List.Content>
+           </List.Item>
+         </List>
+       </Segment>
+       {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
+       {surveyDetail && this.props.mode === "task" && <Segment> {taskDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
+   
+   </div>
+
 
     return (
   
       <div>
-      
-      <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
-           <div>
-           <Header
-          as="h2"
-          content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
-        />
-                   <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
-          <div style={{overflowX: "auto", width: "100%"}}>
-          <Table selectable basic="very" >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Title</Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Last Sent <span> <SortingChevron onClick={e => this.sort("_updated", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Queries<span><SortingChevron onClick={e => this.sort("_surveys", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Recipients<span><SortingChevron onClick={e => this.sort("_instances", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}><span>Not Started<SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
-                <Table.HeaderCell></Table.HeaderCell>
-                <Table.HeaderCell />
-              </Table.Row>
-            </Table.Header>
 
-            <Table.Body>
-                {rows}
-            </Table.Body>
-          </Table>
-          </div>
-          </div>
-
+        {!this.state.surveyDetail? listView: detailView}
           
-          <div>
-          <Icon
-                name="arrow circle left"
-                color="blue"
-                size="large"
-                onClick={() => this.slider.slickGoTo(0)} alt="Go back"
-              />
-              <br/>
-              <Header as="h2" content={surveyDetail && surveyDetail.label}/>
-
-              <Segment>
-              <List horizontal>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>Not Started</List.Header>
-                      {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._noStart)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._noStart} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._noStart === 1? "":"s"})`}</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>Partially Completed</List.Header>
-                      {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._partial)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._partial} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._partial === 1? "":"s"})`}</p>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header>Completed</List.Header>
-                      {`${this.getPercentage([surveyDetail._noStart, surveyDetail._partial, surveyDetail._completed] ,surveyDetail._completed)}%`}
-                      <p style={{fontSize: ".7em"}}>{`(${surveyDetail._completed} ${surveyDetail.type === "survey"? "Survey":"Task List"}${surveyDetail._completed === 1? "":"s"})`}</p>
-                    </List.Content>
-                  </List.Item>
-                </List>
-              </Segment>
-              {surveyDetail && this.props.mode === "survey" && <Segment> {questionDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
-              {surveyDetail && this.props.mode === "task" && <Segment> {taskDetails(surveyDetail.surveyItems, surveyDetail.anonymous)} </Segment>}
-          </div>
-
-         </Slider>
+         
       </div>
     );
   }

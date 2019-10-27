@@ -102,12 +102,11 @@ class Store {
     //type needs to be "team" or "tag"
     //returns object to transverse valid sub items in tags and teams when displaying to user
     //outputs {0: team, 1: sub-team/tag, 2:sub-team/tag of sub-team/tag}
-
     let teamPath = { 0: "", 1: "", 2: "" };
-    if(type === "team" && id === "global"){
+    if(type === "team" && (id === "global" || this.structure.length === 1)){
       return { 0: "", 1: "", 2: "" }
     }
-    else if(type === "tag" && id === "none"){
+    else if(type === "tag" && (id === "none" || !this.tags.length)){
       return { 0: "", 1: "", 2: "" }
     }
     else if(type === "tag" && id === ""){
