@@ -224,7 +224,7 @@ export class SurveyAnalytics extends React.Component {
          name="arrow circle left"
          color="blue"
          size="large"
-         onClick={() => this.slider.slickGoTo(0)} alt="Go back"
+         onClick={() => this.setState({surveyDetail:""})} alt="Go back"
        />
        <br/>
        <Header as="h2" content={surveyDetail && surveyDetail.label}/>
