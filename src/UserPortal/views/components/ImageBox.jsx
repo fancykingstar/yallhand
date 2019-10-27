@@ -10,16 +10,16 @@ class ImageBox extends React.Component {
         return (
             (box_type === 'announce') ? (
                 <div className={classes}
-                    onClick={()=> this.props.history.push(this.props.url)}
+                    onClick={() => this.props.history.push(this.props.url)}
                 >
-                    <div className="announce_img">
+                    <div className={(this.props.overlayClass ? this.props.overlayClass : "") + " announce_img"}>
                         <a className="settings_icon" href="#/"><img src={constants.SETTING_ICON} alt="setting" /></a>
                         {/* <a className="link_announce" href={((this.props.url) && this.props.url !== '') ? this.props.url : "#/"}> */}
-                            {this.props.user_img && <img src={this.props.user_img} alt={this.props.title} />}
-                            <div className="announce_title">
-                                <h4>{this.props.title}</h4>
-                            </div>
-                            {/* </a> */}
+                        {this.props.user_img && <img src={this.props.user_img} alt={this.props.title} />}
+                        <div className="announce_title">
+                            <h4>{this.props.title}</h4>
+                        </div>
+                        {/* </a> */}
                     </div>
                 </div>) :
                 (box_type === "suggession") ? (

@@ -13,7 +13,7 @@ import ActionSlider from "../components/ActionsSlider";
 import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
-import {sortByUTC} from "../../../SharedCalculations/SortByUTC";
+import { sortByUTC } from "../../../SharedCalculations/SortByUTC";
 
 @inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
@@ -27,11 +27,11 @@ class Home extends React.Component {
       }
    }
 
-   loadFeatured(featured, all, stateKey){
-      if(featured.length) this.setState(stateKey==="annc"? {annc: featured}:{faqs: featured});
+   loadFeatured(featured, all, stateKey) {
+      if (featured.length) this.setState(stateKey === "annc" ? { annc: featured } : { faqs: featured });
       else {
-         const recent = all.length < 7? all : sortByUTC(all, "newest").slice(0, 6)
-         this.setState(stateKey==="annc"? {annc: recent}:{faqs: recent});
+         const recent = all.length < 7 ? all : sortByUTC(all, "newest").slice(0, 6)
+         this.setState(stateKey === "annc" ? { annc: recent } : { faqs: recent });
       }
    }
 
@@ -40,9 +40,9 @@ class Home extends React.Component {
       this.setState({
          suggestedActions: PostData.suggestedActions
       })
-      
-      const featured_annc = AnnouncementsStore.allAnnouncements.filter(annc=>annc.featured);
-      const featured_faq = PoliciesStore.allPolicies.filter(annc=>annc.featured);
+
+      const featured_annc = AnnouncementsStore.allAnnouncements.filter(annc => annc.featured);
+      const featured_faq = PoliciesStore.allPolicies.filter(annc => annc.featured);
       this.loadFeatured(featured_annc, AnnouncementsStore.allAnnouncements, "annc");
       this.loadFeatured(featured_faq, PoliciesStore.allPolicies, "faqs");
 
@@ -152,6 +152,7 @@ class Home extends React.Component {
                                           main_class={"auto-col"}
                                           user_img={item.img}
                                           title={item.label}
+                                          overlayClass={"box-overlay-color-" + index}
                                           key={`post-list-key ${index}`} />
                                     })}
                                  </Slider>
@@ -165,6 +166,7 @@ class Home extends React.Component {
                                              url={`/portal/learn-detail/${item.policyID}`}
                                              key={index}
                                              main_class={"auto-col"}
+                                             overlayClass={"box-overlay-color-" + index}
                                              user_img={item.img}
                                              title={item.label} />
                                        })}
@@ -175,7 +177,7 @@ class Home extends React.Component {
                         </div>
 
 
-{/* 
+                        {/* 
                         <div className="section_title shadow">
                            <h4>Suggested Actions</h4>
                         </div>

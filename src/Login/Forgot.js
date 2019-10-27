@@ -4,6 +4,7 @@ import { apiCall } from "../DataExchange/Fetch"
 import { QLogo } from "../Assets/Graphics/QLogo";
 import { Divider, Grid, Message } from "semantic-ui-react";
 import { Form, Icon  } from "semantic-ui-react"
+import toast from '../YallToast'
 import "./style.css";
 
 
@@ -57,6 +58,7 @@ class Forgot extends React.Component {
       const { history } = this.props;
       if (res.ko) return this.setState({errorMsg: 'Your email or validation code is wrong'});
       this.setState({errorMsg: null, codeOK: true});
+      toast.success("Your password has been changed", {hideProgressBar: true, closeOnClick: false}) 
       history.push('/login')
     })
   }
