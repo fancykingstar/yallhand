@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from "mobx-react";
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col, Button} from 'reactstrap';
+import { Dropdown } from 'semantic-ui-react';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 import Layout from '../../layouts/DefaultLayout';
@@ -14,6 +15,10 @@ import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 import { sortByUTC } from "../../../SharedCalculations/SortByUTC";
+import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
+import StaffDetail from '../components/StaffDetail';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 @inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
@@ -134,13 +139,74 @@ class Home extends React.Component {
                         </div>
                         <div className="page_content shadow">
 
+                        <div className={"servay_group"} key={`survey_q 323`}>
+                           <div className="inner_page_content_title">
+                              <h5>Ticketing</h5>
+                              <p>yesterday</p>
+                     
+                           </div>
+                           <div className="survey_group_questions">
+                          
+                           <Row>
+                              <Col md={3}>
+                              <div style={{width: "300px", padding: 20}}>
+                              <StaffDetail
+                                    profile={"https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png"}
+                                    name={"Spongbob S."}
+                                    designation={"Assistant Manager"}
+                                    department={""}
+                                    location={"Pineapple Under The Sea"}
+                                    contact={"555-555-5555"}
+                                    socials={[]} />
+                                      </div>
+                                    </Col>
+                                    <Col >
+                                  
+                                    <div style={{width: "600px", padding: 20}}>
+                                    <p><span style={{fontWeight: 800}}>Report and assign to IT support agent</span></p>
+                                    <p style={{fontSize: "1em"}}><span style={{fontWeight: 800}}>Describe the issue: </span>Emails are not leaving my outbox</p>
+                                 <p style={{fontSize: "1em"}}><span style={{fontWeight: 800}}>Category: </span>Outlook/Email</p>
+                                 </div>
+                                 <div style={{width: "300px", padding: 20, marginTop: -10}}>                        
+                                  <p style={{fontSize: "1em"}}><span style={{fontWeight: 800}}> Choose Action: </span></p>
+                                     <Dropdown style={{marginTop: -10}} selection defaultValue={0} options={[{text: "Mark as closed", value: 0},{text: "Assign To User", value: 1},{text: "Report Issue", value: 2}]} />                   
+                                  
+                                     <div></div>
+                                 </div>
+                              </Col>
+                              
+                     
+                   
+  
+                        
+                           </Row>
+                       
+                                <Row>
+                              <Col>
+                        
+                           </Col>
+                           
+                              </Row>
+                          
+                     
+                            
+                       
+                     <div style={{padding: "25px 25px 15px 25px"}}>
+             
+                     <Button outline color="primary" size="sm" onClick={()=>submit()}>
+                     Submit <DoneRoundedIcon fontSize="small"/>
+                     </Button>
+                     </div> 
+                     </div>
+                        </div>
+{/* 
                            {(TaskStore.allTasks.length) ? TaskStore.allTasks.map((item, index) => {
                               return <Task data={item} index={index} />
                            }) : ('')}
 
                            {(SurveyStore.allSurveys.length) ? SurveyStore.allSurveys.map((item, index) => {
                               return <Survey data={item} index={index} />
-                           }) : ('')}
+                           }) : ('')} */}
 
                            <div className="announce_component">
                               <h6>Announcements</h6>
@@ -202,7 +268,7 @@ class Home extends React.Component {
                      </Col> */}
                   </Row>
                </Container>
-               {/* <ActionSlider /> */}
+               <ActionSlider />
             </div>
 
          </Layout>

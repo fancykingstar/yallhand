@@ -52,16 +52,7 @@ class ActionsForm extends React.Component {
                     <div className="announce_component faq_announce slick-align-left">
                         <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
                             <Row form>
-                                <Col md={3}>
-                                    <FormGroup>
-                                        <Label for="colleague">Question Raised By</Label>
-                                        <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
-                                            <option>One employee</option>
-                                            <option>Multiple employees</option>
-                                            <option>Management</option>
-                                        </Input>
-                                    </FormGroup>
-                                </Col>
+                            
                                 {/* <Col md={3}>
                                     <FormGroup>
                                         <Label for="props_for">Give props for</Label>
@@ -76,14 +67,24 @@ class ActionsForm extends React.Component {
                                 </Col> */}
                                 <Col>
                                     <FormGroup>
-                                        <Label for="description">Question</Label>
+                                        <Label for="description">Describe the issue</Label>
                                         <InputGroup>
-                                            <Input placeholder="Enter your message here…" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
+                                            <Input placeholder="" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
                                             {/* <InputGroupAddon addonType="append">
                                                 <QuestionIcon className="right-icon" />
                                             </InputGroupAddon> */}
                                         </InputGroup>
 
+                                    </FormGroup>
+                                </Col>
+                                <Col md={3}>
+                                    <FormGroup>
+                                        <Label for="colleague">Category</Label>
+                                        <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
+                                            <option>Outlook/Mail</option>
+                                            <option>Multiple employees</option>
+                                            <option>Management</option>
+                                        </Input>
                                     </FormGroup>
                                 </Col>
                             </Row>

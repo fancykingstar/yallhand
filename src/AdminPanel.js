@@ -11,7 +11,9 @@ import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
+import TicketingFrame from "./Ticketing/TicketingFrame";
 import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
+import TicketingNewEdit from "./Ticketing/TicketingNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -103,6 +105,8 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks" component={TaskFrame} exact/>
+            <Route path="/panel/ticketing" component={TicketingFrame} exact/>
+            <Route path="/panel/ticketing/manage-ticket" render={props => <TicketingNewEdit {...props} />} exact />
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>

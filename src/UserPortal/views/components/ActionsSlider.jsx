@@ -9,6 +9,7 @@ import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
 import Star from '../../assets/images/star.svg';
+import ImportantDevicesRoundedIcon from '@material-ui/icons/ImportantDevicesRounded';
 
 import AskManagement from '../../assets/images/actions/askManagement.svg';
 import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
@@ -115,30 +116,16 @@ class ActionSlider extends React.Component {
                         <IconBox
                            key={"i1"}
                            user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                        {/* <IconBox
-                           key={"AA"}
+                           title={"Report a computer issue"}
+                           showAction={() => { this.showActionForm({ label: "Report a computer issue", img: Star }) }} 
+                        />
+                          <IconBox
+                           key={"i1"}
                            user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                         */}
-                        {/* {(generalActions) ? generalActions.map((item, index) => {
-                              var img = item.img;
-                              // set default img if not return from data
-                              if (index === 0) { img = Star; }
-                              if (index === 1 || index === 4) { img = RefereCandidate; }
-                              if (index === 2 || index === 7) { img = AskManagement; }
-                              if (index === 3) { img = anonymousReport; }
-                              if (index === 5) { img = compensationReview; }
-                              if (index === 6 || index >= 8) { img = reportSomething; }
-                              return <IconBox
-                                 key={index}
-                                 user_img={img}
-                                 title={item.label}
-                                 showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
-                           }) : ('')} */}
-                        {/* </Slider> */}
+                           title={"Request for information"}
+                           showAction={() => { this.showActionForm({ label: "Request for information", img: Star }) }} 
+                        />
+
                      </div>
                   </div>
                </Container>
@@ -148,6 +135,7 @@ class ActionSlider extends React.Component {
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
                   />
+                  
                </Container>
             </Slider >
          </>

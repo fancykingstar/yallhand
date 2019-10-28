@@ -13,6 +13,7 @@ import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
+import ConfirmationNumberRoundedIcon from '@material-ui/icons/ConfirmationNumberRounded';
 
 @inject("UIStore", "UserStore")
 @observer
@@ -84,6 +85,12 @@ class NavItems extends React.Component {
                   <TocRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Tasks" />
+          </ListItem>
+          <ListItem button style={isActive("ticketing")} button onClick={e => handleClick("ticketing")} >
+            <ListItemIcon>
+                  <ConfirmationNumberRoundedIcon/>
+              </ListItemIcon>
+             <ListItemText primary="Ticketing" />
           </ListItem>
           <ListItem button style={isActive("email")} button onClick={e => handleClick("email")} >
             <ListItemIcon>
