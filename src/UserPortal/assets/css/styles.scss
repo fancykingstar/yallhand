@@ -342,6 +342,9 @@ button.load-more {
       max-width: 100%;
     }
 }
+.section_title .small-icon{
+  margin-right: 10px;
+}
 .pretty-checkbox {
   position: relative;
   display: inline-block;
@@ -454,6 +457,17 @@ button.load-more {
     }
   }
 }
+
+.announce_box .box-overlay-color-0:after{background-color: rgba(55, 69, 255, 0.8) !important;}
+.announce_box .box-overlay-color-1:after{background-color: rgba(0, 116, 177, 0.8) !important;}
+.announce_box .box-overlay-color-2:after{background-color: rgba(114, 101, 214, 0.8) !important;}
+.announce_box .box-overlay-color-3:after{background-color: rgba(35, 195, 201, 0.8) !important;}
+.announce_box .box-overlay-color-4:after{background-color: rgba(71, 132, 246, 0.8) !important;}
+.announce_box .box-overlay-color-5:after{background-color: rgba(139, 61, 238, 0.8) !important;}
+.announce_box .box-overlay-color-6:after{background-color: rgba(212, 36, 222, 0.8) !important;}
+.announce_box .box-overlay-color-7:after{background-color: rgba(218, 23, 177, 0.8) !important;}
+.announce_box .box-overlay-color-8:after{background-color: rgba(67, 8, 136, 0.8) !important;}
+.announce_box .box-overlay-color-9:after{background-color: rgba(22, 129, 218, 0.8) !important;}
 
 /** Responsive fix*/
 @media screen and (min-width: 1366px){

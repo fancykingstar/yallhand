@@ -75,6 +75,7 @@ class ContentList extends React.Component {
                            <ImageBox
                               url={`/portal/${mode === "announcement" ? "announcement" : "learn-detail"}/${item[mode === "announcement" ? "announcementID" : "policyID"]}`}
                               main_class={"auto-col"}
+                              overlayClass={"box-overlay-color-" + index}
                               user_img={item.img}
                               title={item.label}
                               key={`post-list-key ${index}`} />

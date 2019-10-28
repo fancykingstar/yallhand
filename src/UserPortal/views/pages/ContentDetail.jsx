@@ -35,7 +35,7 @@ class ContentDetail extends React.Component {
       const content = await urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
       return await this.setState({
          PostData: content,
-         // qaData: ContentData.questionAnswer,
+         qaData: ContentData.questionAnswer,
          contentID: content[`${mode}ID`],
          mode
       });
@@ -74,12 +74,12 @@ class ContentDetail extends React.Component {
             <div className="">
                <div className="">
                   {PostData ? (<PostDetails data={this.state} update={payload=>this.setState(payload)}/>) : ("")}
-                  {/* 
-                  <div className="page_content_bg">
+             
+                  {/* <div className="page_content_bg">
                      <div className="smallContainer">
-                        <QuestionAnswer qaData={qaData} />
+                        <QuestionAnswer qaData={this.state.qaData} />
                      </div>
-                  </div> */}
+                  </div>  */}
                   {/* <div className="announcements-wrap">
                      <div className="smallContainer">
                         <div className="title-box">More from Announcements</div>

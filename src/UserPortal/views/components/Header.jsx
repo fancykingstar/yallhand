@@ -1,13 +1,13 @@
 import React from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import {withRouter} from 'react-router';
+import { withRouter } from 'react-router';
 import { Col, Button } from 'reactstrap';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import {UserStore} from '../../../Stores/UserStore';
-import {UIStore} from "../../../Stores/UIStore";
+import { UserStore } from '../../../Stores/UserStore';
+import { UIStore } from "../../../Stores/UIStore";
 import { deleteUser } from "../../../DataExchange/Fetch";
 
 
@@ -18,13 +18,13 @@ class Header extends React.Component {
       this.toggleProfileMenu = this.toggleProfileMenu.bind(this);
    }
 
-   logout () {
+   logout() {
       const { UserStore, UIStore } = this.props
       deleteUser()
-      if(UIStore.isScreenLoading) UIStore.toggleScreenLoading()
+      if (UIStore.isScreenLoading) UIStore.toggleScreenLoading()
       UserStore.isAuthenticated = false;
       this.props.history.push("/");
-    }
+   }
 
    componentDidMount() {
 
@@ -35,10 +35,10 @@ class Header extends React.Component {
          profileMenuOpen: !prevState.profileMenuOpen
       }));
    }
-   render() { 
+   render() {
       const pageTitle = this.props.pageTitle;
       const user = this.state.user;
-  
+
       return (
          <div className="page-header">
             <div className="container">
@@ -58,17 +58,17 @@ class Header extends React.Component {
                         </div>
                         <div className="header_right">
                            <div className="header_search">
-                             {/* <SearchFrame/> */}
+                              {/* <SearchFrame/> */}
                               <div className="header_select">
                                  <Dropdown isOpen={this.state.profileMenuOpen} toggle={this.toggleProfileMenu}>
                                     <DropdownToggle tag="a" caret>
-                                       {user ? <img src={user.img} alt="" /> : <AccountCircleIcon />}
+                                       <div className="user-avatar-icon">{user ? <img src={user.img} alt="" /> : <AccountCircleIcon />}</div>
                                        {user ? user.displayName : "User"}
                                     </DropdownToggle>
                                     <DropdownMenu right>
                                        <DropdownItem header>{UserStore.user.displayName_full}</DropdownItem>
-                                       <DropdownItem onClick={()=>this.props.history.push("/portal/settings")}>Settings...</DropdownItem>
-                                       <DropdownItem onClick={()=>this.logout()}>Log Out</DropdownItem>
+                                       <DropdownItem onClick={() => this.props.history.push("/portal/settings")}>Settings...</DropdownItem>
+                                       <DropdownItem onClick={() => this.logout()}>Log Out</DropdownItem>
                                     </DropdownMenu>
                                  </Dropdown>
                               </div>

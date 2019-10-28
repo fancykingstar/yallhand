@@ -5,6 +5,7 @@ import { Input } from "../SharedUI/Input";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
+import { TeamStore } from "../Stores/TeamStore";
 import { Col, Row, } from 'reactstrap';
 import { EligibleUsersByTeamTag} from "../SharedCalculations/EligibleUsersByTeamTag";
 
@@ -28,8 +29,8 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
            <Col xl style={resPadding}>
             <Input placeholder="jane@placethatwework.co" value={email} label="Email Address:" onChange={(e, v) => setField({email: v.value})}/>
            </Col>
-           <Col xl style={resPadding}><TeamSelect label="Choose Team:" value={teamID} outputVal={e => setField({teamID: e.value, teamName: e.text})}/></Col>
-           <Col xl style={resPadding}><TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => setField({tagID: e})}/></Col>
+           {TeamStore.structure.length > 1 && <Col xl style={resPadding}><TeamSelect label="Choose Team:" value={teamID} outputVal={e => setField({teamID: e.value, teamName: e.text})}/></Col>}
+           {TeamStore.tags.length > 0 && <Col xl style={resPadding}><TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => setField({tagID: e})}/></Col>}
        <Col xl style={resPadding}><Form.Dropdown
           label="Reports to (optional):"
           fluid
