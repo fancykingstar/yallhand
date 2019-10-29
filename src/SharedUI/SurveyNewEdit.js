@@ -11,6 +11,7 @@ import BackButton from "../SharedUI/BackButton";
 import {survey, surveyEdit, schedule} from "../DataExchange/PayloadBuilder";
 import {createSurvey, modifySurvey, createSchedule, deleteSchedule} from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
+import { TeamStore } from "../Stores/TeamStore";
 
 import moment from "moment";
 import _ from "lodash";
@@ -59,10 +60,8 @@ class SurveyNewEdit extends React.Component {
 
   validate = () => {
     const {label, targetType, targetConfig, deadline, surveyItems, instances} = this.state;
-    console.log("instances", instances)
     const review = {
       general: Boolean(label && surveyItems.length),
-      prevLaunch: Boolean(!instances.length)
       // surveyitems: Boolean(surveyItems.filter(i => !i.valid).length === 0)
     }
     return Object.values(review).filter(i=>!i).length === 0
@@ -137,15 +136,24 @@ class SurveyNewEdit extends React.Component {
 
   updateSurvey = async (active=null) => {
     if (active !== null) await this.setState({active});
-    if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
-    else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
-    else {
-     await createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+    
+    if (active === false) {
+      let newResponses = this.state.responses_by_instance.slice();
+      this.state.instances.forEach(instance=> {
+        let found = newResponses.filter(res => res.instanceID === instance.instanceID);
+        if(found.length) newResponses.push(Object.assign(found[0], {completed: true}))
+        else newResponses.push(Object.assign({}, {instanceID: instance.instanceID, completed: true}))
+      })
+      await modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode, responses_by_instance: newResponses});
     }
+
+    else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
+    else await createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
     if (active !== null) {
       if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
       else if(!active && this.state.deadline) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
     }
+    if(active) this.props.history.push(`/panel/${this.props.mode}s`);
 
   }
 
@@ -187,9 +195,11 @@ class SurveyNewEdit extends React.Component {
           </Form>
               {!this.state.active &&
               <>
+              {TeamStore._isTargetingAvail &&
               <div style={{ paddingTop: "10px" }}>
                 <ChooseTargeting label="Survey" output={val=>this.setState(val)} input={this.state}/>
               </div>
+              }
               <div style={{ paddingTop: "10px" }}>
                 <span style={{ fontWeight: 800 }}>Deadline</span>
               </div>

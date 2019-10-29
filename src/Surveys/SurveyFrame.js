@@ -10,6 +10,7 @@ import { AccountStore} from "../Stores/AccountStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 class SurveyFrame extends React.Component {
+  
   getMuiTheme = () =>
     createMuiTheme({
       overrides: {

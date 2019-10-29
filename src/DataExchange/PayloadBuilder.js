@@ -480,8 +480,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   };
 
   export const surveyEdit = ( type, data ) => { 
-    let instances = [];
-    if (data.active) instances = generateInstances(data)
+    let instances = data.instances.length? data.instances : [];
+    if (data.active) instances = [...instances, ...generateInstances(data)];
     let buildObj = Object.assign(data, {instances, type});
     Object.keys(data).forEach(key => {if(key[0] == "_") delete buildObj[key]}) 
     return _.extend({}, base(), buildObj)

@@ -147,8 +147,8 @@ export const history = async () => {
 }
 
 export const surveys = async (accountID, userID) => {
-  await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}).then(r => r.json()).then(result => {
-    SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
-    TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
-  });
+  const result = await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}) .then(r => r.json())
+  await SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
+  await TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
+  return
 }

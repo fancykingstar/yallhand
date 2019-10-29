@@ -36,6 +36,7 @@ class ManageContent extends React.Component {
 
   }
   componentWillUnmount() {
+    console.log("unmounting")
     const {DataEntryStore} = this.props
     DataEntryStore.reset("contentmgmt")
 
@@ -51,7 +52,6 @@ class ManageContent extends React.Component {
       ) {
         if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.contentID))) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
-          const obj = Object.assign( {}, PoliciesStore._getPolicy(UIStore.content.policyID) );
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
           DataEntryStore.set("contentmgmt", "img", obj.img);
@@ -310,6 +310,7 @@ class ManageContent extends React.Component {
                 <Channel 
                   mode={this.mode}
                   defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                  submitButton
                 />
 
                 {DataEntryStore.contentmgmt.everPublished?

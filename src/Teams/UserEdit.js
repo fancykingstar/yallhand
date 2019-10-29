@@ -3,9 +3,10 @@ import { Button, Header, Image, Modal, Form } from "semantic-ui-react";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AdminEdit } from "./AdminEdit";
-import { modifyUser} from "../DataExchange/Up";
+import { modifyUser,cancelInvite} from "../DataExchange/Up";
 import { Offboard } from "./Offboard";
 import {AccountStore} from "../Stores/AccountStore";
+
 
 
 export class UserEdit extends React.Component {
@@ -21,6 +22,11 @@ export class UserEdit extends React.Component {
       await modifyUser(Object.assign(this.state, {userID}));
       this.props.close()
     }
+
+    const cancelInv = async (id) => {
+        await cancelInvite(id);
+        this.props.close();
+    };
 
     const displayAvatar = !img? null :
     <Modal closeIcon trigger={
@@ -65,16 +71,19 @@ export class UserEdit extends React.Component {
               </React.Fragment>}
               <Form.Input
                 label="Email"
+                disabled={Boolean(this.props.data.code)}
                 defaultValue={email}
                 onChange={(e, val) => this.setState({email: val.value})}
               />
               <TeamSelect
+               disabled={Boolean(this.props.data.code)}
                 label=""
                 defaultVal={teamID}
                 outputVal={val =>
                   this.setState({teamID: val.value})}
               />
               <TagSelect
+               disabled={Boolean(this.props.data.code)}
                 label=""
                 defaultVal={tags}
                 outputVal={val =>
@@ -82,6 +91,7 @@ export class UserEdit extends React.Component {
                 }
               />
               <Form.Dropdown
+               disabled={Boolean(this.props.data.code)}
               label="Reports to (optional):"
               fluid
               search
@@ -94,6 +104,7 @@ export class UserEdit extends React.Component {
               <Form.Group>
          
                 <Form.Radio
+                 disabled={Boolean(this.props.data.code)}
                   toggle
                   defaultChecked={isAdmin} 
                   onChange={e =>
@@ -109,10 +120,14 @@ export class UserEdit extends React.Component {
         <Modal.Actions>
           <div style={{ float: "right" }}>
             {" "}
-           <Offboard user={userID} account={AccountStore.account.accountID} close={()=>this.props.close()}/>
+            {
+              this.props.data.code? <Button onClick={()=>cancelInv(this.props.data.id)} negative>Cancel Invite</Button> :
+             <Offboard user={userID} account={AccountStore.account.accountID} close={()=>this.props.close()}/>
+            }
+  
           </div>
           <div style={{ float: "left", paddingBottom: 10 }}>
-            <Button onClick={() => handleUpdate()} primary content="Update" />
+            <Button disabled={Boolean(this.props.data.code)} onClick={() => handleUpdate()} primary content="Update" />
             <Button onClick={()=>this.props.close()}>Cancel</Button>
           </div>
         </Modal.Actions>

@@ -78,12 +78,7 @@ export class AdminPanel extends React.Component {
         <Responsive {...Responsive.onlyComputer} fireOnMount={true} onUpdate={(e, val) => checkMobile(val.getWidth())}>
         <SideBar />
         </Responsive>
-        {/* <Transition visible={UIStore.responsive.mobileNav} animation='fade right' duration={500}>
-          <div> 
-          <div style={{float: "left"}}> <SideBar /> </div>
-          <div style={{height: "100vh", width: "100vw"}} onClick={e => UIStore.set("responsive", "mobileNav", false)}/> 
-        </div>
-        </Transition> */}
+
 
      {mobileNavDisplay}
 

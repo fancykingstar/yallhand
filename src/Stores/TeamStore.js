@@ -206,12 +206,17 @@ class Store {
 
    @computed
    get _getTeamsAsOptions(){
-    return TeamStore.structure.map(team => ({
+    return this.structure.map(team => ({
       key: team.teamID + giveMeKey(),
       text: team.label,
       value: team.teamID,
       disabled: team.depth === TeamControl.maxDepth ? true : false
     }));
+   }
+
+   @computed
+   get _isTargetingAvail(){
+     return (this.structure.length > 1 || this.tags.length > 0);
    }
 
 }

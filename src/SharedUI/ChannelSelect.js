@@ -29,11 +29,14 @@ export class ChannelSelect extends React.Component {
       this.setState({addField: false, addValue: ""})
     }
 
+
     return (
       <React.Fragment>
         {!addField &&
         <>
         <span>{label}</span>
+        <Form>
+        <Form.Group>
         <Form.Select
             search
             selection
@@ -43,6 +46,8 @@ export class ChannelSelect extends React.Component {
             onChange={(e, val) => listenForAdd(val.value)}
             style={{ minWidth: 200 }}
           />
+             {this.props.submitButton && <Form.Button onClick={()=>this.props.submit()}>Submit</Form.Button>}
+             </Form.Group></Form>
           </>
         }
         {

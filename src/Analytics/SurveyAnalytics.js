@@ -91,6 +91,7 @@ export class SurveyAnalytics extends React.Component {
           <Table.Cell >{survey._noStart}</Table.Cell>
           <Table.Cell >{survey._partial}</Table.Cell>
           <Table.Cell >{survey._completed}</Table.Cell>
+          <Table.Cell >{survey._cancelled}</Table.Cell>
           <Table.Cell >{survey.instances.length === 0 || !Math.max(...survey.instances.map(i=>i.deadline)) ? "None" : <TimeAgo date={Math.max(...survey.instances.map(i=>i.deadline))} />}</Table.Cell>
           </Table.Row>
         )
@@ -206,6 +207,7 @@ export class SurveyAnalytics extends React.Component {
          <Table.HeaderCell style={{whiteSpace:"nowrap"}}><span>Not Started<SortingChevron onClick={e => this.sort("_noStart", e)}/></span></Table.HeaderCell>
          <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Partial<span><SortingChevron onClick={e => this.sort("_partial", e)}/></span></Table.HeaderCell>
          <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Completed <span><SortingChevron onClick={e => this.sort("_completed", e)}/></span></Table.HeaderCell>
+         <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Cancelled <span><SortingChevron onClick={e => this.sort("_cancelled", e)}/></span></Table.HeaderCell>
          <Table.HeaderCell style={{whiteSpace:"nowrap"}}>Deadline <span><SortingChevron onClick={e => this.sort("_deadline", e)}/></span></Table.HeaderCell>
          <Table.HeaderCell></Table.HeaderCell>
          <Table.HeaderCell />

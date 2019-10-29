@@ -4,13 +4,19 @@ import { Header, Segment, Form, Button, Message, Icon, Input } from "semantic-ui
 import { FeaturedAvatar} from "../SharedUI/ManageContent/FeaturedAvatar";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
-import { userSettingsEdit} from "../DataExchange/PayloadBuilder"
-import { modifyUser } from "../DataExchange/Up"
+import { userSettingsEdit} from "../DataExchange/PayloadBuilder";
+import { modifyUser } from "../DataExchange/Up";
+import { apiCall }from "../DataExchange/Fetch";
+import toast from '../YallToast';
 
 
 @inject("UserStore", "DataEntryStore")
 @observer
 export class UserSettings extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={pwd1: "", pwd2: "", changePassword: false, errorMsg:"",  }
+  }
   componentDidMount() {
     const { DataEntryStore, UserStore } = this.props;
     DataEntryStore.set("userSettings", "img", UserStore.user.img)
@@ -22,6 +28,29 @@ export class UserSettings extends React.Component {
     window.scrollTo(0, 0);
     
   }
+
+  isInvalidPassword (value) {
+    return !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/.test(String(value)))
+  }
+
+  isPasswordNotEqual () {
+    return this.state.pwd1 !== this.state.pwd2
+  }
+
+  async validatePwd () {
+    const {UserStore} = this.props;
+    const { pwd1, pwd2 } = this.state
+    if (this.isInvalidPassword(pwd1)) return this.setState({errorMsg: 'New password must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character'});
+    if (this.isPasswordNotEqual(pwd2)) return this.setState({errorMsg: 'Confirm new password is not equal to New password'});
+    await apiCall(`/users/reset`, 'POST', {password: pwd1, email:UserStore.user.email}).then((res) => res.json()).then(res => {
+      const { history } = this.props;
+      if (res.ko) return this.setState({errorMsg: 'Your email or validation code is wrong'});
+      this.setState({errorMsg: null, changePassword: false});
+      toast.success("Your password has been changed", {hideProgressBar: true, closeOnClick: false}) 
+      
+    })
+  }
+  
   render() {
     const { DataEntryStore, UserStore } = this.props;
     const timezones = require("../TemplateData/timezones.json")
@@ -175,6 +204,7 @@ export class UserSettings extends React.Component {
         
         <Segment>
           <Header>Email and Security</Header>
+          {!this.state.changePassword?
           <Form>
           <Form.Group>
               <Form.Input
@@ -185,8 +215,22 @@ export class UserSettings extends React.Component {
               />
            
               </Form.Group>
-              <Form.Button primary>Change Password</Form.Button>
+              <Form.Button primary onClick={()=>this.setState({changePassword: true})}>Change Password</Form.Button>
               </Form>
+          :
+          <>
+            <Form>
+              <Form.Group>
+              <Form.Input icon="key" type="password"  label="New password" onChange={(e) => this.setState({pwd1: e.target.value})}/>
+              <Form.Input icon="key" type="password"  label="Confirm new password" onChange={(e) => this.setState({pwd2: e.target.value})}/>
+          
+              </Form.Group>
+              <Button primary size="small"  onClick={e =>  this.validatePwd() }>Submit</Button>
+              <Button  size="small"  onClick={e =>  this.setState({pwd1:"", pwd2:"", changePassword: false}) }>Cancel</Button>
+            </Form>
+            {this.state.errorMsg && <div style={{maxWidth: 350, paddingTop: 10}}><Message icon="warning" content={this.state.errorMsg} negative/></div>}
+          </>
+          }
         </Segment>
         
         <div style={{height: 100}}></div>

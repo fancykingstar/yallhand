@@ -24,7 +24,7 @@ import { content, contentEdit, contentHistory } from "../../DataExchange/Payload
 import toast from "../../YallToast"
 import _ from "lodash";
 
-@inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore")
+@inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore", "TeamStore")
 @observer
 class VariationContent extends React.Component {
   constructor(props){
@@ -70,7 +70,7 @@ class VariationContent extends React.Component {
     
     if (isNewContent) {
       (isPolicy ? createPolicy(content(this.state)) : createAnnouncement(content(this.state))).then(res => {
-        if (isPolicy) PoliciesStore.pushPolicies(res);
+        if (isPolicy)  PoliciesStore.pushPolicies(res);
         else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
         this.reset();
@@ -82,7 +82,7 @@ class VariationContent extends React.Component {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       await this.reset();
-        history.push(`${path}${UIStore.content[mode + "ID"]}`);
+      history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
 
@@ -95,7 +95,7 @@ class VariationContent extends React.Component {
   }
 
   render() {
-    const { DataEntryStore, UIStore } = this.props;
+    const { DataEntryStore, UIStore, TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
     const { _options } = this.state;
@@ -148,10 +148,12 @@ class VariationContent extends React.Component {
         <Wysiwyg loadContent={content.variations? vari[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
         {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
         <div>
+          {TeamStore._isTargetingAvail &&
           <Row>
             <Col>
              <div style={{ paddingTop: "10px" }}>
               <ChooseTargeting
+                noPass
                 NoSelectUsers 
                 label={mode} 
                 input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
@@ -160,6 +162,7 @@ class VariationContent extends React.Component {
             </div>
             </Col>
           </Row>
+          }
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
             <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
