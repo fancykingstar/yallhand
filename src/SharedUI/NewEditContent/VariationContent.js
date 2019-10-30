@@ -70,8 +70,6 @@ class VariationContent extends React.Component {
     
     if (isNewContent) {
       (isPolicy ? createPolicy(content(this.state)) : createAnnouncement(content(this.state))).then(res => {
-        if (isPolicy)  PoliciesStore.pushPolicies(res);
-        else AnnouncementsStore.pushAnnouncements(res);
         const id = res[typeId];
         this.reset();
         history.push(`${path}${res[id]}`); 

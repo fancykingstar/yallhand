@@ -513,14 +513,28 @@ body{font-family: 'Rubik', sans-serif;}
     }
 }
 .PostDetailContent{
-    p{
+    ol {
+        li {
+            display:list-item;
+            list-style-type: decimal;
+        }
+    }
+    ul {
+        li {
+            display:list-item;
+            list-style-type: disc;
+        }
+    }
+
+    li { display: block; }
+    p, li {
         font-size: 20px;
         line-height: 28px;
         color: #0f141a;
         
     }
     @media(max-width: 767px) {
-        p {
+        p, li {
             font-size: 16px;line-height: 20px;
         }
     }
