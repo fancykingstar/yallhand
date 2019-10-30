@@ -95,16 +95,16 @@ class VariationContent extends React.Component {
   }
 
   render() {
-    const { DataEntryStore, UIStore, TeamStore } = this.props;
+    const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
-    if (DataEntryStore.content.isNew) attachedStyle.pointerEvents = "none";
+    if (isNewContent) attachedStyle.pointerEvents = "none";
 
-    const attachFiles = DataEntryStore.content.isNew? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
-    :  <Segment disabled={DataEntryStore.content.isNew}>
+    const attachFiles = isNewContent? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
+    :  <Segment disabled={isNewContent}>
     <AttachedFiles mode={mode}  />
   </Segment>
 
@@ -127,7 +127,7 @@ class VariationContent extends React.Component {
           />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
-          {DataEntryStore.content.isNew ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
+          {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
 
         <TextField

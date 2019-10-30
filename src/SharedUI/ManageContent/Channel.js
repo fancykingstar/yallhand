@@ -20,7 +20,6 @@ export class Channel extends React.Component {
         }
 
         const updateContent = async () => {
-          console.log("acctid", )
           return this.mode === "policy"? await modifyPolicy({accountID:AccountStore.account.accountID, policyID: UIStore.content.policyID, chanID: DataEntryStore.contentmgmt.settingsChannel}) : modifyAnnouncement({accountID:AccountStore.account.accountID, announcementID: UIStore.content.announcementID, chanID: DataEntryStore.contentmgmt.settingsChannel});
         }
 
@@ -36,7 +35,6 @@ export class Channel extends React.Component {
               placeholder="choose channel..."
               outputVal={val => echoState(val)}
             />
-            {DataEntryStore.contentmgmt.settingsChannel}
         </div>
       </Segment>
         )

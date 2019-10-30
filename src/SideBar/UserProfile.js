@@ -89,7 +89,7 @@ class UserProfile extends React.Component {
         </div>
         <div className="UserName">
           <div>
-            <h4>{UserStore.user && UserStore.user.displayName_full}</h4>
+            <h4>{UserStore.user && UserStore.user.displayName}</h4>
           </div>
         </div>
       </div>
