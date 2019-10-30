@@ -36,7 +36,6 @@ class ManageContent extends React.Component {
 
   }
   componentWillUnmount() {
-    console.log("unmounting")
     const {DataEntryStore} = this.props
     DataEntryStore.reset("contentmgmt")
 
@@ -50,7 +49,8 @@ class ManageContent extends React.Component {
         this.props.match.params.contentID !== UIStore.content.policyID ||
         DataEntryStore._isReset("contentmgmt")
       ) {
-        if (!_.isEmpty(PoliciesStore._getPolicy(this.props.match.params.contentID))) {
+        const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
+        if (!_.isEmpty(obj)) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
           UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
           DataEntryStore.set("contentmgmt", "label", obj.label);
