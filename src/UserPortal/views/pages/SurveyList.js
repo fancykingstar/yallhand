@@ -3,6 +3,7 @@ import Layout from '../../layouts/DefaultLayout';
 import {Survey} from "../components/Survey";
 import {SurveyStore} from "../../../Stores/SurveyStore";
 import Paper from '@material-ui/core/Paper';
+import { EmptyPlaceholder } from '../components/EmptyPlaceholder';
 
 
 class SurveyList extends React.Component {
@@ -33,7 +34,7 @@ class SurveyList extends React.Component {
                               <Paper style={{padding: 20, borderRadius: 8}} elevation={4}>
                               <Survey data={item} index={index}/>
                               </Paper>
-                           ) : ('')}
+                           ) : <EmptyPlaceholder type="survey"/> }
                </div>
             </div>
          </Layout>

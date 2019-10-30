@@ -142,7 +142,8 @@ class Home extends React.Component {
                               return <Survey data={item} index={index} />
                            }) : ('')}
 
-                           <div className="announce_component">
+                              {Boolean(this.state.annc.length) &&
+                               <div className="announce_component">
                               <h6>Announcements</h6>
                               <div className="slider_wrap announce_main_box">
                                  <Slider {...settings}>
@@ -157,6 +158,10 @@ class Home extends React.Component {
                                     })}
                                  </Slider>
                               </div>
+                              </div>
+                              }
+
+                              {Boolean(this.state.faqs.length) &&
                               <div className="announce_component faq_announce">
                                  <h6>FAQs</h6>
                                  <div className="slider_wrap announce_main_box">
@@ -173,7 +178,8 @@ class Home extends React.Component {
                                     </Slider>
                                  </div>
                               </div>
-                           </div>
+                              }
+                        
                         </div>
 
 

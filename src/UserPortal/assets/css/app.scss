@@ -484,7 +484,10 @@ body{font-family: 'Rubik', sans-serif;}
         height: 4px;
         background-image: linear-gradient(to right, #2bf1f8,#4784f6,#8b3dee,#d424de,#da17b1);
     }
-    .contentDetailTitle{padding: 40px 0;}
+    .contentDetailTitle{
+        text-align: center;
+        padding: 40px 0;
+    }
     .contentBigImage{
         margin-bottom: 32px;
         img{
@@ -639,3 +642,58 @@ body{font-family: 'Rubik', sans-serif;}
 .home-actions {
     margin-left: -14px;
 }
+
+
+.empty-placeholder {
+    height: calc(100%); 
+    position: calc(100%);
+
+    .center {
+        background-color: red;
+    
+
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      
+        
+      }
+      
+      .content {
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+
+        animation: colorchange 12s; /* animation-name followed by duration in seconds*/
+        /* you could also use milliseconds (ms) or something like 2.5s */
+     -webkit-animation: colorchange 12s; /* Chrome and Safari */
+   }
+
+    @keyframes colorchange
+    {
+        0%   {color:  #706e7a;}
+        25%  {color:  #4784f6;}
+        50%  {color:  #d424de;}
+        75%  {color:  #da17b1;}
+        100% {color:  rgba(0, 0, 0, 0.87);}
+    }
+
+    @-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+    {
+        0%   {color:  #706e7a;}
+        25%  {color:  #4784f6;}
+        50%  {color:  #d424de;}
+        75%  {color:  #da17b1;}
+        100% {color: rgba(0, 0, 0, 0.87);}
+    }
+        
+  
+  }
+  
+  

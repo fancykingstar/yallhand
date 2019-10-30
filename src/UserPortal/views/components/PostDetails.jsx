@@ -50,7 +50,7 @@ class PostDetails extends React.Component {
                         <div className="contentDetailTitle">
                             <h3>
                                 <IconButton
-                                    color="inherit"
+                                    color="primary"
                                     aria-label="back to actions"
                                     edge="start"
                                     style={{ display: 'inline-block' }}
