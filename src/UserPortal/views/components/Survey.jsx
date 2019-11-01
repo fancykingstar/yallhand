@@ -1,21 +1,22 @@
 import React from 'react';
-import * as constants from "../../constants/constants.js";
-import { withRouter } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
-import { Col, Row, Form, FormGroup, Label, Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+
+
 import {SliderScale} from "./Responses/Slider";
 import {StarRating} from "./Responses/StarRating";
 import {Binary} from "./Responses/Binary";
 import {MultiChoice} from "./Responses/MultiChoice";
-import { ItemExtra } from 'semantic-ui-react';
+
 import TimeAgo from 'react-timeago';
+import { apiCall } from '../../../DataExchange/Fetch.js';
+
+import { UserStore } from "../../../Stores/UserStore";
+import {SurveyStore} from "../../../Stores/SurveyStore";
+
 import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
 import Collapse from '@material-ui/core/Collapse';
-import { cpus } from 'os';
-import { apiCall } from '../../../DataExchange/Fetch.js';
-import { UserStore } from "../../../Stores/UserStore";
+import Paper from '@material-ui/core/Paper';
 import VisibilityOffRoundedIcon from '@material-ui/icons/VisibilityOffRounded';
-
+import {  Button, Input } from 'reactstrap';
 
 
 export class Survey extends React.Component {
@@ -62,33 +63,36 @@ export class Survey extends React.Component {
             const payload = {surveyID, instanceID, response};
             await apiCall('surveys/response', 'POST', payload).then(res => {
                 this.setState({completed:true});
+                SurveyStore._dropSurvey(surveyID);
             })
         }
 
+        const content =  <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
+        <div className="inner_page_content_title">
+           <h5>{label}</h5>
+           <p><TimeAgo date={this.props.data.updated} /></p>
+  
+        </div>
+        <div className="survey_group_questions">
+        {this.props.data.anonymous && <div style={{paddingLeft: 20, paddingTop: 10, paddingBottom: 10}}><p style={{fontSize: ".9em", color: "#abacab"}}><VisibilityOffRoundedIcon size="small"/> Responses are anonymous</p></div>}
+        {this.props.data.surveyItems.map((item, innerIndex) => {
+           return <div className="check_question" key={innerIndex}>
+              <h6>{item.q}</h6>
+              {answerOptions(answerKey(item), item)}
+           </div>
+        })}
+    <div style={{padding: "25px 25px 15px 25px"}}>
+    <Button outline color="primary" size="sm" onClick={()=>submit()}>
+    Submit <DoneRoundedIcon fontSize="small"/>
+  </Button>
+    </div>
+    </div>
+     </div>
+
         return (
             <Collapse ref="showSurvey" in={!this.state.completed}>
-            <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
-            <div className="inner_page_content_title">
-               <h5>{label}</h5>
-               <p><TimeAgo date={this.props.data.updated} /></p>
-      
-            </div>
-            <div className="survey_group_questions">
-            {this.props.data.anonymous && <div style={{paddingLeft: 20, paddingTop: 10, paddingBottom: 10}}><p style={{fontSize: ".9em", color: "#abacab"}}><VisibilityOffRoundedIcon size="small"/> Responses are anonymous</p></div>}
-            {this.props.data.surveyItems.map((item, innerIndex) => {
-               return <div className="check_question" key={innerIndex}>
-                  <h6>{item.q}</h6>
-                  {answerOptions(answerKey(item), item)}
-               </div>
-            })}
-        <div style={{padding: "25px 25px 15px 25px"}}>
-        <Button outline color="primary" size="sm" onClick={()=>submit()}>
-        Submit <DoneRoundedIcon fontSize="small"/>
-      </Button>
-        </div>
-        </div>
-         </div>
-         </Collapse>
+                { this.props.usePaper ? <Paper style={{padding: 20, borderRadius: 8, margin: 25}} elevation={4}>{content}</Paper> : content }
+            </Collapse>
         )
     }
 }

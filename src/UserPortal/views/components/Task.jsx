@@ -12,6 +12,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import TimeAgo from 'react-timeago';
 import Collapse from '@material-ui/core/Collapse';
+import Paper from '@material-ui/core/Paper';
 
 import {surveys} from "../../../DataExchange/Down";
 import { apiCall } from '../../../DataExchange/Fetch.js';
@@ -40,7 +41,7 @@ export class Task extends React.Component {
     
     render() {
         const {label, surveyID, instances} = this.props.data;
-        const instanceID = instances[0].instanceID;
+        const instanceID = instances.length? instances[0].instanceID: "";
 
         const submit = async (item, val) => {
             const updated = Date.now();
@@ -75,9 +76,7 @@ export class Task extends React.Component {
             </ListItemSecondaryAction>}
         </ListItem>
 
-        return (
-            <Collapse ref="showSurvey" in={!this.state.completed}>
-            <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
+            const content =    <div className={"servay_group"} key={`survey_q ${this.props.index}`}>
             <div className="inner_page_content_title">
                <h5>{this.props.data.label}</h5>
                <p><TimeAgo date={this.props.data.updated} /></p>
@@ -100,7 +99,11 @@ export class Task extends React.Component {
                 }
         </div>
          </div>
-         </Collapse>
+
+            return (
+                <Collapse ref="showSurvey" in={!this.state.completed}>
+                { this.props.usePaper ? <Paper style={{padding: 20, borderRadius: 8, margin: 25}} elevation={4}>{content}</Paper> : content }
+             </Collapse>
         )
     }
 }
