@@ -454,9 +454,9 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   ///SURVEYS AND TASKS
   const generateInstances = (data) => {
     const {sendTargetType, deadline, sendToTagID, sendToTeamID} = data;
-    if(data.sendTargetType === "all") return AccountStore._allActiveUsers.map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
+    if(data.sendTargetType === "all") return AccountStore._allActiveUsers.filter(user => !user.isAdmin).map(user => ({instanceID: generateID(), sent: Date.now(), userID: user.userID, deadline}) )
     else if(data.sendTargetType === "users") return data.sendToUsers.map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
-    else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
+    else if (data.sendTargetType === "teams") return EligibleUsersByTeamTag(sendToTeamID, sendToTagID==="none"? "": sendToTagID).filter(user => !user.isAdmin).map(userID => ({instanceID: generateID(), sent: Date.now(), userID, deadline}) )
   }
 
   export const survey = ( type, data ) => {
