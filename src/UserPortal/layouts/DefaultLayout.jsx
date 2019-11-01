@@ -26,6 +26,7 @@ import Directory from '../assets/images/Directory.svg';
 import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
+import TocRoundedIcon from '@material-ui/icons/TocRounded';
 
 
 import search_icon from "../assets/images/search_icon.svg";
@@ -242,6 +243,10 @@ const DefaultLayout = ({ ...props }) => {
                         <ListItem button key="surveys" component={Link} to='/portal/surveys'>
                             <ListItemIcon><BallotRoundedIcon /></ListItemIcon>
                             <ListItemText primary="Surveys" />
+                        </ListItem>
+                        <ListItem button key="surveys" component={Link} to='/portal/tasks'>
+                            <ListItemIcon><TocRoundedIcon /></ListItemIcon>
+                            <ListItemText primary="Tasks" />
                         </ListItem>
                         {/* <ListItem button key="directory" component={Link} to="directory">
                             <ListItemIcon><img src={Directory} alt="" /></ListItemIcon>
