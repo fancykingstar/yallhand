@@ -27,7 +27,7 @@ export class Task extends React.Component {
 
     isCompleted(task,i) {
         const {surveyItems, instances, responses_by_instance} = this.props.data;
-        const instanceID = instances[0].instanceID;
+        const instanceID = this.props.preview? "" : instances[0].instanceID;
         const completed = () => {
             if(!responses_by_instance.length) return [];
             let anyRs = responses_by_instance.filter(i=>i.instanceID === instanceID);
@@ -44,6 +44,7 @@ export class Task extends React.Component {
         const instanceID = instances.length? instances[0].instanceID: "";
 
         const submit = async (item, val) => {
+            if(this.props.preview) return;
             const updated = Date.now();
             let response = {};
             response[item._id] = {updated, response: val};

@@ -14,6 +14,7 @@ import { Wysiwyg } from "../../SharedUI/Wysiwyg";
 import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
 import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
 import { CommonOptions } from "../../SharedUI/NewEditContent/CommonOptions";
+import { ContentPreview } from "../../SharedUI/ContentPreview";
 
 import { FeaturedImage } from "../ManageContent/FeaturedImage";
 import { Channel } from "../ManageContent/Channel";
@@ -45,8 +46,11 @@ class VariationContent extends React.Component {
       chanID: "",
       resourceID: "",
       _options: "",
+      _contentPreview: false,
       _audience_target: "",})
   }
+
+  togglePreview = (bool) => this.setState({_contentPreview: bool});
 
   hasBeenChanged() { 
     return false
@@ -123,6 +127,7 @@ class VariationContent extends React.Component {
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
           />
+        <ContentPreview open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} data={{mode: "policy", contentID: "", PostData  : Object.assign(content, {variations: vari})}} />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
@@ -164,7 +169,7 @@ class VariationContent extends React.Component {
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
             <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
-            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
+            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState(e === "preview"? {_contentPreview: true} : {_options: e===_options? "": e})}/>
             </Col>
           </Row>
           <Row>

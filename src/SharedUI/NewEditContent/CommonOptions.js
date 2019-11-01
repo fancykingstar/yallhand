@@ -7,6 +7,7 @@ import "../style.css";
 @inject("UIStore")
 @observer
 export class CommonOptions extends React.Component {
+
   clickActions = {
     "draft":"draft",
     "published": "published",
@@ -21,16 +22,17 @@ export class CommonOptions extends React.Component {
 
 
     return (
-
+      <>
       <Dropdown 
       button text="Options...">
       <Dropdown.Menu>
-        <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Channel..."} onClick={() => this.props.handleClick("channel")}  /> 
-        <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Featured Image..."} onClick={() => this.props.handleClick("image")}   />
-        <Dropdown.Item disabled={this.props.unsavedWarning} key={"pubctrl" + giveMeKey()} text={`Attach Files...${this.props.unsavedWarning && "(requires save)"}`} onClick={() => this.props.handleClick("attach")}   />
+         <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"View Preview"} onClick={() => this.props.handleClick("preview")}  /> 
+        <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Choose Channel..."} onClick={() => this.props.handleClick("channel")}  /> 
+        <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Set Featured Image..."} onClick={() => this.props.handleClick("image")}   />
+        <Dropdown.Item disabled={this.props.unsavedWarning} key={"pubctrl" + giveMeKey()} text={`Attach Files...${this.props.unsavedWarning? "(requires save)" : ""}`} onClick={() => this.props.handleClick("attach")}   />
       </Dropdown.Menu>
       </Dropdown>
-
+      </>
     );
   }
 }

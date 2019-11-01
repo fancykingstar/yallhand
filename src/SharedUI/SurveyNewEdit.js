@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Segment, Button, Form, Header, Checkbox } from "semantic-ui-react";
+import { Segment, Button, Form, Header, Checkbox, Modal } from "semantic-ui-react";
 import { TaskItem } from "../Tasks/TaskItem";
 import { SurveyItem }from "../Surveys/SurveyItem";
 import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
@@ -12,6 +12,9 @@ import {survey, surveyEdit, schedule} from "../DataExchange/PayloadBuilder";
 import {createSurvey, modifySurvey, createSchedule, deleteSchedule} from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
 import { TeamStore } from "../Stores/TeamStore";
+
+import {Survey} from "../UserPortal/views/components/Survey";
+import {Task} from "../UserPortal/views/components/Task";
 
 import moment from "moment";
 import _ from "lodash";
@@ -29,6 +32,7 @@ class SurveyNewEdit extends React.Component {
       deadline: 0,
       active: false,
       anonymous: false,
+      openPreview: false,
       sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []
     }
   };
@@ -175,9 +179,24 @@ class SurveyNewEdit extends React.Component {
     const save = ( <Button onClick={e => this.updateSurvey()}> Save </Button> );
     const stop = <Button negative onClick={()=> this.updateSurvey(false)}>Stop</Button>;
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
-    const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} </div> ); 
+    const preview = this.state.surveyItems.length && ( <Button onClick={() => this.setState({openPreview: true})}> Preview </Button> );
+    const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} {preview} </div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} {preview} </div> ); 
     return (
       <div> 
+
+        <Modal closeIcon onClose={()=>this.setState({openPreview: false})} open={this.state.openPreview}>
+          <Modal.Header>Preview</Modal.Header>
+          <Modal.Content  style={{backgroundColor: "#898989"}}>
+
+           { this.state.surveyItems.length &&  <div style={{paddingTop: 20}} className="container">
+               <div className="page_container">
+                  { this.props.mode === "survey"? <Survey preview data={this.state} index={giveMeKey()} usePaper/> :  <Task data={this.state} index={giveMeKey()} usePaper/>   }
+               </div>
+            </div>}
+
+          </Modal.Content>
+        </Modal>
+
         <BackButton/>
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           {this.props.mode==="survey"? "Survey builder" :"Task builder"}

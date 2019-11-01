@@ -16,7 +16,8 @@ import { Channel } from "./Channel";
 import { generateID } from "../../SharedCalculations/GenerateID";
 import Settings from "./Settings";
 import { AnnouncementsStore } from "../../Stores/AnnouncementsStore";
-import { PoliciesStore } from "../../Stores/PoliciesStore"
+import { PoliciesStore } from "../../Stores/PoliciesStore";
+import { ContentPreview } from "../ContentPreview";
 
 import "./style.css";
 import _ from "lodash";
@@ -28,6 +29,7 @@ import { modifyPolicy, modifyAnnouncement } from "../../DataExchange/Up";
 class ManageContent extends React.Component {
   constructor(props) {
     super(props);
+    this.state={contentPreview: false};
     const {UIStore} = this.props
     this.mode = this.props.location.pathname.includes("faq")
       ? "policy"
@@ -35,6 +37,9 @@ class ManageContent extends React.Component {
         UIStore.reset("content")
 
   }
+
+  closePreview = () => this.setState({contentPreview: false});
+  
   componentWillUnmount() {
     const {DataEntryStore} = this.props
     DataEntryStore.reset("contentmgmt")
@@ -112,6 +117,8 @@ class ManageContent extends React.Component {
     }
   }
 
+
+
   render() {
 
     const { TeamStore, DataEntryStore, UIStore, AccountStore, match } = this.props;
@@ -130,16 +137,20 @@ class ManageContent extends React.Component {
       }
       const options = {
         "draft": <React.Fragment>
+          <Dropdown.Item text='Preview' icon="external alternate" onClick={e=>this.setState({contentPreview: true})}/>
           <Dropdown.Item text='Publish' icon="rocket" onClick={e=>updateStage("published")}/>
           <Dropdown.Item text='Archive' icon="archive" onClick={e=>updateStage("archived")}/>
+          
         </React.Fragment> ,
         "published":
         <React.Fragment>
+            <Dropdown.Item text='Preview' icon="external alternate" onClick={e=>this.setState({contentPreview: true})}/>
           <Dropdown.Item text='Unpublish' icon="remove circle" onClick={e=>updateStage("draft")}/>
           <Dropdown.Item text='Archive' icon="archive"  onClick={e=>updateStage("archived")}/>
       </React.Fragment>
         ,
         "archived": <React.Fragment>
+            <Dropdown.Item text='Preview' icon="external alternate" onClick={e=>this.setState({contentPreview: true})}/>
         <Dropdown.Item text='Restore' icon="hand spock"  onClick={e=>updateStage("draft")}/>
       </React.Fragment>,
       }
@@ -260,7 +271,9 @@ class ManageContent extends React.Component {
                   subheader={DataEntryStore.contentmgmt.label}
                 />
                 <Segment>
-                  <div>
+                  <div> 
+                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={{mode: "policy", contentID: "", PostData  : Object.assign(Object.assign({}, DataEntryStore.contentmgmt), {variations: [vari()]})}} />
+
                     <Header>Available Variations</Header>
                     <br />
                     <SelectVariation

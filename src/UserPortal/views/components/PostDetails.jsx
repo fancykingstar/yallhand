@@ -33,13 +33,12 @@ class PostDetails extends React.Component {
         const post = this.props.data.PostData;
         const vari = post && post.variations[0];
 
-
         const sentimentClick = (val) => {
+            if(this.props.preview) return;
             this.props.update({ sentiment: true });
             if (!UserStore.user.isAdmin) {
                 createSentiment(sentiment(val, `${mode}ID`, contentID, vari.variationID)).then(r => r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
             }
-
         }
 
         return (
@@ -78,7 +77,7 @@ class PostDetails extends React.Component {
                         {/* <a href="#/" className="selectPdf">Document-1.pdf</a>
                         <a href="#/" className="selectPdf">Checklist.pdf</a> */}
                         <Fade in={!this.props.data.sentiment}>
-                            <Typography>
+                            <Typography variant="inherit" component="div">
                                 <div className="emojisRows">
                                     <p>This makes you feel...</p>
                                     <div className="emojiBox-outer">

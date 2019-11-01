@@ -26,7 +26,7 @@ export class Survey extends React.Component {
     }
     render() {
         const {label, surveyID, instances} = this.props.data;
-        const instanceID = instances[0].instanceID;
+        const instanceID = this.props.preview? "" : instances[0].instanceID;
         // const box_type = (this.props.box_type) ? this.props.box_type : 'announce';
         // var classes = (box_type === "announce") ? "announce_box " : (box_type === "suggession") ? "suggession_box" : '';
         // classes += " " + this.props.main_class;
@@ -81,11 +81,13 @@ export class Survey extends React.Component {
               {answerOptions(answerKey(item), item)}
            </div>
         })}
+    { !this.props.preview &&
     <div style={{padding: "25px 25px 15px 25px"}}>
     <Button outline color="primary" size="sm" onClick={()=>submit()}>
     Submit <DoneRoundedIcon fontSize="small"/>
   </Button>
     </div>
+    }
     </div>
      </div>
 
