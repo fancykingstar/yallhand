@@ -129,37 +129,28 @@ class ContentListingPage extends React.Component {
       });
     };
 
-    const columns = [{
-      options: {
-        filter: false,
-        sort: false,
-      }
+   
+    const columns = [
+      {
+        options: {
+          customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; }}
     }, {
       label: "Featured",
       name: "Featured",
       options: {
         filter: false,
         sort: false,
+ 
       }
-    }, "Title", "Last Updated", "Channel", "State"];
+    }, 
+    {name:  "Title"},
+    {name:  "Last Updated"},
+    {name:  "Channel"},
+    {name:  "State"}
+    ];
 
     const data = all.map(item => [
-      <LazyImg
-        style={{
-          height: 75,
-          width: 120,
-          objectFit: item.img ? "cover" : "contain"
-        }}
-        alt=""
-        height={75}
-        width={120}
-        img={item.img}
-        src={
-          item.img
-            ? item.img
-            : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png"
-        }
-      />,
+      item.img,
       item.featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />,
       item.label,
       UTCtoFriendly(item.updated),
@@ -179,13 +170,14 @@ class ContentListingPage extends React.Component {
       ),
       filter: true,
       filterType: "dropdown",
-      filterList: [["active"]],
+      // filterList: [["active"]],
       print: false,
       responsive: "scrollMaxHeight",
       viewColumns: false,
       download: false,
       onRowClick: (i, data) => handleClick(all[data.rowIndex])
     };
+
 
     return (
       <React.Fragment>

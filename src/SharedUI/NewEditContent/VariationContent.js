@@ -31,7 +31,6 @@ class VariationContent extends React.Component {
   constructor(props){
     super(props);
     this.state={};
-    this.reset();
   }
   reset() {
     this.setState({   
@@ -49,12 +48,17 @@ class VariationContent extends React.Component {
       _contentPreview: false,
       _audience_target: "",})
   }
+  
+  componentDidMount(){
+    this.reset();
+  }
+
+  updateDraft = (e) => this.setState({contentRAW: e.raw, contentHTML: e.html});
 
   togglePreview = (bool) => this.setState({_contentPreview: bool});
 
   hasBeenChanged() { 
-    return false
-    // return Boolean(Object.values(this.state).filter(i=>i).length) 
+    return Boolean(Object.values(this.state).filter(i=>i.length).length); 
   }
   
 
@@ -73,18 +77,16 @@ class VariationContent extends React.Component {
     const typeId = `${mode}ID`;
     
     if (isNewContent) {
-      (isPolicy ? createPolicy(content(this.state)) : createAnnouncement(content(this.state))).then(res => {
-        const id = res[typeId];
-        this.reset();
-        history.push(`${path}${res[id]}`); 
-      })
-
+      const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
+      const id = res[typeId];
+      await this.reset();
+      await history.push(`${path}${res[id]}`)
     }
     else {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       await this.reset();
-      history.push(`${path}${UIStore.content[mode + "ID"]}`);
+      await history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
 
@@ -123,6 +125,7 @@ class VariationContent extends React.Component {
 
     return (
       <div>
+        {JSON.stringify(this.state)}
          <Prompt
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
@@ -134,7 +137,7 @@ class VariationContent extends React.Component {
         </Header>
 
         <TextField
-            error={this.state.contentHTML && !this.state.label && !content.label}
+            error={Boolean(this.state.contentHTML && !this.state.label && !content.label)}
             id="standard-full-width"
             label="Title"
             placeholder="Enter a title for this content..."
@@ -148,8 +151,7 @@ class VariationContent extends React.Component {
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations? vari[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
-        {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
+        <Wysiwyg loadContent={content.variations.length? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
         <div>
           {TeamStore._isTargetingAvail &&
           <Row>

@@ -1,5 +1,4 @@
 import React from "react"
-import {inject, observer} from "mobx-react"
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
@@ -8,14 +7,12 @@ import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
 import {emojiList} from "./EmojiList"
 import embed from "embed-video";
 import draftToHtml from "draftjs-to-html";
+import {AccountStore} from "../Stores/AccountStore";
 
 import './style.css'
-// import _ from "lodash";
 import {debounce, isEmpty} from "lodash";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-@inject("DataEntryStore", "AccountStore")
-@observer
 export class Wysiwyg extends React.Component {
     constructor(props) {
         super(props);
@@ -64,7 +61,6 @@ export class Wysiwyg extends React.Component {
     };
 
     render(){
-        const {AccountStore} = this.props
         const uploadContentImg = async (file) => 
              await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {

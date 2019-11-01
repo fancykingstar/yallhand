@@ -78,7 +78,7 @@ class TaskFrame extends React.Component {
       selectableRows: "none",
       filter:true,
       filterType: 'dropdown',
-      filterList: [["active"]],
+      // filterList: [["active"]],
       print: false,
       responsive: "scrollMaxHeight",
       viewColumns: false,
