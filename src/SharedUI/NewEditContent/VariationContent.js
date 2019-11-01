@@ -125,7 +125,6 @@ class VariationContent extends React.Component {
 
     return (
       <div>
-        {JSON.stringify(this.state)}
          <Prompt
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
