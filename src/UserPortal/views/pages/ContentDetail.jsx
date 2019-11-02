@@ -21,7 +21,7 @@ class ContentDetail extends React.Component {
       super(props);
       this.state = {
          Announcements: [],
-         PostData: '',
+         content: '',
          qaData: [],
          mode: "",
          sentiment: false
@@ -34,7 +34,7 @@ class ContentDetail extends React.Component {
       const mode = await urlData.path.includes("announcement")? "announcement" : "policy";
       const content = await urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
       return await this.setState({
-         PostData: content,
+         content: content,
          qaData: ContentData.questionAnswer,
          contentID: content[`${mode}ID`],
          mode
@@ -51,7 +51,7 @@ class ContentDetail extends React.Component {
                console.log(result)
                this.setState({sentiment: Boolean(result.length)})});
                if(!UserStore.user.isAdmin){ 
-                  log(ItsLog(false, {"type": this.state.mode, "contentID": this.state.contentID, "variationID": this.state.PostData.variations[0].variationID})) 
+                  log(ItsLog(false, {"type": this.state.mode, "contentID": this.state.contentID, "variationID": this.state.content.variations[0].variationID})) 
                      }
             });
 
@@ -68,12 +68,12 @@ class ContentDetail extends React.Component {
    }
 
    render() {
-      const { PostData } = this.state;
+      const { content } = this.state;
       return (
          <Layout>
             <div className="">
                <div className="">
-                  {PostData ? (<PostDetails data={this.state} update={payload=>this.setState(payload)}/>) : ("")}
+                  {content ? (<PostDetails data={this.state} update={payload=>this.setState(payload)}/>) : ("")}
              
                   {/* <div className="page_content_bg">
                      <div className="smallContainer">

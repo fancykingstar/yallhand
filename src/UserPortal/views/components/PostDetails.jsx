@@ -30,8 +30,9 @@ class PostDetails extends React.Component {
     render() {
         const { AccountStore, UserStore } = this.props;
         const { mode, contentID } = this.props.data;
-        const post = this.props.data.PostData;
-        const vari = post && post.variations[0];
+        const content = this.props.data;
+        const vari = content && content.variations[0];
+
 
         const sentimentClick = (val) => {
             if(this.props.preview) return;
@@ -56,12 +57,12 @@ class PostDetails extends React.Component {
                                     onClick={history.goBack}
                                 ><KeyboardBackspaceIcon fontSize="inherit" />
                                 </IconButton>
-                                {post.label}</h3>
+                                {content.label}</h3>
                         </div>
                     </div>
                 </div>
                 <div className="contentBigImage">
-                    <img alt="" src={post.img} />
+                    <img alt="" src={content.img} />
                 </div>
                 <div className="smallContainer">
                     <div className="userPostDetailRow">

@@ -272,7 +272,7 @@ class ManageContent extends React.Component {
                 />
                 <Segment>
                   <div> 
-                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={{mode: "policy", contentID: "", PostData  : Object.assign(Object.assign({}, DataEntryStore.contentmgmt), {variations: [vari()]})}} />
+                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={Object.assign(Object.assign({}, DataEntryStore.contentmgmt), {variations: [vari()]})} />
 
                     <Header>Available Variations</Header>
                     <br />

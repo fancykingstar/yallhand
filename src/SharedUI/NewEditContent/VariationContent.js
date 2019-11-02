@@ -24,6 +24,7 @@ import { content, contentEdit, contentHistory } from "../../DataExchange/Payload
 
 import toast from "../../YallToast"
 import _ from "lodash";
+import { UserStore } from "../../Stores/UserStore";
 
 @inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore", "TeamStore")
 @observer
@@ -102,6 +103,7 @@ class VariationContent extends React.Component {
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
+    const tempVari = () => [{label: "",userID: UserStore.user.userID, contentRAW: "",}];
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
@@ -123,13 +125,17 @@ class VariationContent extends React.Component {
 
       }[_options]
 
+
     return (
       <div>
+
          <Prompt
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
           />
-        <ContentPreview open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} data={{mode: "policy", contentID: "", PostData  : Object.assign(content, {variations: vari})}} />
+        <ContentPreview 
+          open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} 
+          data={Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})} />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
@@ -150,7 +156,7 @@ class VariationContent extends React.Component {
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations.length? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
+        <Wysiwyg loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
         <div>
           {TeamStore._isTargetingAvail &&
           <Row>

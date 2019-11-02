@@ -55,7 +55,7 @@ export class Wysiwyg extends React.Component {
    
 
     editorStateChanged = (newEditorState) => {
-      debounce(() => this.passContent(), 1000)();
+      debounce(() => this.passContent(), 500)();
       this.setState({editorState: newEditorState});
 
     };
