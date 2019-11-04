@@ -66,8 +66,8 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
               </div>
                 </div>
                 {/* </Grid.Column> */}
-             
-              <div style={{height: 135, paddingTop: 10, overflow: "auto"}}><span dangerouslySetInnerHTML={{__html: props.variation.contentHTML}} /></div>
+{/*              
+              <div style={{height: 135, paddingTop: 10, overflow: "auto"}}><span dangerouslySetInnerHTML={{__html: props.variation.contentHTML}} /></div> */}
               
    
           </React.Fragment>

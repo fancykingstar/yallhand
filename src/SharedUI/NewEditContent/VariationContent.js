@@ -6,8 +6,6 @@ import { withRouter } from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { Row, Col, } from 'reactstrap';
 
-import { useBeforeunload } from 'react-beforeunload';
-
 import BackButton  from "../../SharedUI/BackButton";
 import { AttachedFiles } from "./AttachedFiles";
 import { Wysiwyg } from "../../SharedUI/Wysiwyg";
@@ -64,7 +62,7 @@ class VariationContent extends React.Component {
   
 
   async changeStage(stage) {
-    const { AnnouncementsStore, PoliciesStore, UIStore, history } = this.props;
+    const { UIStore, history } = this.props;
     const {mode, isNewContent, contentID, variID} = this.props.data;
     if ((!this.state.label || !this.state.contentHTML) && !variID) {
       toast.error("Whoops, please be sure to have a title and content before saving", {hideProgressBar: true})
@@ -76,6 +74,10 @@ class VariationContent extends React.Component {
     const isPolicy = mode === "policy";
     const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
     const typeId = `${mode}ID`;
+    if (stage === "published") {
+      const historyMode = contentHistory(mode, contentID, content(this.state));
+      createHistory(historyMode);
+    }
     
     if (isNewContent) {
       const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
@@ -103,7 +105,7 @@ class VariationContent extends React.Component {
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
-    const tempVari = () => [{label: "",userID: UserStore.user.userID, contentRAW: "",}];
+    const tempVari = () => [{label: "",userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}

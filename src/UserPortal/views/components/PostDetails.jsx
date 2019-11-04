@@ -42,6 +42,8 @@ class PostDetails extends React.Component {
             }
         }
 
+       
+
         return (
             <div className="outerContentDetail">
                 <span className="borderGradian"></span>

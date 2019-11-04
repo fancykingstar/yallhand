@@ -134,12 +134,14 @@ class ContentListingPage extends React.Component {
       {
         options: {
           customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; }}
-    }, {
+      }, 
+    {
       label: "Featured",
       name: "Featured",
       options: {
         filter: false,
         sort: false,
+        customBodyRender: featured => { return  featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />}
  
       }
     }, 
@@ -151,7 +153,7 @@ class ContentListingPage extends React.Component {
 
     const data = all.map(item => [
       item.img,
-      item.featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />,
+      item.featured,
       item.label,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),

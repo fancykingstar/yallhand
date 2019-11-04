@@ -14,6 +14,7 @@ import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 import { sortByUTC } from "../../../SharedCalculations/SortByUTC";
+import { giveMeKey } from '../../../SharedCalculations/GiveMeKey';
 
 @inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
@@ -135,11 +136,11 @@ class Home extends React.Component {
                         <div className="page_content shadow">
 
                            {(TaskStore.allTasks.length) ? TaskStore.allTasks.map((item, index) => {
-                              return <Task data={item} index={index} />
+                              return <Task data={item} index={"hometask" + giveMeKey()} />
                            }) : ('')}
 
                            {(SurveyStore.allSurveys.length) ? SurveyStore.allSurveys.map((item, index) => {
-                              return <Survey data={item} index={index} />
+                              return <Survey data={item} index={"homesurvey" + giveMeKey()} />
                            }) : ('')}
 
                               {Boolean(this.state.annc.length) &&
