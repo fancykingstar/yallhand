@@ -90,7 +90,7 @@ class NavItems extends React.Component {
             <ListItemIcon>
                   <ConfirmationNumberRoundedIcon/>
               </ListItemIcon>
-             <ListItemText primary="Ticketing" />
+             <ListItemText primary="Service Desk" />
           </ListItem>
           <ListItem button style={isActive("email")} button onClick={e => handleClick("email")} >
             <ListItemIcon>
