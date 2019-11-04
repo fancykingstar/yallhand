@@ -31,9 +31,9 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
       policy: {id: "policyID", current: UIStore.content.policyID},
       announcement: {id: "announcementID", current: UIStore.content.announcementID},
     }[props.mode]
-    if(DataEntryStore.contentmgmt.campaign === "new"){
+    if(!DataEntryStore.contentmgmt.campaign || DataEntryStore.contentmgmt.campaign === "new"){
       if(DataEntryStore.emailCampaign.sendContent.filter(i => i[key.id] === key.current).length > 0){
-        toast.error("Whoops, that campaign already contains this content 😬", {hideProgressBar: true})
+        toast.error("Whoops, that campaign already contains this content", {hideProgressBar: true})
       }else{
         let newBundle = DataEntryStore.emailCampaign.sendContent.slice()
         let updatedObj = {}
@@ -44,7 +44,7 @@ export const AddToEmail = inject("DataEntryStore", "UIStore", "EmailStore")(
       }
     }
     else if(EmailStore._doesCampaignContain(key.current, DataEntryStore.contentmgmt.campaign)){
-      toast.error("Whoops, that campaign already contains this content 😬", {hideProgressBar: true})
+      toast.error("Whoops, that campaign already contains this content", {hideProgressBar: true})
     }else{
       let newBundle = EmailStore._getCampaign(DataEntryStore.contentmgmt.campaign).content.slice()
       props.mode === "policy" ? newBundle.push({policyID: key.current}) : newBundle.push({announcementID: key.current})

@@ -12,7 +12,7 @@ export class Channel extends React.Component {
       this.state={chanID: "all"};
     }
     render(){
-        const {DataEntryStore, UIStore, AccountStore} = this.props;
+        const {DataEntryStore, UIStore, AccountStore, mode} = this.props;
 
         const echoState = (val) => {
           DataEntryStore.set("contentmgmt", "settingsChannel", val);
@@ -20,7 +20,7 @@ export class Channel extends React.Component {
         }
 
         const updateContent = async () => {
-          return this.mode === "policy"? await modifyPolicy({accountID:AccountStore.account.accountID, policyID: UIStore.content.policyID, chanID: DataEntryStore.contentmgmt.settingsChannel}) : modifyAnnouncement({accountID:AccountStore.account.accountID, announcementID: UIStore.content.announcementID, chanID: DataEntryStore.contentmgmt.settingsChannel});
+          return mode === "policy"? await modifyPolicy({accountID:AccountStore.account.accountID, policyID: UIStore.content.policyID, chanID: DataEntryStore.contentmgmt.settingsChannel}) : modifyAnnouncement({accountID:AccountStore.account.accountID, announcementID: UIStore.content.announcementID, chanID: DataEntryStore.contentmgmt.settingsChannel});
         }
 
         return( 

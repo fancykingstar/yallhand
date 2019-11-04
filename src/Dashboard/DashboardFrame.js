@@ -270,7 +270,7 @@ class DashboardFrame extends React.Component {
             </Grid.Column>
             <Grid.Column>
               <Segment style={{minHeight: 300}}>
-                <div style={{marginTop: 0, paddingTop: 0, paddingBottom: 5}}>   <h4>All Sentiment Surveys</h4></div>
+                <div style={{marginTop: 0, paddingTop: 0, paddingBottom: 5}}>   <h4>All Content Sentiments</h4></div>
                 <div style={{paddingBottom: 10}}> 
                   <Grid className="grid-adjustment" columns="equal">
                     <Grid.Row>

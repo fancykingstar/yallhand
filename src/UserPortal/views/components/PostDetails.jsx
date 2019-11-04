@@ -53,10 +53,10 @@ class PostDetails extends React.Component {
                             <h3>
                                 <IconButton
                                     color="primary"
-                                    aria-label="back to actions"
+                                    aria-label="back button"
                                     edge="start"
                                     style={{ display: 'inline-block' }}
-                                    onClick={history.goBack}
+                                    onClick={this.props.preview? {} : history.goBack}
                                 ><KeyboardBackspaceIcon fontSize="inherit" />
                                 </IconButton>
                                 {content.label}</h3>
