@@ -7,6 +7,8 @@ import TabPanel from "../components/TabPanel";
 import ImageBox from '../components/ImageBox';
 import Hierarchy from "../components/Hierarchy";
 import StaffDetail from '../components/StaffDetail';
+
+import { EmptyPlaceholder } from '../components/EmptyPlaceholder';
 // import ContentListData from '../../data/directory.json';
 
 
@@ -71,6 +73,7 @@ class ContentList extends React.Component {
                   <TabPanel value={this.state.tabValue} index={0}>
 
                      {
+                        !this.state.source.length?  <EmptyPlaceholder type={mode === "policy"? "FAQ": mode} />  :
                         this.state.source.map((item, index) => <div className=" all-staff-box" key={index}>
                            <ImageBox
                               url={`/portal/${mode === "announcement" ? "announcement" : "learn-detail"}/${item[mode === "announcement" ? "announcementID" : "policyID"]}`}

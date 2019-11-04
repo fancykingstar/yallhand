@@ -21,10 +21,11 @@ export class Scheduled extends React.Component {
         ({"send campaign": `Send ${task.data.label} ${!task.userID? `to ${AccountStore._getUser(task.data.userID).displayName_full} (Email Automation)`:""}`,
           "onboard user": `Onboard ${task.task === "onboard user" && AccountStore.allUsers.filter(i=>i.id === task.data.id)[0].email}`,
           "offboard user": `Offboard ${task.task === "offboard user" && AccountStore._getUser(task.data.userID).displayName_full}`,
-          "publish content": `Publish ${task.task === "publish content" && getContentObj(task.data).label}`,
-          "unpublish content": `Unpublish ${task.task === "unpublish content" &&  getContentObj(task.data).label}`,
+          "publish content": `Publish "${task.task === "publish content" && getContentObj(task.data).label}"`,
+          "unpublish content": `Unpublish "${task.task === "unpublish content" &&  getContentObj(task.data).label}"`,
           "end survey": `End survey ${task.task === "end survey" && SurveyStore._getSurvey(task.data.id).label}`,
           "end task": `End task ${task.task === "end task" && TaskStore._getTask(task.data.id).label}`,
+          "review alert": `Review alert "${task.task === "review alert" && getContentObj(task.data).label}"`
       }[task.task])
 
       const scheduled = ScheduleStore.allScheduled.map(task =>   <Table.Row key={"sched" + giveMeKey()}>

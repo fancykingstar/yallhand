@@ -26,7 +26,7 @@ export class Users extends React.Component {
     if (UIStore.search.searchUsersData.length === 0) {
       UIStore.set("search",
         "searchUsersData",
-        initSearchObj(AccountStore.allUsers, "userID", TeamStore.structure, TeamStore.tags, true)
+        initSearchObj(AccountStore.allUsers, "email", TeamStore.structure, TeamStore.tags, true)
       );
     }
   }
@@ -38,22 +38,23 @@ export class Users extends React.Component {
 
     const displayFilter = (all) => {
       if (dropdown.usersFilter === "active") return all.filter(user => user.isActive || (user.password === '' && user.userId === '')) 
-      return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
+      else if (dropdown.usersFilter === "invited") return all.filter(user => user.code);
+      else return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
     }
 
     const filteredDisplay = () => {
       if (search.searchUsers !== "") {
         const results = stupidSearch(search.searchUsersData, search.searchUsers);
-        return AccountStore.allUsers.filter(item => results.includes(item.userID));
+        return AccountStore.allUsers.filter(item => results.includes(item.email));
       } else {
         return displayFilter(AccountStore.allUsers)
       }
     };
 
     const users = filteredDisplay().map(user => (
-      <Table.Row  disabled={!user.isActive} key={`user${giveMeKey()}`} onClick={() => this.setState({user})}>
+      <Table.Row  disabled={!user.isActive && !user.code} key={`user${giveMeKey()}`} onClick={() => this.setState({user})}>
         <Table.Cell width={3}>
-          <Header disabled={!user.isActive}>
+          <Header >
             <Header.Content>
               {user.displayName_full}
               <Header.Subheader>
@@ -85,7 +86,7 @@ export class Users extends React.Component {
           inline
           value={dropdown.usersFilter}
           onChange={(e, val) => UIStore.set("dropdown", "usersFilter", val.value)}
-          options={[{text: "active", value: "active" }, { text: "offboarded", value: "offboarded"}]} />
+          options={[{text: "active", value: "active" }, { text: "invited", value: "invited"}, { text: "offboarded", value: "offboarded"}]} />
         </span>
         <Table basic="very" selectable fixed columns={10}>
           <Table.Header>

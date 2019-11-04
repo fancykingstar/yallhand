@@ -17,7 +17,7 @@ export class PubControls extends React.Component {
         <Menu compact icon="labeled" vertical size="mini" inverted>
           <Menu.Item name="draft" onClick={this.handleItemClick}>
             <Icon name="keyboard" size="small" />
-            Save Draft
+            Draft
           </Menu.Item>
 
           <Menu.Item name="publish" onClick={this.handleItemClick}>

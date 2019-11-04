@@ -3,7 +3,8 @@ import {sortByUTC} from "./SortByUTC";
 
   export const calculateAnalytics = (allSurveys) => {
     const surveysNoStart = (survey) => survey.instances.length - survey.responses_by_instance.length;
-    const surveysCompleted = (partially, survey) => survey.responses_by_instance.length? survey.responses_by_instance.filter(i=>partially? !i.completed: i.completed).length : 0
+    const surveysCompleted = (partially, survey) => survey.responses_by_instance.length? survey.responses_by_instance.filter(i=>partially? !i.completed: i.completed).filter(i=>i.data).length : 0
+    const surveysCancelled = (survey) => survey.responses_by_instance.length? survey.responses_by_instance.filter(i=>!i.data).length : 0
     const getPercentage = (array, val) => {
       const total = array.reduce(function(acc, val) { return acc + val; }, 0);
       return parseFloat(val/total * 100).toFixed(1);
@@ -19,6 +20,7 @@ import {sortByUTC} from "./SortByUTC";
         _noStart: surveysNoStart(survey),
         _partial: surveysCompleted(true, survey),
         _completed: surveysCompleted(false, survey),
+        _cancelled: surveysCancelled(survey),
         _deadline: survey.instances.length === 0? "No Current Deadlines" : Math.max(...survey.instances.map(i=>i.deadline))
       }
 
@@ -31,6 +33,7 @@ import {sortByUTC} from "./SortByUTC";
         let allResponses = []; ///returns an array of responses [{id: {response:}}]
         let responsesByUser= {};
         survey.responses_by_instance.forEach(instance => {
+        if(!instance.data) return;
         Object.keys(instance.data)
           .filter(res => res === id)
           .forEach(res => {
