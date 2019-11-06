@@ -56,7 +56,7 @@ class PostDetails extends React.Component {
                                     aria-label="back button"
                                     edge="start"
                                     style={{ display: 'inline-block' }}
-                                    onClick={this.props.preview? {} : history.goBack}
+                                    onClick={this.props.preview? ()=>{} : history.goBack}
                                 ><KeyboardBackspaceIcon fontSize="inherit" />
                                 </IconButton>
                                 {content.label}</h3>

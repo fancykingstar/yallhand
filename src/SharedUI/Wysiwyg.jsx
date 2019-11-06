@@ -115,7 +115,7 @@ export class Wysiwyg extends React.Component {
         } 
         
       return (
-        <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10}: null}>
+        <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
             <Editor
             //   wrapperClassName="Wrapped"
