@@ -84,7 +84,7 @@ class SurveyFrame extends React.Component {
       responsive: "scrollMaxHeight",
       viewColumns: false,
       download: false,
-      onRowClick: (i, data) => handleClick(SurveyStore.allSurveys[data.rowIndex])
+      onRowClick: (i, data) => handleClick(SurveyStore.allSurveys[data.dataIndex])
     };
 
     return (

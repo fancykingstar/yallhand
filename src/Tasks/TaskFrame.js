@@ -84,7 +84,7 @@ class TaskFrame extends React.Component {
       viewColumns: false,
       download: false,
 
-      onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.rowIndex])
+      onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.dataIndex])
     };
 
     return (
