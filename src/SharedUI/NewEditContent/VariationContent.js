@@ -19,8 +19,9 @@ import { Channel } from "../ManageContent/Channel";
 
 import { createPolicy, createAnnouncement, modifyPolicy, modifyAnnouncement, createHistory } from "../../DataExchange/Up"
 import { content, contentEdit, contentHistory } from "../../DataExchange/PayloadBuilder"
+import { validate } from "../../SharedCalculations/ValidationTemplate"
 
-import toast from "../../YallToast"
+// import toast from "../../YallToast"
 import _ from "lodash";
 import { UserStore } from "../../Stores/UserStore";
 
@@ -45,7 +46,9 @@ class VariationContent extends React.Component {
       resourceID: "",
       _options: "",
       _contentPreview: false,
-      _audience_target: "",})
+      _audience_target: "",
+      _errors: []
+    })
   }
   
   componentDidMount(){
@@ -60,12 +63,45 @@ class VariationContent extends React.Component {
     return Boolean(Object.values(this.state).filter(i=>i.length).length); 
   }
   
+  contentPreviewData = () => {
+    const { label, img, contentHTML} = this.state;
+    const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
+    const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)[0];
+    const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
+    let updatedState = {};
+    Object.keys(this.state)
+      .filter(i => i[0] !=="_" && this.state[i].length)
+      .forEach(i => updatedState[i] = this.state[i]);
+    const data = {
+      label: updatedState.label? updatedState.label : isNewContent? "" : content.label,
+      img: updatedState.img? updatedState.img : isNewContent? "" : content.img,
+      variations: [{
+        userID: UserStore.user.userID,
+        contentHTML: updatedState.contentHTML? updatedState.contentHTML : isNewVari? "" : vari.contentHTML,
+        updated: Date.now()
+      }]
+    }
+    return data;
+    // return Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})
 
+  }
+
+  isValid = () => {
+    const {isNewContent,variID} = this.props.data;
+    const conditions = {
+      Title: isNewContent? this.state.label : true,
+      Body: !this.state.contentHTML && !variID? false : true,
+    }
+   const result = validate(conditions);
+   this.setState({_errors: result.errors});
+   return result.valid
+  }
+
+  
   async changeStage(stage) {
     const { UIStore, history } = this.props;
     const {mode, isNewContent, contentID, variID} = this.props.data;
-    if ((!this.state.label || !this.state.contentHTML) && !variID) {
-      toast.error("Whoops, please be sure to have a title and content before saving", {hideProgressBar: true})
+    if (!this.isValid()) {
       return;
     }
 
@@ -74,23 +110,30 @@ class VariationContent extends React.Component {
     const isPolicy = mode === "policy";
     const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
     const typeId = `${mode}ID`;
+
+
+
     if (stage === "published") {
       const historyMode = contentHistory(mode, contentID, content(this.state));
       createHistory(historyMode);
     }
-    
+
     if (isNewContent) {
       const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
       const id = res[typeId];
       await this.reset();
       await history.push(`${path}${res[id]}`)
     }
+
+
     else {
+      contentEdit(this.state, mode, contentID, variID)
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       await this.reset();
       await history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
+
   }
 
   componentDidUpdate(){
@@ -105,8 +148,8 @@ class VariationContent extends React.Component {
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
-    const tempVari = () => [{label: "",userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
-    const { _options } = this.state;
+    const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
+    const { _options, _errors, _exiting } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
     if (isNewContent) attachedStyle.pointerEvents = "none";
@@ -127,7 +170,6 @@ class VariationContent extends React.Component {
 
       }[_options]
 
-
     return (
       <div>
 
@@ -137,16 +179,18 @@ class VariationContent extends React.Component {
           />
         <ContentPreview 
           open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} 
-          data={Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})} />
+          data={this.contentPreviewData()} 
+          
+          />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
-
+      
         <TextField
-            error={Boolean(this.state.contentHTML && !this.state.label && !content.label)}
+            error={_errors && _errors.includes("Title")}
             id="standard-full-width"
-            label="Title"
+            label={`${!isNewContent? "Variation " : ""}Title`}
             placeholder="Enter a title for this content..."
             fullWidth
             margin="normal"
@@ -154,11 +198,11 @@ class VariationContent extends React.Component {
               shrink: true,
             }}
             onChange={e=>this.setState({label: e.target.value})}
-            defaultValue={isNewContent? "" : vari[0].label? vari[0].label : content.label }
+            defaultValue={isNewContent? "" : isNewVari || !vari[0].label?  content.label : vari[0].label}
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
+        <Wysiwyg  error={_errors && _errors.includes("Body")} loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
         <div>
           {TeamStore._isTargetingAvail &&
           <Row>
@@ -169,7 +213,7 @@ class VariationContent extends React.Component {
                 NoSelectUsers 
                 label={mode} 
                 input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
-                output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tags": []}: val.sendToTeamID? {teamID:val.sendToTeamID}:{tags: val.sendToTagID==="none"? []:[val.sendToTagID]})}
+                output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tags": []}: val.sendToTeamID? {teamID:val.sendToTeamID}:{tags: !val.sendToTagID || val.sendToTagID==="none"? []:[val.sendToTagID]})}
                 />
             </div>
             </Col>
@@ -177,8 +221,8 @@ class VariationContent extends React.Component {
           }
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
-            <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
-            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState(e === "preview"? {_contentPreview: true} : {_options: e===_options? "": e})}/>
+            <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
+            <CommonOptions isNewContent={isNewContent} unsavedWarning={isNewVari} handleClick={(e) => this.setState(e === "preview"? {_contentPreview: true} : {_options: e===_options? "": e})}/>
             </Col>
           </Row>
           <Row>

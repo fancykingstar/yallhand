@@ -9,6 +9,7 @@ import { Row, Col, } from 'reactstrap';
 import _ from "lodash";
 import "./style.css";
 import { apiCall } from "../../DataExchange/Fetch";
+import toast  from "../../YallToast"
 
 @inject("DataEntryStore", "AccountStore", "UIStore")
 @observer
@@ -36,7 +37,13 @@ export class FeaturedImage extends React.Component {
     this.getImg = async () => {
       this.setState({ loading: true });
       await apiCall('/fileresources/unsplash/random', 'POST', {query:this.state.input}).then(res => res.json()).then(res =>
-        this.setState({ retrievedImg: res, loading: false } )
+       {
+        if(res.errors) {
+          toast.error(res.errors[0], {hideProgressBar: true})
+          this.setState({ loading: false } )
+        } 
+        else this.setState({ retrievedImg: res, loading: false } )
+       }
 
         ) };
   }

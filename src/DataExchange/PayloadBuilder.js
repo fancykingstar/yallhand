@@ -367,13 +367,19 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
   export const contentEdit = (obj, mode, contentID, variID) => {
     // const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+
+    const newVariTemplate = { variationID: generateID(), stage: "draft", teamID: "global", label: "",tags: [], contentRAW:"", contentHTML:""}
+
     let updatedFields = {};
-    Object.keys(obj).forEach((key, i) => { if(obj[key]) updatedFields[key] = obj[key]});
+    Object.keys(obj).forEach((key, i) => { if(key[0]!=="_") updatedFields[key] = obj[key]});
 
     let newContentValues = {}
     if (updatedFields.img) newContentValues.img = updatedFields.img;
     if (updatedFields.chanID) newContentValues.chanID = updatedFields.chanID;
-    newContentValues[`${mode}ID`] = contentID;
+    if (mode === "announcement") {newContentValues.announcementID = contentID}
+    else newContentValues.policyID = contentID;
+    newContentValues.accountID = accountID();
+    newContentValues.updated = Date.now();
 
     let newVariValues = {};
     if (updatedFields.label) newVariValues.label = updatedFields.label;
@@ -382,15 +388,21 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
     if (updatedFields.tags) newVariValues.tags = updatedFields.tags;
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
+    newVariValues.updated = Date.now();
+    newVariValues.userID = userID();
+    newVariValues.variationID = updatedFields.variationID? updatedFields.variationID : generateID();
 
-    const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));
+    //Correct for Nasty MOBX bug --- stringify/parse will release from Observer
+    let parent = mode === "policy" ? JSON.stringify(PoliciesStore._getPolicy(contentID)) : JSON.stringify(AnnouncementsStore._getAnnouncement(contentID));
+    parent = JSON.parse(parent);
+ 
     const variations = parent.variations.slice();
-    const editedVari = variations.filter(i=>i.variationID === variID)[0];
+    const editedVari = variID? variations.filter(i=>i.variationID === variID) : [newVariTemplate];
     const otherVaris = variations.filter(i=> i.variationID !== variID);
-    
-    newContentValues.variations = [...otherVaris, ...[Object.assign(editedVari, newVariValues)]]
+    const combinedVaris = [...otherVaris, Object.assign(editedVari.length? editedVari[0]: {}, newVariValues)];
+    newContentValues.variations = combinedVaris;
     if(updatedFields === "published") newContentValues.everPublished = true;
-    return _.extend({}, base(), newContentValues)
+    return _.extend({}, base(), newContentValues);
   }
   
   export const contentPatch = (newObj) => {
