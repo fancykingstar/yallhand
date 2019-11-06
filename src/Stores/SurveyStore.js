@@ -57,6 +57,10 @@ class Store {
     return this.allSurveys.filter(survey => survey.surveyID === ID)[0]
   }
 
+  _dropSurvey(ID) {
+    this.allSurveys = this.allSurveys.filter(i => i.surveyID !== ID);
+  }
+
 
 }
 

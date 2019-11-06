@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-
+import {inject, observer} from "mobx-react";
 import LayoutHeader from "../views/components/Header";
 import LayoutFooter from "../views/components/Footer";
 import { useWindowDimensions } from "./WindowDimensions";
@@ -26,6 +26,8 @@ import Directory from '../assets/images/Directory.svg';
 import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
+import TocRoundedIcon from '@material-ui/icons/TocRounded';
+import Badge from '@material-ui/core/Badge';
 
 
 import search_icon from "../assets/images/search_icon.svg";
@@ -110,7 +112,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const DefaultLayout = ({ ...props }) => {
+const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props }) => {
+    const {SurveyStore, TaskStore} = props;
     const mobileWidth = 992;
     var sOpen = false;
     const [scrollY, setScrollY] = useState(0);
@@ -240,8 +243,14 @@ const DefaultLayout = ({ ...props }) => {
                             <ListItemText primary="Faqs" />
                         </ListItem>
                         <ListItem button key="surveys" component={Link} to='/portal/surveys'>
-                            <ListItemIcon><BallotRoundedIcon /></ListItemIcon>
+                            <ListItemIcon>
+                            <Badge badgeContent={SurveyStore.allSurveys.length} color="secondary"> <BallotRoundedIcon /> </Badge>
+                             </ListItemIcon>
                             <ListItemText primary="Surveys" />
+                        </ListItem>
+                        <ListItem button key="tasks" component={Link} to='/portal/tasks'>
+                            <ListItemIcon><Badge badgeContent={TaskStore.allTasks.length} color="secondary"> <TocRoundedIcon /> </Badge></ListItemIcon>
+                            <ListItemText primary="Tasks" />
                         </ListItem>
                         {/* <ListItem button key="directory" component={Link} to="directory">
                             <ListItemIcon><img src={Directory} alt="" /></ListItemIcon>
@@ -275,5 +284,5 @@ const DefaultLayout = ({ ...props }) => {
             </main>
         </div >
     );
-}
+}));
 export default DefaultLayout;

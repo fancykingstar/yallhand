@@ -6,14 +6,13 @@ import { withRouter } from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import { Row, Col, } from 'reactstrap';
 
-import { useBeforeunload } from 'react-beforeunload';
-
 import BackButton  from "../../SharedUI/BackButton";
 import { AttachedFiles } from "./AttachedFiles";
 import { Wysiwyg } from "../../SharedUI/Wysiwyg";
 import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
 import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
 import { CommonOptions } from "../../SharedUI/NewEditContent/CommonOptions";
+import { ContentPreview } from "../../SharedUI/ContentPreview";
 
 import { FeaturedImage } from "../ManageContent/FeaturedImage";
 import { Channel } from "../ManageContent/Channel";
@@ -23,14 +22,14 @@ import { content, contentEdit, contentHistory } from "../../DataExchange/Payload
 
 import toast from "../../YallToast"
 import _ from "lodash";
+import { UserStore } from "../../Stores/UserStore";
 
-@inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore")
+@inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore", "TeamStore")
 @observer
 class VariationContent extends React.Component {
   constructor(props){
     super(props);
     this.state={};
-    this.reset();
   }
   reset() {
     this.setState({   
@@ -45,17 +44,25 @@ class VariationContent extends React.Component {
       chanID: "",
       resourceID: "",
       _options: "",
+      _contentPreview: false,
       _audience_target: "",})
   }
+  
+  componentDidMount(){
+    this.reset();
+  }
+
+  updateDraft = (e) => this.setState({contentRAW: e.raw, contentHTML: e.html});
+
+  togglePreview = (bool) => this.setState({_contentPreview: bool});
 
   hasBeenChanged() { 
-    return false
-    // return Boolean(Object.values(this.state).filter(i=>i).length) 
+    return Boolean(Object.values(this.state).filter(i=>i.length).length); 
   }
   
 
   async changeStage(stage) {
-    const { AnnouncementsStore, PoliciesStore, UIStore, history } = this.props;
+    const { UIStore, history } = this.props;
     const {mode, isNewContent, contentID, variID} = this.props.data;
     if ((!this.state.label || !this.state.contentHTML) && !variID) {
       toast.error("Whoops, please be sure to have a title and content before saving", {hideProgressBar: true})
@@ -67,22 +74,22 @@ class VariationContent extends React.Component {
     const isPolicy = mode === "policy";
     const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
     const typeId = `${mode}ID`;
+    if (stage === "published") {
+      const historyMode = contentHistory(mode, contentID, content(this.state));
+      createHistory(historyMode);
+    }
     
     if (isNewContent) {
-      (isPolicy ? createPolicy(content(this.state)) : createAnnouncement(content(this.state))).then(res => {
-        if (isPolicy) PoliciesStore.pushPolicies(res);
-        else AnnouncementsStore.pushAnnouncements(res);
-        const id = res[typeId];
-        this.reset();
-        history.push(`${path}${res[id]}`); 
-      })
-
+      const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
+      const id = res[typeId];
+      await this.reset();
+      await history.push(`${path}${res[id]}`)
     }
     else {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       await this.reset();
-        history.push(`${path}${UIStore.content[mode + "ID"]}`);
+      await history.push(`${path}${UIStore.content[mode + "ID"]}`);
     }
   }
 
@@ -95,16 +102,17 @@ class VariationContent extends React.Component {
   }
 
   render() {
-    const { DataEntryStore, UIStore } = this.props;
+    const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
+    const tempVari = () => [{label: "",userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     const { _options } = this.state;
 
     let attachedStyle = {paddingTop: 35, maxWidth: 450}
-    if (DataEntryStore.content.isNew) attachedStyle.pointerEvents = "none";
+    if (isNewContent) attachedStyle.pointerEvents = "none";
 
-    const attachFiles = DataEntryStore.content.isNew? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
-    :  <Segment disabled={DataEntryStore.content.isNew}>
+    const attachFiles = isNewContent? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
+    :  <Segment disabled={isNewContent}>
     <AttachedFiles mode={mode}  />
   </Segment>
 
@@ -119,19 +127,24 @@ class VariationContent extends React.Component {
 
       }[_options]
 
+
     return (
       <div>
+
          <Prompt
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
           />
+        <ContentPreview 
+          open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} 
+          data={Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})} />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
-          {DataEntryStore.content.isNew ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
+          {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 
         </Header>
 
         <TextField
-            error={this.state.contentHTML && !this.state.label && !content.label}
+            error={Boolean(this.state.contentHTML && !this.state.label && !content.label)}
             id="standard-full-width"
             label="Title"
             placeholder="Enter a title for this content..."
@@ -145,13 +158,14 @@ class VariationContent extends React.Component {
             InputProps={{disableUnderline: true, style: {fontSize: "1.4em"} }}
             />
 
-        <Wysiwyg loadContent={content.variations? vari[0].contentRAW: {}} border output={e=>this.setState({contentRAW: e.raw, contentHTML: e.html})}/>
-        {/* this.setState({contentRAW: e.raw, contentHTML: e.html}) */}
+        <Wysiwyg loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
         <div>
+          {TeamStore._isTargetingAvail &&
           <Row>
             <Col>
              <div style={{ paddingTop: "10px" }}>
               <ChooseTargeting
+                noPass
                 NoSelectUsers 
                 label={mode} 
                 input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
@@ -160,10 +174,11 @@ class VariationContent extends React.Component {
             </div>
             </Col>
           </Row>
+          }
           <Row style={{padding: "10px 0 10px"}}>
             <Col>
             <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
-            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState({_options: e===_options? "": e})}/>
+            <CommonOptions unsavedWarning={isNewVari} handleClick={(e) => this.setState(e === "preview"? {_contentPreview: true} : {_options: e===_options? "": e})}/>
             </Col>
           </Row>
           <Row>

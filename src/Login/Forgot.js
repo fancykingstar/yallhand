@@ -52,8 +52,8 @@ class Forgot extends React.Component {
 
   async validatePwd () {
     const { email, code, pwd1, pwd2 } = this.state
-    if (this.isInvalidPassword(pwd1)) return this.setState({errorMsg: 'field New password must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character'});
-    if (this.isPasswordNotEqual(pwd2)) return this.setState({errorMsg: 'field Confirm new password is not equal to New password'});
+    if (this.isInvalidPassword(pwd1)) return this.setState({errorMsg: 'New password must contains 8 characters with 1 upper, 1 lower, 1 number and 1 special character'});
+    if (this.isPasswordNotEqual(pwd2)) return this.setState({errorMsg: 'Confirm new password is not equal to New password'});
     await apiCall(`/users/reset`, 'POST', {password: pwd1, email, code}).then((res) => res.json()).then(res => {
       const { history } = this.props;
       if (res.ko) return this.setState({errorMsg: 'Your email or validation code is wrong'});

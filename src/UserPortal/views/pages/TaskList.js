@@ -1,35 +1,34 @@
 import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
-import {Survey} from "../components/Survey";
-import {SurveyStore} from "../../../Stores/SurveyStore";
+import {Task} from "../components/Task";
+import {TaskStore} from "../../../Stores/TaskStore";
 import { EmptyPlaceholder } from '../components/EmptyPlaceholder';
 
 
-class SurveyList extends React.Component {
+class TaskList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-           SurveyData: [],
+           TaskData: [],
          
         }
      }
      componentDidMount() {
         this.setState({
-           SurveyData: SurveyStore.allSurveys,
+           TaskData: TaskStore.allTasks,
         
         })
      }
 
 
    render() {
-       const {SurveyData} = this.state;
+       const {TaskData} = this.state;
       return (
-         <Layout pageTitle={"Surveys"}>
+         <Layout pageTitle={"Tasks"}>
             <div style={{paddingTop: 20}} className="container">
                <div className="page_container">
-                  {(SurveyData.length) ? 
-                     SurveyData
-                     .map((item, index) => <Survey data={item} index={index} usePaper/> ) : <EmptyPlaceholder type="survey"/> }
+               {(TaskData.length) ? TaskData.map((item, index) => 
+               <Task data={item} index={index} usePaper/> ) : <EmptyPlaceholder type="task"/> }
                </div>
             </div>
          </Layout>
@@ -37,4 +36,4 @@ class SurveyList extends React.Component {
    }
 }
 
-export default SurveyList;
+export default TaskList;

@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import registerServiceWorker from "./registerServiceWorker";
+// import registerServiceWorker from "./registerServiceWorker";
+import { unregister } from './registerServiceWorker';
 import { Provider } from "mobx-react";
 import { BrowserRouter } from "react-router-dom";
 import { ChannelStore } from "./Stores/ChannelStore";
@@ -41,4 +42,4 @@ const Root = (
 );
 
 ReactDOM.render(Root, document.getElementById("root"));
-registerServiceWorker();
+unregister();

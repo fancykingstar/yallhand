@@ -39,7 +39,6 @@ class NewEditVariation extends React.Component {
 
   render() {
     const {loaded} = this.state;
-    console.log("new edit state", this.state)
     return (
       <div>
 

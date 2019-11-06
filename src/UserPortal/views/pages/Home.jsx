@@ -14,6 +14,7 @@ import Star from '@material-ui/icons/Star';
 import PostData from '../../data/home.json';
 import { css } from '@material-ui/system';
 import { sortByUTC } from "../../../SharedCalculations/SortByUTC";
+import { giveMeKey } from '../../../SharedCalculations/GiveMeKey';
 
 @inject("AnnouncementsStore", "PoliciesStore", "SurveyStore", "TaskStore")
 @observer
@@ -135,14 +136,15 @@ class Home extends React.Component {
                         <div className="page_content shadow">
 
                            {(TaskStore.allTasks.length) ? TaskStore.allTasks.map((item, index) => {
-                              return <Task data={item} index={index} />
+                              return <Task data={item} index={"hometask" + giveMeKey()} />
                            }) : ('')}
 
                            {(SurveyStore.allSurveys.length) ? SurveyStore.allSurveys.map((item, index) => {
-                              return <Survey data={item} index={index} />
+                              return <Survey data={item} index={"homesurvey" + giveMeKey()} />
                            }) : ('')}
 
-                           <div className="announce_component">
+                              {Boolean(this.state.annc.length) &&
+                               <div className="announce_component">
                               <h6>Announcements</h6>
                               <div className="slider_wrap announce_main_box">
                                  <Slider {...settings}>
@@ -157,6 +159,10 @@ class Home extends React.Component {
                                     })}
                                  </Slider>
                               </div>
+                              </div>
+                              }
+
+                              {Boolean(this.state.faqs.length) &&
                               <div className="announce_component faq_announce">
                                  <h6>FAQs</h6>
                                  <div className="slider_wrap announce_main_box">
@@ -173,7 +179,8 @@ class Home extends React.Component {
                                     </Slider>
                                  </div>
                               </div>
-                           </div>
+                              }
+                        
                         </div>
 
 

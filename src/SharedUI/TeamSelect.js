@@ -22,6 +22,7 @@ export class TeamSelect extends React.Component {
           <Form.Dropdown
             fluid
             {...val}
+            disabled={this.props.disabled}
             search
             selection
             label={label === "" ? "Team" : label}

@@ -16,6 +16,7 @@ import { fileResource, fileResourceEdit } from "../../../DataExchange/PayloadBui
 import { createFile, modifyFile, deleteFileresource } from "../../../DataExchange/Up";
 import { log } from "../../../DataExchange/Up"
 import { ItsLog } from "../../../DataExchange/PayloadBuilder"
+import { EmptyPlaceholder } from '../components/EmptyPlaceholder';
 
 
 @inject("ResourcesStore", "UIStore", "DataEntryStore")
@@ -64,6 +65,7 @@ class Storage extends React.Component {
          <Layout pageTitle={"Storage"}>
             <div style={{paddingTop: 20}} className="container">
                <div className="page_container">
+                 {!allResources.length?  <EmptyPlaceholder type="storage item" />:
                <div className="LinkTable">
                     
                     <Table basic="very">
@@ -81,6 +83,7 @@ class Storage extends React.Component {
                     </Table>
                     
          </div>
+                 }
                </div>
             </div>
          </Layout>

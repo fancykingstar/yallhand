@@ -30,17 +30,19 @@ class PostDetails extends React.Component {
     render() {
         const { AccountStore, UserStore } = this.props;
         const { mode, contentID } = this.props.data;
-        const post = this.props.data.PostData;
-        const vari = post && post.variations[0];
+        const content = this.props.data;
+        const vari = content && content.variations[0];
 
 
         const sentimentClick = (val) => {
+            if(this.props.preview) return;
             this.props.update({ sentiment: true });
             if (!UserStore.user.isAdmin) {
                 createSentiment(sentiment(val, `${mode}ID`, contentID, vari.variationID)).then(r => r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
             }
-
         }
+
+       
 
         return (
             <div className="outerContentDetail">
@@ -50,19 +52,19 @@ class PostDetails extends React.Component {
                         <div className="contentDetailTitle">
                             <h3>
                                 <IconButton
-                                    color="inherit"
-                                    aria-label="back to actions"
+                                    color="primary"
+                                    aria-label="back button"
                                     edge="start"
                                     style={{ display: 'inline-block' }}
-                                    onClick={history.goBack}
+                                    onClick={this.props.preview? {} : history.goBack}
                                 ><KeyboardBackspaceIcon fontSize="inherit" />
                                 </IconButton>
-                                {post.label}</h3>
+                                {content.label}</h3>
                         </div>
                     </div>
                 </div>
                 <div className="contentBigImage">
-                    <img alt="" src={post.img} />
+                    <img alt="" src={content.img} />
                 </div>
                 <div className="smallContainer">
                     <div className="userPostDetailRow">
@@ -78,7 +80,7 @@ class PostDetails extends React.Component {
                         {/* <a href="#/" className="selectPdf">Document-1.pdf</a>
                         <a href="#/" className="selectPdf">Checklist.pdf</a> */}
                         <Fade in={!this.props.data.sentiment}>
-                            <Typography>
+                            <Typography variant="inherit" component="div">
                                 <div className="emojisRows">
                                     <p>This makes you feel...</p>
                                     <div className="emojiBox-outer">

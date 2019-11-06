@@ -10,6 +10,7 @@ import { AccountStore} from "../Stores/AccountStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 class SurveyFrame extends React.Component {
+  
   getMuiTheme = () =>
     createMuiTheme({
       overrides: {
@@ -78,7 +79,7 @@ class SurveyFrame extends React.Component {
       selectableRows: "none",
       filter:true,
       filterType: 'dropdown',
-      filterList: [["active"]],
+      // filterList: [["active"]],
       print: false,
       responsive: "scrollMaxHeight",
       viewColumns: false,

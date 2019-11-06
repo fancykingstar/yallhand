@@ -51,7 +51,7 @@ export class DateTimeSelect extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) { 
-    if(props.defaultValue) return { currentDate: props.defaultValue }
+    if(props.defaultValue) return { currentDate: props.defaultValue, toggled: true }
     return null
  }  
 
