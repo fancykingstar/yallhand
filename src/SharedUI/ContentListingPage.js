@@ -177,7 +177,7 @@ class ContentListingPage extends React.Component {
       responsive: "scrollMaxHeight",
       viewColumns: false,
       download: false,
-      onRowClick: (i, data) => handleClick(all[data.rowIndex])
+      onRowClick: (i, data) => handleClick(all[data.dataIndex])
     };
 
 
