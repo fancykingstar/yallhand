@@ -22,28 +22,37 @@ class TicketingNewEdit extends React.Component {
     this.state = {
       ticketItems: [this.reset()], 
       label: "",
-      instances: [],
-      targetType: "all",
-      deadline: 0,
-      active: false,
-      anonymous: false,
-      sendToTeamID: "", sendToTagID: "", selectedUser: "", sendTargetType: "all", sendToUsers: []
+      chanID: "all",
+      teamID: "",
+      tags: "",
+      type: "",
+      active: "",
+      icon: "",
+      isTemplate: true,
+      admins: [],
+      collaborators: [],
+      config: {
+        simpleDesc: false, 
+        notifyAdminNewTicket: false,
+        deleteTicket: false,
+        updateOpener: false
+      }
     }
   };
 
   reset () {
     return this.props.mode === "survey"? 
     ({
-        _id: giveMeKey(),
-        q: "",
-        resType: "scale",
-        resRequired: false,
-        multiConfig: "custom", 
-        scaleConfig: "star",
-        resChoices: [],
-        scaleLabels_lo: "Least Favorable",
-        scaleLabels_hi: "Most Favorable",
-        valid: false,
+        id: giveMeKey(),
+        defaultAssignee: "",
+        _requireInfo: false,
+        requiredInfo: [
+          {
+            type: "text",
+            label: "",
+            selectionOptions: []
+          }
+        ]
     })
     :
     ({
@@ -54,6 +63,9 @@ class TicketingNewEdit extends React.Component {
 
   };
 
+  updateState(obj) {
+    this.setState(obj);
+  }
 
 
   validate = () => {
@@ -150,6 +162,7 @@ class TicketingNewEdit extends React.Component {
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
     const preview = ( <Button onClick={e => {}} > Preview </Button> );
     const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} {preview}</div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} {preview}</div> ); 
+
     return (
       <div> 
         <BackButton/>
@@ -167,14 +180,14 @@ class TicketingNewEdit extends React.Component {
             <Form.Input
               label="Title (Required)"
               value={this.state.label}
-              onChange={(e, val) => this.setState({ label: val.value })}
+              onChange={(e, val) => this.updateState({ label: val.value })}
             />
           </Form>
               {!this.state.active &&
               <>
    
    
-                <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Access" output={val=>this.setState(val)} input={this.state}/> </div>
+                <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Access" output={val=>this.updateState(val)} input={this.state}/> </div>
              
                 <Form style={{maxWidth: 400}}>
                   <Form.Dropdown label="Ticketing Type" style={{minWidth: 370}} selection defaultValue="simple" options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} />
