@@ -256,6 +256,8 @@ class ManageContent extends React.Component {
           AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)
       }
 
+      const idobject = this.mode === "announcement"? {announcementID:this.props.match.params.contentID,mode: this.mode, variations: [vari()]} : {policyID: this.props.match.params.contentID,mode: this.mode, variations: [vari()]};
+
       const manageContent = () => {
         if(this.mode === "policy" && UIStore.content.policyID === "")
           {
@@ -277,7 +279,7 @@ class ManageContent extends React.Component {
                 />
                 <Segment>
                   <div> 
-                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={Object.assign(Object.assign({}, DataEntryStore.contentmgmt), {variations: [vari()]})} />
+                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={Object.assign(Object.assign({}, DataEntryStore.contentmgmt), idobject)} />
 
                     <Header>Available Variations</Header>
                     <br />
