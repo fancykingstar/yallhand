@@ -8,14 +8,14 @@ import _ from "lodash";
 
 
 export const TicketingItem = inject("DataEntryStore")(observer((props) => {
-  const { q, _id} = props.info;
+  const { id, _requireInfo, data, label, defaultAssignee} = props;
 
-  const setField = (content) => {
-    const isValid = 
-    Object.values({
-      q: Boolean(q.trim().length !== 0),
-    }).filter(i => !i).length === 0;
-    const obj = Object.assign(content, {valid: isValid})
+  const setField = (obj) => {
+    // const isValid = 
+    // Object.values({
+    //   q: Boolean(q.trim().length !== 0),
+    // }).filter(i => !i).length === 0;
+    // const obj = Object.assign(content, {valid: isValid})
     props.updateFields(obj, props.index) 
   } 
 
@@ -43,7 +43,7 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
         <TextField
           required
           label="Stage Name"
-          value={q}
+          value={label}
           onKeyDown={(e)=> {if(e.keyCode ==13) props.newLine()}}
           onChange={e => setField({ q: e.target.value }) }
         />
@@ -53,15 +53,16 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
       </Row>
         <Row style={{paddingTop: 10}}><Col>
         <span>Default Assignee:</span><br/>
-        <Dropdown selection defaultValue={0} options={[{text: "Marc T", value:0},{text: "none", value:1}]} /><br/>
+        <Dropdown selection value={defaultAssignee} options={[{text: "Marc T", value:0},{text: "none", value:1}]} /><br/>
         {props.index !==0 && <span style={{fontSize: "0.8em"}}>Choose "none" to let previous step assignee delegate</span>}
        
         </Col></Row>
         <Row>
         <div style={{paddingLeft: 10}}>
+          {String(_requireInfo)}
         <Accordion>
-          <Accordion.Title active={props.index === 0}><Icon name='dropdown' /> Required information for this stage</Accordion.Title>
-          <Accordion.Content active={props.index === 0}>
+          <Accordion.Title active={_requireInfo}><Icon onClick={()=>setField({_requireInfo: !_requireInfo})} name='dropdown' /> Required information for this stage</Accordion.Title>
+          <Accordion.Content active={_requireInfo}>
             <Container>
               <Form>
                 <Form.Group>
