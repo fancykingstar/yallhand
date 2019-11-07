@@ -7,32 +7,39 @@ import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 import IconBox from "./IconBox";
-
 import Star from '../../assets/images/star.svg';
 import AskManagement from '../../assets/images/actions/askManagement.svg';
 import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
 
-
+import {S3Download} from "../../../DataExchange/S3Download"
 import { sentiment } from "../../../DataExchange/PayloadBuilder"
 import { createSentiment } from "../../../DataExchange/Up"
-
+import {downloadFilePortal} from "../../../DataExchange/DownloadFile"
 
 import { Col, Row } from 'reactstrap';
 import UTCtoFriendly from '../../../SharedCalculations/UTCtoFriendly';
 import { createBrowserHistory } from 'history';
+import { giveMeKey } from '../../../SharedCalculations/GiveMeKey';
+
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 export const history = createBrowserHistory();
 
-@inject("UIStore", "AccountStore", "UserStore")
+@inject("UIStore", "AccountStore", "UserStore", "ResourcesStore")
 @observer
 class PostDetails extends React.Component {
 
     render() {
-        const { AccountStore, UserStore } = this.props;
+        const { AccountStore, UserStore, ResourcesStore } = this.props;
         const { mode, contentID } = this.props.data;
         const content = this.props.data;
         const vari = content && content.variations[0];
-
+        const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
+        const downloadFile = (S3Key, label) => {
+            const ext = "." + S3Key.split(".")[1]
+            S3Download("gramercy", S3Key, label, ext)
+         }
+        
 
         const sentimentClick = (val) => {
             if(this.props.preview) return;
@@ -76,9 +83,17 @@ class PostDetails extends React.Component {
                     </div>
                     <div className="PostDetailContent">
                         {vari.contentHTML && RenderHTMLContent(vari.contentHTML)}
+                        {
+                             fileResources.map(file => 
+                             <div 
+                             className="selectPdf"
+                             as="a"
+                             key={"contentresourse" + giveMeKey()}
+                             onClick={e => downloadFile(file.S3Key, file.label)}
+                             ><AttachFileIcon/> {file.label}</div>)
+                        }
 
-                        {/* <a href="#/" className="selectPdf">Document-1.pdf</a>
-                        <a href="#/" className="selectPdf">Checklist.pdf</a> */}
+
                         <Fade in={!this.props.data.sentiment}>
                             <Typography variant="inherit" component="div">
                                 <div className="emojisRows">

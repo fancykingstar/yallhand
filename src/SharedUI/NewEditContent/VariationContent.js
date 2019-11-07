@@ -72,15 +72,21 @@ class VariationContent extends React.Component {
     Object.keys(this.state)
       .filter(i => i[0] !=="_" && this.state[i].length)
       .forEach(i => updatedState[i] = this.state[i]);
-    const data = {
+
+    const idobject = mode === "announcement"? {announcementID:this.props.match.params.contentID,mode} : {policyID: this.props.match.params.contentID,mode};
+
+    const data = 
+    Object.assign(
+    {
       label: updatedState.label? updatedState.label : isNewContent? "" : content.label,
       img: updatedState.img? updatedState.img : isNewContent? "" : content.img,
       variations: [{
+        variationID: variID,
         userID: UserStore.user.userID,
         contentHTML: updatedState.contentHTML? updatedState.contentHTML : isNewVari? "" : vari.contentHTML,
         updated: Date.now()
       }]
-    }
+    }, idobject);
     return data;
     // return Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})
 

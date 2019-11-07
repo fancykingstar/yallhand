@@ -390,7 +390,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
     newVariValues.updated = Date.now();
     newVariValues.userID = userID();
-    newVariValues.variationID = updatedFields.variationID? updatedFields.variationID : generateID();
+    newVariValues.variationID = variID? variID : generateID();
 
     //Correct for Nasty MOBX bug --- stringify/parse will release from Observer
     let parent = mode === "policy" ? JSON.stringify(PoliciesStore._getPolicy(contentID)) : JSON.stringify(AnnouncementsStore._getAnnouncement(contentID));
