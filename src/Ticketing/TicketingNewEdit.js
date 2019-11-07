@@ -34,6 +34,9 @@ class TicketingNewEdit extends React.Component {
       icon: "",
       isTemplate: true,
       sendTargetType: "all",
+      sendToTagID: "",
+      sendToTeamID: "",
+      sendToUsers: [],
       admins: [],
       collaborators: [],
       config: {
@@ -49,13 +52,14 @@ class TicketingNewEdit extends React.Component {
     return {
       id: giveMeKey(),
       defaultAssignee: "",
-      data: [], //{type: "", label: "", options: []}
+      data: [{type: "", label: "", options: []}], //{type: "", label: "", options: []}
       _requireInfo: false
     }
   };
 
   updateState(obj) {
-    this.setState(obj);
+    if(Object.keys(obj).includes('config')) this.setState({config: Object.assign(this.state.config, obj.config)});
+    else this.setState(obj);
   }
 
 
@@ -69,10 +73,10 @@ class TicketingNewEdit extends React.Component {
   }
 
   updateFields = (fieldObj, id) => {
-    let questionList = [...this.state.ticketItems]
-    questionList[id] = {...questionList[id], ...fieldObj}
+    let ticketList = [...this.state.ticketItems]
+    ticketList[id] = {...ticketList[id], ...fieldObj}
     this.setState({
-        surveyItems: questionList
+        ticketItems: ticketList
     })
   }
 
@@ -166,14 +170,15 @@ class TicketingNewEdit extends React.Component {
     return (
       <div> 
         <BackButton/>
+        {JSON.stringify(this.state.ticketItems)}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Build Service Ticket Template
           <Header.Subheader>
             Configure and send tickets to your employees
           </Header.Subheader>
         </Header>
-        <Row style={{paddingTop: 10}}>
-          <Col>
+        <Row>
+          <Col style={{marginTop: 10}} xl={6}>
           <Segment>
           <Header style={{paddingBottom: 15}} as="h4">General Settings</Header>
           <Form>
@@ -186,13 +191,10 @@ class TicketingNewEdit extends React.Component {
           </Form>
               {!active &&
               <>
-   
-   
                 <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Access" output={val=>this.updateState(val)} input={this.state}/> </div>
              
                 <Form style={{maxWidth: 400}}>
                   <Form.Dropdown value={type} onChange={(e,val)=>this.updateState({type: val.value})} label="Ticketing Type" style={{minWidth: 370}} selection defaultValue="simple" options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} />
-                    {type === "simple" && <Form.Checkbox label="Include a 'description' field for user to enter additional text"/>}
                     <Form.Dropdown value={chanID} onChange={(e,val)=>this.updateState({chanID: val.value})} options={ChannelStore._channelSelect} selection label="Channel"/>
                     <Form.Dropdown label="Button Icon" placeholder="Choose icon..." onChange={(e, val)=>this.updateState({icon: val.value})} icon={iconKey[this.state.icon]} selection options={iconOptions}>
                   
@@ -206,7 +208,7 @@ class TicketingNewEdit extends React.Component {
     
         </Segment>
           </Col>
-          <Col>
+          <Col style={{marginTop: 10}}  xl={6}>
           <Segment className="TicketingAccess" style={{margin: 10}} style={{backgroundColor: "#e9e9e9"}}>
           <Header style={{paddingBottom: 15}} as="h4">Access</Header>
                   <Form>
@@ -215,16 +217,16 @@ class TicketingNewEdit extends React.Component {
 
                 <Form.Dropdown label="Select collaborator(s)" admin={collaborators} onChange={(e, val)=>this.updateState({collaborators: val.value})} options={AccountStore._getUsersSelectOptions()}  fluid multiple selection placeholder="Select user(s)..." />
                 <p style={{padding: "0px", marginTop: "-15px"}}><span style={{fontSize: "0.7em"}}>Collaborators can edit and view history of tickets that have been assigned to them</span></p>
-
+       
                 <Form.Field>
-                      <Checkbox label="Email admin(s) when a new ticket is opened"/>
+                      <Checkbox checked={this.state.config.notifyAdminNewTicket} onChange={(e,val)=> this.updateState({config: {notifyAdminNewTicket: val.checked}})} label="Email admin(s) when a new ticket is opened"/>
                     </Form.Field>
                     <Form.Field>
-                      <Checkbox label="Allow admin(s) to delete tickets"/>
+                      <Checkbox checked={this.state.config.deleteTicket} onChange={(e,val)=> this.updateState({config: {deleteTicket: val.checked}})}  label="Allow admin(s) to delete tickets"/>
                     </Form.Field>
                     
                   <Form.Field>
-                      <Checkbox label="Keep user who opens ticket updated of status"/>
+                      <Checkbox checked={this.state.config.updateOpener} onChange={(e,val)=> this.updateState({config: {updateOpener: val.checked}})} label="Keep user who opens ticket updated of status"/>
                     </Form.Field>
                
                   </Form>
@@ -239,6 +241,7 @@ class TicketingNewEdit extends React.Component {
     Simple Ticket
     <Header.Subheader>User information will automatically be passed along when this ticket is opened</Header.Subheader>
     </Header>
+    <Form.Checkbox checked={this.state.config.simpleDesc} onChange={(e,val)=> this.updateState({config: {simpleDesc: val.checked}})} label="Include a 'description' field for user to enter additional text"/>
         </Segment>
         : 
         <>
