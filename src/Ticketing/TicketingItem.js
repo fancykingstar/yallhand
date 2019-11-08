@@ -3,7 +3,7 @@ import {inject, observer} from "mobx-react";
 import { Segment, Icon, Accordion, Dropdown, Button, Label, Header, Form } from "semantic-ui-react";
 import { Container, Row, Col } from "reactstrap";
 import TextField from "@material-ui/core/TextField";
-import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 
 import {AccountStore} from "../Stores/AccountStore";
 import _ from "lodash";
@@ -63,16 +63,16 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
   </Form.Group>)
 
     return (
-      <Segment >
+      <Segment secondary={props.isClose} >
       <Row >
         {/* <Col style={{maxWidth: 60}} sm={1}><Avatar>{props.index + 1}</Avatar> </Col> */}
         <Col>
         <div>
         {
-          !props.index?
+          !props.index || props.isClose?
           <Header >
-          Open Ticket
-          <Header.Subheader>Configure required information to open a ticket</Header.Subheader>
+          {`${!props.index? "Open":"Close"}`} Ticket
+          <Header.Subheader>Configure required information to {`${!props.index? "open":"close"}`} a ticket</Header.Subheader>
           </Header>
        :       
         <TextField
@@ -86,16 +86,16 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
         </div>
         </Col>
       </Row>
+        {!props.isClose &&
         <Row style={{paddingTop: 10}}><Col>
         <span>Default Assignee:</span><br/>
         <Dropdown selection placeholder="Choose..." onChange={(e,val)=>setField({defaultAssignee: val.value})} value={defaultAssignee} options={[...AccountStore._getUsersSelectOptions(), {"text":"None", "value":""}]} /><br/>
-        {props.index !==0 && <span style={{fontSize: "0.8em"}}>Choose "none" to let previous step assignee delegate</span>}
-       
         </Col></Row>
+        }
         <Row>
         <div style={{paddingLeft: 10}}>
         <Accordion>
-          <Accordion.Title onClick={()=>setField({_requireInfo: !_requireInfo})} active={_requireInfo}><Icon name='dropdown' /> Required information for this stage</Accordion.Title>
+          <Accordion.Title onClick={()=>setField({_requireInfo: !_requireInfo})} active={_requireInfo}><Icon name='dropdown' /> Required information for this stage {`${!props.index? "(note: user information will automatically be passed along when this ticket is opened)":""}`}</Accordion.Title>
           <Accordion.Content active={_requireInfo}>
             <Container>
               <Form>
@@ -118,13 +118,13 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
         </Row>
        <div style={{ padding: "20px 0 20px", width: "100%" }}>
 
-          <div style={{display: "inline-block", float: "right", display: props.index === 0? "none":"content"}}>
-        <Icon color="grey" name="arrow up" 
+          <div style={{display: "inline-block", float: "right", display: props.index === 0 || props.index === props.totalItemsCount - 1? "none":"content"}}>
+        {/* <Icon color="grey" name="arrow up" 
         onClick={()=>shiftRow("up")} 
         />
         <Icon color="grey" name="arrow down" 
         onClick={()=>shiftRow("down")} 
-        />
+        /> */}
         <Icon color="grey" name="remove" 
         onClick={removeRow} 
         />

@@ -24,7 +24,7 @@ class TicketingNewEdit extends React.Component {
     constructor(props) {
     super(props);
     this.state = {
-      ticketItems: [this.reset()], 
+      ticketItems: this.reset(true), 
       label: "",
       chanID: "All",
       teamID: "",
@@ -48,8 +48,24 @@ class TicketingNewEdit extends React.Component {
     }
   };
 
-  reset () {
-    return {
+  reset (init) {
+    if (init) {
+      return [{
+        id: giveMeKey(),
+        defaultAssignee: "",
+        data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
+        _requireInfo: false
+      },
+      {
+        id: giveMeKey(),
+        defaultAssignee: "",
+        isClose: true,
+        data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
+        _requireInfo: false
+      }
+    ]
+    }
+    else return {
       id: giveMeKey(),
       defaultAssignee: "",
       data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
@@ -108,7 +124,9 @@ class TicketingNewEdit extends React.Component {
         return <TicketingItem
         multipleRows={this.checkMultiRow()} 
         label={stage.label} 
+        isClose={stage.isClose}
         key={"ticketItemDisplay"+ index} 
+        totalItemsCount={this.state.ticketItems.length}
         index={index} 
         id={stage.id}
         defaultAssignee={stage.defaultAssignee}

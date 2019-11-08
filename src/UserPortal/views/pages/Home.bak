@@ -230,54 +230,51 @@ class Home extends React.Component {
                   </div>
                 </div>
 
-                
-{/* 
+                <div className="page_content shadow">
                   <Slider
                     ref={slider => (this.slider = slider)}
                     {...settings_components_slide}
                   >
-                    <div className="actions-container">
-                      <div className="section_title">
-                         <div style={{margin: "1em"}}><h4>Suggested Actions</h4></div>
-               
+                    <Container className="actions-container">
+                    <div className="page_content">
+                <div className="section_title">
+                  <h4>Suggested Actions</h4>
+                </div>
+
+                      <div className=" suggesion_main_box row">
+                        {TicketingStore.allTickets.map(ticket => (
+                          <IconBox
+                            micon="star"
+                            box_type="image-full-width"
+                            main_class={"box col-12 col-sm-6 col-md-4"}
+                            user_img={<Star />}
+                            key={"icon" + ticket.ticketID}
+                            title={ticket.label}
+                            showAction={() => {
+                              this.showActionForm(
+                                Object.assign(ticket, { img: Star })
+                              );
+                            }}
+                          />
+                        ))}
                       </div>
-                      <div className="page_content shadow">
-                        <div className=" suggesion_main_box row">
-                          {TicketingStore.allTickets.map(ticket => (
-                            <IconBox
-                              micon="star"
-                              box_type="image-full-width"
-                              main_class={"box col-12 col-sm-6 col-md-4"}
-                              user_img={<Star />}
-                              key={"icon" + ticket.ticketID}
-                              title={ticket.label}
-                              showAction={() => {
-                                this.showActionForm(
-                                  Object.assign(ticket, { img: Star })
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div elevation={4} className="action-form">
+                       </div>
+                    </Container>
+                    <Container elevation={4} className="action-form">
                       <ActionsForm
                         onSubmit={this.handleActionFormSubmit}
                         onCancel={this.hideActionForm.bind(this)}
                         actionDetail={this.state.selectedActionData}
                       />
-                    </div>
-                  </Slider> */}
-           
-
-               
+                    </Container>
+                  </Slider>
+                </div>
               </Col>
             </Row>
           </Container>
 
-          
-               <ActionSlider />
+          {/* 
+               <ActionSlider /> */}
         </div>
       </Layout>
     );

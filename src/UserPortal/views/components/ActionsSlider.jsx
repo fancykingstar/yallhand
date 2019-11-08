@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from 'reactstrap';
+import { TicketingStore } from "../../../Stores/TicketingStore";
 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
@@ -34,9 +35,9 @@ class ActionSlider extends React.Component {
       });
    }
 
-   showActionForm(item) {
+   showActionForm(data) {
       this.slider.slickGoTo(1);
-      this.setState({ selectedActionData: item });
+      this.setState({ selectedActionData: data });
    }
 
    hideActionForm() {
@@ -112,20 +113,24 @@ class ActionSlider extends React.Component {
                   </div>
                   <div className="page_content actions shadow">
                      <div className="announce_component faq_announce slick-align-left">
-                        {/* <Slider {...settings_multi}> */}
-                        <IconBox
-                           key={"i1"}
-                           user_img={Star}
-                           title={"Report a computer issue"}
-                           showAction={() => { this.showActionForm({ label: "Report a computer issue", img: Star }) }} 
-                        />
-                          <IconBox
+                        <Slider {...settings_multi}>
+
+                        {TicketingStore.allTickets.map(ticket => 
+                                   <IconBox
+                                   key={"icon" + ticket.ticketID}
+                                   user_img={Star}
+                                   title={ticket.label}
+                                   showAction={() => { this.showActionForm(Object.assign(ticket, { img: Star })) }} 
+                                />
+                           )}
+                
+                          {/* <IconBox
                            key={"i1"}
                            user_img={Star}
                            title={"Request for information"}
                            showAction={() => { this.showActionForm({ label: "Request for information", img: Star }) }} 
-                        />
-
+                        /> */}
+                 </Slider>
                      </div>
                   </div>
                </Container>
