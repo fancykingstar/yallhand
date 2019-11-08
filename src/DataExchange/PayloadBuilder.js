@@ -492,7 +492,9 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return _.extend({}, base(), data)
   }
 
-
+  export const ticketOpen = ( data ) => {
+    return _.extend({}, base(), data);
+  }
 
 
 

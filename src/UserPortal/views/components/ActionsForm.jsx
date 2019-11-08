@@ -10,25 +10,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            formData: {
-                colleague: 'One employee',
-                props_for: '',
-                description: '',
-                no_feed: false
-            }
-        }
+        this.state = {}
     }
 
     getFormItemField(formItem) {
         if(formItem.type === "text") return (
         <InputGroup>
-            <Input placeholder="" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
+            <Input placeholder="" type="text" name={formItem.label} id="description" onChange={this.handleInputChange.bind(this)} />
         </InputGroup> )
 
         else if(formItem.type === "select") return (
-            <Input type="select" name="props_for" id="props_for" onChange={this.handleInputChange.bind(this)}>
-                {formItem.options.map(opt =>    <option>{opt}</option>)}
+            <Input type="select" name={formItem.label} id="props_for" onChange={this.handleInputChange.bind(this)}>
+                {formItem.options.map(opt => <option>{opt}</option>)}
             </Input>
         )
 
@@ -37,10 +30,9 @@ class ActionsForm extends React.Component {
             {formItem.options.map(opt =>  
             
             <FormControlLabel
-            control={<Checkbox 
-                // checked={gilad} 
-                // onChange={handleChange('gilad')} 
-                // value="gilad" 
+                control={<Checkbox 
+                name={opt}
+                onChange={this.handleInputChange.bind(this)}
                 />}
             label={opt}
             />
@@ -52,24 +44,27 @@ class ActionsForm extends React.Component {
     }
 
     handleInputChange(evt) {
-        const value =
-            evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-
-        this.setState({
-            formData: {
-                ...this.state.formData,
-                [evt.target.name]: value
-            }
-        });
+        const value = evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+        let newVal = {};
+        newVal[evt.target.name] = value;
+        this.setState(newVal
+        //     {
+        //     formData: {
+        //         ...this.state.formData,
+        //         [evt.target.name]: value
+        //     }
+        // }
+        );
     }
-    handleActionFormSubmit(e) {
+    async handleActionFormSubmit(e) {
         e.preventDefault();
-        this.props.onSubmit(this.state.formData);
+        this.props.onSubmit(this.state);
     }
     render() {
         return (
             <>
                 <div className="section_title">
+                    {JSON.stringify(this.state)}
                     <h4>
                         <IconButton
                         color="inherit"
@@ -100,23 +95,7 @@ class ActionsForm extends React.Component {
                     }
                     </Row>
                     </Container>
-                   
-{/*                     
-                            <Row form>
-                            
-                                <Col>
-                                    <FormGroup>
-                                        <Label for="description">Describe the issue</Label>
-                                        <InputGroup>
-                                            <Input placeholder="" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
-                                            <InputGroupAddon addonType="append">
-                                                <QuestionIcon className="right-icon" />
-                                            </InputGroupAddon> 
-                                        </InputGroup>
-
-                                    </FormGroup>
-                                </Col>
-                            </Row>  */}
+                
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
