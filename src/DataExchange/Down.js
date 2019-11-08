@@ -11,6 +11,7 @@ import { DataEntryStore } from "../Stores/DataEntryStore"
 import { UIStore } from "../Stores/UIStore";
 import { SurveyStore } from "../Stores/SurveyStore";
 import { TaskStore } from "../Stores/TaskStore";
+import { TicketingStore } from "../Stores/TicketingStore";
 import { validContent} from "../SharedCalculations/ValidContent"
 import { validResources } from "../SharedCalculations/ValidResource"
 import {apiCall_noBody, apiCall} from "./Fetch"
@@ -137,7 +138,6 @@ export const campaigns= async (accountID) => {
 export const scheduled= async (accountID) => {
   const result = await apiCall_noBody(`schedules/all?filter={"where":{"accountID":"${accountID}","executed":false}}`, "GET");
   ScheduleStore.loadScheduled(result)
-
   return result
 }
 
@@ -150,5 +150,12 @@ export const surveys = async (accountID, userID) => {
   await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}).then(r => r.json()).then(result => {
     SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
     TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
-  });
-}
+  })
+};
+
+export const tickets = async (accountID) => {
+  const result = await apiCall_noBody(`ticketing/all?filter={"where":{"accountID":"${accountID}"}}`, "GET")
+  console.log(accountID, result)
+  TicketingStore.loadTickets(result);
+};
+

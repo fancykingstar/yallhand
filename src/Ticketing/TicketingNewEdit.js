@@ -8,8 +8,8 @@ import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
 
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
-import {survey, surveyEdit, schedule} from "../DataExchange/PayloadBuilder";
-import {createSurvey, modifySurvey, createSchedule, deleteSchedule} from "../DataExchange/Up";
+import {ticket, surveyEdit, schedule} from "../DataExchange/PayloadBuilder";
+import {createTicket, modifySurvey, createSchedule, deleteSchedule} from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
 
 import {iconKey, iconOptions} from "./IconSelect";
@@ -18,7 +18,7 @@ import {iconKey, iconOptions} from "./IconSelect";
 
 import _ from "lodash";
 
-@inject("TaskStore", "SurveyStore", "ChannelStore", "AccountStore")
+@inject("TicketingStore", "ChannelStore", "AccountStore")
 @observer
 class TicketingNewEdit extends React.Component {
     constructor(props) {
@@ -28,9 +28,9 @@ class TicketingNewEdit extends React.Component {
       label: "",
       chanID: "All",
       teamID: "",
-      tags: "",
+      tags: [],
       type: "simple",
-      active: "",
+      active: false,
       icon: "",
       isTemplate: true,
       sendTargetType: "all",
@@ -52,7 +52,7 @@ class TicketingNewEdit extends React.Component {
     return {
       id: giveMeKey(),
       defaultAssignee: "",
-      data: [{type: "", label: "", options: []}], //{type: "", label: "", options: []}
+      data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
       _requireInfo: false
     }
   };
@@ -64,17 +64,19 @@ class TicketingNewEdit extends React.Component {
 
 
   validate = () => {
+    return true
     const {label, targetType, targetConfig, deadline, surveyItems, instances} = this.state;
-    const review = {
-      general: Boolean(label && surveyItems.length),
+    // const review = {
+    //   general: Boolean(label && surveyItems.length),
       // prevLaunch: Boolean(!instances.length)
-    }
-    return Object.values(review).filter(i=>!i).length === 0
+    // }
+    // return Object.values(review).filter(i=>!i).length === 0
   }
 
-  updateFields = (fieldObj, id) => {
-    let ticketList = [...this.state.ticketItems]
-    ticketList[id] = {...ticketList[id], ...fieldObj}
+  updateFields = (fieldObj, i) => {
+    let ticketList = this.state.ticketItems;
+    let newData = Object.assign(ticketList[i], fieldObj)
+    ticketList.splice(i, 1, newData)
     this.setState({
         ticketItems: ticketList
     })
@@ -106,7 +108,7 @@ class TicketingNewEdit extends React.Component {
         return <TicketingItem
         multipleRows={this.checkMultiRow()} 
         label={stage.label} 
-        key={index} 
+        key={"ticketItemDisplay"+ index} 
         index={index} 
         id={stage.id}
         defaultAssignee={stage.defaultAssignee}
@@ -126,39 +128,39 @@ class TicketingNewEdit extends React.Component {
     this.setState({ ticketItems: [...this.state.ticketItems, this.reset()]});
   }
 
-  updateSurvey = async (active=null) => {
-    if (active !== null) await this.setState({active});
-    if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
-    else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
-    else {
-     await createSurvey(survey(this.props.mode,this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
-    }
-    if (active !== null) {
-      if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
-      else if(!active && this.state.deadline) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
-    }
+  updateTicket = async (active=null) => {
+    // await this.setState({active});
+    // if (active !== null) await this.setState({active});
+    // if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
+    // else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
+    // else {
+     await createTicket(ticket(this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+    // }
+    // if (active !== null) {
+    //   if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
+    //   else if(!active && this.state.deadline) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
+    // }
 
   }
 
   componentDidMount(active=null){
-    const {TaskStore, SurveyStore} = this.props;
+    const {TaskStore, TicketingStore} = this.props;
     const id = this.props.match.params.id;
-    const source = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks;
-    const loadSurvey = this.props.match.params.id? source.filter(i=>i.surveyID === id)[0] : false;
-    if(loadSurvey) {
-      if(loadSurvey.surveyItems.length) {
-        loadSurvey.surveyItems.forEach(i=> Object.keys(i).forEach(key=> {if(key[0]==="_") delete i[key]} ))
-      }
-      this.setState(loadSurvey)
+    const loadTicket = this.props.match.params.id? TicketingStore.allTickets.filter(i=>i.ticketID === id)[0] : false;
+    if(loadTicket) {
+      // if(loadTicket.surveyItems.length) {
+      //   loadSurvey.surveyItems.forEach(i=> Object.keys(i).forEach(key=> {if(key[0]==="_") delete i[key]} ))
+      // }
+      this.setState(loadTicket)
     };
   }
 
   render() {
     const {ChannelStore, AccountStore} = this.props;
 
-    const launch = ( <Button onClick={e => this.updateSurvey(true)} disabled={ !this.validate() } primary > Launch </Button> );
-    const save = ( <Button onClick={e => this.updateSurvey()}> Save </Button> );
-    const stop = <Button negative onClick={()=> this.updateSurvey(false)}>Stop</Button>;
+    const launch = ( <Button onClick={e => this.updateTicket(true)} disabled={ !this.validate() } primary > Launch </Button> );
+    const save = ( <Button onClick={e => this.updateTicket()}> Save </Button> );
+    const stop = <Button negative onClick={()=> this.updateTicket(false)}>Stop</Button>;
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
     const preview = ( <Button onClick={e => {}} > Preview </Button> );
     const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} {preview}</div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} {preview}</div> ); 
@@ -166,11 +168,11 @@ class TicketingNewEdit extends React.Component {
 
    
 
-    const {type, active, chanID, label, admins, collaborators} = this.state;
+    const {type, active, chanID, label, admins, icon, collaborators} = this.state;
     return (
       <div> 
         <BackButton/>
-        {JSON.stringify(this.state.ticketItems)}
+        {JSON.stringify(this.state)}
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Build Service Ticket Template
           <Header.Subheader>
@@ -194,9 +196,9 @@ class TicketingNewEdit extends React.Component {
                 <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Access" output={val=>this.updateState(val)} input={this.state}/> </div>
              
                 <Form style={{maxWidth: 400}}>
-                  <Form.Dropdown value={type} onChange={(e,val)=>this.updateState({type: val.value})} label="Ticketing Type" style={{minWidth: 370}} selection defaultValue="simple" options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} />
+                  <Form.Dropdown value={type} onChange={(e,val)=>this.updateState({type: val.value})} label="Ticketing Type" style={{minWidth: 370}} selection options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} />
                     <Form.Dropdown value={chanID} onChange={(e,val)=>this.updateState({chanID: val.value})} options={ChannelStore._channelSelect} selection label="Channel"/>
-                    <Form.Dropdown label="Button Icon" placeholder="Choose icon..." onChange={(e, val)=>this.updateState({icon: val.value})} icon={iconKey[this.state.icon]} selection options={iconOptions}>
+                    <Form.Dropdown value={icon} label="Button Icon" placeholder="Choose icon..." onChange={(e, val)=>this.updateState({icon: val.value})} icon={iconKey[this.state.icon]} selection options={iconOptions}>
                   
                     </Form.Dropdown>
                   </Form>
@@ -236,7 +238,7 @@ class TicketingNewEdit extends React.Component {
         
         {
           type === "simple"?
-        <Segment placeholder>
+        <Segment>
         <Header >
     Simple Ticket
     <Header.Subheader>User information will automatically be passed along when this ticket is opened</Header.Subheader>

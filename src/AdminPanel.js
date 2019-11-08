@@ -107,6 +107,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/tasks" component={TaskFrame} exact/>
             <Route path="/panel/ticketing" component={TicketingFrame} exact/>
             <Route path="/panel/ticketing/manage-ticket" render={props => <TicketingNewEdit {...props} />} exact />
+            <Route path="/panel/ticketing/manage-ticket/:id" render={props => <TicketingNewEdit {...props} />} exact />
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>

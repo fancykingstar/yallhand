@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import {AccountStore} from "../Stores/AccountStore";
 import _ from "lodash";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 
 export const TicketingItem = inject("DataEntryStore")(observer((props) => {
@@ -24,32 +25,47 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
     props.shiftRow(direction, props.index)
   }
 
+  const getDataItemOptions = (options) => options.map(opt => ({
+    text: opt,
+    key: opt + giveMeKey(),
+    value: opt
+  }))
+
+  const addDataItem = () => setField({data: [...props.data, {type: "text", label: "", options: []}]})
+
   const updateDataItem = (obj, i) => {
     let newData = props.data
-    newData.splice(i, 1, Object.assign(newData[i], obj));
-    setField(newData);
+    const updatedRecord = Object.assign(newData[i], obj);
+    newData.splice(i, 1, updatedRecord);
+    setField({data:newData});
   }
 
   const displayData = () => data.map((dataItem, i) => 
-    <Form.Group>
-    <Form.Dropdown selection label="Type" options={[{text: "Text", value: "Text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multi"}]}/>
-    <Form.Input value={dataItem} onChange={val => updateDataItem(i, {defaultAssignee: val.value})} label="Label" ><input maxLength="48" /></Form.Input>
-    <Form.Input label="Enter Selection Options" action='Add' placeholder='Search...'/>
-    <Form.Field>
-    <div>
-      <Label size="mini">Windows <Icon name='delete' /></Label>
-      <Label size="mini">Monitor</Label>
-      <Label size="mini">Outlook/Mail</Label>
-      <Label size="mini">Hardware</Label>
-      <Label size="mini">Other</Label>
-      </div>
-    </Form.Field>
+    <Form.Group key={"ticketdata" + i} >
+    <Form.Dropdown value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multi"}]}/>
+    <Form.Input 
+    value={dataItem.label} 
+    onChange={(e,{value}) => updateDataItem({label: value},i)} 
+    label="Label" ><input maxLength="48" /></Form.Input>
+    {dataItem.type !== "text" &&
+    <Form.Dropdown 
+    className="MultiSelectDropDown"
+    options={getDataItemOptions(dataItem.options)} 
+    onAddItem={(e,val) => updateDataItem({options: [...dataItem.options, val.value]},i)}  
+    additionLabel={<i>Hit enter to add:  </i>}
+    onChange={(e, val) => updateDataItem({options: val.value},i)}
+    search
+    multiple
+    selection
+    fluid
+    allowAdditions
+    label="Enter Selection Options" />}
   </Form.Group>)
 
     return (
       <Segment >
-      <Row justifyContent="center">
-        <Col style={{maxWidth: 60}} sm={1}><Avatar>{props.index + 1}</Avatar> </Col>
+      <Row >
+        {/* <Col style={{maxWidth: 60}} sm={1}><Avatar>{props.index + 1}</Avatar> </Col> */}
         <Col>
         <div>
         {
@@ -64,7 +80,7 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
           label="Stage Name"
           value={label}
           onKeyDown={(e)=> {if(e.keyCode ==13) props.newLine()}}
-          onChange={e => setField({ q: e.target.value }) }
+          onChange={e => setField({ label: e.target.value }) }
         />
         }
         </div>
@@ -85,7 +101,12 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
               <Form>
                 {displayData()}
               </Form>
-              
+              {
+                data.length < 4 &&
+                <div>
+                 <Button size="mini" primary circular icon="plus" onClick={()=>addDataItem()} />
+                </div>
+              }
             </Container>
           </Accordion.Content>
         </Accordion>
@@ -93,9 +114,7 @@ export const TicketingItem = inject("DataEntryStore")(observer((props) => {
        
         </Row>
         <Row>
-        <div style={{ marginLeft: "25px" }}>
-          <Button size="mini" primary circular icon="plus" onClick={() => this.addItem()} />
-        </div>
+
         </Row>
        <div style={{ padding: "20px 0 20px", width: "100%" }}>
 

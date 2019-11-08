@@ -63,6 +63,8 @@ export const loadAdmin = async (superStatus=false, superUser={}) => {
 
         const surveys = await load.surveys(accountID, userID);
 
+        const tickets = await load.tickets(accountID);
+
 
         // const tasks = await load.tasks(accountID);
         UIStore.set("adminLoadingComplete", "all", true)

@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
-import { TaskStore } from "../Stores/TaskStore";
+import { TicketingStore } from "../Stores/TicketingStore";
 import { AccountStore} from "../Stores/AccountStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
@@ -62,14 +62,14 @@ class TicketingFrame extends React.Component {
       }
     `;
 
-    const handleClick = (task) => {
-      this.props.history.push(`/panel/ticketing/manage-ticket`);
+    const handleClick = (ticket) => {
+      this.props.history.push(`/panel/ticketing/manage-ticket${ticket? "/" + ticket.ticketID : ""}`);
 
     }
     
-    const columns = ["Task Title", "Last Updated", "Created By", "Stage"];
+    const columns = ["Ticket Title", "Last Updated", "Created By", "Stage"];
 
-    const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.active? "Active":"Inactive"])
+    const data = TicketingStore.allTickets.map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ticket.active? "Active":"Inactive"])
     
 
 
@@ -84,7 +84,7 @@ class TicketingFrame extends React.Component {
       viewColumns: false,
       download: false,
 
-      onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.rowIndex])
+      onRowClick: (i, data) => handleClick(TicketingStore.allTickets[data.rowIndex])
     };
 
     return (

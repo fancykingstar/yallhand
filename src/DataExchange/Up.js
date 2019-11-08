@@ -26,7 +26,7 @@ const refresh = {
   campaigns: () => reload.campaigns(accountID()),
   account: () => reload.account(accountID()),
   surveys: () => reload.surveys(accountID()),
-  // tasks: () => reload.tasks(accountID()),
+  tickets: () => reload.tickets(accountID())
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
@@ -384,30 +384,30 @@ export const modifySurvey = (payload) => {
 
 export const deleteSurvey = (surveyID) => {
   processTemplate(false, "surveys/" + surveyID, "DELETE", {}, "surveys", 
-  `Selected surveys deleted 👋`, 
+  `Selected surveys deleted`, 
   true,{"event": "delete", "type":"survey"})
 }
 
-///TASKS
-// export const createTask = (payload) => {
-//   return processTemplate(true, "tasks", "POST", payload, "tasks", 
-//       "Your new task has been created 🙌", 
-//       true,{"event": "create", "type":"task"}
-//   )
-// }
+///TICKETS
+export const createTicket = (payload) => {
+  return processTemplate(true, "ticketing", "POST", payload, "tickets", 
+      `Your new ticket has been created`, 
+      true,{"event": "create", "type":"ticket"}
+  )
+}
 
-// export const modifyTask = (payload) => {
-//   processTemplate(true, "tasks/" + payload.taskID, "PATCH", payload, "tasks", 
-//   "Your tasks has been updated 🛠", 
-//   true,{"event": "update", "type":"task"}
-// )
-// }
+export const modifyTicket = (payload) => {
+  return processTemplate(true, "ticketing/" + payload.surveyID, "PATCH", payload, "tickets", 
+  `Your ticket has been updated`, 
+  true,{"event": "update", "type":"ticket"}
+)
+}
 
-// export const deleteTask = (taskID) => {
-//   processTemplate(false, "tasks/" + taskID, "DELETE", {}, "tasks", 
-//   "Selected tasks deleted 👋", 
-//   true,{"event": "delete", "type":"task"})
-// }
+export const deleteTicket = (surveyID) => {
+  processTemplate(false, "ticketing/" + surveyID, "DELETE", {}, "tickets", 
+  `Selected tickets deleted`, 
+  true,{"event": "delete", "type":"ticket"})
+}
 
 
 

@@ -17,6 +17,7 @@ import { EmailStore } from "./Stores/EmailStore";
 import { ScheduleStore } from "./Stores/ScheduleStore";
 import { SurveyStore } from "./Stores/SurveyStore";
 import { TaskStore } from "./Stores/TaskStore";
+import { TicketingStore } from "./Stores/TicketingStore";
 
 const Root = (
   <Provider
@@ -33,6 +34,7 @@ const Root = (
     ScheduleStore={ScheduleStore}
     SurveyStore={SurveyStore}
     TaskStore={TaskStore}
+    TicketingStore={TicketingStore}
   >
     <BrowserRouter>
       <App />
