@@ -28,6 +28,7 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+import Inbox from "./Inbox/Inbox";
 import "./CSS/styles.scss";
 
 
@@ -111,6 +112,7 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>
+            <Route path="/panel/inbox" component={Inbox} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

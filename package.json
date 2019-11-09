@@ -76,6 +76,7 @@
     "react-time-ago": "^5.0.4",
     "react-timeago": "^4.4.0",
     "react-toastify": "^4.4.3",
+    "react-window": "^1.8.5",
     "reactstrap": "^8.0.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-less": "^2.4.1",

@@ -212,3 +212,15 @@ body {
     display: none !important;
   }
 }
+
+.InboxItem:hover{
+  
+    box-shadow:0px 1px 3px 0px rgba(188, 188, 188, 0.2), 0px 2px 2px ;
+  
+}
+
+.InboxDetails {
+  height: 300px;
+  padding: 25px;
+  background-color: #ffffff;
+}

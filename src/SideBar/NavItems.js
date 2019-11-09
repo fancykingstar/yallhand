@@ -14,6 +14,7 @@ import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
 import ConfirmationNumberRoundedIcon from '@material-ui/icons/ConfirmationNumberRounded';
+import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
 
 @inject("UIStore", "UserStore")
 @observer
@@ -55,6 +56,12 @@ class NavItems extends React.Component {
                   <HomeRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Admin Dashboard" />
+          </ListItem>
+          <ListItem style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
+            <ListItemIcon>
+                  <InboxRoundedIcon/>
+              </ListItemIcon>
+             <ListItemText primary="Inbox" />
           </ListItem>
           <ListItem button style={isActive("teams")} button onClick={e => handleClick("teams")} >
             <ListItemIcon>
