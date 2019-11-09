@@ -224,3 +224,12 @@ body {
   padding: 25px;
   background-color: #ffffff;
 }
+
+.InboxListItem:hover {
+  border-right: 3px solid #2fc7f8;
+} 
+
+
+.InboxListItemActive {
+  border-right: 3px solid #1e7c9bc4;
+}

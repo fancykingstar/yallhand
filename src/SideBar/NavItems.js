@@ -13,7 +13,7 @@ import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
-import ConfirmationNumberRoundedIcon from '@material-ui/icons/ConfirmationNumberRounded';
+import RoomServiceRoundedIcon from '@material-ui/icons/RoomServiceRounded';
 import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
 import Badge from '@material-ui/core/Badge';
 
@@ -102,7 +102,7 @@ class NavItems extends React.Component {
           </ListItem>
           <ListItem button style={isActive("ticketing")} button onClick={e => handleClick("ticketing")} >
             <ListItemIcon>
-                  <ConfirmationNumberRoundedIcon/>
+                  <RoomServiceRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Service Desk" />
           </ListItem>
