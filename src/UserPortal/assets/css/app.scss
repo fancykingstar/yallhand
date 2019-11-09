@@ -95,11 +95,13 @@ body{font-family: 'Rubik', sans-serif;}
 }	
 .section_title{
     border-bottom: 1px solid #d6dbe0;background: #fff;padding:16px 24px 15px;border-radius: 8px 8px 0 0;
+ 
     @media screen and (max-width: 1279px){
         padding: 15px;
     }
 }
 .section_title h4{color:#211b4e;margin: 0;}
+
 .page_content{
     background: #fff;padding: 19px 24px;border-radius: 0 0 8px 8px;margin-bottom: 24px;
     @media screen and (max-width: 1279px){

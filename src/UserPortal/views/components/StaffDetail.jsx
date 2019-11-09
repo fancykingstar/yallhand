@@ -62,6 +62,12 @@ class StaffDetail extends React.Component {
                     />
                     <CardContent>
                         <List component="div">
+                        <ListItem>
+                                <ListItemIcon>
+                                    <img src={department_icon} alt="" />
+                                </ListItemIcon>
+                                <ListItemText secondary={"email"} />
+                            </ListItem>
                             <ListItem>
                                 <ListItemIcon>
                                     <img src={department_icon} alt="" />

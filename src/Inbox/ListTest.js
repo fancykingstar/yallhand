@@ -63,7 +63,7 @@ export default function ListTest() {
                      className={classes.inline}
                      color="textPrimary"
                    >
-                     Assigned to <Label size="mini">You</Label> 4 days ago
+                     Assigned to <Label color="blue" size="mini">You</Label> <strong>4 days ago</strong>
                    </Typography>
                    
                  </React.Fragment>

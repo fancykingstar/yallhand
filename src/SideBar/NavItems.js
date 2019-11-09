@@ -15,6 +15,7 @@ import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
 import ConfirmationNumberRoundedIcon from '@material-ui/icons/ConfirmationNumberRounded';
 import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
+import Badge from '@material-ui/core/Badge';
 
 @inject("UIStore", "UserStore")
 @observer
@@ -59,7 +60,13 @@ class NavItems extends React.Component {
           </ListItem>
           <ListItem style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
             <ListItemIcon>
-                  <InboxRoundedIcon/>
+            <Badge color="secondary" badgeContent={4} 
+            // invisible={invisible} 
+            // className={classes.margin}
+            >
+            <InboxRoundedIcon/>
+        </Badge>
+              
               </ListItemIcon>
              <ListItemText primary="Inbox" />
           </ListItem>
