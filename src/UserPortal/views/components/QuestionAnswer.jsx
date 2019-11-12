@@ -18,6 +18,7 @@ class QuestionAnswer extends React.Component {
     }
     render() {
         const { qaData } = this.props;
+
         return (
             <div className="QuestionAnswer">
                 <div className="QuestionAnswerTitle">

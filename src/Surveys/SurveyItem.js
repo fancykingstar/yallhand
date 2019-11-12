@@ -122,6 +122,7 @@ export const SurveyItem = inject("DataEntryStore")(observer((props) => {
       resType === "multichoice" ? MultiChoiceOptions : resType === "scale"? ScaleOptions : null;
     return (
       <Segment 
+      ref={props.itemRef}
       // color={this.props.error? "red": null}
       >
         <TextField

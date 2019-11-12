@@ -64,10 +64,10 @@ class EmailPrimary extends React.Component {
 
       const sendNow = async () => {
         if(canSubmit()) {
-          // const newCamp = await createCampaign(emailCampaign(true, false)).then((res) => res.json())
-          // EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[newCamp]])
-          // const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
-          // AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
+          const newCamp = await createCampaign(emailCampaign(true, false)).then((res) => res.json())
+          EmailStore.loadCampaigns([...EmailStore.allCampaigns, ...[newCamp]])
+          const newCampAnalytic = {campaignID: newCamp.campaignID, clicks: 0, completed: false, send: newCamp.updated, subject: newCamp.subject, open_rate: 0, total_views:0, unique_views: 0}
+          AccountStore.loadAnalyticData_campaigns([...AccountStore.analyticData_campaigns, ...[newCampAnalytic]])
           this.props.history.push("/panel/analytics")
           this.resetEmail();
         }

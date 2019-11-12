@@ -1,11 +1,8 @@
 import React from "react";
-import {inject, observer} from "mobx-react"
 import { Dropdown, Icon } from "semantic-ui-react";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 import "../style.css";
 
-@inject("UIStore")
-@observer
 export class PublishControls extends React.Component {
   clickActions = {
     "draft":"draft",
@@ -17,7 +14,7 @@ export class PublishControls extends React.Component {
   }
   handleItemClick = (e, { name }) => this.props.onClick(this.clickActions[name]);
   render() {
-    const { stage, UIStore } = this.props;
+    const { stage } = this.props;
     const actionOptions = {
       draft: ["draft", "published", "archived"],
       published: ["update", "unpublish", "archived"],
@@ -34,7 +31,7 @@ export class PublishControls extends React.Component {
     };
 
     const displayText = {
-      draft: "Save Draft",
+      draft: "Draft",
       published: "Publish",
       update: "Update",
       unpublish: "Un-publish",
@@ -46,7 +43,7 @@ export class PublishControls extends React.Component {
     return (
 
       <Dropdown 
-      button style={{backgroundColor: "#2185D0", color: "#FFFFFF"}} text="Stage...">
+      button style={{backgroundColor: "#2185D0", color: "#FFFFFF"}} text="Save Stage As...">
       <Dropdown.Menu>
       <Dropdown.Header>{`Now: ${this.props.unsavedWarning? "Unsaved":""} ${stage}`}</Dropdown.Header>
       {actionOptions[stage].map(opt =>

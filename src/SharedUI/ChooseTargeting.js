@@ -21,7 +21,7 @@ export class ChooseTargeting extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) { 
-    if(props.input) return props.input
+    if(props.input && !props.noPass) return props.input
     return null
  }  
 

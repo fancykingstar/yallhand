@@ -28,11 +28,14 @@ class ContentDetail extends React.Component {
       }
    }
 
+   updatePost = (payload) => this.setState(payload);
+
    async load() {
       const {AnnouncementsStore, PoliciesStore} = this.props;
       const urlData = await {path:  this.props.match.url, id: this.props.match.params.id};
       const mode = await urlData.path.includes("announcement")? "announcement" : "policy";
       const content = await urlData.path.includes("announcement")? AnnouncementsStore._getAnnouncement(urlData.id) : PoliciesStore._getPolicy(urlData.id)
+      await this.setState(content);
       return await this.setState({
          PostData: content,
          qaData: ContentData.questionAnswer,
@@ -43,12 +46,11 @@ class ContentDetail extends React.Component {
 
    componentDidMount() {
       const {AnnouncementsStore, PoliciesStore, UserStore} = this.props;
-
-      this.load().then(r => {
+      this.load()
+      .then(r => {
          apiCall_noBody(
             `sentiments/usersentiment/${UserStore.user.userID}/${this.state.contentID}/${this.state.mode}ID`, "GET")
             .then(result => {
-               console.log(result)
                this.setState({sentiment: Boolean(result.length)})});
                if(!UserStore.user.isAdmin){ 
                   log(ItsLog(false, {"type": this.state.mode, "contentID": this.state.contentID, "variationID": this.state.PostData.variations[0].variationID})) 
@@ -73,7 +75,7 @@ class ContentDetail extends React.Component {
          <Layout>
             <div className="">
                <div className="">
-                  {PostData ? (<PostDetails data={this.state} update={payload=>this.setState(payload)}/>) : ("")}
+                  {PostData ? (<PostDetails data={this.state} update={payload=>this.updatePost(payload)}/>) : ("")}
              
                   <div className="page_content_bg">
                      <div className="smallContainer">

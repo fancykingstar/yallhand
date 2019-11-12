@@ -358,9 +358,7 @@ class Store {
   }
 
   deleteChild(parent,key){
-    console.log(JSON.stringify(this.keys[parent]))
     delete this.keys[parent][key];
-    console.log(JSON.stringify(this.keys[parent]))
   }
 
 

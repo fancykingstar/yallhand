@@ -1,5 +1,4 @@
 import React from "react"
-import {inject, observer} from "mobx-react"
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
@@ -8,14 +7,12 @@ import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
 import {emojiList} from "./EmojiList"
 import embed from "embed-video";
 import draftToHtml from "draftjs-to-html";
+import {AccountStore} from "../Stores/AccountStore";
 
 import './style.css'
-// import _ from "lodash";
 import {debounce, isEmpty} from "lodash";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-@inject("DataEntryStore", "AccountStore")
-@observer
 export class Wysiwyg extends React.Component {
     constructor(props) {
         super(props);
@@ -58,13 +55,12 @@ export class Wysiwyg extends React.Component {
    
 
     editorStateChanged = (newEditorState) => {
-      debounce(() => this.passContent(), 1000)();
+      debounce(() => this.passContent(), 500)();
       this.setState({editorState: newEditorState});
 
     };
 
     render(){
-        const {AccountStore} = this.props
         const uploadContentImg = async (file) => 
              await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
@@ -119,7 +115,7 @@ export class Wysiwyg extends React.Component {
         } 
         
       return (
-        <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: "#E8E8E8", borderRadius: 15, padding: 10}: null}>
+        <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
             <Editor
             //   wrapperClassName="Wrapped"

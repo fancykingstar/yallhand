@@ -2,7 +2,6 @@ import { apiCall, apiCall_noBody, apiCall_del } from "./Fetch"
 import { UIStore } from "../Stores/UIStore";
 import { AccountStore } from "../Stores/AccountStore"
 import { UserStore } from "../Stores/UserStore"
-// import toast  from "../YallToast"
 import toast  from "../YallToast"
 import 'react-toastify/dist/ReactToastify.css';
 import { ItsLog } from "../DataExchange/PayloadBuilder"
@@ -17,7 +16,8 @@ const refresh = {
   schedule: () => reload.scheduled(accountID()),
   teams: () => reload.structure(accountID()),
   tags: () => reload.tags(accountID()),
-  users: () => reload.users(accountID(), userID()),
+  // users: () => reload.users(accountID(), userID()),
+  users: () => reload.users_and_teams(accountID(), userID()),
   channels: () => reload.channels(accountID()),
   urlResources: () => reload.urls(accountID()),
   policies: () => reload.policies(accountID()),
@@ -27,18 +27,23 @@ const refresh = {
   account: () => reload.account(accountID()),
   surveys: () => reload.surveys(accountID()),
   tickets: () => reload.tickets(accountID())
+
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
-  console.log("payload", JSON.stringify(payload))
+  if (process.env.REACT_APP_API_URL.includes("localhost")) console.log("payload", JSON.stringify(payload));
   const callApi = meth === "DELETE" ? apiCall_del : useBody ? apiCall : apiCall_noBody
   return new Promise((resolve, reject) => {
     log(ItsLog(isAction, data))
     callApi(endpoint, meth, payload).then((result) => {
       if(result.ok){
-        refresh[key]().then(() => toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}).catch(e => {})
-        if (key === 'users') reload.users_and_teams(accountID(), userID());
-        resolve(result);
+        refresh[key]()
+          .then(
+            () => {
+              toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}
+              resolve(result);
+            })
+          .catch(e => {})
       } else {
         toast.error(result.statusText, {hideProgressBar: true})
         reject(result);
@@ -99,7 +104,7 @@ export const createAccount = (payload) => {
 } 
 export const deleteAccount = (accountID) => {
     return processTemplate(false, "accounts/" + accountID, "DELETE", {}, "account", 
-    "Selected account deleted 👋", 
+    "Selected account deleted", 
     true,{"event": "delete", "type":"account"})
 }
 
@@ -113,7 +118,7 @@ export const createSchedule = (payload, toastEnabled) => {
 
 export const deleteSchedule = (scheduleID) => {
     processTemplate(false, "schedules/" + scheduleID, "DELETE", {}, "schedule", 
-    "Selected schedule deleted 👋", 
+    "Selected schedule deleted", 
     true,{"event": "delete", "type":"schedule"})
 }
 
@@ -134,7 +139,7 @@ export const modifyTeam = (payload) => {
 
 export const deleteTeam = (teamID) => {
     processTemplate(false, "teams/" + teamID, "DELETE", {}, "teams", 
-    "Selected team deleted 👋", 
+    "Selected team deleted", 
     true,{"event": "delete", "type":"team"})
 }
 
@@ -155,7 +160,7 @@ export const modifyTag = (payload) => {
 
 export const deleteTag = (tagID) => {
     processTemplate(false, "tags/" + tagID, "DELETE", {}, "tags", 
-    "Selected tag deleted 👋", 
+    "Selected tag deleted ", 
     true,{"event": "delete", "type": "tag"})
 }
 
@@ -201,9 +206,16 @@ export const offBoardUser = (userID, now) => {
 
 export const deleteUser = (userID) => {
     return processTemplate(false, "users/" + userID, "DELETE", {}, "users", 
-    "Selected user deleted 👋", 
+    "Selected user deleted ", 
     true,{"event": "delete", "type": "user"})
 }
+
+export const cancelInvite = (id) => {
+  return processTemplate(false, "validations/" + id, "DELETE", {}, "users", 
+  "Invite has been canceled", 
+  true,{"event": "delete", "type": "user"})
+}
+
 
 ///CHANNEL
 export const createChannel = (payload) => {
@@ -222,7 +234,7 @@ export const modifyChannel = (payload) => {
 
 export const deleteChannel = (chanID) => {
     return processTemplate(false, "channels/" + chanID, "DELETE", {}, "channels", 
-    "Selected channel deleted 👋", 
+    "Selected channel deleted", 
     true,{"event": "delete", "type": "channel"})
 }
 
@@ -243,7 +255,7 @@ export const modifyUrlResource = (payload, toast=true) => {
 
 export const deleteUrlResource = (resourceID) => {
     processTemplate(false, "urls/" + resourceID, "DELETE", {}, "urlResources", 
-    "Selected URL deleted 👋", 
+    "Selected URL deleted ", 
     true,{"event": "delete", "type":"url"})
 }
 
@@ -264,7 +276,7 @@ export const modifyFile = (payload, toast=true) => {
 
 export const deleteFileresource = (resourceID) => {
     processTemplate(false, "fileresources/" + resourceID, "DELETE", {}, "files", 
-    "Selected file deleted 👋", 
+    "Selected file deleted", 
     true,{"event": "delete", "type":"file"}), false
 }
 
@@ -319,13 +331,13 @@ export const modifyAnnouncement = (payload, toastEnabled) => {
 
 export const deletePolicy = (policyID) => {
     return processTemplate(false, "policies/" + policyID, "DELETE", {}, "policies", 
-    "Selected policy deleted 👋", 
+    "Selected policy deleted", 
     true,{"event": "delete", "type":"policy"}), false
 }
 
 export const deleteAnnouncement = (announcementID) => {
     return processTemplate(false, "announcements/" + announcementID, "DELETE", {}, "announcements", 
-    "Selected announcement deleted 👋", 
+    "Selected announcement deleted", 
     true,{"event": "delete", "type":"announcement"}), false
 }
 
@@ -388,6 +400,7 @@ export const deleteSurvey = (surveyID) => {
   true,{"event": "delete", "type":"survey"})
 }
 
+
 ///TICKETS
 export const createTicket = (payload) => {
   return processTemplate(true, "ticketing", "POST", payload, "tickets", 
@@ -408,6 +421,7 @@ export const deleteTicket = (surveyID) => {
   `Selected tickets deleted`, 
   true,{"event": "delete", "type":"ticket"})
 }
+
 
 
 
