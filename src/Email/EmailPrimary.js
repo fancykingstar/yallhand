@@ -134,6 +134,7 @@ class EmailPrimary extends React.Component {
           <div style={{ minWidth: 400 }}> 
           
         <ChooseTargeting
+        label={"Send email"}
           // input= {!DataEntryStore.emailCampaign.campaignID? false : {sendTargetType: DataEntryStore.emailCampaign.recipientType, 
           //            sendToTeamID: DataEntryStore.emailCampaign.teamID,
           //            sendToTagID: !DataEntryStore.emailCampaign.tags.length? "": DataEntryStore.emailCampaign.tags[0],

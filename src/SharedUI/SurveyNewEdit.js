@@ -188,7 +188,7 @@ class SurveyNewEdit extends React.Component {
               {!this.state.active &&
               <>
               <div style={{ paddingTop: "10px" }}>
-                <ChooseTargeting label="Survey" output={val=>this.setState(val)} input={this.state}/>
+                <ChooseTargeting label="Send survey" output={val=>this.setState(val)} input={this.state}/>
               </div>
               <div style={{ paddingTop: "10px" }}>
                 <span style={{ fontWeight: 800 }}>Deadline</span>

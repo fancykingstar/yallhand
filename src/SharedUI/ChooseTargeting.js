@@ -106,7 +106,7 @@ export class ChooseTargeting extends React.Component {
     return (
         <div style={{ minWidth: 400 }}>
           <span style={{fontSize: ".9em"}}>
-          Send {this.props.label? this.props.label: "Email"}{" "}
+          {this.props.label}{" "}
             <Dropdown
               inline
               onChange={(e, val) =>  echoState({ "sendTargetType":val.value})}

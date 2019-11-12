@@ -6,12 +6,40 @@ import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import {validate} from "../../../SharedCalculations/ValidationTemplate";
+
+const initialState = {id: ""};
 
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {id: ""};
+        this.resetState = initialState;
     }
+
+    reset() {
+        //ANTI PATTERN
+        Object.keys(this.state).forEach(key => {
+            if(key !== "id" ) delete this.state[key]
+        })
+      }
+
+   
+    componentWillReceiveProps(props){
+        if(
+            // props.actionDetail.ticketItems && props.actionDetail.ticketItems[0].data.length && !Object.keys(state).length
+            props.actionDetail.ticketItems && props.actionDetail.ticketID !== this.state.id
+            ) {
+         this.reset();
+         let addThis = {id: props.actionDetail.ticketID}
+         props.actionDetail.ticketItems[0].data.forEach(dataItem => {   
+             addThis[dataItem.label] = ""
+         });
+      
+         this.setState(addThis);
+        }
+      
+     } 
 
     getFormItemField(formItem) {
         if(formItem.type === "text") return (
@@ -31,6 +59,7 @@ class ActionsForm extends React.Component {
             
             <FormControlLabel
                 control={<Checkbox 
+                id={formItem.label}
                 name={opt}
                 onChange={this.handleInputChange.bind(this)}
                 />}
@@ -44,21 +73,30 @@ class ActionsForm extends React.Component {
     }
 
     handleInputChange(evt) {
-        const value = evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-        let newVal = {};
-        newVal[evt.target.name] = value;
-        this.setState(newVal
-        //     {
-        //     formData: {
-        //         ...this.state.formData,
-        //         [evt.target.name]: value
-        //     }
-        // }
-        );
+        let newValue = {}
+        if (evt.target.type === "checkbox") {
+            let currentValues = this.state[evt.target.id] || [] ;
+            console.log("currentValues", currentValues)
+            if(evt.target.checked) currentValues.push(evt.target.name)
+            else currentValues = currentValues.filter(i => i!== evt.target.name) 
+            newValue[evt.target.id] = currentValues;
+        }
+        else {
+            value = evt.target.value;
+            newValue[evt.target.name] = value;
+        } 
+        this.setState(newValue);
     }
     async handleActionFormSubmit(e) {
         e.preventDefault();
-        this.props.onSubmit(this.state);
+        if(Object.keys(this.state).length > 1) {
+        let conditions = {};
+        await Object.keys(this.state).forEach(key => {if(key !== "id") conditions[key] = this.state[key].length > 0})
+        const valid = await validate(conditions, true)
+        if (valid.valid) this.props.onSubmit(this.state);
+        }
+        else this.props.onSubmit(this.state);
+
     }
     render() {
         return (
@@ -93,6 +131,12 @@ class ActionsForm extends React.Component {
                     )
                     
                     }
+                    {this.props.actionDetail.ticketItems && !this.props.actionDetail.ticketItems[0].data.length ? 
+                    <Col>
+                        <h4>Confirmation</h4>
+                        <p>Are you sure you want to submit this request?</p>
+                    </Col> :""}
+                    
                     </Row>
                     </Container>
                 

@@ -45,7 +45,7 @@ export default function InboxList(props) {
                           className={classes.inline}
                           color="textPrimary"
                         >
-                          {ticket.parent === "QandA"? "Content Q & A" : ticket._parentLabel}
+                          {ticket.parent === "QandA"? ticket._contentPreview.label : ticket._parentLabel}
                         </Typography>
                       </React.Fragment>
                     }

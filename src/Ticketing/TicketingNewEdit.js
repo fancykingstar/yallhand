@@ -11,6 +11,8 @@ import BackButton from "../SharedUI/BackButton";
 import {ticket, surveyEdit, schedule} from "../DataExchange/PayloadBuilder";
 import {createTicket, modifySurvey, createSchedule, deleteSchedule} from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
+import {validate} from "../SharedCalculations/ValidationTemplate";
+
 
 import {iconKey, iconOptions} from "./IconSelect";
 
@@ -30,6 +32,7 @@ class TicketingNewEdit extends React.Component {
       teamID: "",
       tags: [],
       type: "simple",
+      access: "default",
       active: false,
       icon: "",
       isTemplate: true,
@@ -52,15 +55,16 @@ class TicketingNewEdit extends React.Component {
     if (init) {
       return [{
         id: giveMeKey(),
+        isOpen: true,
         defaultAssignee: "",
-        data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
+        data: [], //{type: "", label: "", options: []}
         _requireInfo: false
       },
       {
         id: giveMeKey(),
         defaultAssignee: "",
         isClose: true,
-        data: [{type: "text", label: "", options: []}], //{type: "", label: "", options: []}
+        data: [], //{type: "", label: "", options: []}
         _requireInfo: false
       }
     ]
@@ -79,14 +83,14 @@ class TicketingNewEdit extends React.Component {
   }
 
 
-  validate = () => {
-    return true
-    const {label, targetType, targetConfig, deadline, surveyItems, instances} = this.state;
-    // const review = {
-    //   general: Boolean(label && surveyItems.length),
-      // prevLaunch: Boolean(!instances.length)
-    // }
-    // return Object.values(review).filter(i=>!i).length === 0
+  validateFields = () => {
+    const {label, access, targetType, admins, targetConfig, deadline, surveyItems, instances} = this.state;
+    const conditions = {
+      "Title": Boolean(label),
+      "Admins": access !== "custom" || admins.length,
+    };
+    return validate(conditions).valid;
+
   }
 
   updateFields = (fieldObj, i) => {
@@ -152,7 +156,17 @@ class TicketingNewEdit extends React.Component {
     // if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
     // else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
     // else {
-     await createTicket(ticket(this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+
+     if (this.validateFields()) await createTicket(ticket(this.state)).then(res => res.json()).then(res => this.setState({surveyID: res.surveyID}))
+    
+    
+    // if (this.validateFields()) await console.log(ticket(this.state)); //TEST
+
+
+
+
+
+
     // }
     // if (active !== null) {
     //   if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
@@ -176,17 +190,14 @@ class TicketingNewEdit extends React.Component {
   render() {
     const {ChannelStore, AccountStore} = this.props;
 
-    const launch = ( <Button onClick={e => this.updateTicket(true)} disabled={ !this.validate() } primary > Launch </Button> );
+    const launch = ( <Button onClick={e => this.updateTicket(true)} primary > Launch </Button> );
     const save = ( <Button onClick={e => this.updateTicket()}> Save </Button> );
     const stop = <Button negative onClick={()=> this.updateTicket(false)}>Stop</Button>;
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/surveys')} > Cancel </Button> );
     const preview = ( <Button onClick={e => {}} > Preview </Button> );
     const actions = this.state.active? ( <div style={{paddingTop: 5}}> {save} {stop} {preview}</div> ) : ( <div style={{paddingTop: 5}}> {launch} {save} {cancel} {preview}</div> ); 
 
-
-   
-
-    const {type, active, chanID, label, admins, icon, collaborators} = this.state;
+    const {type, active, chanID, label, admins, icon, collaborators, access} = this.state;
     return (
       <div> 
         <BackButton/>
@@ -198,25 +209,35 @@ class TicketingNewEdit extends React.Component {
           </Header.Subheader>
         </Header>
         <Row>
-          <Col style={{marginTop: 10}} xl={6}>
+          <Col style={{marginTop: 10}}>
           <Segment>
           <Header style={{paddingBottom: 15}} as="h4">General Settings</Header>
           <Form>
             <Form.Input
+            style={{maxWidth: 400}}
               label="Title (Required)"
               placeholder="e.g. Open service request"
               value={label}
               onChange={(e, val) => this.updateState({ label: val.value })}
-            />
+            >
+              <input maxLength={48} />
+            </Form.Input>
           </Form>
               {!active &&
               <>
-                <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Access" output={val=>this.updateState(val)} input={this.state}/> </div>
+                <div style={{paddingTop: 5, paddingBottom: 10}}> <ChooseTargeting label="Grant access to open ticket" output={val=>this.updateState(val)} input={this.state}/> </div>
              
                 <Form style={{maxWidth: 400}}>
                   <Form.Dropdown value={type} onChange={(e,val)=>this.updateState({type: val.value})} label="Ticketing Type" style={{minWidth: 370}} selection options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} />
+                  <Form.Dropdown value={access} onChange={(e,val)=>this.updateState({access: val.value})} label="Ticket Fulfillment Settings" style={{minWidth: 370}} selection options={[{"text":"Default", "value":"default", "description":"Typical settings/Yallhands admin fulfill"},{"text":"Custom...", "value":"custom", "description":"Customize access and notifications"}]} />
                     <Form.Dropdown value={chanID} onChange={(e,val)=>this.updateState({chanID: val.value})} options={ChannelStore._channelSelect} selection label="Channel"/>
-                    <Form.Dropdown value={icon} label="Button Icon" placeholder="Choose icon..." onChange={(e, val)=>this.updateState({icon: val.value})} icon={iconKey[this.state.icon]} selection options={iconOptions}>
+                    <Form.Dropdown value={'Star'} label="Button Icon" 
+                    // placeholder="Choose icon..." 
+                    // onChange={(e, val)=>this.updateState({icon: val.value})} 
+                    icon={iconKey["Star"]} 
+                    disabled
+                    // selection options={iconOptions}
+                    >
                   
                     </Form.Dropdown>
                   </Form>
@@ -228,6 +249,7 @@ class TicketingNewEdit extends React.Component {
     
         </Segment>
           </Col>
+          {this.state.access === "custom" &&
           <Col style={{marginTop: 10}}  xl={6}>
           <Segment className="TicketingAccess" style={{margin: 10}} style={{backgroundColor: "#e9e9e9"}}>
           <Header style={{paddingBottom: 15}} as="h4">Access</Header>
@@ -252,6 +274,7 @@ class TicketingNewEdit extends React.Component {
                   </Form>
                 </Segment>
           </Col>
+          }
         </Row>
         
         {
