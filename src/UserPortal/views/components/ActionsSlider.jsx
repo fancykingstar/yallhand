@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from 'reactstrap';
+import { TicketingStore } from "../../../Stores/TicketingStore";
 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
@@ -8,13 +9,19 @@ import ActionsForm from "./ActionsForm";
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
-import Star from '../../assets/images/star.svg';
+// import Star from '../../assets/images/star.svg';
+import {getIcon} from "../../../SharedUI/SVGIconStorage";
+import ImportantDevicesRoundedIcon from '@material-ui/icons/ImportantDevicesRounded';
 
-import AskManagement from '../../assets/images/actions/askManagement.svg';
-import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
-import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
-import compensationReview from '../../assets/images/actions/compensationReview.svg';
-import reportSomething from '../../assets/images/actions/reportSomething.svg';
+import {UserStore} from "../../../Stores/UserStore";
+import {createTicket} from "../../../DataExchange/Up";
+import {ticketOpen} from "../../../DataExchange/PayloadBuilder";
+
+// import AskManagement from '../../assets/images/actions/askManagement.svg';
+// import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
+// import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
+// import compensationReview from '../../assets/images/actions/compensationReview.svg';
+// import reportSomething from '../../assets/images/actions/reportSomething.svg';
 
 class ActionSlider extends React.Component {
    constructor(props) {
@@ -33,17 +40,19 @@ class ActionSlider extends React.Component {
       });
    }
 
-   showActionForm(item) {
+   showActionForm(data) {
       this.slider.slickGoTo(1);
-      this.setState({ selectedActionData: item });
+      this.setState({ selectedActionData: data });
    }
 
    hideActionForm() {
       this.slider.slickGoTo(0);
    }
 
-   handleActionFormSubmit(data) {
-      console.log(data);
+   async handleActionFormSubmit(data) {
+      const payload = {parent: this.state.selectedActionData.ticketID, stage: "open", activity: [{data, updated: Date.now(), userID: UserStore.user.userID}]};
+      await createTicket(ticketOpen(payload)).then(res => res.json());
+      this.slider.slickGoTo(0);
    }
    render() {
       const { generalActions } = this.state
@@ -111,43 +120,28 @@ class ActionSlider extends React.Component {
                   </div>
                   <div className="page_content actions shadow">
                      <div className="announce_component faq_announce slick-align-left">
-                        {/* <Slider {...settings_multi}> */}
-                        <IconBox
-                           key={"i1"}
-                           user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                        {/* <IconBox
-                           key={"AA"}
-                           user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                         */}
-                        {/* {(generalActions) ? generalActions.map((item, index) => {
-                              var img = item.img;
-                              // set default img if not return from data
-                              if (index === 0) { img = Star; }
-                              if (index === 1 || index === 4) { img = RefereCandidate; }
-                              if (index === 2 || index === 7) { img = AskManagement; }
-                              if (index === 3) { img = anonymousReport; }
-                              if (index === 5) { img = compensationReview; }
-                              if (index === 6 || index >= 8) { img = reportSomething; }
-                              return <IconBox
-                                 key={index}
-                                 user_img={img}
-                                 title={item.label}
-                                 showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
-                           }) : ('')} */}
-                        {/* </Slider> */}
+                        <Slider {...settings_multi}>
+
+                        {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => 
+                                   <IconBox
+                                   key={"icon" + ticket.ticketID}
+                                   user_img={getIcon("Star")}
+                                   title={ticket.label}
+                                   showAction={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} 
+                                />
+                           )}
+
+                 </Slider>
                      </div>
                   </div>
                </Container>
                <Container elevation={4} className="action-form">
                   <ActionsForm
-                     onSubmit={this.handleActionFormSubmit}
+                     onSubmit={this.handleActionFormSubmit.bind(this)}
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
                   />
+                  
                </Container>
             </Slider >
          </>

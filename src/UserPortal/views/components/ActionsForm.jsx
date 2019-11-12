@@ -1,43 +1,110 @@
 import React from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Container, Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import Star from '../../assets/images/star.svg';
 import { Svg } from "../../helpers/Helpers";
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import {validate} from "../../../SharedCalculations/ValidationTemplate";
+
+const initialState = {id: ""};
 
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            formData: {
-                colleague: 'One employee',
-                props_for: '',
-                description: '',
-                no_feed: false
-            }
+        this.state = {id: ""};
+        this.resetState = initialState;
+    }
+
+    reset() {
+        //ANTI PATTERN
+        Object.keys(this.state).forEach(key => {
+            if(key !== "id" ) delete this.state[key]
+        })
+      }
+
+   
+    componentWillReceiveProps(props){
+        if(
+            // props.actionDetail.ticketItems && props.actionDetail.ticketItems[0].data.length && !Object.keys(state).length
+            props.actionDetail.ticketItems && props.actionDetail.ticketID !== this.state.id
+            ) {
+         this.reset();
+         let addThis = {id: props.actionDetail.ticketID}
+         props.actionDetail.ticketItems[0].data.forEach(dataItem => {   
+             addThis[dataItem.label] = ""
+         });
+      
+         this.setState(addThis);
         }
+      
+     } 
+
+    getFormItemField(formItem) {
+        if(formItem.type === "text") return (
+        <InputGroup>
+            <Input placeholder="" type="text" name={formItem.label} id="description" onChange={this.handleInputChange.bind(this)} />
+        </InputGroup> )
+
+        else if(formItem.type === "select") return (
+            <Input type="select" name={formItem.label} id="props_for" onChange={this.handleInputChange.bind(this)}>
+                {formItem.options.map(opt => <option>{opt}</option>)}
+            </Input>
+        )
+
+        else if(formItem.type === "multi") return (
+            <FormGroup>
+            {formItem.options.map(opt =>  
+            
+            <FormControlLabel
+                control={<Checkbox 
+                id={formItem.label}
+                name={opt}
+                onChange={this.handleInputChange.bind(this)}
+                />}
+            label={opt}
+            />
+
+            )}
+          </FormGroup>
+        )
+        
     }
 
     handleInputChange(evt) {
-        const value =
-            evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
-
-        this.setState({
-            formData: {
-                ...this.state.formData,
-                [evt.target.name]: value
-            }
-        });
+        let newValue = {}
+        if (evt.target.type === "checkbox") {
+            let currentValues = this.state[evt.target.id] || [] ;
+            console.log("currentValues", currentValues)
+            if(evt.target.checked) currentValues.push(evt.target.name)
+            else currentValues = currentValues.filter(i => i!== evt.target.name) 
+            newValue[evt.target.id] = currentValues;
+        }
+        else {
+            value = evt.target.value;
+            newValue[evt.target.name] = value;
+        } 
+        this.setState(newValue);
     }
-    handleActionFormSubmit(e) {
+    async handleActionFormSubmit(e) {
         e.preventDefault();
-        this.props.onSubmit(this.state.formData);
+        if(Object.keys(this.state).length > 1) {
+        let conditions = {};
+        await Object.keys(this.state).forEach(key => {if(key !== "id") conditions[key] = this.state[key].length > 0})
+        const valid = await validate(conditions, true)
+        if (valid.valid) this.props.onSubmit(this.state);
+        }
+        else this.props.onSubmit(this.state);
+
     }
     render() {
         return (
             <>
-                <div className="section_title shadow">
-                    <h4><IconButton
+                <div className="section_title">
+                    {JSON.stringify(this.state)}
+                    <h4>
+                        <IconButton
                         color="inherit"
                         aria-label="back to actions"
                         edge="start"
@@ -48,60 +115,38 @@ class ActionsForm extends React.Component {
                             ('')}
                         {this.props.actionDetail.label}</h4>
                 </div>
-                <div className="page_content actions shadow">
+                <div className="page_content actions">
                     <div className="announce_component faq_announce slick-align-left">
-                        <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
-                            <Row form>
-                                <Col md={3}>
-                                    <FormGroup>
-                                        <Label for="colleague">Question Raised By</Label>
-                                        <Input type="select" name="colleague" id="colleague" onChange={this.handleInputChange.bind(this)}>
-                                            <option>One employee</option>
-                                            <option>Multiple employees</option>
-                                            <option>Management</option>
-                                        </Input>
+                    <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
+                    <Container>
+                        <Row>
+                    {this.props.actionDetail.ticketItems && this.props.actionDetail.ticketItems[0].data.map(formItem => 
+                        <Col md={6}>
+                             <FormGroup>
+                                        <Label for="description">{formItem.label}</Label>
+                                        {this.getFormItemField(formItem)}
                                     </FormGroup>
-                                </Col>
-                                {/* <Col md={3}>
-                                    <FormGroup>
-                                        <Label for="props_for">Give props for</Label>
-                                        <Input type="select" name="props_for" id="props_for" onChange={this.handleInputChange.bind(this)}>
-                                            <option>Teamwork</option>
-                                            <option>Teamwork2</option>
-                                            <option>Teamwork3</option>
-                                            <option>Teamwork4</option>
-                                            <option>Teamwork5</option>
-                                        </Input>
-                                    </FormGroup>
-                                </Col> */}
-                                <Col>
-                                    <FormGroup>
-                                        <Label for="description">Question</Label>
-                                        <InputGroup>
-                                            <Input placeholder="Enter your message here…" type="text" name="description" id="description" onChange={this.handleInputChange.bind(this)} />
-                                            {/* <InputGroupAddon addonType="append">
-                                                <QuestionIcon className="right-icon" />
-                                            </InputGroupAddon> */}
-                                        </InputGroup>
+                        </Col>
 
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            {/* <Row>
-                                <Col>
-                                    <FormGroup check className="pretty-checkbox">
-                                        <Input type="checkbox" name="no_feed" id="no_feed" onChange={this.handleInputChange.bind(this)} />
-                                        <div className="state"><Label for="no_feed" check>Private (don’t add to feed)</Label></div>
-                                    </FormGroup>
-                                </Col>
-                            </Row> */}
+                    )
+                    
+                    }
+                    {this.props.actionDetail.ticketItems && !this.props.actionDetail.ticketItems[0].data.length ? 
+                    <Col>
+                        <h4>Confirmation</h4>
+                        <p>Are you sure you want to submit this request?</p>
+                    </Col> :""}
+                    
+                    </Row>
+                    </Container>
+                
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
                                     <Button color="primary">Submit</Button>
                                 </Col>
                             </Row>
-                        </Form>
+                        </Form>  
                     </div>
                 </div>
             </>

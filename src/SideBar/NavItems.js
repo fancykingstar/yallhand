@@ -13,6 +13,9 @@ import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
+import RoomServiceRoundedIcon from '@material-ui/icons/RoomServiceRounded';
+import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
+import Badge from '@material-ui/core/Badge';
 
 @inject("UIStore", "UserStore")
 @observer
@@ -55,6 +58,18 @@ class NavItems extends React.Component {
               </ListItemIcon>
              <ListItemText primary="Admin Dashboard" />
           </ListItem>
+          <ListItem style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
+            <ListItemIcon>
+            <Badge color="secondary" badgeContent={4} 
+            // invisible={invisible} 
+            // className={classes.margin}
+            >
+            <InboxRoundedIcon/>
+        </Badge>
+              
+              </ListItemIcon>
+             <ListItemText primary="Inbox" />
+          </ListItem>
           <ListItem button style={isActive("teams")} button onClick={e => handleClick("teams")} >
             <ListItemIcon>
                   <GroupRoundedIcon/>
@@ -84,6 +99,12 @@ class NavItems extends React.Component {
                   <TocRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Tasks" />
+          </ListItem>
+          <ListItem button style={isActive("ticketing")} button onClick={e => handleClick("ticketing")} >
+            <ListItemIcon>
+                  <RoomServiceRoundedIcon/>
+              </ListItemIcon>
+             <ListItemText primary="Service Desk" />
           </ListItem>
           <ListItem button style={isActive("email")} button onClick={e => handleClick("email")} >
             <ListItemIcon>

@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
 
 body {
     /* color: rgb(51, 51, 51);  */
@@ -198,4 +204,32 @@ body {
 .Hidden .surveySlider .slick-track,
 .Hidden .surveySlider .slick-slide{
   width: 100vw !important;
+}
+
+.MultiSelectDropDown {
+  .message { display: none;}
+  .icon {
+    display: none !important;
+  }
+}
+
+.InboxItem:hover{
+  
+    box-shadow:0px 1px 3px 0px rgba(188, 188, 188, 0.2), 0px 2px 2px ;
+  
+}
+
+.InboxDetails {
+  height: 300px;
+  padding: 25px;
+  background-color: #ffffff;
+}
+
+.InboxListItem:hover {
+  border-right: 3px solid #2fc7f8;
+} 
+
+
+.InboxListItemActive {
+  border-right: 3px solid #28a5cf;
 }

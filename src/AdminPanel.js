@@ -11,7 +11,9 @@ import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
+import TicketingFrame from "./Ticketing/TicketingFrame";
 import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
+import TicketingNewEdit from "./Ticketing/TicketingNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -26,6 +28,7 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadAdmin } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+import Inbox from "./Inbox/Inbox";
 import "./CSS/styles.scss";
 
 
@@ -98,9 +101,13 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks" component={TaskFrame} exact/>
+            <Route path="/panel/ticketing" component={TicketingFrame} exact/>
+            <Route path="/panel/ticketing/manage-ticket" render={props => <TicketingNewEdit {...props} />} exact />
+            <Route path="/panel/ticketing/manage-ticket/:id" render={props => <TicketingNewEdit {...props} />} exact />
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel" component={DashboardFrame} exact/>
+            <Route path="/panel/inbox" component={Inbox} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

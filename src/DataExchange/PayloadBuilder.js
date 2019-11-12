@@ -501,7 +501,34 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   }
 
 
+  ///TICKETING AND SERVICE DESK
+  export const ticket = ( data ) => {
+    let payload = data;
+    if (data.access === "default")
+    payload.admins = [userID()];
+    payload.config = {
+      simpleDesc: true, 
+      notifyAdminNewTicket: true,
+      deleteTicket: false,
+      updateOpener: true
+    };
+    if (data.type === "simple" && data.config.simpleDesc) {
+      payload.ticketItems.splice(0, 1, {type: "text", label: "Description (optional)", options: [], isOpen: true})
+    };
 
+    payload.teamID = payload.sendToTeamID?  payload.sendToTeamID : "global";
+    delete payload.sendToTeamID;
+    payload.tags = payload.sendToTagID && payload.sendToTagID !== "none"? [payload.sendToTagID] : [];
+    delete payload.sendToTagID;
+
+    return _.extend({}, base(), payload)
+  }
+
+  export const ticketOpen = ( data ) => {
+    let payload = data;
+    if (payload.id) delete payload.id
+    return _.extend({}, base(), payload);
+  }
 
 
 
