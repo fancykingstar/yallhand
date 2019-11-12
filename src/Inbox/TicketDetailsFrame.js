@@ -16,13 +16,25 @@ import { AccountStore } from "../Stores/AccountStore";
 import { TicketingStore } from "../Stores/TicketingStore";
 import TimeAgo from 'react-timeago'
 import {giveMeKey} from "../SharedCalculations/GiveMeKey";
+import { ticketEdit, addTicketActivity } from "../DataExchange/PayloadBuilder";
+import { modifyTicket } from "../DataExchange/Up";
 
 
 
 class TicketDetailsFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { contactExpanded: false, stage: "", addlFieldsSource: [] };
+    this.state = { contactExpanded: false, stage: "", addlFieldsSource: [],assignee: "", memo: "", memoAdmin: "" };
+  }
+
+  updateTicket = async () => {
+   
+    await modifyTicket(addTicketActivity(this.state, this.props.data));
+    
+
+    // if (!this.state.stage) delete newVals.stage;
+    // await modifyTicket(addTicketActivity(newVals));
+    // this.setState({ contactExpanded: false, stage: "", assignee: "", memo: "", memoAdmin: "" })
   }
 
 toggleContactInfo() {
@@ -41,7 +53,8 @@ async addlFields() {
   async changeStage(stage) {
     await this.setState({stage});
     const checkFields = await this.addlFields();
-    if (checkFields[0].data.length) this.setState({addlFieldsSource: checkFields[0].data})
+    console.log("checkfields", checkFields)
+    if (checkFields.length && checkFields[0].data.length) this.setState({addlFieldsSource: checkFields[0].data})
   }
 
   stagesOptions = () => {
@@ -50,7 +63,8 @@ async addlFields() {
     const parentStages = !_parent.ticketItems.length? [] : _parent.ticketItems.filter(ticketItem=>ticketItem.label).map(ticketItem => ({text: ticketItem.label, value: ticketItem.label}));
     // console.log(_parent.ticketItems.filter(ticketItem=>ticketItem.label).map(ticketItem => ({text: ticketItem.label, value: ticketItem.label})))
     let baseStages = [
-      {text: "Re-open", value:"reopen"},
+      {text: "Open", value:"open"},
+      // {text: "Re-open", value:"reopen"},
       {text: "Close (completed)", value: "closed"},
       {text: "Close (unable to fulfill)", value: "closed-cant"},
       {text: "Close (out of scope/declined)", value: "closed-wont"}
@@ -62,11 +76,19 @@ async addlFields() {
     getFormItemField(formItem) {
       if(formItem.type === "text") return (
       <InputGroup>
-          <Input placeholder="" type="text" name={formItem.label} id="description" onChange={() => console.log("fix")} />
+          <Input placeholder="" type="text" name={formItem.label} id="description" onChange={(e) => {
+            let newVal = {};
+            newVal[formItem.label] = e.target.value;
+            this.setState(newVal);
+          } } />
       </InputGroup> )
 
       else if(formItem.type === "select") return (
-          <Input type="select" name={formItem.label} id="props_for" onChange={() => console.log("fix")}>
+          <Input type="select" name={formItem.label} id="props_for" onChange={(e) => {
+            let newVal = {};
+            newVal[formItem.label] = e.target.value;
+            this.setState(newVal);
+          }}>
               {formItem.options.map(opt => <option>{opt}</option>)}
           </Input>
       )
@@ -79,7 +101,11 @@ async addlFields() {
               control={<Checkbox 
               id={formItem.label}
               name={opt}
-              onChange={() => console.log("fix")}
+              onChange={(e) => {
+                let newVal = {};
+                newVal[formItem.label] = e.target.value;
+                this.setState(newVal);
+              }}
               />}
           label={opt}
           />
@@ -197,7 +223,7 @@ async addlFields() {
                               {activity.reverse().map(act => 
                               <Row style={{ padding: "3px 0 3px" }}>
                               <Col xs={8}>Set as{" "}
-                                <strong>{act.stage}</strong> by{" "}
+                                <strong>{this.props.data.stage}</strong> by{" "}
                                 <strong>{AccountStore._getUser(act.userID).displayName}</strong>{" "}
                               </Col>
                               <Col> <strong><TimeAgo date={act.updated} /></strong></Col>
@@ -222,7 +248,7 @@ async addlFields() {
                                {activity.filter(act => Object.keys(act.data).length).map(act => 
 
                                {
-                                const res = Object.keys(act.data).map(datapnt => 
+                                const res = Object.keys(act.data).filter(datapnt => datapnt !== "id").map(datapnt => 
                                 <Row style={{ padding: "3px 0 3px" }}>
                                 <Col xs={9}>
                                   <strong>{datapnt} </strong> 
@@ -271,7 +297,8 @@ async addlFields() {
                       <Col xs={3}>
                         <InputGroup>
                           <Input
-                            placeholder="Change stage..."
+                            onChange={e=>this.setState({assignee: e.target.value})}
+                            // placeholder="Change stage..."
                             type="select"
                             name="select"
                             id="exampleSelect"
@@ -305,17 +332,24 @@ async addlFields() {
                       <Col>
                         <InputGroup>
                           <Input
+                            onChange={e=>this.setState({memo: e.target.value})}
                             placeholder="Memo (optional)"
                             type="text"
                             name={"description"}
                             id="description"
                           />
                         </InputGroup>
+                        <FormGroup style={{marginTop: 7, marginLeft: 5}} check>
+                          <RSLabel check>
+                            <Input onChange={e=>this.setState({memoAdmin:e.target.checked})} type="checkbox" id="checkbox2" />{' '}
+                            Admin Only
+                          </RSLabel>
+                        </FormGroup>
                       </Col>
                     </Row>
                     <Row style={{ padding: "8px 0 8px" }}>
                       <Col>
-                        <Button primary>Update</Button>
+                        <Button onClick={()=>this.updateTicket()} primary>Update</Button>
                       </Col>
                     </Row>
                   </Container>

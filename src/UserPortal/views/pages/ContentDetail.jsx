@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
 import { inject, observer } from "mobx-react";
 
-import { Row } from 'reactstrap';
+import { Row, Button, Input } from 'reactstrap';
 
 import ImageBox from "../components/ImageBox";
 import PostDetails from '../components/PostDetails';
@@ -12,6 +12,12 @@ import ContentData from '../../data/content-detail.json';
 import {apiCall_noBody }from "../../../DataExchange/Fetch";
 import {ItsLog} from "../../../DataExchange/PayloadBuilder";
 import {log} from "../../../DataExchange/Up";
+import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
+import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
+
+import {createTicket} from "../../../DataExchange/Up";
+import {ticketOpen} from "../../../DataExchange/PayloadBuilder";
+
 
 
 @inject("AnnouncementsStore", "PoliciesStore", "UserStore")
@@ -24,8 +30,31 @@ class ContentDetail extends React.Component {
          PostData: '',
          qaData: [],
          mode: "",
-         sentiment: false
+         sentiment: false,
+         displayQ: false,
+         q: ""
       }
+   }
+
+   submitQ = async () => {
+      const {UserStore} = this.props;
+      const {PostData} = this.state;
+      let data = {};
+      const isPolicy = Boolean(PostData.policyID);
+      data[isPolicy? "policyID":"announcementID"] = PostData[isPolicy? "policyID": "announcementID"];
+      data.variationID = PostData.variations[0].variationID;
+      data.q = this.state.q
+      const payload = {
+         parent: "QandA",
+         stage: "open",
+         activity: [{
+            update: Date.now(),
+            userID: UserStore.user.userID,
+            data
+         }]
+      }
+      await createTicket(ticketOpen(payload));
+      this.setState({displayQ: false})
    }
 
    updatePost = (payload) => this.setState(payload);
@@ -70,20 +99,40 @@ class ContentDetail extends React.Component {
    }
 
    render() {
-      const { PostData } = this.state;
+      const { PostData,displayQ } = this.state;
+      const takeQuestion = !displayQ?  
+            <Button outline color="primary" size="sm" onClick={()=> this.setState({displayQ: true})}>
+            Ask a question <HelpOutlineRoundedIcon fontSize="small"/>
+         </Button>
+    :
+    <>
+    <Input placeholder="Enter your question…" type="text" name="q" id="q" onChange={e=>this.setState({q: e.target.value})} />
+    <div style={{padding: "25px 25px 15px 25px"}}>
+    <Button outline color="primary" size="sm" onClick={()=>this.submitQ()}>
+    Submit <DoneRoundedIcon fontSize="small"/>
+  </Button>
+    </div>
+    </>
+
       return (
          <Layout>
             <div className="">
                <div className="">
                   {PostData ? (<PostDetails data={this.state} update={payload=>this.updatePost(payload)}/>) : ("")}
-             
+
+           
                   <div className="page_content_bg">
+                  {PostData.variations && PostData.variations[0].qa ? 
                      <div className="smallContainer">
-                        <QuestionAnswer qaData={this.state.qaData} />
+                        <QuestionAnswer qaData={this.state} />
+                     </div>:
+                     <div className="smallContainer" style={{padding: "25px 25px 25px 25px"}}>
+                        {takeQuestion}
                      </div>
-                  </div> 
-                  {/* <div className="announcements-wrap">
-                     <div className="smallContainer">
+                     }
+                  </div>  
+                  
+                     {/* <div className="smallContainer">
                         <div className="title-box">More from Announcements</div>
                         <div className="slider_wrap announce_main_box">
                            <Row>{Announcements.map((item, index) => {
@@ -96,7 +145,7 @@ class ContentDetail extends React.Component {
                            </Row>
                         </div>
                      </div>
-                  </div> */}
+                  </div>  */}
 
 
                </div>

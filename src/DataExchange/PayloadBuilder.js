@@ -388,6 +388,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
     if (updatedFields.tags) newVariValues.tags = updatedFields.tags;
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
+    if (updatedFields.qanda) newVariValues.qanda = updatedFields.qanda;
     newVariValues.updated = Date.now();
     newVariValues.userID = userID();
     newVariValues.variationID = variID? variID : generateID();
@@ -522,6 +523,37 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     delete payload.sendToTagID;
 
     return _.extend({}, base(), payload)
+  }
+
+  export const ticketEdit = ( data ) => {
+    return _.extend({}, base(), data); 
+  }
+
+  export const addTicketActivity = (state, props) => {
+    let newVals = Object.assign({}, state);
+    delete newVals.contactExpanded
+    delete newVals.addlFieldsSource
+
+    
+    let buildObj = {
+      ticketID: props.ticketID,
+      accountID: props.accountID,
+    };
+
+    if (state.stage) buildObj.stage = state.stage;
+    if (state.assignee) buildObj.currentAssignee = state.assignee;
+    delete newVals.stage;
+    delete newVals.assignee;
+    Object.keys(newVals).filter(i => !newVals[i]).forEach(i => delete newVals[i]);
+
+    let activity = {updated: Date.now(), userID: userID(), data: newVals};
+ 
+
+    buildObj.activity = [...props.activity, activity];
+    buildObj.update = Date.now();
+
+    return buildObj;
+
   }
 
   export const ticketOpen = ( data ) => {

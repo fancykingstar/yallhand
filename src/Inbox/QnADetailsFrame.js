@@ -11,23 +11,25 @@ import mobile_icon from "../Assets/Icons/mobile_icon.svg";
 import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
 import {Label as RSLabel} from "reactstrap";
 import { Container, Col, Row, Input, InputGroup,FormGroup } from "reactstrap";
-
 import { AccountStore } from "../Stores/AccountStore";
-
 import { TicketingStore } from "../Stores/TicketingStore";
 import {getDisplayTags} from "../SharedCalculations/GetDisplayTags";
 import {getDisplayTeams} from "../SharedCalculations/GetDisplayTeams";
 import { TeamStore } from "../Stores/TeamStore";
+import { UserStore } from "../Stores/UserStore";
 
 import TimeAgo from 'react-timeago'
 import {giveMeKey} from "../SharedCalculations/GiveMeKey";
+import { ContentPreview } from "../SharedUI/ContentPreview";
+import { modifyPolicy, modifyAnnouncement } from "../DataExchange/Up";
+import { contentEdit} from "../DataExchange/PayloadBuilder";
 
 
 
 class QnADetailsFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { contactExpanded: false, stage: "", addlFieldsSource: [], contentPreview: "", vari: "" };
+    this.state = { contactExpanded: false, stage: "", addlFieldsSource: [], toggleContentPreview: false, contentPreview: "", vari: "", assignee: "", memo: "", memoAdmin: "", response: "" };
   }
 
 //   async componentDidMount(){
@@ -38,35 +40,59 @@ class QnADetailsFrame extends React.Component {
 //   }
 
 async componentDidMount() {
-    const vari = await this.props.data._contentPreview.variations.filter(vari => vari.variationID === this.props.data.activity[0].data.variationID)[0];
-    await this.setState({vari})
+    const vari = await this.props.data._contentPreview.variations.filter(vari => vari.variationID === this.props.data.activity[0].data.variationID);
+    console.log("vari",vari);
+    // console.log("propsdata", this.props.data ,this.props.data.activity[0].data.variationID);
+    // await this.setState({vari})
 
 
+}
+
+updateTicket = () => {
+  const {stage,  response, vari} = this.state;
+  const { _contentPreview} = this.props.data;
+  if (stage === "close") {
+    const payload =  {qanda : [{
+      q: this.props.data.activity[0].data.q,
+      a: response,
+      adminID: UserStore.user.userID,
+      update: Date.now()
+    }]};
+
+    const mode = _contentPreview.policyID? "policy" : "announcement";
+    const contentID = _contentPreview[`${mode}ID`]
+    console.log("payload good?", payload, mode, contentID, vari.variationID)
+    if (mode === "policy") modifyPolicy(contentEdit(payload, mode, contentID, vari.variationID)) 
+    else modifyAnnouncement(contentEdit(payload, mode, contentID, vari.variationID))
+    // contentEdit = (obj, mode, contentID, variID) let newVari = Object.assign({}, vari);
+
+    
+  }
+
+}
+
+getPreviewContent = () => {
+  console.log(Object.assign(this.props.data._contentPreview, {variations: [this.state.vari]}))
+  return Object.assign(this.props.data._contentPreview, {variations: [this.state.vari]})
+}
+
+closePreview = () => {
+  this.setState({toggleContentPreview: false})
 }
 
 toggleContactInfo() {
   this.setState({ contactExpanded: !this.state.contactExpanded });
 }
 
-// async addlFields() {
-//   const {stage} = this.state;
-//   const {_parent} = this.props.data;
-//    if (!stage) return [];
-//     else if (stage.includes("close")) return await _parent.ticketItems.filter(i => i.isClose);
-//     else if (stage === "open") return await _parent.ticketItems.filter(i=>i.isOpen);
-//     else return await _parent.ticketItems.filter(i=>i.label && i.label === stage)
-// }
 
   async changeStage(stage) {
     await this.setState({stage});
-    // const checkFields = await this.addlFields();
-    // if (checkFields[0].data.length) this.setState({addlFieldsSource: checkFields[0].data})
   }
 
   stagesOptions = () => {
 
     let baseStages = [
-      {text: "Re-open", value:"reopen"},
+      // {text: "Re-open", value:"reopen"},
       {text: "Open", value: "open"},
       {text: "Close (Attach question & response to public content)", value: "close"},
       {text: "Close (Send a reponse to requester privately)", value: "close-cant"},
@@ -111,11 +137,14 @@ toggleContactInfo() {
 
   render() {
     const {_requester, _userImg, _userInitials, _parent, activity, _contentPreview} = this.props.data;
-    const {vari} = this.state;
+    console.log("contentpreview", _contentPreview)
+    const {vari,toggleContentPreview} = this.state;
     return (
       <React.Fragment>
         {/* {JSON.stringify(this.state)} */}
         <Paper>
+        <ContentPreview open={toggleContentPreview} onClose={this.closePreview} data={this.getPreviewContent()} />
+                {JSON.stringify(this.state)}
                 <div className="section_title">
                   <div>
                     <h4 style={{ color: "#404040" }}>{_contentPreview.label}</h4>
@@ -139,7 +168,9 @@ toggleContactInfo() {
   <Col><p style={{fontSize: "0.8em", padding: 0, margin: "0 0 0 10px"}}>{_contentPreview.policyID? "FAQ":"Announcement"}</p><p style={{lineHeight: "1.25em", margin: "3px 0 0 10px"}}>{_contentPreview.label}</p></Col>
                         </Row>
                         <Row>
-                             <Col sm={3}> <Button primary style={{marginTop: 5,padding:4, fontSize: ".8em"}} size='mini'>Preview</Button></Col>
+                             <Col sm={3}> <Button 
+                            //  onClick={()=>this.setState({toggleContentPreview:true})} 
+                             primary style={{marginTop: 5,padding:4, fontSize: ".8em"}} size='mini'>Preview</Button></Col>
                             <Col style={{marginTop: 5, color: "rgba(0, 0, 0, 0.54)"}}><p style={{fontSize: "0.8em", padding: 0, margin: "0 0 0 10px"}}>
                             {vari && getDisplayTeams(vari.teamID, TeamStore.structure)}{" "}
                             {vari && (!vari.tags.length ? "" : getDisplayTags(vari.tags, TeamStore.tags))}
@@ -240,7 +271,7 @@ toggleContactInfo() {
                               {activity.reverse().map(act => 
                               <Row style={{ padding: "3px 0 3px" }}>
                               <Col xs={8}>Set as{" "}
-                                <strong>{act.stage}</strong> by{" "}
+                              <strong>{this.props.data.stage}</strong> by{" "}
                                 <strong>{AccountStore._getUser(act.userID).displayName}</strong>{" "}
                               </Col>
                               <Col> <strong><TimeAgo date={act.updated} /></strong></Col>
@@ -324,6 +355,7 @@ toggleContactInfo() {
                         <Col xs={3}>
                         <InputGroup>
                         <Input
+                            onChange={(e)=> this.setState({assignee: e.target.value})}
                             type="select"
                             name="select"
                             id="exampleSelect"
@@ -362,6 +394,7 @@ toggleContactInfo() {
                               this.state.stage.includes('close')?
                               <Input 
                               type="textarea"
+                              onChange={e=>this.setState({response: e.target.value})}
                               placeholder="Response"
                               name="response"
                               />
@@ -369,13 +402,14 @@ toggleContactInfo() {
                           <>
                           <Input
                             placeholder="Memo (optional)"
+                            onChange={e=>this.setState({memo: e.target.value})}
                             type="text"
                             name={"description"}
                             id="description"
                           />
                           <FormGroup style={{marginTop: 7, marginLeft: 5}} check>
                           <RSLabel check>
-                            <Input type="checkbox" id="checkbox2" />{' '}
+                            <Input onChange={e=>this.setState({memoAdmin:e.target.checked})} type="checkbox" id="checkbox2" />{' '}
                             Admin Only
                           </RSLabel>
                         </FormGroup>
@@ -386,7 +420,7 @@ toggleContactInfo() {
                     </Row>
                     <Row style={{ padding: "8px 0 8px" }}>
                       <Col>
-                        <Button primary>Update</Button>
+                        <Button onClick={()=>this.updateTicket()} primary>Update</Button>
                       </Col>
                     </Row>
                   </Container>
