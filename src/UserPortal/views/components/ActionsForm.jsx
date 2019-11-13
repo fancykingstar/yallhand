@@ -82,7 +82,7 @@ class ActionsForm extends React.Component {
             newValue[evt.target.id] = currentValues;
         }
         else {
-            value = evt.target.value;
+            const value = evt.target.value;
             newValue[evt.target.name] = value;
         } 
         this.setState(newValue);
@@ -102,7 +102,7 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title">
-                    {JSON.stringify(this.state)}
+              
                     <h4>
                         <IconButton
                         color="inherit"

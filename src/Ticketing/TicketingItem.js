@@ -133,7 +133,7 @@ export class TicketingItem extends React.Component {
 
     return (
       <Segment secondary={this.props.isClose} >
-        {`props data ${JSON.stringify(this.props.data)}`}
+    
       <Row >
         {/* <Col style={{maxWidth: 60}} sm={1}><Avatar>{this.props.index + 1}</Avatar> </Col> */}
         <Col>

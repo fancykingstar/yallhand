@@ -1,5 +1,5 @@
 import { observable, action, computed } from "mobx";
-// import {calculateAnalytics} from "../SharedCalculations/CalculateSurveyAnalytics";
+import {calculateTicketing} from "../SharedCalculations/CalculateTicketing";
 import _ from "lodash";
 
 class Store {
@@ -46,8 +46,7 @@ class Store {
 
   loadTickets(allTickets) {
     return new Promise((resolve, reject) => {
-    //   this.allTickets = calculateAnalytics(allTickets);
-      this.allTickets = allTickets;
+      this.allTickets = calculateTicketing(allTickets);
       resolve(true)
       // this.allSurveys.length === 0 ? reject(false) : resolve(true)
     })

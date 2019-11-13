@@ -201,7 +201,7 @@ class TicketingNewEdit extends React.Component {
     return (
       <div> 
         <BackButton/>
-        {JSON.stringify(this.state)}
+ 
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Build Service Ticket Template
           <Header.Subheader>

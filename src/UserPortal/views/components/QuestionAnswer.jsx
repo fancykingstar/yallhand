@@ -3,6 +3,8 @@ import QAData from '../../data/content-detail.json';
 import TextField from '@material-ui/core/TextField';
 import {Button} from 'reactstrap';
 import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
+import {AccountStore} from "../../../Stores/AccountStore";
+import TimeAgo from 'react-timeago'
 
 class QuestionAnswer extends React.Component {
     constructor(props) {
@@ -18,7 +20,7 @@ class QuestionAnswer extends React.Component {
     }
     render() {
         const { qaData } = this.props;
-
+        console.log("qadata", qaData)
         return (
             <div className="QuestionAnswer">
                 <div className="QuestionAnswerTitle">
@@ -39,25 +41,25 @@ class QuestionAnswer extends React.Component {
                 {(qaData) ? (qaData.map((item, index) => {
                     return <div key={index} className="QuestionAnswerBox">
                         <div className="QuestionAnswerBoxTop">
-                            <span>2d ago</span>
+                            <span><TimeAgo date={item.updated} /></span>
                         </div>
-                        <h6>Q: {item.question}</h6>
+                        <h6>Q: {item.q}</h6>
                         <div className="QuestionAnswerUser">
-                            {(item.admin.img) && <img alt="" src={item.admin.img} />}
+                            {(AccountStore._getUser(item.adminID).img) && <img alt="" src={AccountStore._getUser(item.adminID).img} />}
                             <div className="userPostDate">
-                                {(item.admin.name) && <a href="#/">{item.admin.name}</a>}
+                                <a href="#/">{AccountStore._getUser(item.adminID).displayName}</a>
                                 {/* <p>{item.updated}</p> */}
                             </div>
                         </div>
-                        {(item.answer !== '') ? (
+                        {/* {(item.answer !== '') ? ( */}
                             <div className="replyContent">
-                                <p>{item.answer}</p>
+                                <p>{item.a}</p>
                             </div>
-                        ) : (
+                        {/* ) : (
                                 <div className="ansBtn">
                                     <a href="#/">Answer</a>
                                 </div>
-                            )}
+                            )} */}
                     </div>
                 })) : ('')} 
 

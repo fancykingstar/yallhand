@@ -1,360 +1,314 @@
 import React from "react";
-import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
+import { Button, Form, Checkbox, Dropdown, Menu } from "semantic-ui-react";
+import { Paper } from "@material-ui/core";
 
-import { Button, Label } from "semantic-ui-react";
-import { Paper, Card, CardHeader, CardContent, Avatar, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse, IconButton } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import department_icon from "../Assets/Icons/department_icon.svg";
-import location_icon from "../Assets/Icons/location_icon.svg";
-import mobile_icon from "../Assets/Icons/mobile_icon.svg";
-import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
-import {Label as RSLabel} from "reactstrap";
-import { Container, Col, Row, Input, InputGroup,FormGroup } from "reactstrap";
-
+import { Container, Col, Row } from "reactstrap";
 import { AccountStore } from "../Stores/AccountStore";
-import { TicketingStore } from "../Stores/TicketingStore";
-import TimeAgo from 'react-timeago'
-import {giveMeKey} from "../SharedCalculations/GiveMeKey";
-import { ticketEdit, addTicketActivity } from "../DataExchange/PayloadBuilder";
+import { UserStore } from "../Stores/UserStore";
 import { modifyTicket } from "../DataExchange/Up";
-
-
+import { TicketData } from "./TicketData";
+import { TicketActivity } from "./TicketActivity";
+import { TicketRequester } from "./TicketRequester";
+import FadeIn from 'react-fade-in';
 
 class TicketDetailsFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { contactExpanded: false, stage: "", addlFieldsSource: [],assignee: "", memo: "", memoAdmin: "" };
+    this.state = {
+      activeItem: "activity",
+      showMemo: false,
+      stage: "",
+      addlFieldsSource: [],
+      selectedAssignee: "", //NOTE: False is unassigned for dropdown functionality
+      memo: "",
+      memoAdmin: "",
+      id: "",
+      addlFieldsRes: {},
+      assigneeOptions: [],
+    };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.id !== state.id) {
+      const base = AccountStore._getUsersSelectOptions([ ...props.data._parent.admins, ...props.data._parent.collaborators ]); 
+      console.log("DATA", props.data)
+      return {
+        id: props.id,
+        showMemo: false,
+        memo: "",
+        stage: props.data._stage,
+        selectedAssignee: props.data._currentAssignee || false ,
+        memoAdmin: "",
+        addlFieldsSource: [],
+        addlFieldsRes: {},
+        assigneeOptions: [...base, {text: "Unassigned", value: false}]
+      };
+
+    }
+    else return null;
+  }
+
+  setAddlFieldRes = obj => {
+    const newVal = Object.assign(this.state.addlFieldsRes, obj);
+    this.setState({ addlFieldsRes: newVal });
+  };
+
+  handleMenuClick = (e, { name }) => {
+    this.setState({ activeItem: name });
+  };
+
+  async addlFields() {
+    const { stage } = this.state;
+    const { _parent } = this.props.data;
+    if (!stage) return [];
+    else if (stage.includes("close"))
+      return await _parent.ticketItems.filter(i => i.isClose);
+    else if (stage === "open")
+      return await _parent.ticketItems.filter(i => i.isOpen);
+    else
+      return await _parent.ticketItems.filter(
+        i => i.label && i.label === stage
+      );
   }
 
   updateTicket = async () => {
-   
-    await modifyTicket(addTicketActivity(this.state, this.props.data));
-    
-
-    // if (!this.state.stage) delete newVals.stage;
-    // await modifyTicket(addTicketActivity(newVals));
-    // this.setState({ contactExpanded: false, stage: "", assignee: "", memo: "", memoAdmin: "" })
-  }
-
-toggleContactInfo() {
-  this.setState({ contactExpanded: !this.state.contactExpanded });
-}
-
-async addlFields() {
-  const {stage} = this.state;
-  const {_parent} = this.props.data;
-   if (!stage) return [];
-    else if (stage.includes("close")) return await _parent.ticketItems.filter(i => i.isClose);
-    else if (stage === "open") return await _parent.ticketItems.filter(i=>i.isOpen);
-    else return await _parent.ticketItems.filter(i=>i.label && i.label === stage)
-}
+    const { stage } = this.state;
+    const userID = UserStore.user.userID;
+    if (stage.includes("close")) {
+      const newActivity = [
+        ...this.props.data.activity,
+        {
+          userID,
+          stage: this.state.stage,
+          updated: Date.now(),
+          data: this.state.memo ? { memo: this.state.memo } : {}
+        }
+      ];
+      const updateObj = {
+        ticketID: this.props.data.ticketID,
+        accountID: this.props.data.accountID,
+        stage: this.state.stage,
+        activity: newActivity
+      };
+      modifyTicket(updateObj);
+    }
+  };
 
   async changeStage(stage) {
-    await this.setState({stage});
+    await this.setState({ stage });
     const checkFields = await this.addlFields();
-    console.log("checkfields", checkFields)
-    if (checkFields.length && checkFields[0].data.length) this.setState({addlFieldsSource: checkFields[0].data})
+
+    if (checkFields.length && checkFields[0].data.length)
+      this.setState({ addlFieldsSource: checkFields[0].data });
   }
 
   stagesOptions = () => {
-    const {_parent} = this.props.data;
+    const { _parent } = this.props.data;
 
-    const parentStages = !_parent.ticketItems.length? [] : _parent.ticketItems.filter(ticketItem=>ticketItem.label).map(ticketItem => ({text: ticketItem.label, value: ticketItem.label}));
-    // console.log(_parent.ticketItems.filter(ticketItem=>ticketItem.label).map(ticketItem => ({text: ticketItem.label, value: ticketItem.label})))
+    const parentStages = !_parent.ticketItems.length
+      ? []
+      : _parent.ticketItems
+          .filter(ticketItem => ticketItem.label)
+          .map(ticketItem => ({
+            text: ticketItem.label,
+            value: ticketItem.label
+          }));
+
     let baseStages = [
-      {text: "Open", value:"open"},
-      // {text: "Re-open", value:"reopen"},
-      {text: "Close (completed)", value: "closed"},
-      {text: "Close (unable to fulfill)", value: "closed-cant"},
-      {text: "Close (out of scope/declined)", value: "closed-wont"}
-    ]
+      { text: "Open", value: "open" },
+      { text: "Close (completed)", value: "closed" },
+      { text: "Close (unable to fulfill)", value: "closed-cant" },
+      { text: "Close (out of scope/declined)", value: "closed-wont" }
+    ];
+    return [...parentStages, ...baseStages];
+  };
 
-    return [...parentStages, ...baseStages]
-  }
-
-    getFormItemField(formItem) {
-      if(formItem.type === "text") return (
-      <InputGroup>
-          <Input placeholder="" type="text" name={formItem.label} id="description" onChange={(e) => {
-            let newVal = {};
-            newVal[formItem.label] = e.target.value;
-            this.setState(newVal);
-          } } />
-      </InputGroup> )
-
-      else if(formItem.type === "select") return (
-          <Input type="select" name={formItem.label} id="props_for" onChange={(e) => {
-            let newVal = {};
-            newVal[formItem.label] = e.target.value;
-            this.setState(newVal);
-          }}>
-              {formItem.options.map(opt => <option>{opt}</option>)}
-          </Input>
-      )
-
-      else if(formItem.type === "multi") return (
-          <FormGroup>
-          {formItem.options.map(opt =>  
-          
-          <FormControlLabel
-              control={<Checkbox 
-              id={formItem.label}
-              name={opt}
-              onChange={(e) => {
-                let newVal = {};
-                newVal[formItem.label] = e.target.value;
-                this.setState(newVal);
-              }}
-              />}
-          label={opt}
+  getFormItemField(formItem) {
+    if (formItem.type === "text")
+      return (
+        <Form className="FixSemanticLabel">
+          <Form.Input
+            label={formItem.label}
+            onChange={(e, value) => {
+              let newVal = {};
+              newVal[formItem.label] = value;
+              this.setAddlFieldRes(newVal);
+            }}
           />
-
-          )}
-        </FormGroup>
-      )
-      
+        </Form>
+      );
+    else if (formItem.type === "select")
+      return (
+        <Form className="FixSemanticLabel">
+          <Form.Select
+            label={formItem.label}
+            onChange={(e, { value }) => {
+              let newVal = {};
+              newVal[formItem.label] = value;
+              this.setAddlFieldRes(newVal);
+            }}
+            options={formItem.options.map(opt => ({ text: opt, value: opt }))}
+          />
+        </Form>
+      );
+    else if (formItem.type === "multi")
+      return (
+        <>
+          <span>{formItem.label}</span>
+          <Form>
+            <Form.Group grouped>
+              {formItem.options.map(opt => (
+                <Form.Field
+                  control={Checkbox}
+                  label={<label>{opt}</label>}
+                  onChange={(e, value) => {
+                    let newVal = {};
+                    newVal[opt] = value.checked;
+                    this.setAddlFieldRes(newVal);
+                  }}
+                />
+              ))}
+            </Form.Group>
+          </Form>
+        </>
+      );
   }
-
-  
 
   render() {
-    const {_requester, _userImg, _userInitials, _parent, _parentLabel, activity} = this.props.data;
+    const { _requester, _userImg, _userInitials, _parent, _parentLabel, activity } = this.props.data;
+    const { activeItem, assigneeOptions, selectedAssignee, stage } = this.state;
     return (
       <React.Fragment>
-        {JSON.stringify(this.state)}
+        <FadeIn>
+          {JSON.stringify(this.state)}
+   
         <Paper>
-                <div className="section_title">
-                  <div>
-                    <h4 style={{ color: "#404040" }}>{_parentLabel}</h4>
-                    <p style={{ color: "#abacab", fontSize: ".8em" }}>{"Service Desk"}</p>
-                  </div>
-                </div>
-                <div style={{ padding: 15 }}>
-                  <Container>
-                    <Row>
-                      <Col>
-                        <h5>Requester</h5>
+          <div className="section_title">
+            <div>
+              <h4 style={{ color: "#404040" }}>{_parentLabel}</h4>
+              <p style={{ color: "#abacab", fontSize: ".8em" }}>
+                {"Service Desk"}
+              </p>
+            </div>
+          </div>
+          <div style={{ padding: 15 }}>
+            <Container>
+              <Row>
+                <Col>
+                  <Menu
+                    text
+                    style={{ fontSize: "0.9em", marginTop: 0 }}
+                    secondary
+                  >
+                    <Menu.Item
+                      name="activity"
+                      active={activeItem === "activity"}
+                      onClick={this.handleMenuClick}
+                    />
+                    <Menu.Item
+                      name="data"
+                      active={activeItem === "data"}
+                      onClick={this.handleMenuClick}
+                    />
+                    <Menu.Item
+                      name="requester"
+                      active={activeItem === "requester"}
+                      onClick={this.handleMenuClick}
+                    />
+                  </Menu>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {activeItem === "requester" ? (
+                    <TicketRequester
+                      requester={_requester}
+                      userImg={_userImg}
+                      userInitials={_userInitials}
+                    />
+                  ) : activeItem === "activity" ? (
+                    <TicketActivity activity={activity} />
+                  ) : (
+                    <TicketData activity={activity} />
+                  )}
+                </Col>
+              </Row>
 
-                        <Card style={{ boxShadow: "none" }}>
-                          <CardHeader
-                            action={
-                              <IconButton
-                                onClick={this.toggleContactInfo.bind(this)}
-                                aria-label="show more"
-                              >
-                                {" "}
-                                <ExpandMoreIcon />{" "}
-                              </IconButton>
-                            }
-                            avatar= { _userImg ? <Avatar src={_userImg}></Avatar> : <Avatar>{_userInitials}</Avatar>}
-                            title={_requester.displayName}
-                            subheader={
-                              <>
-                                {_requester.profile.title}
-                                {_parent.config.updateOpener && <> 
-                                  <br />
-                                <span style={{ fontSize: "0.7em" }}>
-                                  Requester is subscribed to updates
-                                </span>
-                                </>
-                                
-                              }
-                              </>
+              <Row style={{ padding: "25px 0 0px" }}>
+                <Col>
+                  <Form className="FixSemanticLabel">
+                    <Form.Group>
+                      <Form.Field>
+                        {"Stage:"}{" "}
+                        <span style={{ fontWeight: "bold" }}>
+                          <Dropdown
+                            value={stage}
+                            onChange={(e, { value }) => this.changeStage(value)}
+                            options={this.stagesOptions()}
+                          />
+                        </span>
+                      </Form.Field>
+
+                      <Form.Field>
+                        {" "}
+                        {"Assignee:"}{" "}
+                        <span style={{ fontWeight: "bold" }}>
+                          <Dropdown
+                            value={selectedAssignee}
+                            options={assigneeOptions}
+                            onChange={(e, { value }) =>
+                              this.setState({ selectedAssignee: value })
                             }
                           />
+                        </span>
+                      </Form.Field>
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
 
-                          <Collapse
-                            in={this.state.contactExpanded}
-                            timeout="auto"
-                            unmountOnExit
-                          >
-                            <CardContent>
-                              <List component="div">
-                              {_requester.email &&
-                                <ListItem>
-                                  <ListItemIcon>
-                                    <MailOutlineRoundedIcon
-                                      style={{ color: "#4780F7" }}
-                                    />
-                                  </ListItemIcon>
-                                  <ListItemText secondary={_requester.email} />
-                                </ListItem>}
+              <Row>
+                {this.state.addlFieldsSource &&
+                  this.state.addlFieldsSource.map(formItem => (
+                    <Col md={6}>{this.getFormItemField(formItem)}</Col>
+                  ))}
+              </Row>
 
-                                {_requester.Department &&
-                                <ListItem>
-                                  <ListItemIcon>
-                                    <img src={department_icon} alt="" />
-                                  </ListItemIcon>
-                                  <ListItemText secondary={_requester.profile.Department} />
-                                </ListItem>
-                                }
-
-                                {_requester.Location &&
-                                <ListItem>
-                                  <ListItemIcon>
-                                    <img src={location_icon} alt="" />
-                                  </ListItemIcon>
-                                  <ListItemText secondary={_requester.profile.Location} />
-                                </ListItem>}
-
-                                {_requester.Mobile &&
-                                <ListItem>
-                                  <ListItemIcon>
-                                    <img src={mobile_icon} alt="" />
-                                  </ListItemIcon>
-                                  <ListItemText secondary={_requester.profile.Mobile} />
-                                </ListItem>}
-
-                              </List>
-                            </CardContent>
-                          </Collapse>
-                        </Card>
-                      </Col>
-                      <Col>
-                        <h5>Activity</h5>
-                        <Card style={{ boxShadow: "none" }}>
-                          <CardContent style={{ padding: 0 }}>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                            >
-                              {activity.reverse().map(act => 
-                              <Row style={{ padding: "3px 0 3px" }}>
-                              <Col xs={8}>Set as{" "}
-                                <strong>{this.props.data.stage}</strong> by{" "}
-                                <strong>{AccountStore._getUser(act.userID).displayName}</strong>{" "}
-                              </Col>
-                              <Col> <strong><TimeAgo date={act.updated} /></strong></Col>
-                            </Row>
-                              )}
-                            
-                            
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Col>
-                      <Col>
-                        <h5>Data</h5>
-
-                        <Card style={{ boxShadow: "none" }}>
-                          <CardContent style={{ padding: 0 }}>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                            >
-                               {activity.filter(act => Object.keys(act.data).length).map(act => 
-
-                               {
-                                const res = Object.keys(act.data).filter(datapnt => datapnt !== "id").map(datapnt => 
-                                <Row style={{ padding: "3px 0 3px" }}>
-                                <Col xs={9}>
-                                  <strong>{datapnt} </strong> 
-                                  {act.data[datapnt]}{" "}
-                                  <Label size="mini" >{AccountStore._getUser(act.userID).displayName}</Label>
-                                </Col>
-                                <Col>3d ago</Col>
-                              </Row>
-                                  );
-                                return res;
-                               }
-                          
-                               
-                             
-                                )}
-                              
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Col>
-                    </Row>
-                    <Row style={{ padding: "5px 0 5px" }}>
-                      <Col>
-                        <h5>Update</h5>
-                      </Col>
-                    </Row>
-                    <Row style={{ padding: "5px 0 5px" }}>
-                      <Col xs={3}>
-                        <InputGroup>
-                          <Input
-                            placeholder="Change stage..."
-                            type="select"
-                            name="select"
-                            id="exampleSelect"
-                            onChange={(e) => this.changeStage(e.target.value)}
-                          >
-                            <option value="" disabled selected>
-                              Change stage...
-                            </option>
-                            {this.stagesOptions().map(opt => 
-                              <option value={opt.value}>{opt.text}</option>
-                            )}
-                          </Input>
-                        </InputGroup>
-                      </Col>
-                      <Col xs={3}>
-                        <InputGroup>
-                          <Input
-                            onChange={e=>this.setState({assignee: e.target.value})}
-                            // placeholder="Change stage..."
-                            type="select"
-                            name="select"
-                            id="exampleSelect"
-                          >
-                            <option value="" disabled selected>
-                              Assign to...
-                            </option>
-                            {
-                              AccountStore._getUsersSelectOptions([..._parent.admins, ..._parent.collaborators]).map(user => <option key={giveMeKey() + user.text} value={user.value}>{user.text}</option>)
-                            }
-                          </Input>
-                        </InputGroup>
-                      </Col>
-                    </Row>
-
-                   <Row>
-                   {this.state.addlFieldsSource.map(formItem => 
-                        <Col md={6}>
-                             <FormGroup>
-                                        <RSLabel for="description">{formItem.label}</RSLabel>
-                                        {this.getFormItemField(formItem)}
-                                    </FormGroup>
-                        </Col>
-
-                    )
-                    
-                    }
-                   </Row>
-
-                    <Row style={{ padding: "8px 0 8px" }}>
-                      <Col>
-                        <InputGroup>
-                          <Input
-                            onChange={e=>this.setState({memo: e.target.value})}
-                            placeholder="Memo (optional)"
-                            type="text"
-                            name={"description"}
-                            id="description"
-                          />
-                        </InputGroup>
-                        <FormGroup style={{marginTop: 7, marginLeft: 5}} check>
-                          <RSLabel check>
-                            <Input onChange={e=>this.setState({memoAdmin:e.target.checked})} type="checkbox" id="checkbox2" />{' '}
-                            Admin Only
-                          </RSLabel>
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row style={{ padding: "8px 0 8px" }}>
-                      <Col>
-                        <Button onClick={()=>this.updateTicket()} primary>Update</Button>
-                      </Col>
-                    </Row>
-                  </Container>
-                </div>
-              </Paper>
+              <Row style={{ padding: "5px 0 8px" }}>
+                <Col>
+                  {!this.state.showMemo ? (
+                    <span
+                      style={{ color: "#4183C4", fontSize: "1rem" }}
+                      onClick={() => this.setState({ showMemo: true })}
+                    >
+                      Add Memo...
+                    </span>
+                  ) : (
+                    <Form className="FixSemanticLabel">
+                      <Form.Input
+                        onChange={e => this.setState({ memo: e.target.value })}
+                        placeholder="Memo (optional)"
+                        label="Memo (optional)"
+                        type="text"
+                        name={"description"}
+                        id="description"
+                      />
+                    </Form>
+                  )}
+                </Col>
+              </Row>
+              <Row style={{ padding: "8px 0 8px" }}>
+                <Col>
+                  <Button onClick={() => this.updateTicket()} primary>
+                    Update
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </Paper>
+        </FadeIn>
       </React.Fragment>
     );
   }

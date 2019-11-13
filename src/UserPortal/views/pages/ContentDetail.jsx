@@ -99,7 +99,9 @@ class ContentDetail extends React.Component {
    }
 
    render() {
+
       const { PostData,displayQ } = this.state;
+      console.log("qnada?", PostData.variations)
       const takeQuestion = !displayQ?  
             <Button outline color="primary" size="sm" onClick={()=> this.setState({displayQ: true})}>
             Ask a question <HelpOutlineRoundedIcon fontSize="small"/>
@@ -122,14 +124,14 @@ class ContentDetail extends React.Component {
 
            
                   <div className="page_content_bg">
-                  {PostData.variations && PostData.variations[0].qa ? 
+                  {PostData.variations && PostData.variations[0].qanda && 
                      <div className="smallContainer">
-                        <QuestionAnswer qaData={this.state} />
-                     </div>:
+                        <QuestionAnswer qaData={PostData.variations[0].qanda} />
+                     </div>}
                      <div className="smallContainer" style={{padding: "25px 25px 25px 25px"}}>
                         {takeQuestion}
                      </div>
-                     }
+                     
                   </div>  
                   
                      {/* <div className="smallContainer">

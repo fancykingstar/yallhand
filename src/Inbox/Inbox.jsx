@@ -1,8 +1,7 @@
 import React from "react";
-import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 
-import { Header, Button } from "semantic-ui-react";
+import { Header, Dropdown, Menu, DropdownMenu } from "semantic-ui-react";
 import { Paper, 
   // Card, CardHeader, CardContent, Avatar, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse, IconButton 
 } from "@material-ui/core";
@@ -18,7 +17,7 @@ import {
 } from "reactstrap";
 
 
-import { uniq } from "lodash";
+import { uniq, isEmpty } from "lodash";
 import { getInitials } from "../SharedCalculations/GetInitials";
 import TicketDetailsFrame from "./TicketDetailsFrame";
 import QnADetailsFrame from "./QnADetailsFrame";
@@ -34,7 +33,17 @@ import InboxList from "./InboxList";
 class Inbox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { source: [], selected: null };
+    this.state = { source: [], sourceOrig: [], selected: null, filter: "all" };
+  }
+
+ filterSource =   async (val) => {
+    const {sourceOrig} = this.state;
+    const newSource = {
+      active: await sourceOrig.filter(ticket => !ticket._stage.includes("close")),
+      closed: await sourceOrig.filter(ticket => ticket._stage.includes("close") || ticket.stage.includes("reject")),
+      all: sourceOrig
+    }[val]
+    this.setState({filter: val, source: newSource, selected: null})
   }
 
 
@@ -49,19 +58,20 @@ class Inbox extends React.Component {
   getDetails() {
     if (!this.state.selected) return null;
     else {
-      if (this.state.selected.parent !== "QandA") return  <TicketDetailsFrame data={this.state.selected} />;
-      else {return <QnADetailsFrame data={this.state.selected}/> }
+      if (this.state.selected.parent !== "QandA") return  <TicketDetailsFrame id={this.state.selected.ticketID} data={this.state.selected} />;
+    //   else {return <QnADetailsFrame data={this.state.selected}/> 
+    // }
     }
   }
 
-  getCurrentAssignee = ticket => {
-    if (!ticket.currentAssignee) return false;
-    else {
-      const me = UserStore.user.userID;
-      const assignee = AccountStore._getUser(ticket.currentAssignee);
-      return me === assignee.userID ? "Me" : assignee.displayName;
-    }
-  };
+  // getCurrentAssignee = ticket => {
+  //   if (!ticket._currentAssignee) return "";
+  //   else {
+  //     const me = UserStore.user.userID;
+  //     const assignee = AccountStore._getUser(ticket._currentAssignee);
+  //     return me === assignee.userID ? "Me" : assignee.displayName;
+  //   }
+  // };
 
   getProgress = async ticket => {
     if (ticket.parent === "QandA") return {steps: 20, activeStep: 10}
@@ -78,22 +88,27 @@ class Inbox extends React.Component {
 
   async componentDidMount() {
     const source = async () => {
-      let newSource = TicketingStore.allTickets
-        .slice()
-        .filter(i => !i.isTemplate);
+      let newSource = [];
+      TicketingStore.allTickets.forEach(i => newSource.push(i));
+      newSource = newSource.filter(i => !i.isTemplate);
+     
       for await (const i of newSource) {
-        i["_currentAssignee"] = this.getCurrentAssignee(i);
+        // console.log("vari search", Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID))
+
+        // i["_currentAssignee"] = this.getCurrentAssignee(i);
         i["_progress"] = await this.getProgress(i);
         i["_userImg"] = AccountStore._getUser(i.userID).img;
         i["_requester"] = AccountStore._getUser(i.userID);
         i["_parent"] = TicketingStore._getTicket(i.parent);
-        i["_contentPreview"] = i.parent !== "QandA"? "" : await Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID);
         i["_userInitials"] = getInitials(
           AccountStore._getUser(i.userID).displayName
         );
         i["_parentLabel"] = i.parent === "QandA"? this.getContentLabel(i) : TicketingStore._getTicket(i.parent).label;
+        i["_contentPreview"] = Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID)
+        i["_contentData"] = Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID)
       }
-      await this.setState({ source: newSource, selected: newSource[0] });
+      await this.setState({ source: newSource, sourceOrig: newSource, selected: newSource[0] });
+      console.log("this state source", this.state.source)
     };
     source();
   }
@@ -101,18 +116,36 @@ class Inbox extends React.Component {
   render() {
     return (
       <React.Fragment>
+        
         <Header as="h2" style={{ padding: 0, margin: "10px 0 10px" }}>
           Inbox
         </Header>
-        <div style={{ marginTop: 15 }}>
-          <Row>
+        <Row>
+          <Col>
+
+          <div> 
+  <span>
+    Sort by{' '}
+    <Dropdown inline options={[
+      {text: "active", value: "active" },{text: "closed", value: "closed"},{text: "all", value: "all"}
+    ]} value={this.state.filter} onChange= {(e, {value}) => this.filterSource(value)} />
+   
+    </span>
+    </div>
+
+          </Col>
+        </Row>
+      
+   
+          <Row style={{ marginTop: 15 }}>
             <Col xl={3}>
               {!this.state.source.length? <Header>Your inbox is empty </Header> :
               <Paper
                 style={{
+            
                   maxHeight: "85vh",
                   overflowY: "auto",
-                  overflowX: "hidden"
+                  overflowX: "hidden",
                 }}
               >
                 <InboxList selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={this.state.source} />
@@ -123,7 +156,7 @@ class Inbox extends React.Component {
                
             </Col>
           </Row>
-        </div>
+
       </React.Fragment>
     );
   }

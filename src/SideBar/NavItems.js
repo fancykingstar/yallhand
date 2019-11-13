@@ -17,7 +17,7 @@ import RoomServiceRoundedIcon from '@material-ui/icons/RoomServiceRounded';
 import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
 import Badge from '@material-ui/core/Badge';
 
-@inject("UIStore", "UserStore")
+@inject("UIStore", "UserStore", "TicketingStore")
 @observer
 class NavItems extends React.Component {
   componentDidMount() {
@@ -26,7 +26,7 @@ class NavItems extends React.Component {
 
 
   render() {
-    const { UIStore, UserStore } = this.props;
+    const { UIStore, UserStore, TicketingStore } = this.props;
     
     const isActive = (val) =>  UIStore.sideNav.activePrimary === val? {backgroundColor: "rgba(87, 193, 222, 0.4)"}  : {visibility: "visible"}
 
@@ -60,7 +60,7 @@ class NavItems extends React.Component {
           </ListItem>
           <ListItem style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
             <ListItemIcon>
-            <Badge color="secondary" badgeContent={4} 
+            <Badge color="secondary" badgeContent={TicketingStore.allTickets.filter(ticket => ticket.stage === "open").length} 
             // invisible={invisible} 
             // className={classes.margin}
             >

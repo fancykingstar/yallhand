@@ -225,11 +225,27 @@ body {
   background-color: #ffffff;
 }
 
+.InboxListItem {
+  min-height: 70px;
+  border-right: 3px solid #2fc6f800;
+}
+
 .InboxListItem:hover {
   border-right: 3px solid #2fc7f8;
+  background-color: #fafafa;
 } 
 
 
 .InboxListItemActive {
   border-right: 3px solid #28a5cf;
 }
+
+.ActiveIfHover:hover {
+  transition: color 0.5s ease;
+  color: #2fc7f8;
+}
+
+.FixSemanticLabel {
+  label {font-weight: normal !important}
+}
+

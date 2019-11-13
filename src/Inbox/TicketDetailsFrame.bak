@@ -1,0 +1,425 @@
+import React from "react";
+import { withRouter } from "react-router-dom";
+import { Button, Label, Form, Checkbox } from "semantic-ui-react";
+import { Paper, Avatar, List, ListItem, ListItemIcon, ListItemText, Collapse } from "@material-ui/core";
+import department_icon from "../Assets/Icons/department_icon.svg";
+import location_icon from "../Assets/Icons/location_icon.svg";
+import mobile_icon from "../Assets/Icons/mobile_icon.svg";
+import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
+import { Container, Col, Row } from "reactstrap";
+import { AccountStore } from "../Stores/AccountStore";
+import { UserStore } from "../Stores/UserStore";
+import TimeAgo from "react-timeago";
+import { modifyTicket } from "../DataExchange/Up";
+import KeyboardArrowDownRoundedIcon from "@material-ui/icons/KeyboardArrowDownRounded";
+
+class TicketDetailsFrame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contactExpanded: false,
+      showMemo: false,
+      stage: "",
+      addlFieldsSource: [],
+      assignee: "",
+      memo: "",
+      memoAdmin: ""
+    };
+  }
+
+  updateTicket = async () => {
+    const { stage } = this.state;
+    const userID = UserStore.user.userID;
+    if (stage.includes("close")) {
+      const newActivity = [
+        ...this.props.data.activity,
+        {
+          userID,
+          stage: this.state.stage,
+          updated: Date.now(),
+          data: this.state.memo ? { memo: this.state.memo } : {}
+        }
+      ];
+      const updateObj = {
+        ticketID: this.props.data.ticketID,
+        accountID: this.props.data.accountID,
+        stage: this.state.stage,
+        activity: newActivity
+      };
+      modifyTicket(updateObj);
+    }
+  };
+
+  toggleContactInfo() {
+    this.setState({ contactExpanded: !this.state.contactExpanded });
+  }
+
+  async addlFields() {
+    const { stage } = this.state;
+    const { _parent } = this.props.data;
+    if (!stage) return [];
+    else if (stage.includes("close"))
+      return await _parent.ticketItems.filter(i => i.isClose);
+    else if (stage === "open")
+      return await _parent.ticketItems.filter(i => i.isOpen);
+    else
+      return await _parent.ticketItems.filter(
+        i => i.label && i.label === stage
+      );
+  }
+
+  async changeStage(stage) {
+   
+    await this.setState({ stage });
+    const checkFields = await this.addlFields();
+    
+    if (checkFields.length && checkFields[0].data.length)
+      this.setState({ addlFieldsSource: checkFields[0].data });
+  }
+
+  stagesOptions = () => {
+    const { _parent } = this.props.data;
+
+    const parentStages = !_parent.ticketItems.length
+      ? []
+      : _parent.ticketItems
+          .filter(ticketItem => ticketItem.label)
+          .map(ticketItem => ({
+            text: ticketItem.label,
+            value: ticketItem.label
+          }));
+
+    let baseStages = [
+      { text: "Open", value: "open" },
+      { text: "Close (completed)", value: "closed" },
+      { text: "Close (unable to fulfill)", value: "closed-cant" },
+      { text: "Close (out of scope/declined)", value: "closed-wont" }
+    ];
+    return [...parentStages, ...baseStages];
+  };
+
+  getFormItemField(formItem) {
+    if (formItem.type === "text")
+      return (
+        <Form className="FixSemanticLabel">
+          <Form.Input
+            label={formItem.label}
+            onChange={(e, value) => {
+              let newVal = {};
+              newVal[formItem.label] = value;
+              this.setState(newVal);
+            }}
+          />
+        </Form>
+      );
+    else if (formItem.type === "select")
+      return (
+        <Form className="FixSemanticLabel">
+          <Form.Select
+            label={formItem.label}
+            onChange={(e, { value }) => {
+              let newVal = {};
+              newVal[formItem.label] = value;
+              this.setState(newVal);
+            }}
+            options={formItem.options.map(opt => ({ text: opt, value: opt }))}
+          />
+        </Form>
+      );
+    else if (formItem.type === "multi")
+      return (
+        <>
+          <span>{formItem.label}</span>
+          <Form>
+            <Form.Group grouped>
+              {formItem.options.map(opt => (
+                <Form.Field
+                  control={Checkbox}
+                  label={<label>{opt}</label>}
+                  onChange={(e, value) => {
+                    let newVal = {};
+                    newVal[opt] = value.checked;
+                    this.setState(newVal);
+                  }}
+                />
+              ))}
+            </Form.Group>
+          </Form>
+        </>
+      );
+  }
+
+  render() {
+    const {
+      _requester,
+      _userImg,
+      _userInitials,
+      _parent,
+      _parentLabel,
+      activity
+    } = this.props.data;
+    return (
+      <React.Fragment>
+        <Paper>
+          <div className="section_title">
+            <div>
+              <h4 style={{ color: "#404040" }}>{_parentLabel}</h4>
+              <p style={{ color: "#abacab", fontSize: ".8em" }}>
+                {"Service Desk"}
+              </p>
+            </div>
+          </div>
+          <div style={{ padding: 15 }}>
+            <Container>
+              <Row>
+                <Col xl={3} style={{ paddingTop: 5 }}>
+                  <h5>Requester</h5>
+
+                  <Row style={{ padding: "3px 0 3px" }}>
+                    <Col sm={2}>
+                      {_userImg ? (
+                        <Avatar src={_userImg}></Avatar>
+                      ) : (
+                        <Avatar>{_userInitials}</Avatar>
+                      )}
+                    </Col>
+                    <Col>
+                      <div style={{ paddingLeft: 8 }}>
+                        <span style={{ color: "rgba(0, 0, 0, 0.54)" }}>
+                          {_requester.displayName}
+                        </span>
+                        {_requester.profile.title && (
+                          <p style={{ fontSize: "0.9em" }}>
+                            {_requester.profile.title}
+                          </p>
+                        )}
+                      </div>
+                    </Col>
+                    <Col style={{ paddingTop: 5 }}>
+                      <KeyboardArrowDownRoundedIcon
+                        onClick={this.toggleContactInfo.bind(this)}
+                        className="ActiveIfHover"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Collapse
+                    in={this.state.contactExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <div>
+                      <List component="div">
+                        {_requester.email && (
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <ListItemIcon>
+                              <MailOutlineRoundedIcon
+                                style={{ color: "#4780F7" }}
+                              />
+                            </ListItemIcon>
+                            <ListItemText secondary={_requester.email} />
+                          </ListItem>
+                        )}
+
+                        {_requester.Department && (
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <ListItemIcon>
+                              <img src={department_icon} alt="" />
+                            </ListItemIcon>
+                            <ListItemText
+                              secondary={_requester.profile.Department}
+                            />
+                          </ListItem>
+                        )}
+
+                        {_requester.Location && (
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <ListItemIcon>
+                              <img src={location_icon} alt="" />
+                            </ListItemIcon>
+                            <ListItemText
+                              secondary={_requester.profile.Location}
+                            />
+                          </ListItem>
+                        )}
+
+                        {_requester.Mobile && (
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <ListItemIcon>
+                              <img src={mobile_icon} alt="" />
+                            </ListItemIcon>
+                            <ListItemText
+                              secondary={_requester.profile.Mobile}
+                            />
+                          </ListItem>
+                        )}
+                      </List>
+                    </div>
+                  </Collapse>
+                  {/* </Card> */}
+                </Col>
+                <Col lg={5} style={{ paddingTop: 5 }}>
+                  <h5>Activity</h5>
+
+                  {activity.map(act => (
+                    <Row style={{ padding: "3px 0 3px" }}>
+                      <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} xs={8}>
+                        <p style={{ fontSize: "0.9em" }}>
+                          Set as{" "}
+                          <span style={{ color: "rgb(60, 60, 60)" }}>
+                            {act.stage}
+                          </span>{" "}
+                          by{" "}
+                          <Label size="mini">
+                            {AccountStore._getUser(act.userID).displayName}
+                          </Label>{" "}
+                        </p>
+                      </Col>
+                      <Col
+                        style={{
+                          color: "rgba(0, 0, 0, 0.54)",
+                          fontSize: "0.9em"
+                        }}
+                      >
+                        {" "}
+                        <TimeAgo date={act.updated} />
+                      </Col>
+                    </Row>
+                  ))}
+                </Col>
+                <Col>
+                  <h5>Data</h5>
+
+                  <div>
+                    {activity
+                      .filter(act => Object.keys(act.data).length)
+                      .map(act => {
+                        const res = Object.keys(act.data)
+                          .filter(datapnt => datapnt !== "id")
+                          .map(datapnt => (
+                            <>
+                              <Row style={{ padding: "3px 0 3px" }}>
+                                <Col>
+                                  <span
+                                    style={{
+                                      color: "rgba(0, 0, 0, 0.54)",
+                                      fontSize: "0.9em"
+                                    }}
+                                  >
+                                    {datapnt}{" "}
+                                  </span>{" "}
+                                  <br />
+                                  <span
+                                    style={{
+                                      color: "rgba(0, 0, 0, 0.74)",
+                                      fontSize: "0.9em"
+                                    }}
+                                  >
+                                    {act.data[datapnt]}{" "}
+                                  </span>
+                                </Col>
+                              </Row>
+                              <Row
+                                style={{
+                                  alignItems: "center",
+                                  paddingBottom: 5
+                                }}
+                              >
+                                <Col style={{ fontSize: "0.9em" }}>
+                                  <TimeAgo date={act.updated} />
+                                </Col>
+                                <Col>
+                                  <Label size="mini">
+                                    {
+                                      AccountStore._getUser(act.userID)
+                                        .displayName
+                                    }
+                                  </Label>{" "}
+                                </Col>
+                              </Row>
+                            </>
+                          ));
+                        return res;
+                      })}
+                  </div>
+                </Col>
+              </Row>
+              <Row style={{ padding: "5px 0 5px" }}>
+                <Col>
+                  <h5>Update</h5>
+                </Col>
+              </Row>
+              <Row style={{ padding: "5px 0 5px" }}>
+                <Col xs={4}>
+                  <Form className="FixSemanticLabel">
+                    <Form.Select
+                      selection
+                      placeholder="Change stage..."
+                      label="Change stage"
+                      onChange={(e, { value }) => this.changeStage(value)}
+                      options={this.stagesOptions()}
+                    />
+                  </Form>
+                </Col>
+                <Col xs={3}>
+                  <Form className="FixSemanticLabel">
+                    <Form.Select
+                      label="Change assignee"
+                      selection
+                      options={AccountStore._getUsersSelectOptions([
+                        ..._parent.admins,
+                        ..._parent.collaborators
+                      ])}
+                      onChange={(e, { value }) =>
+                        this.setState({ assignee: value })
+                      }
+                    />
+                  </Form>
+                </Col>
+              </Row>
+
+              <Row>
+                {this.state.addlFieldsSource.map(formItem => (
+                  <Col md={6}>{this.getFormItemField(formItem)}</Col>
+                ))}
+              </Row>
+
+              <Row style={{ padding: "8px 0 8px" }}>
+                <Col>
+                  {!this.state.showMemo ? (
+                    <span
+                      style={{ color: "#4183C4", fontSize: "0.92em" }}
+                      onClick={() => this.setState({ showMemo: true })}
+                    >
+                      Add Memo...
+                    </span>
+                  ) : (
+                    <Form className="FixSemanticLabel">
+                      <Form.Input
+                        onChange={e => this.setState({ memo: e.target.value })}
+                        placeholder="Memo (optional)"
+                        label="Memo (optional)"
+                        type="text"
+                        name={"description"}
+                        id="description"
+                      />
+                    </Form>
+                  )}
+                </Col>
+              </Row>
+              <Row style={{ padding: "8px 0 8px" }}>
+                <Col>
+                  <Button onClick={() => this.updateTicket()} primary>
+                    Update
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </Paper>
+      </React.Fragment>
+    );
+  }
+}
+
+export default withRouter(TicketDetailsFrame);

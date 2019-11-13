@@ -69,7 +69,7 @@ class TicketingFrame extends React.Component {
     
     const columns = ["Ticket Title", "Last Updated", "Created By", "Stage"];
 
-    const data = TicketingStore.allTickets.map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ticket.active? "Active":"Inactive"])
+    const data = TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ticket.active? "Active":"Inactive"])
     
 
 

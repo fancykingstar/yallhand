@@ -5,9 +5,9 @@ import { withRouter } from "react-router-dom";
 import { Button, Label } from "semantic-ui-react";
 import { Paper, Card, CardHeader, CardContent,CardActionArea, CardMedia, CardActions, Avatar, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse, IconButton } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import department_icon from "../Assets/Icons/department_icon.svg";
-import location_icon from "../Assets/Icons/location_icon.svg";
-import mobile_icon from "../Assets/Icons/mobile_icon.svg";
+// import department_icon from "../Assets/Icons/department_icon.svg";
+// import location_icon from "../Assets/Icons/location_icon.svg";
+// import mobile_icon from "../Assets/Icons/mobile_icon.svg";
 import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
 import {Label as RSLabel} from "reactstrap";
 import { Container, Col, Row, Input, InputGroup,FormGroup } from "reactstrap";
@@ -21,7 +21,7 @@ import { UserStore } from "../Stores/UserStore";
 import TimeAgo from 'react-timeago'
 import {giveMeKey} from "../SharedCalculations/GiveMeKey";
 import { ContentPreview } from "../SharedUI/ContentPreview";
-import { modifyPolicy, modifyAnnouncement } from "../DataExchange/Up";
+import { modifyPolicy, modifyAnnouncement, modifyTicket } from "../DataExchange/Up";
 import { contentEdit} from "../DataExchange/PayloadBuilder";
 
 
@@ -39,18 +39,18 @@ class QnADetailsFrame extends React.Component {
 
 //   }
 
-async componentDidMount() {
-    const vari = await this.props.data._contentPreview.variations.filter(vari => vari.variationID === this.props.data.activity[0].data.variationID);
+componentDidMount(){
+    const vari = this.props.data._contentData.variations.filter(vari => vari.variationID === this.props.data.activity[0].data.variationID)[0];
     console.log("vari",vari);
-    // console.log("propsdata", this.props.data ,this.props.data.activity[0].data.variationID);
-    // await this.setState({vari})
+    this.setState({vari})
 
 
 }
 
-updateTicket = () => {
+updateTicket = async () => {
   const {stage,  response, vari} = this.state;
   const { _contentPreview} = this.props.data;
+  const userID = UserStore.user.userID;
   if (stage === "close") {
     const payload =  {qanda : [{
       q: this.props.data.activity[0].data.q,
@@ -61,18 +61,22 @@ updateTicket = () => {
 
     const mode = _contentPreview.policyID? "policy" : "announcement";
     const contentID = _contentPreview[`${mode}ID`]
-    console.log("payload good?", payload, mode, contentID, vari.variationID)
-    if (mode === "policy") modifyPolicy(contentEdit(payload, mode, contentID, vari.variationID)) 
-    else modifyAnnouncement(contentEdit(payload, mode, contentID, vari.variationID))
-    // contentEdit = (obj, mode, contentID, variID) let newVari = Object.assign({}, vari);
 
+    if (mode === "policy") await modifyPolicy(contentEdit(payload, mode, contentID, vari.variationID)) 
+    else await modifyAnnouncement(contentEdit(payload, mode, contentID, vari.variationID))
+
+    // contentEdit = (obj, mode, contentID, variID) let newVari = Object.assign({}, vari);
     
+    const newActivity = [...this.props.data.activity, {userID, stage: this.state.stage, updated: Date.now(), data: {}}]
+    const updateObj = {ticketID: this.props.data.ticketID, accountID: this.props.data.accountID, stage: this.state.stage, activity: newActivity};
+    modifyTicket(updateObj);
+
   }
 
 }
 
 getPreviewContent = () => {
-  console.log(Object.assign(this.props.data._contentPreview, {variations: [this.state.vari]}))
+
   return Object.assign(this.props.data._contentPreview, {variations: [this.state.vari]})
 }
 
@@ -137,14 +141,13 @@ toggleContactInfo() {
 
   render() {
     const {_requester, _userImg, _userInitials, _parent, activity, _contentPreview} = this.props.data;
-    console.log("contentpreview", _contentPreview)
     const {vari,toggleContentPreview} = this.state;
     return (
       <React.Fragment>
-        {/* {JSON.stringify(this.state)} */}
+    
         <Paper>
         <ContentPreview open={toggleContentPreview} onClose={this.closePreview} data={this.getPreviewContent()} />
-                {JSON.stringify(this.state)}
+     
                 <div className="section_title">
                   <div>
                     <h4 style={{ color: "#404040" }}>{_contentPreview.label}</h4>
@@ -169,7 +172,7 @@ toggleContactInfo() {
                         </Row>
                         <Row>
                              <Col sm={3}> <Button 
-                            //  onClick={()=>this.setState({toggleContentPreview:true})} 
+                             onClick={()=>this.setState({toggleContentPreview:true})} 
                              primary style={{marginTop: 5,padding:4, fontSize: ".8em"}} size='mini'>Preview</Button></Col>
                             <Col style={{marginTop: 5, color: "rgba(0, 0, 0, 0.54)"}}><p style={{fontSize: "0.8em", padding: 0, margin: "0 0 0 10px"}}>
                             {vari && getDisplayTeams(vari.teamID, TeamStore.structure)}{" "}
