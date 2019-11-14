@@ -249,3 +249,42 @@ body {
   label {font-weight: normal !important}
 }
 
+
+.FixActiveButton {
+  .ui.button.toggle.active{
+      background-color: #6d21ba !important;
+  }
+  .ui.button.toggle.active:hover{
+    background-color: #e831f2 !important;
+}
+ 
+}
+
+.SubAction{
+  background-color: #6d21ba !important;
+  color: #fff !important;
+}
+
+.SubAction:hover {
+    background-color: #902bf5 !important;
+}
+
+.SubActionFeatured {
+  background-color: #f52bd7 !important;
+  color: #fff !important;
+}
+
+.SubActionFeatured:hover {
+  background-color: #f948de !important;
+}
+
+.ActionButton {
+  .input {
+    button {
+      background-color:#6d21ba;
+      color: #fff;
+    }
+   
+  }
+
+}

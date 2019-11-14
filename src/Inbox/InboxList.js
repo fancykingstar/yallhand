@@ -40,11 +40,11 @@ export default function InboxList(props) {
                           {ticket._parentLabel}
                         </Typography>
                           </Col>
-                          <Col className="text-right"><Typography style={{fontSize: "0.8em", color: "#ABACAB"}}>  <TimeAgo date={ticket.updated} /></Typography> 
+                          <Col className="text-right"><Typography style={{fontSize: "0.8em", color: "#ABACAB"}}>  <TimeAgo date={ticket._updated} /></Typography> 
                           </Col>
                         </Row>
                         <Row>
-                        <Col sm={8}>
+                        <Col sm={6}>
                           {!ticket._stage.includes("close") &&
                           <MobileStepper
                   
