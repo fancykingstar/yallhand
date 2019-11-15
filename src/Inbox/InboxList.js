@@ -3,6 +3,7 @@ import { makeStyles,ListItem, List, Divider, ListItemText, ListItemAvatar, ListI
 import { Label } from "semantic-ui-react";
 import { Row, Col } from "reactstrap";
 import { AccountStore } from "../Stores/AccountStore";
+import { TicketingStore } from "../Stores/TicketingStore";
 
 import TimeAgo from 'react-timeago'
 
@@ -23,12 +24,23 @@ const useStyles = makeStyles(theme => ({
 
 export default function InboxList(props) {
   const classes = useStyles();
+
+  const filterSource = async (val) => {
+    const {sourceOrig} = this.state;
+    const newSource = {
+      active: await sourceOrig.filter(ticket => !ticket._stage.includes("close")),
+      closed: await sourceOrig.filter(ticket => ticket._stage.includes("close") || ticket.stage.includes("reject")),
+      all: sourceOrig
+    }[val]
+    // this.setState({filter: val, source: newSource, selected: null})
+  }
+
   return (
     <List className={classes.root}>
-      {props.source.map((ticket, i) => (
+      {TicketingStore.allTickets.filter(i=>!i.isTemplate).map((ticket, i) => (
 
                 <>
-                <ListItem onClick={()=>props.handleClick(i)} className={props.selected && props.selected.ticketID === ticket.ticketID? "InboxListItem InboxListItemActive":"InboxListItem"}>
+                <ListItem onClick={()=>props.handleClick(ticket.ticketID)} className={props.selected === ticket.ticketID? "InboxListItem InboxListItemActive":"InboxListItem"}>
                   <ListItemText
                     primary={
                       <React.Fragment>
@@ -37,7 +49,7 @@ export default function InboxList(props) {
                           <Typography
                           style={{fontSize: "0.9em", color: ticket._stage.includes("close")? "#ABACAB": "#000"}}
                           color="textPrimary" >
-                          {ticket._parentLabel}
+                          {ticket._parent && ticket._parent.label}
                         </Typography>
                           </Col>
                           <Col className="text-right"><Typography style={{fontSize: "0.8em", color: "#ABACAB"}}>  <TimeAgo date={ticket._updated} /></Typography> 

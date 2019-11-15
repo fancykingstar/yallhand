@@ -12,6 +12,9 @@ import { TicketActivity } from "./TicketActivity";
 import { TicketRequester } from "./TicketRequester";
 import { TicketActions } from "./TicketActions";
 import { TicketDetailsMessage} from "./TicketDetailsMessage";
+
+
+
 import FadeIn from 'react-fade-in';
 
 class TicketDetailsFrame extends React.Component {
@@ -19,7 +22,9 @@ class TicketDetailsFrame extends React.Component {
     super(props);
     this.state = {
       activeItem: "activity",
-      showMessage: false
+      messageType: "",
+      message: "",
+
       // showMemo: false,
       // stage: "",
       // addlFieldsSource: [],
@@ -31,6 +36,11 @@ class TicketDetailsFrame extends React.Component {
       // assigneeOptions: [],
     };
   }
+
+  updateState = (obj) => {
+    this.setState(obj);
+  }
+
 
   // static getDerivedStateFromProps(props, state) {
   //   if (props.id !== state.id) {
@@ -60,6 +70,29 @@ class TicketDetailsFrame extends React.Component {
   handleMenuClick = (e, { name }) => {
     this.setState({ activeItem: name });
   };
+
+  handleSubmit = async () => {
+     const userID = UserStore.user.userID;
+     const newData = this.state.messageType === "internal"? {memo: this.state.message} : {}
+
+     const newActivity = [
+        {
+          userID,
+          stage: "",
+          updated: Date.now(),
+          data: newData,
+          assignee: this.props.data._currentAssignee
+        },    ...this.props.data.activity
+      ];
+      const updateObj = {
+        ticketID: this.props.data.ticketID,
+        accountID: this.props.data.accountID,
+        activity: newActivity,
+      };  
+
+      await modifyTicket(updateObj);
+      await this.setState({messageType : ""})
+  }
 
   // async addlFields() {
   //   const { stage } = this.state;
@@ -180,15 +213,16 @@ class TicketDetailsFrame extends React.Component {
 
   render() {
     const { _requester, _userImg, _userInitials, _parent, _parentLabel, activity } = this.props.data;
-    const { activeItem, assigneeOptions, selectedAssignee, stage } = this.state;
+    const { activeItem, messageType, message } = this.state;
 
    
     return (
       <React.Fragment>
         <FadeIn>
-          {/* {JSON.stringify(this.state)} */}
+         
    
         <Paper>
+        
           <div className="section_title">
             <div>
               <h4 style={{ color: "#404040" }}>{_parentLabel}</h4>
@@ -239,8 +273,8 @@ class TicketDetailsFrame extends React.Component {
                   )}
                 </Col>
               </Row>
-              { this.state.showMessage?   <TicketDetailsMessage /> :   <TicketActions id={this.props.id} data={this.props.data}/> }
-                    <button onClick={()=>this.setState({showMessage: !this.state.showMessage})}>hi</button>
+              { messageType?  <TicketDetailsMessage  data={this.props.data} action={messageType==="requester"? "Send" : "Add"} label={messageType==="requester"? "Send message to requester" : "Add internal memo"} handleSubmit={this.handleSubmit} output={this.updateState}  /> :   <TicketActions data={this.props.data} output={this.updateState} id={this.props.id}/> }
+                   
             </Container>
           </div>
         </Paper>

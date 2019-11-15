@@ -409,10 +409,10 @@ export const createTicket = (payload) => {
   )
 }
 
-export const modifyTicket = (payload) => {
+export const modifyTicket = (payload, toast=false) => {
   return processTemplate(true, "ticketing/" + payload.ticketID, "PATCH", payload, "tickets", 
   `Your ticket has been updated`, 
-  true,{"event": "update", "type":"ticket"}
+  true,{"event": "update", "type":"ticket"},toast
 )
 }
 

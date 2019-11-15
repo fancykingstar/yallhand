@@ -3,21 +3,21 @@ import {Container, Row, Col} from "reactstrap";
 import {Header, Icon, Form } from "semantic-ui-react";
 import FadeIn from 'react-fade-in';
 
-export class TicketDetailsMessage extends React.Component {
-    render() {
+export const TicketDetailsMessage = (props) => {
+
         return(
             <FadeIn transitionDuration={100} delay={0}>
              <Container style={{padding: 0}}>
               <Row style={{ padding: "25px 0 0px" }}>
               <Col>
-              <Header style={{marginBottom: 5}} as="h5">   <Icon color="blue" name='arrow circle left' />Send message to requester
+              <Header style={{marginBottom: 5}} as="h5">   <Icon onClick={()=>props.output({messageType: ""})} color="blue" name='arrow circle left' />{props.label}
            
               </Header>
-               <Form  className="FixSemanticLabel">
+               <Form onSubmit={()=>props.handleSubmit()}  className="FixSemanticLabel">
                  <Form.Input
                  className="ActionButton"
-                 action="Send"
-                 // label="This label"
+                 action={props.action}
+                 onChange={(e, {value})=>props.output({"message":value})}
                  />
                </Form>
               </Col>
@@ -25,8 +25,8 @@ export class TicketDetailsMessage extends React.Component {
           </Container>
           </FadeIn>
         )
-    }
-}
+    };
+
 
               
   
