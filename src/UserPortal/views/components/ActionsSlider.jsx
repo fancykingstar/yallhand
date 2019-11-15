@@ -50,7 +50,7 @@ class ActionSlider extends React.Component {
    }
 
    async handleActionFormSubmit(data) {
-      const payload = {parent: this.state.selectedActionData.ticketID, stage: "open", activity: [{data, stage: "open", updated: Date.now(), userID: UserStore.user.userID}]};
+      const payload = {parent: this.state.selectedActionData.ticketID, stage: "open", activity: [{data, views:[], stage: "open", updated: Date.now(), userID: UserStore.user.userID}]};
       await createTicket(ticketOpen(payload)).then(res => res.json());
       this.slider.slickGoTo(0);
    }

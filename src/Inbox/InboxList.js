@@ -40,7 +40,7 @@ export default function InboxList(props) {
       {TicketingStore.allTickets.filter(i=>!i.isTemplate).map((ticket, i) => (
 
                 <>
-                <ListItem onClick={()=>props.handleClick(ticket.ticketID)} className={props.selected === ticket.ticketID? "InboxListItem InboxListItemActive":"InboxListItem"}>
+                <ListItem onClick={()=>props.handleClick(ticket.ticketID)} className={props.selected === ticket.ticketID? "InboxListItem InboxListItemActive": ticket._unread? "InboxListItemUnread" : "InboxListItem"}>
                   <ListItemText
                     primary={
                       <React.Fragment>

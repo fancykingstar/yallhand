@@ -2,6 +2,7 @@ import {TicketingStore} from "../Stores/TicketingStore";
 import {AccountStore} from "../Stores/AccountStore";
 import { PoliciesStore } from "../Stores/PoliciesStore";
 import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
+import { UserStore } from "../Stores/UserStore";
 
 import {uniq} from "lodash";
 import { getInitials } from "../SharedCalculations/GetInitials";
@@ -19,9 +20,10 @@ export const calculateTicketing = (allTickets) => {
       };
 
       const getContentLabel = (obj) => {
-        return "Untitled"
+        return "Untitled";
       };
     
+      const userID = UserStore.user.userID;
 
 
     let updatedtickets = [];
@@ -32,7 +34,7 @@ export const calculateTicketing = (allTickets) => {
             const _currentAssignee = mostRecent.assignee; //non-templates ONLY!
             const _updated = mostRecent.updated  //non-templates ONLY!
             const _stage = mostRecent.stage? mostRecent.stage : i.activity.map(i=>i.stage).filter(i => Boolean(i))[0] //non-templates ONLY!
-
+            const _unread = mostRecent.assignee && mostRecent.assignee !== userID ? false : (!mostRecent.assignee || mostRecent.assignee === userID)? !mostRecent.views.includes(userID) : false; 
             const _progress = getProgress(i); //needs await?
             const _userImg = AccountStore._getUser(i.userID).img;
             const _requester = AccountStore._getUser(i.userID);
@@ -42,7 +44,7 @@ export const calculateTicketing = (allTickets) => {
             const _contentPreview = Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID)
             const _contentData = Object.keys(i.activity[0].data).includes("policyID")? PoliciesStore._getPolicy(i.activity[0].data.policyID) : AnnouncementsStore._getAnnouncement(i.activity[0].data.announcementID)
 
-            updatedtickets.push(Object.assign(i, {_currentAssignee, _updated, _stage, _progress, _userImg, _requester, _parent, _userInitials,  _contentPreview, _contentData}))
+            updatedtickets.push(Object.assign(i, {_currentAssignee, _updated, _stage, _progress, _userImg, _requester, _parent, _userInitials, _unread, _contentPreview, _contentData}))
         }
         else updatedtickets.push(i);
     });

@@ -124,7 +124,7 @@ class Inbox extends React.Component {
 
           <div> 
   <span>
-    Sort by{' '}
+    Filter by{' '}
     <Dropdown inline options={[
       {text: "active", value: "active" },{text: "closed", value: "closed"},{text: "all", value: "all"}
     ]} value={this.state.filter} onChange= {(e, {value}) => this.updateState({filter: value})} />

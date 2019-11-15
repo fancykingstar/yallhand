@@ -562,6 +562,16 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     return _.extend({}, base(), payload);
   }
 
+  export const addView = ( data ) => {
+
+    let newTicket = {};
+    Object.keys(data).forEach(key => {if (key[0] !== "_") newTicket[key] = data[key]})
+    let latestViews = newTicket.activity[0].views.slice();
+    latestViews.push(userID());
+    const newActivity = newTicket.activity.slice().splice(0, 1, Object.assign(newTicket.activity[0], {views: latestViews}))
+    return Object.assign(newTicket, {activity: newActivity});
+  }
+
 
 
 

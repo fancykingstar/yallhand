@@ -12,6 +12,7 @@ import { TicketActivity } from "./TicketActivity";
 import { TicketRequester } from "./TicketRequester";
 import { TicketActions } from "./TicketActions";
 import { TicketDetailsMessage} from "./TicketDetailsMessage";
+import { addView } from "../DataExchange/PayloadBuilder";
 
 
 
@@ -24,7 +25,8 @@ class TicketDetailsFrame extends React.Component {
       activeItem: "activity",
       messageType: "",
       message: "",
-
+      ticketID: "",
+      addView: false,
       // showMemo: false,
       // stage: "",
       // addlFieldsSource: [],
@@ -41,31 +43,31 @@ class TicketDetailsFrame extends React.Component {
     this.setState(obj);
   }
 
+  async componentDidUpdate() {
+    alert("addView")
+    if (this.state.addView)  {
 
-  // static getDerivedStateFromProps(props, state) {
-  //   if (props.id !== state.id) {
-  //     const base = AccountStore._getUsersSelectOptions([ ...props.data._parent.admins, ...props.data._parent.collaborators ]); 
-  //     console.log("DATA", props.data)
-  //     return {
-  //       id: props.id,
-  //       showMemo: false,
-  //       memo: "",
-  //       stage: props.data._stage,
-  //       selectedAssignee: props.data._currentAssignee || false ,
-  //       memoAdmin: "",
-  //       addlFieldsSource: [],
-  //       addlFieldsRes: {},
-  //       assigneeOptions: [...base, {text: "Unassigned", value: false}]
-  //     };
+      await modifyTicket(addView(props.data));
+      this.setState({addView: false });
 
-  //   }
-  //   else return null;
-  // }
+    }
+  }
 
-  // setAddlFieldRes = obj => {
-  //   const newVal = Object.assign(this.state.addlFieldsRes, obj);
-  //   this.setState({ addlFieldsRes: newVal });
-  // };
+
+ static async getDerivedStateFromProps(props, state) {
+    if (props.data.ticketID !== state.id) {
+      return {
+       addView: true,
+       ticketID: props.data.ticketID
+      };
+    }
+    else return null;
+  }
+
+  setAddlFieldRes = obj => {
+    const newVal = Object.assign(this.state.addlFieldsRes, obj);
+    this.setState({ addlFieldsRes: newVal });
+  };
 
   handleMenuClick = (e, { name }) => {
     this.setState({ activeItem: name });
@@ -225,7 +227,7 @@ class TicketDetailsFrame extends React.Component {
         
           <div className="section_title">
             <div>
-              <h4 style={{ color: "#404040" }}>{_parentLabel}</h4>
+              <h4 style={{ color: "#404040" }}>{_parent.label}</h4>
               <p style={{ color: "#abacab", fontSize: ".8em" }}>
                 {"Service Desk"}
               </p>
