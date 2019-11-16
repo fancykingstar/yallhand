@@ -25,8 +25,8 @@ class TicketDetailsFrame extends React.Component {
       activeItem: "activity",
       messageType: "",
       message: "",
-      ticketID: "",
-      addView: false,
+      // ticketID: "",
+      // addView: false,
       // showMemo: false,
       // stage: "",
       // addlFieldsSource: [],
@@ -43,26 +43,30 @@ class TicketDetailsFrame extends React.Component {
     this.setState(obj);
   }
 
+  markAsRead = async () => {
+   if (this.props.data._unread) await modifyTicket(addView(this.props.data));
+  }
+
   async componentDidUpdate() {
-    alert("addView")
-    if (this.state.addView)  {
-
-      await modifyTicket(addView(props.data));
-      this.setState({addView: false });
-
-    }
+    this.markAsRead();
   }
 
 
- static async getDerivedStateFromProps(props, state) {
-    if (props.data.ticketID !== state.id) {
-      return {
-       addView: true,
-       ticketID: props.data.ticketID
-      };
-    }
-    else return null;
+  async componentDidMount() {
+    this.markAsRead();
   }
+
+
+//  static async getDerivedStateFromProps(props, state) {
+//     if (props.data.ticketID !== state.id) {
+//            // await modifyTicket(addView(props.data));
+//       return {
+//        addView: true,
+//        ticketID: props.data.ticketID
+//       };
+//     }
+//     else return null;
+//   }
 
   setAddlFieldRes = obj => {
     const newVal = Object.assign(this.state.addlFieldsRes, obj);
@@ -81,6 +85,7 @@ class TicketDetailsFrame extends React.Component {
         {
           userID,
           stage: "",
+          views: [userID],
           updated: Date.now(),
           data: newData,
           assignee: this.props.data._currentAssignee
@@ -91,7 +96,6 @@ class TicketDetailsFrame extends React.Component {
         accountID: this.props.data.accountID,
         activity: newActivity,
       };  
-
       await modifyTicket(updateObj);
       await this.setState({messageType : ""})
   }
@@ -224,7 +228,6 @@ class TicketDetailsFrame extends React.Component {
          
    
         <Paper>
-        
           <div className="section_title">
             <div>
               <h4 style={{ color: "#404040" }}>{_parent.label}</h4>

@@ -1,8 +1,20 @@
 import React from "react";
 import {Row, Col} from "reactstrap";
 import TimeAgo from 'react-timeago';
-import {Label} from "semantic-ui-react";
+import {Label, Icon} from "semantic-ui-react";
 import {AccountStore} from "../Stores/AccountStore";
+import {ResourcesStore} from "../Stores/ResourcesStore";
+import {S3Download} from "../DataExchange/S3Download";
+
+
+const downloadFile = (S3Key, label) => {
+  const ext = "." + S3Key.split(".")[1]
+  S3Download("gramercy", S3Key, label, ext)
+}
+
+const getFileValue = (id, key) => ResourcesStore._getFile(id)[key]
+
+
 
 export const TicketData = (props) => {
     return(
@@ -33,7 +45,8 @@ export const TicketData = (props) => {
                             fontSize: "0.9em"
                           }}
                         >
-                          {act.data[datapnt]}{" "}
+
+                          {datapnt === "file"?  <span style={{color: "#15596f",  cursor: "pointer"}} onClick={()=>downloadFile(getFileValue(act.data.file,"S3Key"), getFileValue(act.data.file,"label"))} style={{color: "#15596f",  cursor: "pointer"}}><Icon size="small" name="attach"/>{getFileValue(act.data[datapnt],"label")}</span>  : act.data[datapnt]}{" "}
                         </span>
                       </Col>
                       <Col 

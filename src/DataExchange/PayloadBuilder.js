@@ -230,6 +230,23 @@ export const urlResourceAssociate = (resourceID, associations) => {
 
 
 ///FILE RESOURCES
+export const newFile = (label, assoc=null) => {
+ const buildObj = {
+  label,
+  S3Key: "",
+  url: "", 
+  // filename: DataEntryStore.fileForUpload.filename,
+  type: "",
+  size: "", 
+  teamID: "",
+  tags: []
+  };
+  assoc !== null? buildObj.associations = Object.assign({policies:[], announcements:[], tickets: []}, assoc) : {policies:[], announcements:[], tickets: []};
+  return _.extend({}, base(), buildObj)
+}
+
+
+
 export const fileResource = (assoc=null) => {
   const buildObj = {
   associations: DataEntryStore.fileForUpload.associations,
@@ -563,7 +580,6 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   }
 
   export const addView = ( data ) => {
-
     let newTicket = {};
     Object.keys(data).forEach(key => {if (key[0] !== "_") newTicket[key] = data[key]})
     let latestViews = newTicket.activity[0].views.slice();

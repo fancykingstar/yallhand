@@ -26,7 +26,8 @@ export const TicketActivity = (props) => {
 
     const closeMsg = (stage, index) => {
     if (stage === "closed-cant") return <>{`Closed (unable to fulfill)`}{" "} </> 
-    else if (stage === "closed-wont") return <>{`Closed (Outside of scope/declined)`}{" "} </> 
+    else if (stage === "closed-wont") return <>{`Closed (outside of scope/declined)`}{" "} </> 
+    else if (stage === "closed-duplicate") return <>{`Closed (duplicate)`}{" "} </> 
     else return <>{`Closed`}{" "} </> 
     }
 
@@ -35,7 +36,7 @@ export const TicketActivity = (props) => {
         if (act.stage.includes('open')) return openMsg(act.stage, i)
         else if (act.stage.includes('close')) return closeMsg(act.stage, i)
         else if (!act.stage && isEmpty(act.data)) return <>{`Assigned to `}<Label size="mini"> {!act.assignee? "Unassigned": act.userID === act.assignee? "Self" : AccountStore._getUser(act.userID)} </Label>{" "} </>
-        else if (!act.stage) return <>{`Memo added `}</> 
+        else if (!act.stage) return <>{`${Object.keys(act.data).includes("memo")? "Memo" : "File    "} added `}</> 
         else return <>{`Set as `}<span style={{ color: "rgb(60, 60, 60)" }}> {act.stage} </span>{" "} </> 
         }
     

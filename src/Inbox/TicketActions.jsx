@@ -2,8 +2,9 @@ import React from "react";
 import { Button, Form, Checkbox, Dropdown, Menu, Icon } from "semantic-ui-react";
 import { Container, Col, Row } from "reactstrap";
 import { AccountStore } from "../Stores/AccountStore";
-import { UserStore } from "../Stores/UserStore";
+import { userID } from "../SharedCalculations/CommonValues";
 import { modifyTicket } from "../DataExchange/Up";
+import { AttachFile } from "../SharedUI/AttachFile";
 import FadeIn from "react-fade-in";
 import isEmpty from "lodash";
 import moment from "moment";
@@ -18,16 +19,42 @@ export class TicketActions extends React.Component {
       selectedAssignee: "", //NOTE: False is unassigned for dropdown functionality
       id: "",
       addlFieldsRes: {},
-      assigneeOptions: []
+      assigneeOptions: [],
+      showFileUpload: false,
+      files: []
     };
   }
 
+  updateState(obj) {this.setState(obj)};
+
+ async addFile(file) {
+    const newActivity =  {
+      userID: userID(),
+      views: [userID()],
+      stage: "",
+      updated: Date.now(),
+      data: {file: file.resourceID},
+      assignee: ""
+    };
+    let activity = [ newActivity, ...this.props.data.activity];
+
+    const updateObj = {
+      ticketID: this.props.data.ticketID,
+      accountID: this.props.data.accountID,
+      activity,
+    };
+    await modifyTicket(updateObj);
+
+    // this.setState({files: [...this.state.files, file]})
+  }
+
   static getDerivedStateFromProps(props, state) {
+
     if (props.id !== state.id) {
-      const base = AccountStore._getUsersSelectOptions([
+      const base = [...AccountStore._getUsersSelectOptions([
         ...props.data._parent.admins,
         ...props.data._parent.collaborators
-      ]);
+      ]), ...AccountStore._getAdminSelectOptions()];
       return {
         id: props.id,
         stage: props.data._stage,
@@ -72,29 +99,29 @@ export class TicketActions extends React.Component {
       );
   }
 
-  updateTicket = async () => {
-    const { selectedAssignee, addlFieldsRes } = this.state;
-    const userID = UserStore.user.userID;
-    let newData = isEmpty(addlFieldsRes)? {} : addlFieldsRes;
+  // updateTicket = async () => {
+  //   const { selectedAssignee, addlFieldsRes } = this.state;
+  //   const userID() = UserStore.user.userID();
+  //   let newData = isEmpty(addlFieldsRes)? {} : addlFieldsRes;
  
 
-      const newActivity = [
-        ...this.props.data.activity,
-        {
-          userID,
-          stage: this.state.stage,
-          updated: Date.now(),
-          data: newData,
-          assignee: selectedAssignee || ""
-        }
-      ];
-      const updateObj = {
-        ticketID: this.props.data.ticketID,
-        accountID: this.props.data.accountID,
-        activity: newActivity,
-      };
-      await modifyTicket(updateObj);
-  };
+  //     const newActivity = [
+  //       ...this.props.data.activity,
+  //       {
+  //         userID(),
+  //         stage: this.state.stage,
+  //         updated: Date.now(),
+  //         data: newData,
+  //         assignee: selectedAssignee || ""
+  //       }
+  //     ];
+  //     const updateObj = {
+  //       ticketID: this.props.data.ticketID,
+  //       accountID: this.props.data.accountID,
+  //       activity: newActivity,
+  //     };
+  //     await modifyTicket(updateObj);
+  // };
 
   addOrReplace = (type) => {
     const lastActivity = this.props.data.activity[0];
@@ -109,20 +136,20 @@ export class TicketActions extends React.Component {
     return sameType && underThreeMin? "replace":"add";
   }
 
-  acceptRequest = () => {
-    
-  }
 
   async changeStageOrAssign(type, data) {
     const { selectedAssignee, stage } = this.state;
-    const userID = UserStore.user.userID;
+    if (type === "stage" && data === stage) return
+    if (type === "assignee" && data === selectedAssignee) return
     await this.setState(type === "stage"? {stage: data} : {selectedAssignee: data});
     const checkFields = await this.addlFields();
-    const action = this.addOrReplace(type === "stage"? "stageOnly" : "assignOnly");
+    const action = type === "stage" && data === "open" && stage === "open-pending"? "add" : this.addOrReplace(type === "stage"? "stageOnly" : "assignOnly");
+    
     if (type === "stage" && checkFields.length && checkFields[0].data.length) this.setState({ addlFieldsSource: checkFields[0].data });
     else {
       const newActivity =  {
-        userID,
+        userID: userID(),
+        views: [userID()],
         stage: type==="stage"? data : "",
         updated: Date.now(),
         data: {},
@@ -130,10 +157,12 @@ export class TicketActions extends React.Component {
       };
       let activity = [];
       if (action === "add") activity = [ newActivity, ...this.props.data.activity];
+
       else {
         activity = this.props.data.activity;
         activity.splice(0, 1, newActivity);
       }
+
       const updateObj = {
         ticketID: this.props.data.ticketID,
         accountID: this.props.data.accountID,
@@ -162,7 +191,8 @@ export class TicketActions extends React.Component {
       { text: "Open", value: "open" },
       { text: "Close (completed)", value: "closed" },
       { text: "Close (unable to fulfill)", value: "closed-cant" },
-      { text: "Close (outside of scope/declined)", value: "closed-wont" }
+      { text: "Close (outside of scope/declined)", value: "closed-wont" },
+      { text: "Close (duplicate)", value: "closed-duplicate" }
     ];
     return [...parentStages, ...baseStages];
   };
@@ -224,6 +254,7 @@ export class TicketActions extends React.Component {
     return (
       <FadeIn transitionDuration={100} delay={0}>
         <Container style={{ padding: 0 }}>
+
           <Row style={{ padding: "25px 0 0px" }}>
             <Col>
               <Form className="FixSemanticLabel">
@@ -281,15 +312,16 @@ export class TicketActions extends React.Component {
                   </Button>
                   <Dropdown
                     className="SubAction"
+                    onChange={(e, {value}) => this.changeStageOrAssign("stage", value)}
                     button
                     style={{ fontSize: ".7em" }}
                     size="mini"
                     text="Decline Request"
                     options={[
-                      { text: "Outside of scope/declined", value: 0 },
-                      { text: "Unable to fulfill", value: 2 },
-                      { text: "Duplicate", value: 3 },
-                      { text: "Completed", value: 4 }
+                      { text: "Outside of scope/declined", value: "closed-wont" },
+                      { text: "Unable to fulfill", value: "closed-cant" },
+                      { text: "Duplicate", value: "closed-duplicate" },
+                      { text: "Completed", value: "closed" }
                     ]}
                   />
                 </>
@@ -305,6 +337,24 @@ export class TicketActions extends React.Component {
                 <Icon name="write" />
                 Add Memo...
               </Button>
+              <Button
+                onClick={() => this.updateState({showFileUpload: true})}
+                className="SubAction"
+                style={{ fontSize: ".7em" }}
+                size="mini"
+                toggle
+              >
+                <Icon name="attach" />
+                Add File...
+              </Button>
+              <AttachFile
+              assoc={{tickets: [this.props.data.ticketID]}}
+              open={this.state.showFileUpload}
+              close={() => this.updateState({showFileUpload: false})}
+              title="Upload a new file"
+              output={val => this.addFile(val)}
+              includeTeamTag={false}
+        />
             </Col>
           </Row>
         </Container>
