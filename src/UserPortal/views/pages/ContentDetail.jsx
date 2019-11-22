@@ -46,10 +46,11 @@ class ContentDetail extends React.Component {
       data.q = this.state.q
       const payload = {
          parent: "QandA",
-         stage: "open",
          activity: [{
-            update: Date.now(),
+            updated: Date.now(),
+            views: [],
             userID: UserStore.user.userID,
+            stage: "open-pending",
             data
          }]
       }

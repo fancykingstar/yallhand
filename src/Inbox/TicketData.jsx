@@ -2,6 +2,7 @@ import React from "react";
 import {Row, Col} from "reactstrap";
 import TimeAgo from 'react-timeago';
 import {Label, Icon} from "semantic-ui-react";
+import { TicketContentSource } from "./TicketContentSource";
 import {AccountStore} from "../Stores/AccountStore";
 import {ResourcesStore} from "../Stores/ResourcesStore";
 import {S3Download} from "../DataExchange/S3Download";
@@ -22,12 +23,33 @@ export const TicketData = (props) => {
 
         <div>
           {props.activity
-            .filter(act => Object.keys(act.data).length)
+            .filter(act => Object.keys(act.data).length && !Object.keys(act.data).includes('variationID'))
             .map(act => {
-              const res = Object.keys(act.data)
+              const res = 
+              // Object.keys(act.data).includes("variationID")?
+              // (<>
+              // <Row style={{ padding: "3px 0 6px" }}>
+              //   <Col>
+              //     <TicketContentSource content={props.content} />
+              //   </Col>
+              //    <Col style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} >
+              //       <TimeAgo date={act.updated} /><br/>
+              //       <Label size="mini"> { AccountStore._getUser(act.userID) .displayName } </Label>{" "}
+              //    </Col>
+              // </Row>
+              //  <Row style={{ padding: "3px 0 6px" }}>
+              //  <Col md={6}>
+              //  <span style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} > {"Question"}{" "} </span>{" "} <br />
+              //  <span style={{ color: "rgba(0, 0, 0, 0.74)", fontSize: "0.9em" }} > {act.data.q}{" "} </span>
+              // </Col>
+              // </Row>
+              // </>)
+              // :
+              Object.keys(act.data)
                 .filter(datapnt => datapnt !== "id")
                 .map(datapnt => (
                   <>
+        
                     <Row style={{ padding: "3px 0 6px" }}>
                       <Col md={6}>
                         <span
@@ -67,15 +89,7 @@ export const TicketData = (props) => {
                       </Col>
                       {/* </Col> */}
                     </Row>
-                    {/* <Row
-                      style={{
-                        alignItems: "center",
-                        paddingBottom: 5
-                      }}
-                    >
-                     
-                      
-                    </Row> */}
+                   
                   </>
                 ));
               return res;

@@ -76,12 +76,12 @@ export class TicketingItem extends React.Component {
 
   const displayData = () => data.map((dataItem, i) => 
     <Form.Group key={"ticketdata" + i} >
-    <Form.Dropdown value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multi"}]}/>
+    <Form.Dropdown value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multi"},{text: "File Upload", value: "file"}]}/>
     <Form.Input 
     value={dataItem.label} 
     onChange={(e,{value}) => updateDataItem({label: value},i)} 
     label="Label" ><input maxLength="48" /></Form.Input>
-    {dataItem.type !== "text" &&
+    {dataItem.type.toLowerCase().includes('select') &&
 
         <>
       <Form.Field >

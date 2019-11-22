@@ -9,6 +9,7 @@ import {isEmpty} from "lodash";
 
 
 export const TicketActivity = (props) => {
+
     const openMsg = (stage, index) => {
         const firstOpen = () => {
             let val = ""
@@ -19,7 +20,7 @@ export const TicketActivity = (props) => {
                }
               };
           return val }
-        if(stage === "open-pending" && props.activity.length === 1) return(    <>{`Created`} <span style={{ color: "rgb(60, 60, 60)" }}></span>{" "} </> );
+        if(stage === "open-pending") return(    <>{`Created`} <span style={{ color: "rgb(60, 60, 60)" }}></span>{" "} </> );
         else if (stage === "open" && index === firstOpen())  return( <>{`Accepted`} <span style={{ color: "rgb(60, 60, 60)" }}></span>{" "} </> );
         else return( <>{`Set as open`} <span style={{ color: "rgb(60, 60, 60)" }}></span>{" "} </> );
     };

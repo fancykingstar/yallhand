@@ -40,8 +40,7 @@ class QnADetailsFrame extends React.Component {
 //   }
 
 componentDidMount(){
-    const vari = this.props.data._contentData.variations.filter(vari => vari.variationID === this.props.data.activity[0].data.variationID)[0];
-    console.log("vari",vari);
+    const vari = this.props.data._content.variations[0];
     this.setState({vari})
 
 
@@ -49,7 +48,7 @@ componentDidMount(){
 
 updateTicket = async () => {
   const {stage,  response, vari} = this.state;
-  const { _contentPreview} = this.props.data;
+  const { _content} = this.props.data;
   const userID = UserStore.user.userID;
   if (stage === "close") {
     const payload =  {qanda : [{
@@ -59,8 +58,8 @@ updateTicket = async () => {
       update: Date.now()
     }]};
 
-    const mode = _contentPreview.policyID? "policy" : "announcement";
-    const contentID = _contentPreview[`${mode}ID`]
+    const mode = _content.policyID? "policy" : "announcement";
+    const contentID = _content[`${mode}ID`]
 
     if (mode === "policy") await modifyPolicy(contentEdit(payload, mode, contentID, vari.variationID)) 
     else await modifyAnnouncement(contentEdit(payload, mode, contentID, vari.variationID))
@@ -77,7 +76,7 @@ updateTicket = async () => {
 
 getPreviewContent = () => {
 
-  return Object.assign(this.props.data._contentPreview, {variations: [this.state.vari]})
+  return Object.assign(this.props.data._content, {variations: [this.state.vari]})
 }
 
 closePreview = () => {
@@ -140,7 +139,7 @@ toggleContactInfo() {
   
 
   render() {
-    const {_requester, _userImg, _userInitials, _parent, activity, _contentPreview} = this.props.data;
+    const {_requester, _userImg, _userInitials, _parent, activity, _content} = this.props.data;
     const {vari,toggleContentPreview} = this.state;
     return (
       <React.Fragment>
@@ -150,7 +149,7 @@ toggleContactInfo() {
      
                 <div className="section_title">
                   <div>
-                    <h4 style={{ color: "#404040" }}>{_contentPreview.label}</h4>
+                    <h4 style={{ color: "#404040" }}>{_content.label}</h4>
                     <p style={{ color: "#abacab", fontSize: ".8em" }}>{"Content Q & A"}</p>
                   </div>
                 </div>
@@ -164,11 +163,11 @@ toggleContactInfo() {
                             <Col sm={3}>
                              <div
                                 className="ContentPreviewImg"
-                                style={{ backgroundImage: `url(${_contentPreview.img})` }}
+                                style={{ backgroundImage: `url(${_content.img})` }}
                             />
           
           </Col>
-  <Col><p style={{fontSize: "0.8em", padding: 0, margin: "0 0 0 10px"}}>{_contentPreview.policyID? "FAQ":"Announcement"}</p><p style={{lineHeight: "1.25em", margin: "3px 0 0 10px"}}>{_contentPreview.label}</p></Col>
+  <Col><p style={{fontSize: "0.8em", padding: 0, margin: "0 0 0 10px"}}>{_content.policyID? "FAQ":"Announcement"}</p><p style={{lineHeight: "1.25em", margin: "3px 0 0 10px"}}>{_content.label}</p></Col>
                         </Row>
                         <Row>
                              <Col sm={3}> <Button 

@@ -51,7 +51,7 @@ export class TicketActions extends React.Component {
   static getDerivedStateFromProps(props, state) {
 
     if (props.id !== state.id) {
-      const base = [...AccountStore._getUsersSelectOptions([
+      const base = props.data._parent === "QandA"? [] : [...AccountStore._getUsersSelectOptions([
         ...props.data._parent.admins,
         ...props.data._parent.collaborators
       ]), ...AccountStore._getAdminSelectOptions()];
@@ -250,6 +250,7 @@ export class TicketActions extends React.Component {
 
   render() {
     const { assigneeOptions, selectedAssignee, stage } = this.state;
+    const QandA = this.props.data.parent === "QandA";
 
     return (
       <FadeIn transitionDuration={100} delay={0}>
@@ -259,7 +260,7 @@ export class TicketActions extends React.Component {
             <Col>
               <Form className="FixSemanticLabel">
                 <Form.Group>
-                  {stage !== "open-pending" && (
+                  {!QandA && stage !== "open-pending"? (
                     <Form.Field>
                       {"Stage:"}{" "}
                       <span style={{ fontWeight: "bold" }}>
@@ -270,7 +271,7 @@ export class TicketActions extends React.Component {
                         />
                       </span>
                     </Form.Field>
-                  )}
+                  ):""}
 
                   <Form.Field>
                     {" "}
@@ -327,6 +328,31 @@ export class TicketActions extends React.Component {
                 </>
               )}
               {/* <Button onClick={() => this.props.output({messageType: "requester"})} className="SubAction"   style={{fontSize: ".7em"}} size="mini" toggle><Icon name='talk' />Message Requester...</Button> */}
+              {QandA? 
+               <>
+                  <Button
+                  onClick={() => this.props.output({ messageType: "" })}
+                  className="SubAction"
+                  style={{ fontSize: ".7em" }}
+                  size="mini"
+                  toggle
+                  >
+                  <Icon name="reply" />
+                  Reply
+                  </Button>
+                  <Button
+                  onClick={() => this.changeStageOrAssign("stage", "closed-wont")}
+                  className="SubAction"
+                  style={{ fontSize: ".7em" }}
+                  size="mini"
+                  toggle
+                >
+                  <Icon name="cancel" />
+                  Decline
+                </Button>
+                </>
+              :     
+              <>         
               <Button
                 onClick={() => this.props.output({ messageType: "internal" })}
                 className="SubAction"
@@ -355,6 +381,8 @@ export class TicketActions extends React.Component {
               output={val => this.addFile(val)}
               includeTeamTag={false}
         />
+        </>
+        }
             </Col>
           </Row>
         </Container>

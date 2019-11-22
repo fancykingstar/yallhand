@@ -46,10 +46,12 @@ export default function InboxList(props) {
                       <React.Fragment>
                         <Row>
                           <Col sm={8}>
+                 
                           <Typography
                           style={{fontSize: "0.9em", color: ticket._stage.includes("close")? "#ABACAB": "#000"}}
                           color="textPrimary" >
-                          {ticket._parent && ticket._parent.label}
+                                       {/* {"content" + JSON.stringify(ticket._content)} */}
+                          {ticket._content? ticket._content.label : ticket._parent? ticket._parent.label : ""}
                         </Typography>
                           </Col>
                           <Col className="text-right"><Typography style={{fontSize: "0.8em", color: "#ABACAB"}}>  <TimeAgo date={ticket._updated} /></Typography> 

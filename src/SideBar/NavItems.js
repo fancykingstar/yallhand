@@ -61,8 +61,6 @@ class NavItems extends React.Component {
           <ListItem style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
             <ListItemIcon>
             <Badge color="secondary" badgeContent={TicketingStore.allTickets.filter(ticket => ticket._unread).length} 
-            // invisible={invisible} 
-            // className={classes.margin}
             >
             <InboxRoundedIcon/>
         </Badge>

@@ -155,6 +155,6 @@ export const surveys = async (accountID, userID) => {
 
 export const tickets = async (accountID) => {
   const result = await apiCall_noBody(`ticketing/all?filter={"where":{"accountID":"${accountID}"}}`, "GET")
-  console.log(accountID, result)
-  TicketingStore.loadTickets(result);
+  await TicketingStore.loadTickets(result);
+  return;
 };

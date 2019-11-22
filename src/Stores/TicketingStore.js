@@ -44,17 +44,18 @@ class Store {
   
 
 
-  loadTickets(allTickets) {
-    return new Promise((resolve, reject) => {
-      this.allTickets = calculateTicketing(allTickets);
-      resolve(true)
+  async loadTickets(allTickets) {
+    // return new Promise((resolve, reject) => {
+      this.allTickets = await calculateTicketing(allTickets);
+      // resolve(true)
       // this.allSurveys.length === 0 ? reject(false) : resolve(true)
-    })
+    // })
   }
 
 
   _getTicket(ID) {
-    return this.allTickets.filter(ticket => ticket.ticketID === ID)[0]
+    const ticket = this.allTickets.filter(ticket => ticket.ticketID === ID)[0];
+    return ticket;
   }
 
 

@@ -4,15 +4,19 @@ import { Button, Form, Checkbox, Dropdown, Menu, Icon, Header } from "semantic-u
 import { Paper } from "@material-ui/core";
 
 import { Container, Col, Row } from "reactstrap";
-import { AccountStore } from "../Stores/AccountStore";
 import { UserStore } from "../Stores/UserStore";
-import { modifyTicket } from "../DataExchange/Up";
+import { modifyPolicy, modifyAnnouncement, modifyTicket } from "../DataExchange/Up";
+import { contentEdit} from "../DataExchange/PayloadBuilder";
 import { TicketData } from "./TicketData";
 import { TicketActivity } from "./TicketActivity";
 import { TicketRequester } from "./TicketRequester";
 import { TicketActions } from "./TicketActions";
 import { TicketDetailsMessage} from "./TicketDetailsMessage";
+import { TicketDetailsQandAMessage} from "./TicketDetailsQandAMessage";
+import { TicketContentSource } from "./TicketContentSource";
 import { addView } from "../DataExchange/PayloadBuilder";
+
+
 
 
 
@@ -25,7 +29,7 @@ class TicketDetailsFrame extends React.Component {
       activeItem: "activity",
       messageType: "",
       message: "",
-      // ticketID: "",
+      ticketID: "",
       // addView: false,
       // showMemo: false,
       // stage: "",
@@ -57,16 +61,17 @@ class TicketDetailsFrame extends React.Component {
   }
 
 
-//  static async getDerivedStateFromProps(props, state) {
-//     if (props.data.ticketID !== state.id) {
-//            // await modifyTicket(addView(props.data));
-//       return {
-//        addView: true,
-//        ticketID: props.data.ticketID
-//       };
-//     }
-//     else return null;
-//   }
+ static getDerivedStateFromProps(props, state) {
+    if (props.data.ticketID !== state.ticketID) {
+      return {
+       message: "",
+       messageType: "",
+       activeItem: props.data._stage === "open-pending"? "data" : "activity",
+       ticketID: props.data.ticketID
+      };
+    }
+    else return null;
+  }
 
   setAddlFieldRes = obj => {
     const newVal = Object.assign(this.state.addlFieldsRes, obj);
@@ -77,14 +82,34 @@ class TicketDetailsFrame extends React.Component {
     this.setState({ activeItem: name });
   };
 
+
+  updateContent = async () => {
+    const { _content} = this.props.data;
+    const {activity} = this.props.data;
+    const vari = _content.variations[0];
+    const payload =  {qanda : [{
+      q: activity[activity.length - 1].data.q,
+      a: this.state.message,
+      adminID: UserStore.user.userID,
+      update: Date.now()
+    }]};
+
+    const mode = _content.policyID? "policy" : "announcement";
+    const contentID = _content[`${mode}ID`]
+
+    if (mode === "policy") await modifyPolicy(contentEdit(payload, mode, contentID, vari.variationID), false) 
+    else await modifyAnnouncement(contentEdit(payload, mode, contentID, vari.variationID), false)
+    
+  }
+
   handleSubmit = async () => {
      const userID = UserStore.user.userID;
-     const newData = this.state.messageType === "internal"? {memo: this.state.message} : {}
+     const newData = this.state.messageType === "internal"? {memo: this.state.message} : !this.state.messageType.includes('reply')? {} : this.state.messageType.includes('public')? {"replied pubicly": this.state.message}: {"replied privately": this.state.message};
 
      const newActivity = [
         {
           userID,
-          stage: "",
+          stage: "closed",
           views: [userID],
           updated: Date.now(),
           data: newData,
@@ -97,129 +122,39 @@ class TicketDetailsFrame extends React.Component {
         activity: newActivity,
       };  
       await modifyTicket(updateObj);
+      if (this.state.messageType.includes('reply')) {
+        if(this.state.messageType.includes('public')) await this.updateContent();
+        //nofity
+      };
       await this.setState({messageType : ""})
   }
 
-  // async addlFields() {
-  //   const { stage } = this.state;
-  //   const { _parent } = this.props.data;
-  //   if (!stage) return [];
-  //   else if (stage.includes("close"))
-  //     return await _parent.ticketItems.filter(i => i.isClose);
-  //   else if (stage === "open")
-  //     return await _parent.ticketItems.filter(i => i.isOpen);
-  //   else
-  //     return await _parent.ticketItems.filter(
-  //       i => i.label && i.label === stage
-  //     );
-  // }
-
-  // updateTicket = async () => {
-  //   const { stage } = this.state;
-  //   const userID = UserStore.user.userID;
-  //   if (stage.includes("close")) {
-  //     const newActivity = [
-  //       ...this.props.data.activity,
-  //       {
-  //         userID,
-  //         stage: this.state.stage,
-  //         updated: Date.now(),
-  //         data: this.state.memo ? { memo: this.state.memo } : {}
-  //       }
-  //     ];
-  //     const updateObj = {
-  //       ticketID: this.props.data.ticketID,
-  //       accountID: this.props.data.accountID,
-  //       stage: this.state.stage,
-  //       activity: newActivity
-  //     };
-  //     modifyTicket(updateObj);
-  //   }
-  // };
-
-  // async changeStage(stage) {
-  //   await this.setState({ stage });
-  //   const checkFields = await this.addlFields();
-
-  //   if (checkFields.length && checkFields[0].data.length)
-  //     this.setState({ addlFieldsSource: checkFields[0].data });
-  // }
-
-  // stagesOptions = () => {
-  //   const { _parent } = this.props.data;
-
-  //   const parentStages = !_parent.ticketItems.length
-  //     ? []
-  //     : _parent.ticketItems
-  //         .filter(ticketItem => ticketItem.label)
-  //         .map(ticketItem => ({
-  //           text: ticketItem.label,
-  //           value: ticketItem.label
-  //         }));
-
-  //   let baseStages = [
-  //     { text: "Open", value: "open" },
-  //     { text: "Close (completed)", value: "closed" },
-  //     { text: "Close (unable to fulfill)", value: "closed-cant" },
-  //     { text: "Close (out of scope/declined)", value: "closed-wont" }
-  //   ];
-  //   return [...parentStages, ...baseStages];
-  // };
-
-  // getFormItemField(formItem) {
-  //   if (formItem.type === "text")
-  //     return (
-  //       <Form className="FixSemanticLabel">
-  //         <Form.Input
-  //           label={formItem.label}
-  //           onChange={(e, value) => {
-  //             let newVal = {};
-  //             newVal[formItem.label] = value;
-  //             this.setAddlFieldRes(newVal);
-  //           }}
-  //         />
-  //       </Form>
-  //     );
-  //   else if (formItem.type === "select")
-  //     return (
-  //       <Form className="FixSemanticLabel">
-  //         <Form.Select
-  //           label={formItem.label}
-  //           onChange={(e, { value }) => {
-  //             let newVal = {};
-  //             newVal[formItem.label] = value;
-  //             this.setAddlFieldRes(newVal);
-  //           }}
-  //           options={formItem.options.map(opt => ({ text: opt, value: opt }))}
-  //         />
-  //       </Form>
-  //     );
-  //   else if (formItem.type === "multi")
-  //     return (
-  //       <>
-  //         <span>{formItem.label}</span>
-  //         <Form>
-  //           <Form.Group grouped>
-  //             {formItem.options.map(opt => (
-  //               <Form.Field
-  //                 control={Checkbox}
-  //                 label={<label>{opt}</label>}
-  //                 onChange={(e, value) => {
-  //                   let newVal = {};
-  //                   newVal[opt] = value.checked;
-  //                   this.setAddlFieldRes(newVal);
-  //                 }}
-  //               />
-  //             ))}
-  //           </Form.Group>
-  //         </Form>
-  //       </>
-  //     );
-  // }
+  displayDetail = () => {
+    const { _requester, _userImg, _userInitials, _parent, _content, activity } = this.props.data;
+    const { activeItem, messageType, message } = this.state;
+    
+    return {
+    "requester":  <TicketRequester requester={_requester} userImg={_userImg} userInitials={_userInitials} />,
+    "activity":  <TicketActivity activity={activity} />,
+    "data" : <TicketData activity={activity} content={this.props.data._content} />,
+    }
+  };
 
   render() {
-    const { _requester, _userImg, _userInitials, _parent, _parentLabel, activity } = this.props.data;
+    const { _requester, _userImg, _userInitials, _parent, _content, activity, _stage } = this.props.data;
     const { activeItem, messageType, message } = this.state;
+    const QandA = this.props.data.parent === "QandA";
+    const firstActivity = activity[activity.length - 1];
+
+    const featuredData = QandA ? 
+      <>
+        <Col> <span style={{fontWeight: 800}}>Question</span><br/> <span>{firstActivity.data.q}</span> </Col>
+        <Col> <span style={{fontWeight: 800}}>Source</span><br/> <TicketContentSource content={this.props.data._content} data={this.props.data} /> </Col>
+      </> 
+      :
+      Object.keys(firstActivity.data).filter(datapoint => datapoint !== "id").map(datapoint => 
+      <Col> <span style={{fontWeight: 800}}>{datapoint}</span><br/> <span>{firstActivity.data[datapoint]}</span> </Col>
+        )
 
    
     return (
@@ -228,18 +163,32 @@ class TicketDetailsFrame extends React.Component {
          
    
         <Paper>
-          <div className="section_title">
+          <div className="section_title" style={{backgroundColor: _stage === "open-pending"? "#da17b1":"#39b6f8"}}>
             <div>
-              <h4 style={{ color: "#404040" }}>{_parent.label}</h4>
-              <p style={{ color: "#abacab", fontSize: ".8em" }}>
-                {"Service Desk"}
+              <h4 style={{ color: "#FFFFFF" }}>{QandA? _content.label :_parent.label}</h4>
+              <p style={{ color: "#e3e8ee", fontSize: ".8em" }}>
+                {QandA? "Content Q & A": "Service Desk"}
               </p>
             </div>
           </div>
-          <div style={{ padding: 15 }}>
+        
+            <Container style={{padding: "15px", borderBottom: "1px solid #ABACAB"}}>
+              <Row  style={{padding: "15px", fontSize: "0.9em", color: "rgba(0, 0, 0, 0.54)"}}>
+                {featuredData}
+                 <Col> <span style={{fontWeight: 800}}>Requester</span><br/> <TicketRequester requester={_requester} userImg={_userImg} userInitials={_userInitials} />  </Col>
+              </Row>
+         
+            </Container>
+            <div style={{ padding: 15 }}>
             <Container>
+       
+
+         
+          
+
               <Row>
                 <Col>
+           
                   <Menu
                     text
                     style={{ fontSize: "0.9em", marginTop: 0 }}
@@ -249,36 +198,46 @@ class TicketDetailsFrame extends React.Component {
                       name="activity"
                       active={activeItem === "activity"}
                       onClick={this.handleMenuClick}
+                      color={activeItem === "activity" && "blue"}
                     />
+                    {/* {_content && 
+                        <Menu.Item
+                        name="source"
+                        active={activeItem === "source"}
+                        onClick={this.handleMenuClick}
+                      />
+                    } */}
+                    {/* {!_content && */}
                     <Menu.Item
                       name="data"
                       active={activeItem === "data"}
                       onClick={this.handleMenuClick}
+                      color={activeItem === "data" && "blue"}
                     />
-                    <Menu.Item
+                    {/* } */}
+                    {/* <Menu.Item
                       name="requester"
                       active={activeItem === "requester"}
                       onClick={this.handleMenuClick}
-                    />
+                    /> */}
                   </Menu>
                 </Col>
               </Row>
               <Row>
                 <Col>
-                  {activeItem === "requester" ? (
-                    <TicketRequester
-                      requester={_requester}
-                      userImg={_userImg}
-                      userInitials={_userInitials}
-                    />
-                  ) : activeItem === "activity" ? (
-                    <TicketActivity activity={activity} />
-                  ) : (
-                    <TicketData activity={activity} />
-                  )}
+
+                {this.displayDetail()[activeItem]}
+                  
                 </Col>
+              
               </Row>
-              { messageType?  <TicketDetailsMessage  data={this.props.data} action={messageType==="requester"? "Send" : "Add"} label={messageType==="requester"? "Send message to requester" : "Add internal memo"} handleSubmit={this.handleSubmit} output={this.updateState}  /> :   <TicketActions data={this.props.data} output={this.updateState} id={this.props.id}/> }
+              {
+              !messageType?   <TicketActions data={this.props.data} output={this.updateState} id={this.props.id}/>  :
+              messageType.includes('reply')? 
+              <TicketDetailsQandAMessage data={this.props.data} handleSubmit={this.handleSubmit} output={this.updateState}  /> :
+              <TicketDetailsMessage  data={this.props.data} action={messageType==="requester"? "Send" : "Add"} label={messageType==="requester"? "Send message to requester" : "Add internal memo"} handleSubmit={this.handleSubmit} output={this.updateState}  /> 
+              
+              }
                    
             </Container>
           </div>

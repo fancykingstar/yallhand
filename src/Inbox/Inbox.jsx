@@ -46,16 +46,20 @@ class Inbox extends React.Component {
 
   selectInboxItem(ticketID) {
     this.setState({selected: ticketID});
+
   }
 
 
 
   getDetails() {
     const {TicketingStore} = this.props;
-    if (!this.state.selected) return null;
+    const {selected} = this.state;
+    if (!selected) return null;
     else {
-      if (this.state.selected.parent !== "QandA") return  <TicketDetailsFrame id={this.state.selected} data={TicketingStore._getTicket(this.state.selected)} />;
-    //   else {return <QnADetailsFrame data={this.state.selected}/> 
+      const parent = TicketingStore._getTicket(selected).parent
+      // if (parent !== "QandA") 
+      return <TicketDetailsFrame id={this.state.selected} data={TicketingStore._getTicket(this.state.selected)} />;
+    //   else {return <QnADetailsFrame data={TicketingStore._getTicket(this.state.selected)}/> 
     // }
     }
   }
