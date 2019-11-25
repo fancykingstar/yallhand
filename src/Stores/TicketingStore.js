@@ -1,5 +1,6 @@
 import { observable, action, computed } from "mobx";
 import {calculateTicketing} from "../SharedCalculations/CalculateTicketing";
+import { AccountStore } from "../Stores/AccountStore";
 import _ from "lodash";
 
 class Store {
@@ -57,6 +58,26 @@ class Store {
     const ticket = this.allTickets.filter(ticket => ticket.ticketID === ID)[0];
     return ticket;
   }
+
+
+  @computed
+  get _currentAssignees(){
+    return ["Unassigned", ...this.allTickets.filter(ticket => ticket._currentAssignee).map(ticket => AccountStore._getUser(ticket._currentAssignee).displayName)];
+  };
+
+  @computed
+  get _allStages(){
+    return this.allTickets.filter(ticket => ticket._stage).map(ticket => {
+      if (ticket._stage.includes('open')) return "open";
+      else if (ticket._stage.includes('close')) return "closed";
+      else return ticket._stage
+    });
+  };
+
+  @computed
+  get _allTitles(){
+    return this.allTickets.filter(ticket => ticket.label || ticket._content).map(ticket => ticket.label || ticket._content.label);
+  };
 
 
 }

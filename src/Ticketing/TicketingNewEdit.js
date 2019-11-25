@@ -235,9 +235,9 @@ class TicketingNewEdit extends React.Component {
         <BackButton />
 
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
-          Build Service Ticket Template
+          New Request Template  
           <Header.Subheader>
-            Configure and send tickets to your employees
+            Employees create new tickets via the employee portal
           </Header.Subheader>
         </Header>
         <Row>
@@ -248,8 +248,10 @@ class TicketingNewEdit extends React.Component {
               </Header> */}
               <Form>
                 <Form.Input
+                  className="FixSemanticLabel"
                   style={{ maxWidth: 400 }}
-                  label="Title (Required)"
+                  label="Title"
+                  required
                   placeholder="e.g. Open service request"
                   value={label}
                   onChange={(e, val) => this.updateState({ label: val.value })}
@@ -269,7 +271,7 @@ class TicketingNewEdit extends React.Component {
                   </div>
 
                   <Form style={{ maxWidth: 400 }}>
-                    <Form.Field style={{ minWidth: 370 }}>
+                    <Form.Field className="FixSemanticLabel" style={{ minWidth: 370 }}>
                       <label>Ticketing Type</label>
                       <Grid columns={2} relaxed="very" stackable>
                         <Grid.Column>
@@ -294,6 +296,7 @@ class TicketingNewEdit extends React.Component {
                         this.updateState({ access: val.value })
                       }
                       label="Ticket Admin Settings"
+                      className="FixSemanticLabel"
                       style={{ minWidth: 370 }}
                       selection
                       options={[
@@ -319,6 +322,7 @@ class TicketingNewEdit extends React.Component {
                           value={admins}
                           options={AccountStore._getUsersSelectOptions()}
                           label="Select admin(s)"
+                          className="FixSemanticLabel"
                           fluid
                           multiple
                           selection
@@ -333,6 +337,7 @@ class TicketingNewEdit extends React.Component {
 
                         <Form.Dropdown
                           label="Select collaborator(s)"
+                          className="FixSemanticLabel"
                           admin={collaborators}
                           onChange={(e, val) =>
                             this.updateState({ collaborators: val.value })
@@ -391,6 +396,7 @@ class TicketingNewEdit extends React.Component {
                       <Form.Group>
                       <Form.Dropdown
                       value={chanID}
+                      className="FixSemanticLabel"
                       onChange={(e, val) =>
                         this.updateState({ chanID: val.value })
                       }

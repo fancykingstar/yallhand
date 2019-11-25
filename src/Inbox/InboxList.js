@@ -5,7 +5,8 @@ import { Row, Col } from "reactstrap";
 import { AccountStore } from "../Stores/AccountStore";
 import { TicketingStore } from "../Stores/TicketingStore";
 
-import TimeAgo from 'react-timeago'
+import TimeAgo from 'react-timeago';
+import moment from "moment";
 
 
 
@@ -35,9 +36,26 @@ export default function InboxList(props) {
     // this.setState({filter: val, source: newSource, selected: null})
   }
 
+  const source = () => {
+    if (props.filter === "closed") return TicketingStore.allTickets.filter(ticket => ticket._stage && ticket._stage.includes("close"));
+    else if (props.filter === "active") return TicketingStore.allTickets.filter(ticket => ticket._stage && !ticket._stage.includes("close"));
+    else if (props.filter === "pending") return TicketingStore.allTickets.filter(ticket => ticket._stage && ticket._stage === "open-pending");
+    else if (props.filter === "all") return TicketingStore.allTickets;
+    return TicketingStore.allTickets.filter(ticket => moment.duration(moment(new Date()).diff(moment(ticket._updated))).asDays() < 15 );
+  }
+
+  const sortdata = (data) => {
+    return props.sort === "new" ?
+          data
+            .sort((a, b) => b["_updated"] - a["_updated"])
+          : 
+          data
+          .sort((a, b) => a["_updated"] - b["_updated"]);       
+  }
+
   return (
     <List className={classes.root}>
-      {TicketingStore.allTickets.filter(i=>!i.isTemplate).map((ticket, i) => (
+      {sortdata(source()).filter(i=>!i.isTemplate).map((ticket, i) => (
 
                 <>
                 <ListItem onClick={()=>props.handleClick(ticket.ticketID)} className={props.selected === ticket.ticketID? "InboxListItem InboxListItemActive": ticket._unread? "InboxListItemUnread" : "InboxListItem"}>

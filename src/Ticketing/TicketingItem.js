@@ -76,17 +76,18 @@ export class TicketingItem extends React.Component {
 
   const displayData = () => data.map((dataItem, i) => 
     <Form.Group key={"ticketdata" + i} >
-    <Form.Dropdown value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multi"},{text: "File Upload", value: "file"}]}/>
+    <Form.Dropdown className="FixSemanticLabel" value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multiselect"},{text: "File Upload", value: "file"}]}/>
     <Form.Input 
+    className="FixSemanticLabel"
     value={dataItem.label} 
     onChange={(e,{value}) => updateDataItem({label: value},i)} 
     label="Label" ><input maxLength="48" /></Form.Input>
     {dataItem.type.toLowerCase().includes('select') &&
 
         <>
-      <Form.Field >
+      <Form.Field className="FixSemanticLabel">
 
-      <label>Options</label>
+      <label>Create Options</label>
       <input 
         value={this.state.optionInput}
         onChange={(e) => this.setState({optionInput: e.target.value})}
@@ -97,7 +98,7 @@ export class TicketingItem extends React.Component {
           }
         }}
         />
-
+              <label style={{fontSize: "0.8em", color: "#ABACAB"}}>Hit enter to add entry</label>
       
       </Form.Field>
       <Form.Field>
@@ -145,21 +146,27 @@ export class TicketingItem extends React.Component {
           <Header.Subheader>Configure required information to {`${!this.props.index? "open":"close"}`} a ticket</Header.Subheader>
           </Header>
        :       
-        <TextField
+        <Form>
+          <Form.Input
           required
+          className="FixSemanticLabel"
           label="Stage Name"
           value={label}
           onKeyDown={(e)=> {if(e.keyCode ==13) this.props.newLine()}}
           onChange={e => setField({ label: e.target.value }) }
         />
+        </Form>
         }
         </div>
         </Col>
       </Row>
         {!this.props.isClose &&
         <Row style={{paddingTop: 10}}><Col>
-        <span>Default Assignee:</span><br/>
-        <Dropdown selection placeholder="Choose..." onChange={(e,val)=>setField({defaultAssignee: val.value})} value={defaultAssignee} options={[...AccountStore._getUsersSelectOptions(), {"text":"None", "value":""}]} /><br/>
+        {/* <span>Default Assignee:</span><br/> */}
+        <Form>
+          <Form.Dropdown className="FixSemanticLabel" label="Default Assignee" selection placeholder="Choose..." onChange={(e,val)=>setField({defaultAssignee: val.value})} value={defaultAssignee} options={[...AccountStore._getUsersSelectOptions(), {"text":"None", "value":""}]} />
+        </Form>
+
         </Col></Row>
         }
         <Row>

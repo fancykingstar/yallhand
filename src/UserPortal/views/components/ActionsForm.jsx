@@ -53,7 +53,7 @@ class ActionsForm extends React.Component {
             </Input>
         )
 
-        else if(formItem.type === "multi") return (
+        else if(formItem.type === "multiselect") return (
             <FormGroup>
             {formItem.options.map(opt =>  
             

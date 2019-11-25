@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { inject, observer} from "mobx-react";
-import { Header, Dropdown, Menu, DropdownMenu } from "semantic-ui-react";
+import { Header, Dropdown, Menu, DropdownMenu, Search, Icon } from "semantic-ui-react";
 import { Paper, 
   // Card, CardHeader, CardContent, Avatar, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse, IconButton 
 } from "@material-ui/core";
@@ -31,14 +31,22 @@ import { AnnouncementsStore } from "../Stores/AnnouncementsStore";
 
 import InboxList from "./InboxList";
 
+import {debounce} from "lodash";
+
 
 @inject("TicketingStore")
 @observer
 class Inbox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: null, filter: "all" };
+    this.state = { selected: null, filter: "all", sort: "new", searching: false, search_results: {}, search_val: ""} ;
+    this.filterRef = React.createRef();
+    this.openFilter = this.openFilter.bind(this);
   }
+
+openFilter(){
+  this.filterRef.current.open();
+}
 
  updateState(obj) {
    this.setState(obj);
@@ -49,7 +57,20 @@ class Inbox extends React.Component {
 
   }
 
-
+ async handleSearchChange(e, { value }) {
+    const {TicketingStore} = this.props;
+    this.setState({search_val: value.toLowerCase(), searching: true});
+    const titles = await TicketingStore._allTitles.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+    const assignees = TicketingStore._currentAssignees.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+    const stages = TicketingStore._allStages.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+    let search_results = {};
+    if (titles.length) search_results.title =  {name: "title", results: titles.map(i => ({title: i, className: "SearchResultCompact"}))};
+    if (assignees.length) search_results.assignee = {name: "assignee", results: assignees.map(i => ({title: i, className: "SearchResultCompact"}))};
+    if (stages.length) search_results.stage = {name: "stage", results: stages.map(i => ({title: i, className: "SearchResultCompact"}))};
+    this.setState({searching: false
+      , search_results
+    })
+  }
 
   getDetails() {
     const {TicketingStore} = this.props;
@@ -115,8 +136,11 @@ class Inbox extends React.Component {
     // source();
   }
 
+  
+
   render() {
     const {TicketingStore} = this.props; 
+    const {filter,sort, searching, search_results, search_value} = this.state;
     return (
       <React.Fragment>
         
@@ -127,13 +151,61 @@ class Inbox extends React.Component {
           <Col>
 
           <div> 
-  <span>
-    Filter by{' '}
-    <Dropdown inline options={[
-      {text: "active", value: "active" },{text: "closed", value: "closed"},{text: "all", value: "all"}
-    ]} value={this.state.filter} onChange= {(e, {value}) => this.updateState({filter: value})} />
-   
-    </span>
+         
+
+            <Row style={{paddingBottom: 5}}>
+              <Col sm={3}>
+              <span style={{whiteSpace: "nowrap"}}>
+                  Show{' '}
+                  <span onClick={this.openFilter} style={{fontWeight: "bold"}}>{filter}</span>
+                  <Dropdown inline 
+                      ref={this.filterRef}
+                  // options={[
+                  //   {text: "recent", value: "recent" },{text: "active only", value: "active" },{text: "closed only", value: "closed"},{text: "pending approval", value: "pending" },{text: "all", value: "all"}
+                  // ]}
+                  value={this.state.filter} 
+                
+                  >
+                        <Dropdown.Menu>
+                        <Dropdown.Item active={filter === "recent"} onClick={(e, {value}) => this.updateState({filter: value})} value={"recent"}>recent </Dropdown.Item>
+                        <Dropdown.Item  active={filter === "active"} onClick={(e, {value}) => this.updateState({filter: value})} value={"active"}>active </Dropdown.Item>
+                        <Dropdown.Item  active={filter === "closed"} onClick={(e, {value}) => this.updateState({filter: value})} value={"closed"}>closed </Dropdown.Item>
+                        <Dropdown.Item  active={filter === "pending"} onClick={(e, {value}) => this.updateState({filter: value})} value={"pending"}>pending approval </Dropdown.Item>
+                        <Dropdown.Item  active={filter === "all"} onClick={(e, {value}) => this.updateState({filter: value})} value={"all"} active={true}>all</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Header icon='sort' content='Sort' />
+                        <Dropdown.Divider />
+                        <Dropdown.Item active={sort === "new"} onClick={(e, {value}) => this.updateState({sort: value})} value={"new"} >newest </Dropdown.Item>
+                        <Dropdown.Item active={sort === "old"} onClick={(e, {value}) => this.updateState({sort: value})} value={"old"}>oldest </Dropdown.Item>
+                     
+                      </Dropdown.Menu>
+                    </Dropdown>
+                
+                  </span>
+              </Col>
+            </Row>
+            <Row>
+            <Col xl={3}>
+                  
+       
+               
+                    <Search placeholder="Title, Assignee, Stage..." size="mini" fluid className="InboxSearchBox"
+                    category
+                    loading={searching}
+                    // onResultSelect={this.handleResultSelect}
+                    onSearchChange={debounce(this.handleSearchChange.bind(this), 500, {
+                      leading: true,
+                    })}
+                    results={search_results}
+                    value={search_value}
+                    // {...this.props}
+    
+                    />
+    
+      
+                  </Col>
+            </Row>
+
     </div>
 
           </Col>
@@ -151,7 +223,7 @@ class Inbox extends React.Component {
                   overflowX: "hidden",
                 }}
               >
-                <InboxList filter={this.state.filter} selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={TicketingStore.allTickets} />
+                <InboxList sort={this.state.sort} filter={this.state.filter} selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={TicketingStore.allTickets} />
               </Paper>}
             </Col>
             <Col>
