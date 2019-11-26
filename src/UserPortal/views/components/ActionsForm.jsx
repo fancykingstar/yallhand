@@ -1,28 +1,53 @@
 import React from 'react';
 import { Container, Col, Row, Button, Form, FormGroup, Label, Input, InputGroup, InputGroupAddon } from 'reactstrap';
+import { Loader } from "semantic-ui-react";
 import Star from '../../assets/images/star.svg';
 import { Svg } from "../../helpers/Helpers";
+import { Fab } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import BackupIcon from '@material-ui/icons/Backup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {validate} from "../../../SharedCalculations/ValidationTemplate";
+import {giveMeKey} from "../../../SharedCalculations/GiveMeKey";
 
-const initialState = {id: ""};
+const initialState = {id: "",  files: []};
 
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {id: ""};
+        this.state = {id: "", files: []};
         this.resetState = initialState;
     }
 
     reset() {
         //ANTI PATTERN
         Object.keys(this.state).forEach(key => {
-            if(key !== "id" ) delete this.state[key]
+            if(key !== "id" && key !=="file") delete this.state[key]
         })
+        this.setState({files: []})
       }
+
+     handleSubmit = async (type) => {
+        this.setState({loading: true});
+   
+        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
+        .then((r) => {
+        this.props.close();
+        console.log("fileattached to S3 as ", r)
+        this.props.output(r);
+        })
+    
+        this.setState({loading: false});
+      };
+  
+    handleFileChange = async (e) => {
+        e.preventDefault();
+        let file = e.target.files[0];
+        await this.setState({files: [...this.state.files, file]});
+      };
 
    
     componentWillReceiveProps(props){
@@ -51,6 +76,35 @@ class ActionsForm extends React.Component {
             <Input type="select" name={formItem.label} id="props_for" onChange={this.handleInputChange.bind(this)}>
                 {formItem.options.map(opt => <option>{opt}</option>)}
             </Input>
+        )
+
+        else if (formItem.type === "file") return (
+            <div>
+            <input
+            hidden
+            onChange={this.handleFileChange.bind(this)}
+            id="raised-button-file"
+            multiple
+            type="file"
+          />
+          <label htmlFor="raised-button-file">
+          <Fab size="medium" color="primary" component="span" variant="extended">
+                <BackupIcon style={{marginRight: 5}} />
+                Add file
+            </Fab>
+          </label> 
+
+          {
+                             this.state.files.map(file => 
+                             <div 
+                             as="a"
+                             key={"contentresourse" + giveMeKey()}
+                            //  onClick={e => downloadFile(file.S3Key, file.label)}
+                             ><AttachFileIcon/> {file.name}</div>)
+                        }
+
+            </div>
+        
         )
 
         else if(formItem.type === "multiselect") return (
@@ -102,7 +156,6 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title">
-              
                     <h4>
                         <IconButton
                         color="inherit"
@@ -143,7 +196,7 @@ class ActionsForm extends React.Component {
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
-                                    <Button color="primary">Submit</Button>
+                                    <Button disabled={this.state.loading} color="primary">Submit  {this.state.loading && <Loader style={{marginLeft: 5}} inverted size="small" active inline />} </Button>
                                 </Col>
                             </Row>
                         </Form>  

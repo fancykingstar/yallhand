@@ -65,7 +65,8 @@ class ActionSlider extends React.Component {
       this.slider.slickGoTo(0);
    }
    render() {
-      const { generalActions } = this.state
+      const { generalActions, } = this.state
+      const {selectedActionData} = this.state;
       const settings_multi = {
          dots: false,
          infinite: false,
@@ -145,7 +146,7 @@ class ActionSlider extends React.Component {
                      </div>
                   </div>
                </Container>
-               
+               {selectedActionData.assoc && selectedActionData.assoc.length? 
                <Container elevation={4} className="action-form">
                   <ActionsContent
                      onProceed={this.proceed.bind(this)}
@@ -154,7 +155,7 @@ class ActionSlider extends React.Component {
                   />
                   
                </Container>
-
+               :""}
                <Container elevation={4} className="action-form">
                   <ActionsForm
                      onSubmit={this.handleActionFormSubmit.bind(this)}
