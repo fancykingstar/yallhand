@@ -5,6 +5,7 @@ import { TicketingStore } from "../../../Stores/TicketingStore";
 import Slider from "react-slick";
 import IconBox from "./IconBox";
 import ActionsForm from "./ActionsForm";
+import ActionsContent from "./ActionsContent";
 
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
@@ -45,8 +46,17 @@ class ActionSlider extends React.Component {
       this.setState({ selectedActionData: data });
    }
 
-   hideActionForm() {
+   proceed() {
+      this.slider.slickGoTo(2);
+   }
+
+   backToActions() {
       this.slider.slickGoTo(0);
+   }
+
+   hideActionForm() {
+      const {assoc} = this.state.selectedActionData;
+      this.slider.slickGoTo(assoc && assoc.length? 1: 0);
    }
 
    async handleActionFormSubmit(data) {
@@ -135,6 +145,16 @@ class ActionSlider extends React.Component {
                      </div>
                   </div>
                </Container>
+               
+               <Container elevation={4} className="action-form">
+                  <ActionsContent
+                     onProceed={this.proceed.bind(this)}
+                     onCancel={this.backToActions.bind(this)}
+                     actionDetail={this.state.selectedActionData}
+                  />
+                  
+               </Container>
+
                <Container elevation={4} className="action-form">
                   <ActionsForm
                      onSubmit={this.handleActionFormSubmit.bind(this)}

@@ -174,7 +174,14 @@ class EmailPrimary extends React.Component {
             </div></div>
           </div>
           <div style={UIStore.menuItem.sendEmailBody === "message"? {display: "none"}:{display:"contents"} }>
-           <div style={{paddingTop: 25}}> <ContentSearch output={res => updateSelectedContent(res)}/> </div>
+           <div style={{paddingTop: 25}}>
+                <Form>
+                  <Form.Field className="FixSemanticLabel">
+                    <label>Search and add content</label>
+                  <ContentSearch output={res => updateSelectedContent(res)}/>
+                  </Form.Field>
+                </Form>
+           </div>
           <div style={{ maxWidth: 500, paddingTop: 5 }}>
 
           {bundlePopulated ? (

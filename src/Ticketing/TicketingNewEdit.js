@@ -6,6 +6,8 @@ import { Collapse } from '@material-ui/core';
 import { TicketingItem } from "./TicketingItem";
 import { Col, Row } from "reactstrap";
 import { ChooseTargeting } from "../SharedUI/ChooseTargeting";
+import { ContentSearch} from "../SharedUI/ContentSearch";
+import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
@@ -13,6 +15,7 @@ import { ticket, surveyEdit, schedule } from "../DataExchange/PayloadBuilder";
 import { createTicket, modifySurvey, createSchedule, deleteSchedule } from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
 import { validate } from "../SharedCalculations/ValidationTemplate";
+import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 
 import { iconKey, iconOptions } from "./IconSelect";
 
@@ -29,6 +32,7 @@ class TicketingNewEdit extends React.Component {
       chanID: "All",
       teamID: "",
       tags: [],
+      assoc: [],
       type: "simple",
       access: "default",
       active: false,
@@ -181,6 +185,23 @@ class TicketingNewEdit extends React.Component {
     // }
   };
 
+  removeSuggestedContent = val => {
+    const {assoc} = this.state;
+    const updatedBundle= assoc.filter(
+      item => Object.values(item)[0] !== Object.values(val)[0]
+    );
+    this.setState({assoc: updatedBundle});
+  };
+  
+  moveSuggestedContent = (val, direction) => {
+    const {assoc} = this.state;
+    const updatedBundle = arrayValUpOrDown( assoc, val, direciton );
+    this.setState({assoc: updatedBundle});
+  };
+
+
+
+
   componentDidMount(active = null) {
     const { TaskStore, TicketingStore } = this.props;
     const id = this.props.match.params.id;
@@ -229,7 +250,7 @@ class TicketingNewEdit extends React.Component {
       </div>
     );
 
-    const { type, active, chanID, label, admins, icon, collaborators, access } = this.state;
+    const { type, active, chanID, label, admins, icon, collaborators, access, assoc } = this.state;
     return (
       <div>
         <BackButton />
@@ -413,6 +434,20 @@ class TicketingNewEdit extends React.Component {
                       disabled
                       // selection options={iconOptions}
                     ></Form.Dropdown>
+                      </Form.Group>
+                      <Form.Group>
+                      <Form.Field className="FixSemanticLabel">
+                        <label>Suggest content to requester</label>
+                        <ContentSearch output={res => {if(!assoc.filter(i=>i.value === res.value).length) this.updateState({assoc: [...assoc, {type: res.type, value: res.value}]})}}/>
+                        {Boolean(assoc.length) &&
+                        <BundleContent
+                        input={assoc}
+                        remove={val => this.removeSuggestedContent(val)}
+                        moveUp={val => this.moveSuggestedContent(val, "up")}
+                        moveDown={val => this.moveSuggestedContent(val, "up")}
+                      />
+                        }
+                      </Form.Field>
                       </Form.Group>
                     </Form>
                   

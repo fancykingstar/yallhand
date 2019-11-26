@@ -534,6 +534,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       payload.ticketItems.splice(0, 1, {type: "text", label: "Description (optional)", options: [], isOpen: true})
     };
 
+    if (payload.assoc.length) payload.assoc = data.assoc.map(i=> ({type: i.type, contentID: i.value}))
+
     payload.teamID = payload.sendToTeamID?  payload.sendToTeamID : "global";
     delete payload.sendToTeamID;
     payload.tags = payload.sendToTagID && payload.sendToTagID !== "none"? [payload.sendToTagID] : [];
