@@ -36,12 +36,22 @@ export default function InboxList(props) {
     // this.setState({filter: val, source: newSource, selected: null})
   }
 
+  const filterBySearch = () => {
+    const {title, source} = props.searchBy;
+    if (source === "title") return TicketingStore.allTickets.filter(ticket => !ticket.isTemplate).filter(ticket => ticket._content? ticket._content.label === title : ticket._parent.label === title);
+    else if (source === "assignee") return TicketingStore.allTickets.filter(ticket => !ticket.isTemplate).filter(ticket => ticket._currentAssignee === props.searchBy.id )
+    else if (source === "stage") return TicketingStore.allTickets.filter(ticket => !ticket.isTemplate).filter(ticket => title === "closed"? ticket._stage.toLowerCase().includes('close') : ticket._stage.toLowerCase().includes(title.toLowerCase()));
+    else return []
+  }
+
   const source = () => {
-    if (props.filter === "closed") return TicketingStore.allTickets.filter(ticket => ticket._stage && ticket._stage.includes("close"));
-    else if (props.filter === "active") return TicketingStore.allTickets.filter(ticket => ticket._stage && !ticket._stage.includes("close"));
-    else if (props.filter === "pending") return TicketingStore.allTickets.filter(ticket => ticket._stage && ticket._stage === "open-pending");
-    else if (props.filter === "all") return TicketingStore.allTickets;
-    return TicketingStore.allTickets.filter(ticket => moment.duration(moment(new Date()).diff(moment(ticket._updated))).asDays() < 15 );
+    const base = props.searchBy? filterBySearch() : TicketingStore.allTickets;
+
+    if (props.filter === "closed") return base.filter(ticket => ticket._stage && ticket._stage.includes("close"));
+    else if (props.filter === "active") return base.filter(ticket => ticket._stage && !ticket._stage.includes("close"));
+    else if (props.filter === "pending") return base.filter(ticket => ticket._stage && ticket._stage === "open-pending");
+    else if (props.filter === "all") return base;
+    return base.filter(ticket => moment.duration(moment(new Date()).diff(moment(ticket._updated))).asDays() < 15 );
   }
 
   const sortdata = (data) => {

@@ -39,10 +39,19 @@ import {debounce} from "lodash";
 class Inbox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: null, filter: "all", sort: "new", searching: false, search_results: {}, search_val: ""} ;
+    this.state = { selected: null, filter: "all", sort: "new", searchBy: "", searching: false, search_results: {}, search_val: ""} ;
     this.filterRef = React.createRef();
     this.openFilter = this.openFilter.bind(this);
   }
+
+handleResultSelect(e, {result}){
+  const searchBy = Object.assign({}, result);
+  //if (result.source === "assignee")
+   //if (result.source === "stage")
+    //if (result.source === "title")
+    this.setState({searchBy})
+    //reset sesarch
+}
 
 openFilter(){
   this.filterRef.current.open();
@@ -59,14 +68,14 @@ openFilter(){
 
  async handleSearchChange(e, { value }) {
     const {TicketingStore} = this.props;
-    this.setState({search_val: value.toLowerCase(), searching: true});
+    this.setState({search_value: value, searching: true, searchBy: ""});
     const titles = await TicketingStore._allTitles.filter(i => i.toLowerCase().includes(value.toLowerCase()));
-    const assignees = TicketingStore._currentAssignees.filter(i => i.toLowerCase().includes(value.toLowerCase()));
+    const assignees = TicketingStore._currentAssignees.filter(i => i.name.toLowerCase().includes(value.toLowerCase()));
     const stages = TicketingStore._allStages.filter(i => i.toLowerCase().includes(value.toLowerCase()));
     let search_results = {};
-    if (titles.length) search_results.title =  {name: "title", results: titles.map(i => ({title: i, className: "SearchResultCompact"}))};
-    if (assignees.length) search_results.assignee = {name: "assignee", results: assignees.map(i => ({title: i, className: "SearchResultCompact"}))};
-    if (stages.length) search_results.stage = {name: "stage", results: stages.map(i => ({title: i, className: "SearchResultCompact"}))};
+    if (titles.length) search_results.title =  {name: "Title", results: titles.map(i => ({title: i, source: "title", className: "SearchResultCompact"}))};
+    if (assignees.length) search_results.assignee = {name: "Assignee", results: assignees.map(i => ({title: i.name, source: "assignee", id: i.id, className: "SearchResultCompact"}))};
+    if (stages.length) search_results.stage = {name: "Stage", results: stages.map(i => ({title: i, source: "stage", className: "SearchResultCompact"}))};
     this.setState({searching: false
       , search_results
     })
@@ -171,7 +180,7 @@ openFilter(){
                         <Dropdown.Item  active={filter === "active"} onClick={(e, {value}) => this.updateState({filter: value})} value={"active"}>active </Dropdown.Item>
                         <Dropdown.Item  active={filter === "closed"} onClick={(e, {value}) => this.updateState({filter: value})} value={"closed"}>closed </Dropdown.Item>
                         <Dropdown.Item  active={filter === "pending"} onClick={(e, {value}) => this.updateState({filter: value})} value={"pending"}>pending approval </Dropdown.Item>
-                        <Dropdown.Item  active={filter === "all"} onClick={(e, {value}) => this.updateState({filter: value})} value={"all"} active={true}>all</Dropdown.Item>
+                        <Dropdown.Item  active={filter === "all"} onClick={(e, {value}) => this.updateState({filter: value})} value={"all"}>all</Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Header icon='sort' content='Sort' />
                         <Dropdown.Divider />
@@ -191,9 +200,10 @@ openFilter(){
                
                     <Search placeholder="Title, Assignee, Stage..." size="mini" fluid className="InboxSearchBox"
                     category
+                    // icon={search_value? <Icon name="remove" onClick={()=>alert("clicked")}/>:"search"}
                     loading={searching}
-                    // onResultSelect={this.handleResultSelect}
-                    onSearchChange={debounce(this.handleSearchChange.bind(this), 500, {
+                    onResultSelect={this.handleResultSelect.bind(this)}
+                    onSearchChange={debounce(this.handleSearchChange.bind(this), 800, {
                       leading: true,
                     })}
                     results={search_results}
@@ -201,7 +211,7 @@ openFilter(){
                     // {...this.props}
     
                     />
-    
+            
       
                   </Col>
             </Row>
@@ -223,7 +233,7 @@ openFilter(){
                   overflowX: "hidden",
                 }}
               >
-                <InboxList sort={this.state.sort} filter={this.state.filter} selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={TicketingStore.allTickets} />
+                <InboxList sort={this.state.sort} filter={this.state.filter} searchBy={this.state.searchBy} selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={TicketingStore.allTickets} />
               </Paper>}
             </Col>
             <Col>

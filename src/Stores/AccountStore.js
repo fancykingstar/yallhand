@@ -132,6 +132,7 @@ class Store {
       return this._getUser(ID).displayName
   }
 
+
   @computed
   get _allActiveUsers() {
     return this.allUsers.filter(user => user.isActive || user.now === "false")

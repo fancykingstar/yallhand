@@ -62,7 +62,7 @@ class Store {
 
   @computed
   get _currentAssignees(){
-    return ["Unassigned", ...this.allTickets.filter(ticket => ticket._currentAssignee).map(ticket => AccountStore._getUser(ticket._currentAssignee).displayName)];
+    return [{name: "Unassigned", id: ""}, ...this.allTickets.filter(ticket => ticket._currentAssignee).map(ticket => ({name: AccountStore._getDisplayName(ticket._currentAssignee), id: ticket._currentAssignee}))];
   };
 
   @computed
