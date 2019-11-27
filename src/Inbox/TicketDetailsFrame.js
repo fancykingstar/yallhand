@@ -5,6 +5,7 @@ import { Paper } from "@material-ui/core";
 
 import { Container, Col, Row } from "reactstrap";
 import { UserStore } from "../Stores/UserStore";
+import { ResourcesStore } from "../Stores/ResourcesStore";
 import { modifyPolicy, modifyAnnouncement, modifyTicket } from "../DataExchange/Up";
 import { contentEdit} from "../DataExchange/PayloadBuilder";
 import { TicketData } from "./TicketData";
@@ -14,6 +15,7 @@ import { TicketActions } from "./TicketActions";
 import { TicketDetailsMessage} from "./TicketDetailsMessage";
 import { TicketDetailsQandAMessage} from "./TicketDetailsQandAMessage";
 import { TicketContentSource } from "./TicketContentSource";
+import {S3Download} from "../DataExchange/S3Download";
 import { addView } from "../DataExchange/PayloadBuilder";
 
 
@@ -72,6 +74,13 @@ class TicketDetailsFrame extends React.Component {
     }
     else return null;
   }
+
+  downloadFile = (S3Key, label) => {
+    const ext = "." + S3Key.split(".")[1]
+    S3Download("gramercy", S3Key, label, ext)
+  }
+  
+  getFileValue = (id, key) => ResourcesStore._getFile(id)[key]
 
   setAddlFieldRes = obj => {
     const newVal = Object.assign(this.state.addlFieldsRes, obj);
@@ -144,6 +153,7 @@ class TicketDetailsFrame extends React.Component {
     const { _requester, _userImg, _userInitials, _parent, _content, activity, _stage } = this.props.data;
     const { activeItem, messageType, message } = this.state;
     const QandA = this.props.data.parent === "QandA";
+    const fileLabels = this.props.data._parent.ticketItems[0].data.filter(i => i.type === "file");
     const firstActivity = activity[activity.length - 1];
 
     const featuredData = QandA ? 
@@ -153,6 +163,10 @@ class TicketDetailsFrame extends React.Component {
       </> 
       :
       Object.keys(firstActivity.data).filter(datapoint => datapoint !== "id").map(datapoint => 
+        fileLabels.length && fileLabels[0].label === datapoint?   
+        
+        <Col> <span style={{fontWeight: 800}}>{datapoint}</span><br/>  {firstActivity.data[datapoint].map(file =>  <span style={{color: "#15596f",  cursor: "pointer"}} onClick={()=>this.downloadFile(this.getFileValue(file,"S3Key"), this.getFileValue(file,"label"))} style={{color: "#15596f",  cursor: "pointer"}}><Icon size="small" name="attach"/>{this.getFileValue(file,"label")}</span> )} </Col>
+        :
       <Col> <span style={{fontWeight: 800}}>{datapoint}</span><br/> <span>{firstActivity.data[datapoint]}</span> </Col>
         )
 

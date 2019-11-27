@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import { TicketingStore } from "../../../Stores/TicketingStore";
+import { AccountStore } from "../../../Stores/AccountStore";
 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
@@ -15,8 +16,11 @@ import {getIcon} from "../../../SharedUI/SVGIconStorage";
 import ImportantDevicesRoundedIcon from '@material-ui/icons/ImportantDevicesRounded';
 
 import {UserStore} from "../../../Stores/UserStore";
-import {createTicket} from "../../../DataExchange/Up";
-import {ticketOpen} from "../../../DataExchange/PayloadBuilder";
+import {createTicket, modifyTicket} from "../../../DataExchange/Up";
+import {ticketOpen, newFile} from "../../../DataExchange/PayloadBuilder";
+import {GenerateFileName} from "../../../SharedCalculations/GenerateFileName";
+import {S3Upload} from "../../../DataExchange/S3Upload";
+import { isBoolean } from 'lodash';
 
 // import AskManagement from '../../assets/images/actions/askManagement.svg';
 // import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
@@ -30,6 +34,7 @@ class ActionSlider extends React.Component {
       this.state = {
          ActionsData: [],
          selectedActionData: {},
+         loading: false,
       }
    }
    componentDidMount() {
@@ -59,9 +64,44 @@ class ActionSlider extends React.Component {
       this.slider.slickGoTo(assoc && assoc.length? 1: 0);
    }
 
-   async handleActionFormSubmit(data) {
+
+   uploadFiles = async (files, ticket) => {
+      this.setState({loading: true});
+      let resources = [];
+      for (let index = 0; index < files.length; index++) {
+         const file = files[index];
+         await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}))
+         .then((r) => {
+         resources.push(r);
+         })
+         }
+      let filesLabel = Object.keys(ticket.activity[0].data).filter(i=>isBoolean(ticket.activity[0].data[i]))[0];
+      let filesObj = {};
+      filesObj[filesLabel] = resources.map(file=>file.resourceID);
+      let activityData = Object.assign(ticket.activity[0].data, filesObj);
+      const activity = Object.assign(ticket.activity[0], {data: activityData} );
+      const newTicket = Object.assign(ticket, {activity: [activity]});
+      await modifyTicket(newTicket);
+
+      this.setState({loading: false});
+    }
+   
+  
+
+   async handleActionFormSubmit(toSubmit) {
+      let data = Object.assign({}, toSubmit);
+      let files = [];
+      if (toSubmit.files.length) {
+         files = toSubmit.files;
+      }
+      delete data.files;
+
+
       const payload = {parent: this.state.selectedActionData.ticketID, activity: [{data, views:[], stage: "open-pending", updated: Date.now(), userID: UserStore.user.userID}]};
-      await createTicket(ticketOpen(payload)).then(res => res.json());
+      const res = await createTicket(ticketOpen(payload)).then(res => res.json());
+      if (files.length) this.uploadFiles(files, res)
+
+
       this.slider.slickGoTo(0);
    }
    render() {
@@ -161,6 +201,7 @@ class ActionSlider extends React.Component {
                      onSubmit={this.handleActionFormSubmit.bind(this)}
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
+                     loading={this.state.loading}
                   />
                   
                </Container>

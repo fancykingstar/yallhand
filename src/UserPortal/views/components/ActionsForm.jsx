@@ -12,6 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {validate} from "../../../SharedCalculations/ValidationTemplate";
 import {giveMeKey} from "../../../SharedCalculations/GiveMeKey";
+import {isBoolean} from 'lodash';
 
 const initialState = {id: "",  files: []};
 
@@ -30,22 +31,25 @@ class ActionsForm extends React.Component {
         this.setState({files: []})
       }
 
-     handleSubmit = async (type) => {
-        this.setState({loading: true});
+    //  uploadFiles = async (type) => {
+    //     this.setState({loading: true});
    
-        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
-        .then((r) => {
-        this.props.close();
-        console.log("fileattached to S3 as ", r)
-        this.props.output(r);
-        })
+    //     await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
+    //     .then((r) => {
+    //     this.props.close();
+    //     console.log("fileattached to S3 as ", r)
+    //     this.props.output(r);
+    //     })
     
-        this.setState({loading: false});
-      };
+    //     this.setState({loading: false});
+    //   };
   
     handleFileChange = async (e) => {
         e.preventDefault();
         let file = e.target.files[0];
+        let newValue = {};
+        newValue[e.target.name] = true; //File upload labels are uniquely boolean && true, value is replaced later with array of resourceID upon submission
+        await this.setState(newValue);
         await this.setState({files: [...this.state.files, file]});
       };
 
@@ -81,6 +85,7 @@ class ActionsForm extends React.Component {
         else if (formItem.type === "file") return (
             <div>
             <input
+            name={formItem.label}
             hidden
             onChange={this.handleFileChange.bind(this)}
             id="raised-button-file"
@@ -145,7 +150,8 @@ class ActionsForm extends React.Component {
         e.preventDefault();
         if(Object.keys(this.state).length > 1) {
         let conditions = {};
-        await Object.keys(this.state).forEach(key => {if(key !== "id") conditions[key] = this.state[key].length > 0})
+        await Object.keys(this.state).forEach(key => {if(key !== "id") conditions[key] = isBoolean(this.state[key])? this.state[key] : this.state[key].length > 0})
+        console.log("conditions", conditions)
         const valid = await validate(conditions, true)
         if (valid.valid) this.props.onSubmit(this.state);
         }
@@ -156,6 +162,7 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title">
+                    {JSON.stringify(this.state)}
                     <h4>
                         <IconButton
                         color="inherit"
@@ -196,7 +203,7 @@ class ActionsForm extends React.Component {
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
-                                    <Button disabled={this.state.loading} color="primary">Submit  {this.state.loading && <Loader style={{marginLeft: 5}} inverted size="small" active inline />} </Button>
+                                    <Button disabled={this.props.loading} color="primary">Submit  {this.props.loading && <Loader style={{marginLeft: 5}} inverted size="small" active inline />} </Button>
                                 </Col>
                             </Row>
                         </Form>  
