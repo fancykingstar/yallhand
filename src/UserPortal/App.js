@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 import { Switch } from 'react-router-dom';
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route } from 'react-router';
-import { loadAdmin } from "../DataExchange/LoadProfile";
+import { loadProfile } from "../DataExchange/LoadProfile";
 
 import Home from './views/pages/Home';
 import Actions from './views/pages/Actions';
@@ -28,7 +28,7 @@ export class UserPortal extends React.Component {
   componentDidMount() {
     const { UserStore } = this.props;
     if (UserStore.previewTeam !== "") {
-      loadAdmin().then(()=>this.setState({loaded:true})) 
+      loadProfile().then(()=>this.setState({loaded:true})) 
     }
     else {this.setState({loaded:true})}
   }

@@ -32,6 +32,7 @@ class TicketDetailsFrame extends React.Component {
       messageType: "",
       message: "",
       ticketID: "",
+      collaborators: [],
       // addView: false,
       // showMemo: false,
       // stage: "",
@@ -150,10 +151,10 @@ class TicketDetailsFrame extends React.Component {
   };
 
   render() {
-    const { _requester, _userImg, _userInitials, _parent, _content, activity, _stage } = this.props.data;
+    const { _requester, _userImg, _userInitials, _parent, _content, activity, _stage, } = this.props.data;
     const { activeItem, messageType, message } = this.state;
     const QandA = this.props.data.parent === "QandA";
-    const fileLabels = this.props.data._parent.ticketItems[0].data.filter(i => i.type === "file");
+    const fileLabels = _parent.ticketItems && _parent.ticketItems[0].data.filter(i => i.type === "file");
     const firstActivity = activity[activity.length - 1];
 
     const featuredData = QandA ? 

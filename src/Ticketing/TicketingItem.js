@@ -76,7 +76,7 @@ export class TicketingItem extends React.Component {
 
   const displayData = () => data.map((dataItem, i) => 
     <Form.Group key={"ticketdata" + i} >
-    <Form.Dropdown className="FixSemanticLabel" value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multiselect"},{text: "File Upload", value: "file"}]}/>
+    <Form.Dropdown className="FixSemanticLabel" value={dataItem.type} onChange={(e,val) => updateDataItem({type: val.value},i)} selection label="Type" options={[{text: "Text", value: "text"}, {text:"Select", value: "select"},{text: "MultiSelect", value: "multiselect"},{text: "File Upload", disabled: this.props.fileUploadInUse, value: "file"}]}/>
     <Form.Input 
     className="FixSemanticLabel"
     value={dataItem.label} 
@@ -134,7 +134,7 @@ export class TicketingItem extends React.Component {
 
     return (
       <Segment secondary={this.props.isClose} >
-    
+        {JSON.stringify(this.props.fileUploadInUse)}
       <Row >
         {/* <Col style={{maxWidth: 60}} sm={1}><Avatar>{this.props.index + 1}</Avatar> </Col> */}
         <Col>

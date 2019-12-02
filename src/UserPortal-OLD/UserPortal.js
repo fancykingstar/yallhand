@@ -12,7 +12,7 @@ import { ContentDetail } from "./ContentDetail";
 import { UserSettings } from "../Settings/UserSettings"
 import { CardFrame } from "./CardFrame";
 import { Responsive, Transition } from "semantic-ui-react";
-import { loadAdmin } from "../DataExchange/LoadProfile";
+import { loadProfile } from "../DataExchange/LoadProfile";
 import {apiCall_pixel} from "../DataExchange/Fetch"
 import { AskAQuestion } from "./AskAQuestion"
 
@@ -26,7 +26,7 @@ class UserPortal extends React.Component {
   componentDidMount() {
     const { UserStore } = this.props;
     if (UserStore.previewTeam !== "") {
-      loadAdmin().then(()=>this.setState({loaded:true})) 
+      loadProfile().then(()=>this.setState({loaded:true})) 
     }
     else {this.setState({loaded:true})}
   }

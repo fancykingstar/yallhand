@@ -1,4 +1,5 @@
 import { observable, action, computed } from "mobx";
+import {AccountStore} from "../Stores/AccountStore";
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
 import { TeamControl } from "../QuadranceControls";
 
@@ -56,7 +57,8 @@ class Store {
     return sortedStructure;
   }
 
-  loadStructure(allTeams, allUsers) {
+  async loadStructure(allTeams) {
+    const allUsers = await AccountStore._allActiveUsers;
     return new Promise((resolve, reject) => {
       allTeams.forEach(team => {
         team["count"] = allUsers.filter(user => user.teamID === team.teamID).length
