@@ -27,7 +27,6 @@ class Hierarchy extends React.Component {
          if (typeof user.boss == 'undefined' || user.boss == "") user = {...user, boss: "self"};
          return user;
       });
-      console.log("====================", users);
 
       this.setState({
          StaffDetailsData: users,
@@ -65,7 +64,6 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log("*****************************", this.state.boss);
       }
    }
    update_boss_slide(newIndex, newBoss) {
@@ -73,7 +71,6 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log("-----------------------------------------", this.state.boss);
          this.slider.slickNext();
       }
    }
