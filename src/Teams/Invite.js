@@ -152,7 +152,7 @@ export class Invite extends React.Component  {
         <Segment>
           {this.displayUserInvites()}
    
-          <div style={{ paddingBottom: "10px" }}>
+          <div style={{ paddingBottom: "10px", visibility: this.state.userInvites[0].isAdmin? "hidden":"visible" }}>
           <Button primary circular icon="plus" onClick={() => this.handleClick()} />
         </div>
      

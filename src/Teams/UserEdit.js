@@ -6,6 +6,7 @@ import { AdminEdit } from "./AdminEdit";
 import { modifyUser,cancelInvite} from "../DataExchange/Up";
 import { Offboard } from "./Offboard";
 import {AccountStore} from "../Stores/AccountStore";
+import { ChannelStore } from "../Stores/ChannelStore";
 import Collapse from '@material-ui/core/Collapse';
 
 
@@ -22,15 +23,22 @@ export class UserEdit extends React.Component {
     this.props.close()
   }
 
-  updateState(obj) {
-    console.log(obj)
-    this.setState(obj)
+  updateState(content) {
+    const {adminLimits} = this.props.data;
+    let adminLimit = false;
+    if (content.features || content.channels) {
+      adminLimit = adminLimits? Object.assign({}, adminLimits) : {features: [], channels: []};
+      adminLimit = Object.assign(adminLimit, content);
+    }
+
+    this.setState(adminLimit? {adminLimits: adminLimit} : content);
+    
   };
 
   features = ["Teams", "FAQs", "Announcements", "Surveys", "Tasks", "Service Desk", "Email Campaigns"].map(feature => ({text: feature, value: feature}))
 
   render() {
-    const {img, displayName, displayName_Full, isAdmin, email, teamID, tags, userID, boss} = this.props.data;
+    const {img, displayName, displayName_Full, isAdmin, email, teamID, tags, userID, boss, adminLimits} = this.props.data;
 
 
     const handleUpdate = async () => {
@@ -58,7 +66,6 @@ export class UserEdit extends React.Component {
 
     return (
       <Modal open={this.props.open} onClose={()=>this.closeModal()} size="small">
-        {JSON.stringify(this.state)}
         <Header as="h2">
           {displayAvatar}
           <Header.Content>
@@ -132,9 +139,8 @@ export class UserEdit extends React.Component {
               </Form.Group>
               <Collapse in={this.state.isAdmin === undefined? isAdmin : this.state.isAdmin}>
                   <Form>
-                    <Form.Dropdown className="FixSemanticLabel" options={this.features} selection multiple label="Only allow access to view/edit features" />
-                    <Form.Dropdown className="FixSemanticLabel" selection label="Only allow access to only view/edit channels" />
-                    <Form.Dropdown className="FixSemanticLabel" selection label="Only allow access to only team/tag" />
+                    <Form.Dropdown defaultValue={adminLimits? adminLimits.features: []} className="FixSemanticLabel" onChange={(e, {value}) => this.updateState({features: value})}  options={this.features} selection multiple label="Limit admin to Yallhands select features (optional)" />
+                    <Form.Dropdown defaultValue={adminLimits? adminLimits.channels: []} className="FixSemanticLabel" onChange={(e, {value}) => this.updateState({channels: value})}  options={ChannelStore._channelSelectNoAll} multiple selection label="Limit admin to specific channels (optional)" />
                   </Form>
               </Collapse>
             </Form.Field>

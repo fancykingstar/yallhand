@@ -27,18 +27,17 @@ import BallotRoundedIcon from '@material-ui/icons/BallotRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 import TocRoundedIcon from '@material-ui/icons/TocRounded';
+import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
 import Badge from '@material-ui/core/Badge';
-
-
 import search_icon from "../assets/images/search_icon.svg";
 
 import logo_img from "../assets/images/logo.png";
 import { QLogo } from "../../Assets/Graphics/QLogo";
-// import menu_footer_logo_img from "../assets/images/yallhands-small-grey.png";
+
 
 import { AccountStore } from "../../Stores/AccountStore";
 import { UserStore } from "../../Stores/UserStore";
-
+import { TicketingStore } from "../../Stores/TicketingStore";
 
 // import 'bootstrap/dist/css/bootstrap.css';
 import "../assets/css/UserPortal.scss";
@@ -172,6 +171,9 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
         }
     };
     const account = AccountStore.account;
+    const displayInbox = Boolean(
+        // !UserStore.user.isAdmin && 
+        UserStore.user.isCollaborator && UserStore.user.isCollaborator.tickets && UserStore.user.isCollaborator.tickets.length);
 
     return (
         <div className={clsx(classes.root, "topBorderBefore", (((width <= mobileWidth) ? !mopen : !open) ? "menuClosed" : 'menuOpen'), (scrollY > 50) ? 'menuSticky' : '')}>
@@ -226,14 +228,24 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
-                        {/* <ListItem button key="actions" component={Link} to="/portal/actions">
-                            <ListItemIcon><TouchAppIcon /></ListItemIcon>
-                            <ListItemText primary="Actions" />
-                        </ListItem> */}
-                        {/* <ListItem button key="events">
-                            <ListItemIcon><EventIcon /></ListItemIcon>
-                            <ListItemText primary="Events" />
-                        </ListItem> */}
+
+                        {displayInbox &&
+                        <ListItem 
+                  
+                        button 
+                        component={Link} to='/portal/inbox'
+                        >
+                        <ListItemIcon >
+                        <Badge color="secondary" 
+                        badgeContent={TicketingStore.allTickets.filter(ticket => ticket._unread).length} 
+                        >
+                        <InboxRoundedIcon/>
+                    </Badge>
+                        
+                        </ListItemIcon>
+                        <ListItemText primary="Inbox" />
+                    </ListItem>
+                        }
                         <ListItem button key="announcements" component={Link} to='/portal/announcements' >
                             <ListItemIcon><img src={Announcements} alt="" /></ListItemIcon>
                             <ListItemText primary="Announcements" />

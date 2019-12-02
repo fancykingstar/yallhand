@@ -15,6 +15,7 @@ import TaskList from "./views/pages/TaskList";
 import PortalSearchResults from "./views/pages/PortalSearchResults";
 import Settings from "./views/pages/Settings";
 import Storage from "./views/pages/Storage";
+import PortalInbox from "./views/pages/Inbox";
 
 import history from './helpers/history';
 
@@ -54,6 +55,7 @@ export class UserPortal extends React.Component {
                         {/* <Router history={history}> */}
                             <Route path="/portal" exact component={Home} />
                             <Route path="/portal/actions" exact component={Actions} />
+                            <Route path="/portal/inbox" exact component={PortalInbox} />
                             <Route path="/portal/announcements" exact component={ContentList} />
                             <Route path="/portal/learn" component={ContentList} exact/>
                             <Route path="/portal/surveys" component={SurveyList} exact/>

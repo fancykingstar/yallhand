@@ -152,10 +152,11 @@ openFilter(){
     const {filter,sort, searching, search_results, search_value} = this.state;
     return (
       <React.Fragment>
-        
+        {!this.props.hideHeading &&
         <Header as="h2" style={{ padding: 0, margin: "10px 0 10px" }}>
           Inbox
         </Header>
+        }
         <Row>
           <Col>
 
