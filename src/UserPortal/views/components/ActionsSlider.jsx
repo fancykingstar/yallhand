@@ -22,6 +22,8 @@ import {GenerateFileName} from "../../../SharedCalculations/GenerateFileName";
 import {S3Upload} from "../../../DataExchange/S3Upload";
 import { isBoolean } from 'lodash';
 
+import CircleIcons from './CircleIcons';
+
 // import AskManagement from '../../assets/images/actions/askManagement.svg';
 // import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
 // import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
@@ -182,7 +184,8 @@ class ActionSlider extends React.Component {
                                 />
                            )}
 
-                 </Slider>
+                        </Slider>
+                        <CircleIcons name="star" color="#1249bd" bgColor="#e7eefc" size="40" onClick={() => alert("test")} />
                      </div>
                   </div>
                </Container>

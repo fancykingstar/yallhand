@@ -61,8 +61,8 @@ export class UserPortal extends React.Component {
                             <Route path="/portal/search" component={PortalSearchResults} exact />
                             <Route path="/portal/settings" component={Settings} exact />
                             <Route path="/portal/storage" component={Storage} exact />
-                            {/* <Route path="/directory" exact component={Directory} />
-                            <Route path="/content-detail/" exact component={ContentDetail} /> */}
+                            <Route path="/portal/directory" exact component={Directory} />
+                            {/*<Route path="/content-detail/" exact component={ContentDetail} />*/}
 
                             <Route path="/portal/announcement/:id" render={props => <ContentDetail {...props} mode="announcement" />} exact />
                             <Route path="/portal/learn-detail/:id" render={props => <ContentDetail {...props} mode="policy" />} exact />
