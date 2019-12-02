@@ -75,6 +75,14 @@ class Hierarchy extends React.Component {
       }
    }
 
+   socials = (user) => {
+      let socials = {}
+      if(user.profile.Twitter !== "" && user.profile.Twitter !== undefined) { socials = { ...socials, "github": `https://twitter.com/${user.profile.Twitter}` } }
+      if(user.profile.Medium !== "" && user.profile.Medium !== undefined) { socials = { ...socials, "medium": `https://medium.com/@${user.profile.Medium}` } }
+      if(user.profile.Github !== "" && user.profile.Github !== undefined) { socials = { ...socials, "twitter": `https://github.com/${user.profile.Twitter}` } }
+      if(user.profile.LinkedIn !== "" && user.profile.LinkedIn !== undefined) { socials = { ...socials, "linkedin": `https://linkedin.com/${user.profile.LinkedIn}` } }
+      return socials
+   }
 
    render() {
       const { boss, width } = this.state;
@@ -104,11 +112,12 @@ class Hierarchy extends React.Component {
 
                               profile={e.img}
                               name={e.displayName_full}
-                              designation={e.title}
-                              department={e.dept}
-                              location={e.location}
+                              designation={e.profile.Title}
+                              department={e.profile.Department}
+                              location={e.profile.Location}
                               contact={e.phone}
-                              socials={e.socials} />)}
+                              email={e.email}
+                              socials={this.socials(e)} />)}
                      </Grid>)}
                </Slider>
             </Grid>
@@ -129,11 +138,12 @@ class Hierarchy extends React.Component {
 
                            profile={e.img}
                            name={e.displayName_full}
-                           designation={e.title}
-                           department={e.dept}
-                           location={e.location}
+                           designation={e.profile.Title}
+                           department={e.profile.Department}
+                           location={e.profile.Location}
                            contact={e.phone}
-                           socials={e.socials} />)}
+                           email={e.email}
+                           socials={this.socials(e)} />)}
                   </Grid>)}
             </Grid>
          );
