@@ -28,6 +28,8 @@ class Hierarchy extends React.Component {
          return user;
       });
 
+      console.log("========================================", users);
+
       this.setState({
          StaffDetailsData: users,
       });
@@ -104,9 +106,9 @@ class Hierarchy extends React.Component {
                         {this.get_employee(iboss).map((e, j) =>
                            <StaffDetail
                               update_boss={this.update_boss_slide}
-                              active={(boss[i + 1] === e.displayName_full)}
-                              boss={{ index: (i + 1), boss: e.displayName_full }}
-                              has_child={this.check_employee_has_child(e.displayName_full)}
+                              active={(boss[i + 1] === e.userID)}
+                              boss={{ index: (i + 1), boss: e.userID }}
+                              has_child={this.check_employee_has_child(e.userID)}
                               key={j}
                               view="hierarchy"
 
@@ -130,9 +132,9 @@ class Hierarchy extends React.Component {
                      {this.get_employee(iboss).map((e, j) =>
                         <StaffDetail
                            update_boss={this.update_boss}
-                           active={(boss[i + 1] === e.displayName_full)}
-                           boss={{ index: (i + 1), boss: e.displayName_full }}
-                           has_child={this.check_employee_has_child(e.displayName_full)}
+                           active={(boss[i + 1] === e.userID)}
+                           boss={{ index: (i + 1), boss: e.userID }}
+                           has_child={this.check_employee_has_child(e.userID)}
                            key={j}
                            view="hierarchy"
 
