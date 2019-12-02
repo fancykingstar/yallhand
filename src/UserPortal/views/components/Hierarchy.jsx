@@ -1,10 +1,13 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import {inject, observer} from "mobx-react"
 import StaffDetail from './StaffDetail';
 import DirectoryData from '../../data/directory.json';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
+@inject("AccountStore")
+@observer
 class Hierarchy extends React.Component {
    constructor(props) {
       super(props);
@@ -18,8 +21,16 @@ class Hierarchy extends React.Component {
    }
 
    componentDidMount() {
+      const { AccountStore } = this.props;
+      const allUsers = AccountStore._allActiveUsers || [];
+      let users = allUsers.map(user => {
+         if (typeof user.boss == 'undefined' || user.boss == "") user = {...user, boss: "self"};
+         return user;
+      });
+      console.log("====================", users);
+
       this.setState({
-         StaffDetailsData: DirectoryData,
+         StaffDetailsData: users,
       });
       this.setState({ width: window.innerWidth, height: window.innerHeight });
       window.addEventListener("resize", this.updateWindowDimensions);
@@ -54,7 +65,7 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log(this.state.boss);
+         console.log("*****************************", this.state.boss);
       }
    }
    update_boss_slide(newIndex, newBoss) {
@@ -62,7 +73,7 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log(this.state.boss);
+         console.log("-----------------------------------------", this.state.boss);
          this.slider.slickNext();
       }
    }

@@ -47,13 +47,12 @@ class Directory extends React.Component {
       const { AccountStore } = this.props;
 
       const allUsers = AccountStore._allActiveUsers || [];
-      console.log("=========================================", allUsers);
       let users = allUsers.map((user, i) => {
          return (
             <Col className="all-staff-box" lg={4} md={6} sm={6} key={i}>
                <StaffDetail
                   profile={user.img}
-                  name={user.displayName}
+                  name={user.displayName_full}
                   designation={user.profile.Title}
                   department={user.profile.Department}
                   location={user.profile.Location}
