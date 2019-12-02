@@ -66,7 +66,7 @@ class StaffDetail extends React.Component {
                                 <ListItemIcon>
                                     <img src={department_icon} alt="" />
                                 </ListItemIcon>
-                                <ListItemText secondary={"email"} />
+                                <ListItemText secondary={this.props.email} />
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>

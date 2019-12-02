@@ -1,10 +1,13 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import {inject, observer} from "mobx-react"
 import StaffDetail from './StaffDetail';
 import DirectoryData from '../../data/directory.json';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
+@inject("AccountStore")
+@observer
 class Hierarchy extends React.Component {
    constructor(props) {
       super(props);
@@ -18,8 +21,15 @@ class Hierarchy extends React.Component {
    }
 
    componentDidMount() {
+      const { AccountStore } = this.props;
+      const allUsers = AccountStore._allActiveUsers || [];
+      let users = allUsers.map(user => {
+         if (typeof user.boss == 'undefined' || user.boss == "") user = {...user, boss: "self"};
+         return user;
+      });
+
       this.setState({
-         StaffDetailsData: DirectoryData,
+         StaffDetailsData: users,
       });
       this.setState({ width: window.innerWidth, height: window.innerHeight });
       window.addEventListener("resize", this.updateWindowDimensions);
@@ -54,7 +64,6 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log(this.state.boss);
       }
    }
    update_boss_slide(newIndex, newBoss) {
@@ -62,11 +71,18 @@ class Hierarchy extends React.Component {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
          this.setState({ boss });
-         console.log(this.state.boss);
          this.slider.slickNext();
       }
    }
 
+   socials = (user) => {
+      let socials = {}
+      if(user.profile.Twitter !== "" && user.profile.Twitter !== undefined) { socials = { ...socials, "github": `https://twitter.com/${user.profile.Twitter}` } }
+      if(user.profile.Medium !== "" && user.profile.Medium !== undefined) { socials = { ...socials, "medium": `https://medium.com/@${user.profile.Medium}` } }
+      if(user.profile.Github !== "" && user.profile.Github !== undefined) { socials = { ...socials, "twitter": `https://github.com/${user.profile.Twitter}` } }
+      if(user.profile.LinkedIn !== "" && user.profile.LinkedIn !== undefined) { socials = { ...socials, "linkedin": `https://linkedin.com/${user.profile.LinkedIn}` } }
+      return socials
+   }
 
    render() {
       const { boss, width } = this.state;
@@ -96,11 +112,12 @@ class Hierarchy extends React.Component {
 
                               profile={e.img}
                               name={e.displayName_full}
-                              designation={e.title}
-                              department={e.dept}
-                              location={e.location}
+                              designation={e.profile.Title}
+                              department={e.profile.Department}
+                              location={e.profile.Location}
                               contact={e.phone}
-                              socials={e.socials} />)}
+                              email={e.email}
+                              socials={this.socials(e)} />)}
                      </Grid>)}
                </Slider>
             </Grid>
@@ -121,11 +138,12 @@ class Hierarchy extends React.Component {
 
                            profile={e.img}
                            name={e.displayName_full}
-                           designation={e.title}
-                           department={e.dept}
-                           location={e.location}
+                           designation={e.profile.Title}
+                           department={e.profile.Department}
+                           location={e.profile.Location}
                            contact={e.phone}
-                           socials={e.socials} />)}
+                           email={e.email}
+                           socials={this.socials(e)} />)}
                   </Grid>)}
             </Grid>
          );

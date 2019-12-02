@@ -264,10 +264,10 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                             <ListItemIcon><Badge badgeContent={TaskStore.allTasks.length} color="secondary"> <TocRoundedIcon /> </Badge></ListItemIcon>
                             <ListItemText primary="Tasks" />
                         </ListItem>
-                        {/* <ListItem button key="directory" component={Link} to="directory">
+                        <ListItem button key="directory" component={Link} to="/portal/directory">
                             <ListItemIcon><img src={Directory} alt="" /></ListItemIcon>
                             <ListItemText primary="Directory" />
-                        </ListItem> */}
+                        </ListItem> 
 
                         <ListItem button key="storage" component={Link} to='/portal/storage'>
                             <ListItemIcon><CloudRoundedIcon /></ListItemIcon>

@@ -1,0 +1,63 @@
+[
+	{
+		"source": "star",
+		"label": "Give Props to Colleague",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Ask Management Anything",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Refer a candidate to recruiting",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Report Something Anonymously",
+		"icon": "star",
+		
+	},
+	{
+		"source": "star",
+		"label": "Make Anonymous Report",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Request a compensation review",
+		"icon": "star"
+	},
+	{
+		"source": "print",
+		"label": "Report issues with a printer",
+		"icon": "print"
+	},
+	{
+		"source": "baby",
+		"label": "Request for parental leave information",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Request weekend office access",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Open computer issue ticket with IT",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Request reimbursement",
+		"icon": "star"
+	},
+	{
+		"source": "star",
+		"label": "Request for vacation leave",
+		"icon": "star"
+	},
+]
