@@ -31,7 +31,9 @@ class StaffDetail extends React.Component {
         if (this.props.view === 'hierarchy') {
             var cardActionProps = '';
             if (this.props.has_child) {
-                cardActionProps = { onClick: (e) => this.props.update_boss(this.props.boss['index'], this.props.boss['boss']) }
+                cardActionProps = { onClick: (e) => { 
+                    this.props.update_boss(this.props.boss['index'], this.props.boss['boss'])
+                } }
             }
             return (
                 <Card square className={(this.props.has_child ? 'has_child ' : ' ') + (this.props.active ? 'is-active' : '') + " inner_staff_detail hierarchy"}>

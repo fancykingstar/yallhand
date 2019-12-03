@@ -28,8 +28,6 @@ class Hierarchy extends React.Component {
          return user;
       });
 
-      console.log("========================================", users);
-
       this.setState({
          StaffDetailsData: users,
       });
@@ -65,14 +63,22 @@ class Hierarchy extends React.Component {
       if (newIndex !== 0 && newIndex <= 3) {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
-         this.setState({ boss });
+         var b = []
+         for (var i = 0; i <= newIndex; i ++) {
+            b.push(boss[i]);
+         }
+         this.setState({ boss: b });
       }
    }
    update_boss_slide(newIndex, newBoss) {
       if (newIndex !== 0 && newIndex <= 3) {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
-         this.setState({ boss });
+         var b = []
+         for (var i = 0; i <= newIndex; i ++) {
+            b.push(boss[i]);
+         }
+         this.setState({ boss: b });
          this.slider.slickNext();
       }
    }
