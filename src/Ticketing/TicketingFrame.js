@@ -1,11 +1,11 @@
 import React from "react";
-import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
 import { TicketingStore } from "../Stores/TicketingStore";
 import { AccountStore} from "../Stores/AccountStore";
+import { ChannelStore } from "../Stores/ChannelStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
@@ -67,11 +67,10 @@ class TicketingFrame extends React.Component {
 
     }
     
-    const columns = ["Ticket Title", "Last Updated", "Created By", "Stage"];
+    const columns = ["Ticket Title", "Last Updated", "Created By", "Channel"];
 
-    const data = TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ticket.active? "Active":"Inactive"])
+    const data = TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ChannelStore._getLabel(ticket.chanID)]);
     
-
 
     const options = {
       elevation: 1,
@@ -90,7 +89,7 @@ class TicketingFrame extends React.Component {
     return (
       <React.Fragment>
         <Header as="h2" style={{ padding: 0, margin: "10px 0 10px" }}>
-          Ticketing
+          Service Desk
           <Header.Subheader>
             Create ticketing workflows for common processes
           </Header.Subheader>
