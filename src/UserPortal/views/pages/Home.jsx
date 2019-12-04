@@ -64,42 +64,35 @@ class Home extends React.Component {
             {
                breakpoint: 2560,
                settings: {
-                  slidesToShow: 5,
+                  slidesToShow: 8,
                }
             },
             {
                breakpoint: 2000,
                settings: {
+                  slidesToShow: 6,
+               }
+            },
+            {
+               breakpoint: 1800,
+               settings: {
+                  slidesToShow: 5,
+               }
+            },
+            {
+               breakpoint: 1600,
+               settings: {
                   slidesToShow: 4,
                }
             },
             {
-               breakpoint: 1660,
-               settings: {
-                  slidesToShow: 3,
-               }
-            },
-
-            {
-               breakpoint: 1360,
-               settings: {
-                  slidesToShow: 2,
-               }
-            },
-            {
-               breakpoint: 1280,
+               breakpoint: 1336,
                settings: {
                   slidesToShow: 3,
                }
             },
             {
                breakpoint: 1100,
-               settings: {
-                  slidesToShow: 2,
-               }
-            },
-            {
-               breakpoint: 1024,
                settings: {
                   slidesToShow: 2,
                }

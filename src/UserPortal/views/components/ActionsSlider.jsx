@@ -175,17 +175,20 @@ class ActionSlider extends React.Component {
                      <div className="announce_component faq_announce slick-align-left">
                         <Slider {...settings_multi}>
 
-                        {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => 
+                       {/* {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => 
                                    <IconBox
                                    key={"icon" + ticket.ticketID}
                                    user_img={getIcon("Star")}
                                    title={ticket.label}
                                    showAction={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} 
                                 />
-                           )}
+                           )}*/}
+
+                        {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => 
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name="star" color="#1249bd" bgColor="#e7eefc" size="40" onClick={() => alert("test")} />
+                        )}
 
                         </Slider>
-                        <CircleIcons name="star" color="#1249bd" bgColor="#e7eefc" size="40" onClick={() => alert("test")} />
                      </div>
                   </div>
                </Container>

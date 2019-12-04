@@ -426,13 +426,12 @@ class TicketingNewEdit extends React.Component {
                       label="Channel"
                     />
                     <Form.Dropdown
-                      value={"Star"}
+                      value={icon.value}
                       label="Button Icon"
                       // placeholder="Choose icon..."
                       // onChange={(e, val)=>this.updateState({icon: val.value})}
-                      icon={iconKey["Star"]}
-                      disabled
-                      // selection options={iconOptions}
+                      icon={iconKey[`${icon.value}`]}
+                      selection options={iconOptions}
                     ></Form.Dropdown>
                       </Form.Group>
                       <Form.Group>
