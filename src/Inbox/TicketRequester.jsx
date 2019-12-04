@@ -40,6 +40,8 @@ export class TicketRequester extends React.Component {
     const {userImg, requester, userInitials} = this.props;
     const iconStyle ={fontSize: "1.2em", color: "rgb(65, 131, 196)" };
 
+    console.log("=========================================", requester);
+
     return(
       <React.Fragment>
  
@@ -52,7 +54,7 @@ export class TicketRequester extends React.Component {
               <span style={{fontSize: "1.1em"}}>
                 {requester.displayName}
               </span>
-              {requester.profile.Title && (
+              {requester.profile && requester.profile.Title && (
                 <p style={{ fontSize: "0.9em", color: "rgba(0, 0, 0, 0.54)" }}>
                   {requester.profile.Title}
                 </p>
@@ -62,12 +64,12 @@ export class TicketRequester extends React.Component {
         
              
            
-              {requester.email && <> <span style={{whiteSpace: "nowrap"}}> <MailOutlineRoundedIcon style={iconStyle} /> {requester.email} </span></>}
-              {requester.profile.Department && <> <span> <GroupIcon style={iconStyle} /> {requester.profile.Department}  </span></>}
+              { requester.profile && requester.email && <> <span style={{whiteSpace: "nowrap"}}> <MailOutlineRoundedIcon style={iconStyle} /> {requester.email} </span></>}
+              { requester.profile && requester.profile.Department && <> <span> <GroupIcon style={iconStyle} /> {requester.profile.Department}  </span></>}
    
       
-             {requester.profile.Location && <>  <span>   <RoomRoundedIcon style={iconStyle} /> {requester.profile.Location}</span></>}
-             {requester.profile.Mobile && <>  <span>  <PhoneIcon style={iconStyle} />  {requester.profile.Mobile} </span> </>}
+             { requester.profile && requester.profile.Location && <>  <span>   <RoomRoundedIcon style={iconStyle} /> {requester.profile.Location}</span></>}
+             { requester.profile && requester.profile.Mobile && <>  <span>  <PhoneIcon style={iconStyle} />  {requester.profile.Mobile} </span> </>}
  
             </Col>
             </Row>

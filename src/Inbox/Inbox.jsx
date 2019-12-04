@@ -231,6 +231,7 @@ openFilter(){
                   maxHeight: "85vh",
                   overflowY: "auto",
                   overflowX: "hidden",
+                  marginBottom: "20px",
                 }}
               >
                 <InboxList sort={this.state.sort} filter={this.state.filter} searchBy={this.state.searchBy} selected={this.state.selected} handleClick={i => this.selectInboxItem(i)} source={TicketingStore.allTickets} />
@@ -238,7 +239,6 @@ openFilter(){
             </Col>
             <Col>
                 {this.getDetails()}
-               
             </Col>
           </Row>
 

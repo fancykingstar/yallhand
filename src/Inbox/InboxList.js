@@ -14,6 +14,10 @@ const useStyles = makeStyles(theme => ({
   root: {
     padding: 0,
     backgroundColor: theme.palette.background.paper,
+
+    ['@media (max-width:1199px)']: {
+      height: 'calc(50vh - 120px)',
+    }
   },
   inline: {
     display: "inline"
@@ -67,7 +71,7 @@ export default function InboxList(props) {
     <List className={classes.root}>
       {sortdata(source()).filter(i=>!i.isTemplate).map((ticket, i) => (
 
-                <>
+              <React.Fragment key={i}>
                 <ListItem onClick={()=>props.handleClick(ticket.ticketID)} className={props.selected === ticket.ticketID? "InboxListItem InboxListItemActive": ticket._unread? "InboxListItemUnread" : "InboxListItem"}>
                   <ListItemText
                     primary={
@@ -88,16 +92,16 @@ export default function InboxList(props) {
                         <Row>
                         <Col sm={6}>
                           {!ticket._stage.includes("close") &&
-                          <MobileStepper
-                  
-                            style={{paddingLeft: 0, paddingTop: 10,  backgroundColor: "transparent" }}
-                            variant="progress"
-                            steps={ticket._progress.steps}
-                            position="static"
-                            activeStep={ticket._progress.activeStep}
-                            
-                          />
-          }
+                            <MobileStepper
+                    
+                              style={{paddingLeft: 0, paddingTop: 10,  backgroundColor: "transparent" }}
+                              variant="progress"
+                              steps={ticket._progress.steps}
+                              position="static"
+                              activeStep={ticket._progress.activeStep}
+                              
+                            />
+                          }
                         </Col>
                         {!ticket._stage.includes("close") &&
                         <Col className="text-right">
@@ -113,10 +117,10 @@ export default function InboxList(props) {
                   />
                 </ListItem>
        
-            {props.source.length && i !== props.source.length -1 ? 
-            <Divider component="li" /> : ""}
+                {props.source.length && i !== props.source.length -1 ? 
+                <Divider component="li" /> : ""}
        
-              </>
+              </React.Fragment>
       ))}
     </List>
   );
