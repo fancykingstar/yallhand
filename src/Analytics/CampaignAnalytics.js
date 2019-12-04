@@ -2,17 +2,19 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header,Icon} from "semantic-ui-react";
+import { Table, Header, Icon, Pagination } from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
+import { PageSizeSelect } from "./PageSizeSelect";
+
 
 @inject("AccountStore", "EmailStore", "TeamStore", "UIStore")
 @observer
 export class CampaignAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={data: [], sortsToggled:[]};
+    this.state={ data: [], sortsToggled:[], limit: 5, currentPage: 1 };
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     
  
@@ -33,10 +35,24 @@ export class CampaignAnalytics extends React.Component {
   componentDidMount(){
     const {AccountStore} = this.props;
     this.setState({data: AccountStore.analyticData_campaigns})
-}
+  }
+
+  onChangeLimit = (event, data) => {
+    if (data.value !== this.state.limit) {
+      this.setState({limit: data.value, currentPage: 1});
+    }
+  }
+
+  onChangePage = (event, data) => {
+    const { activePage } = data;
+    if (activePage !== this.state.currentPage) {
+      this.setState({currentPage: activePage})
+    }
+  };
+
   render() {
     const {AccountStore, EmailStore, UIStore} = this.props
-
+    const { currentPage, data, limit } = this.state;
 
     const sort = (param) => {
       if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
@@ -49,10 +65,16 @@ export class CampaignAnalytics extends React.Component {
     const searchFilter = (all) => {
       if(UIStore.search.campaignsSearchValue === "") return all
       else return all.filter(i => i.subject.toLowerCase().includes(UIStore.search.campaignsSearchValue.toLowerCase()))
-  }
+    }
+
+    const totalPages = Math.ceil(searchFilter(data).length / limit);
+    const items = searchFilter(data).slice(
+      (currentPage - 1) * limit,
+      (currentPage) * limit
+    );
 
 
-    const outbounds = searchFilter(this.state.data).map(camp => {
+    const outbounds = items.map(camp => {
       const campaign = EmailStore._getCampaign(camp.campaignID)
 
       if(!campaign) return null
@@ -67,11 +89,11 @@ export class CampaignAnalytics extends React.Component {
           <Table.Cell disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>{this.clickRate(camp)}%</Table.Cell>
           <Table.Cell></Table.Cell>
           <Table.Cell> 
-                    {CampaignDetails(campaign)}
-            </Table.Cell>
-          </Table.Row>
-        )
-      })
+            {CampaignDetails(campaign)}
+          </Table.Cell>
+        </Table.Row>
+      )
+    })
 
     return (
       <div>
@@ -79,8 +101,11 @@ export class CampaignAnalytics extends React.Component {
           as="h2"
           content="Email Campaign Performance"
         />
-                   <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/></div>
-     
+          <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/></div>
+          <PageSizeSelect 
+            limit={limit}
+            onChangeLimit={this.onChangeLimit} 
+          />
           <Table basic="very">
             <Table.Header>
               <Table.Row>
@@ -97,10 +122,23 @@ export class CampaignAnalytics extends React.Component {
             <Table.Body>
                 {outbounds}
             </Table.Body>
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell style={{border: 'none'}}>
+                  <Pagination 
+                    activePage={currentPage} 
+                    totalPages={totalPages} 
+                    onPageChange={this.onChangePage} 
+                    ellipsisItem={null}
+                    firstItem={null}
+                    lastItem={null}
+                    siblingRange={1}
+                    boundaryRange={0}
+                  />
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
           </Table>
-
-   
-       
       </div>
     );
   }

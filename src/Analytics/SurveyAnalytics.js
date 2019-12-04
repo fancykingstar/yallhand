@@ -2,10 +2,11 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header,Icon, Segment, List, Rating, Modal} from "semantic-ui-react";
+import { Table, Header,Icon, Segment, List, Rating, Modal, Pagination} from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { UIStore } from "../Stores/UIStore";
+import { PageSizeSelect } from "./PageSizeSelect";
 // import Slider from "react-slick";
 
 import {SurveyStore} from "../Stores/SurveyStore";
@@ -18,7 +19,7 @@ import TimeAgo from 'react-timeago'
 export class SurveyAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[]}
+    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[], limit: 5, currentPage: 1 }
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     this.sort = (param) => {
       
@@ -51,17 +52,34 @@ export class SurveyAnalytics extends React.Component {
     this.setState({data});
   }
 
+  onChangeLimit = (event, data) => {
+    if (data.value !== this.state.limit) {
+      this.setState({limit: data.value, currentPage: 1});
+    }
+  }
+
+  onChangePage = (event, data) => {
+    const { activePage } = data;
+    if (activePage !== this.state.currentPage) {
+      this.setState({currentPage: activePage})
+    }
+  };
+
 
   render() {
-    const {searchValue, data, surveyDetail} = this.state;
-
-
-
+    const {searchValue, surveyDetail} = this.state;
 
     const searchFilter = (all) => {
       if(searchValue === "") return all
-      else return all.filter(i => i.label.toLowerCase().includes(searchValue.toLowerCase()))
-  }
+        else return all.filter(i => i.label.toLowerCase().includes(searchValue.toLowerCase()))
+    }
+
+    const { currentPage, data, limit } = this.state;
+    const totalPages = Math.ceil(searchFilter(data).length / limit);
+    const items = searchFilter(data).slice(
+      (currentPage - 1) * limit,
+      (currentPage) * limit
+    );
 
     const settings_components_slide = {
       dots: false,
@@ -75,11 +93,9 @@ export class SurveyAnalytics extends React.Component {
       afterChange: () =>
         this.setState(state => ({ updateCount: state.updateCount + 1 })),
       beforeChange: (current, next) => this.setState({ slideIndex: next }),
-  };
+    };
 
-
-
-    const rows = searchFilter(data).map(survey => {
+    const rows = items.map(survey => {
       return (
         <Table.Row disabled={!survey.instances.length} key={"survey" + giveMeKey()} onClick={e => this.rowSelected(survey)}>
           <Table.Cell width={4} style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  >
@@ -197,6 +213,10 @@ export class SurveyAnalytics extends React.Component {
     />
             <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
    <div style={{overflowX: "auto", width: "100%"}}>
+   <PageSizeSelect 
+      limit={limit}
+      onChangeLimit={this.onChangeLimit} 
+    />
    <Table selectable basic="very" >
      <Table.Header>
        <Table.Row>
@@ -217,6 +237,22 @@ export class SurveyAnalytics extends React.Component {
      <Table.Body>
          {rows}
      </Table.Body>
+     <Table.Footer>
+        <Table.Row>
+          <Table.HeaderCell style={{border: 'none'}}>
+            <Pagination 
+              activePage={currentPage} 
+              totalPages={totalPages} 
+              onPageChange={this.onChangePage} 
+              ellipsisItem={null}
+              firstItem={null}
+              lastItem={null}
+              siblingRange={1}
+              boundaryRange={0}
+            />
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
    </Table>
    </div>
    </div>

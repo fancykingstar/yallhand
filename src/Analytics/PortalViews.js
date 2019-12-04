@@ -1,10 +1,11 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Icon, Table, Modal } from "semantic-ui-react"
+import { Segment, Header, Menu, Icon, Table, Modal, Pagination } from "semantic-ui-react"
 import { SearchBox } from "../SharedUI/SearchBox"
 
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import {SortingChevron} from "../SharedUI/SortingChevron";
+import { PageSizeSelect } from "./PageSizeSelect";
 import _ from 'lodash'
 
 @inject("UIStore", "AccountStore", "PoliciesStore", "AnnouncementsStore", "ResourcesStore", "TeamStore")
@@ -12,14 +13,43 @@ import _ from 'lodash'
 export class PortalViews extends React.Component {
     constructor(props){
         super(props);
-        this.state={data: [], sortsToggled:[]};
+        this.state={data: [], sortsToggled:[], limit: 5, currentPage: 1 };
     }
     componentDidMount(){
         const {AccountStore} = this.props;
         this.setState({data: AccountStore.analyticData_portal})
     }
+
+    onChangeLimit = (event, data) => {
+      if (data.value !== this.state.limit) {
+        this.setState({limit: data.value, currentPage: 1});
+      }
+    }
+
+    onChangePage = (event, data) => {
+      const { activePage } = data;
+      if (activePage !== this.state.currentPage) {
+        this.setState({currentPage: activePage})
+      }
+    };
+
     render(){
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
+
+        const searchFilter = (all) => {
+            const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file"}
+            const result = all.slice().filter(log => log.type === UItoLogKey[UIStore.menuItem.analyticsHeader])
+            if(UIStore.search.analyticsSearchValue === "") return result
+            else return result.filter(i => getLabel(i).toLowerCase().includes(UIStore.search.analyticsSearchValue.toLowerCase()))
+        }
+
+        const { currentPage, data, limit } = this.state;
+        const totalPages = Math.ceil(searchFilter(data).length / limit);
+        const items = searchFilter(data).slice(
+          (currentPage - 1) * limit,
+          (currentPage) * limit
+        );
+        console.log(items);
 
         const sort = (param) => {
 
@@ -42,13 +72,6 @@ export class PortalViews extends React.Component {
            }
         //    else {return "No label available"}
            return label === "" || label === undefined? "obsoleted data" : label
-        }
-
-        const searchFilter = (all) => {
-            const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file"}
-            const result = all.slice().filter(log => log.type === UItoLogKey[UIStore.menuItem.analyticsHeader])
-            if(UIStore.search.analyticsSearchValue === "") return result
-            else return result.filter(i => getLabel(i).toLowerCase().includes(UIStore.search.analyticsSearchValue.toLowerCase()))
         }
 
         const templateHeader = (vari=false) =>    
@@ -123,9 +146,10 @@ export class PortalViews extends React.Component {
                 </Modal>
             }
         
-        const displayResults = searchFilter(this.state.data) 
-        .map(log => 
-            <Table.Row key={"analyticsResult" + giveMeKey()}>
+        const displayResults = searchFilter(items) 
+          .map(log => {
+            return (
+              <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
                 <Table.Cell textAlign="center">{log.total_views}</Table.Cell>
                 <Table.Cell textAlign="center">{log.unique_views}</Table.Cell>
@@ -136,8 +160,9 @@ export class PortalViews extends React.Component {
                                <Table.Cell textAlign="center">{log.sentiment_total[0]}</Table.Cell>
                                </React.Fragment>
                                 : null }
-            </Table.Row>
+              </Table.Row>
             )
+          })
 
 
         return(
@@ -170,14 +195,33 @@ export class PortalViews extends React.Component {
             </Menu>
            </div>
            <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10,display: "inline-block"}}>     <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/></div>
-     
-           
+            <br/>
+            <PageSizeSelect 
+              limit={limit}
+              onChangeLimit={this.onChangeLimit} 
+            />
             <Table basic="very">
             {templateHeader()}
             
             <Table.Body>
             {displayResults}
             </Table.Body>
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell style={{border: 'none'}}>
+                  <Pagination 
+                    activePage={currentPage} 
+                    totalPages={totalPages} 
+                    onPageChange={this.onChangePage} 
+                    ellipsisItem={null}
+                    firstItem={null}
+                    lastItem={null}
+                    siblingRange={1}
+                    boundaryRange={0}
+                  />
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
             </Table>
             </React.Fragment>
   
