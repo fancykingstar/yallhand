@@ -2,13 +2,13 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header,Icon, Segment, List, Rating, Modal, Pagination} from "semantic-ui-react";
+import { Table, Header,Icon, Segment, List, Rating, Modal, Pagination, Button } from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { UIStore } from "../Stores/UIStore";
 import { PageSizeSelect } from "./PageSizeSelect";
 // import Slider from "react-slick";
-
+import CsvDownloader from 'react-csv-downloader';
 import {SurveyStore} from "../Stores/SurveyStore";
 import {TaskStore} from "../Stores/TaskStore";
 import {AccountStore} from "../Stores/AccountStore";
@@ -19,7 +19,8 @@ import TimeAgo from 'react-timeago'
 export class SurveyAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[], limit: 5, currentPage: 1 }
+    this.state={width: 0, height: 0, searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[], limit: 5, currentPage: 1 }
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     this.sort = (param) => {
       
@@ -47,9 +48,19 @@ export class SurveyAnalytics extends React.Component {
 
 
   componentDidMount(){
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     this.sort("_updated", "Highest");
     const data = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks
     this.setState({data});
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   onChangeLimit = (event, data) => {
@@ -112,6 +123,20 @@ export class SurveyAnalytics extends React.Component {
           </Table.Row>
         )
       })
+
+    const download = searchFilter(data).map(survey => {
+      console.log(Math.max(...survey.instances.map(i=>i.sent)));
+      return {
+        "Title": survey.label,
+        "Last Sent": survey.label,
+        "Queries": survey._surveys,
+        "Not Started": survey._noStart,
+        "Partial": survey._partial,
+        "Completed": survey._completed,
+        "Cancelled": survey._cancelled,
+        "Deadline": survey._cancelled,
+      }
+    })
 
       const userList = (userIDs) => 
             <List>
@@ -211,13 +236,20 @@ export class SurveyAnalytics extends React.Component {
    as="h2"
    content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
     />
-            <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
+      <div style={UIStore.responsive.isMobile? {display: "flex"} : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "flex"}}>
+        <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+          <Button primary>export CSV</Button>
+        </CsvDownloader>
+        <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/>
+      </div>
    <div style={{overflowX: "auto", width: "100%"}}>
-   <PageSizeSelect 
-      limit={limit}
-      onChangeLimit={this.onChangeLimit} 
-    />
-   <Table selectable basic="very" >
+   {
+      this.state.width > 767 ? <PageSizeSelect 
+                      limit={limit}
+                      onChangeLimit={this.onChangeLimit}
+                    />: <div />
+    }
+   <Table selectable basic="very" style={this.state.width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
      <Table.Header>
        <Table.Row>
          <Table.HeaderCell>Title</Table.HeaderCell>

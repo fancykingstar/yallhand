@@ -1,8 +1,9 @@
 import React from "react";
 import {inject, observer} from "mobx-react"
+import CsvDownloader from 'react-csv-downloader';
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header, Icon, Pagination } from "semantic-ui-react";
+import { Table, Header, Icon, Pagination, Button } from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
@@ -14,9 +15,9 @@ import { PageSizeSelect } from "./PageSizeSelect";
 export class CampaignAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={ data: [], sortsToggled:[], limit: 5, currentPage: 1 };
+    this.state={ width: 0, height: 0, data: [], sortsToggled:[], limit: 5, currentPage: 1 };
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
-    
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
  
     // this.sort = (controller, direction) => {
     //   const param = controller
@@ -33,8 +34,18 @@ export class CampaignAnalytics extends React.Component {
   // }
   }
   componentDidMount(){
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     const {AccountStore} = this.props;
     this.setState({data: AccountStore.analyticData_campaigns})
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   onChangeLimit = (event, data) => {
@@ -53,6 +64,7 @@ export class CampaignAnalytics extends React.Component {
   render() {
     const {AccountStore, EmailStore, UIStore} = this.props
     const { currentPage, data, limit } = this.state;
+    const { width } = this.state;
 
     const sort = (param) => {
       if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
@@ -67,12 +79,24 @@ export class CampaignAnalytics extends React.Component {
       else return all.filter(i => i.subject.toLowerCase().includes(UIStore.search.campaignsSearchValue.toLowerCase()))
     }
 
-    const totalPages = Math.ceil(searchFilter(data).length / limit);
-    const items = searchFilter(data).slice(
+    const filteredData = searchFilter(data);
+
+    const totalPages = Math.ceil(filteredData.length / limit);
+    const items = filteredData.slice(
       (currentPage - 1) * limit,
       (currentPage) * limit
     );
 
+    const download = filteredData.map(camp => {   
+      return {
+        "Name": camp.subject,
+        "Sent": UTCtoFriendly(camp.sent),
+        "Sent1": UTCtoFriendly(camp.sent),
+        "Views(All/Unique)": camp.total_views + "/" + camp.unique_views,
+        "Open Rate": camp.open_rate + "%",
+        "Click Rate": this.clickRate(camp) + "%"
+      }
+    });
 
     const outbounds = items.map(camp => {
       const campaign = EmailStore._getCampaign(camp.campaignID)
@@ -101,12 +125,19 @@ export class CampaignAnalytics extends React.Component {
           as="h2"
           content="Email Campaign Performance"
         />
-          <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/></div>
-          <PageSizeSelect 
-            limit={limit}
-            onChangeLimit={this.onChangeLimit} 
-          />
-          <Table basic="very">
+          <div style={UIStore.responsive.isMobile? { display: 'flex' } : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "flex"}}>
+            <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+              <Button primary>export CSV</Button>
+            </CsvDownloader>
+            <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/>
+          </div>
+          {
+            width > 767 ? <PageSizeSelect 
+                            limit={limit}
+                            onChangeLimit={this.onChangeLimit}
+                          />: <div />
+          }
+          <Table basic="very" style={width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell><div style={{paddingBottom: 20}}>Name</div></Table.HeaderCell>

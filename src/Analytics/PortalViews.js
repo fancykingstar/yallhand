@@ -1,8 +1,8 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Icon, Table, Modal, Pagination } from "semantic-ui-react"
+import { Segment, Header, Menu, Icon, Table, Modal, Pagination, Button } from "semantic-ui-react"
 import { SearchBox } from "../SharedUI/SearchBox"
-
+import CsvDownloader from 'react-csv-downloader';
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import { PageSizeSelect } from "./PageSizeSelect";
@@ -13,11 +13,22 @@ import _ from 'lodash'
 export class PortalViews extends React.Component {
     constructor(props){
         super(props);
-        this.state={data: [], sortsToggled:[], limit: 5, currentPage: 1 };
+        this.state={width: 0, height: 0, data: [], sortsToggled:[], limit: 5, currentPage: 1 };
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
     componentDidMount(){
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
         const {AccountStore} = this.props;
         this.setState({data: AccountStore.analyticData_portal})
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+      this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
     onChangeLimit = (event, data) => {
@@ -49,7 +60,8 @@ export class PortalViews extends React.Component {
           (currentPage - 1) * limit,
           (currentPage) * limit
         );
-        console.log(items);
+
+        const filteredData = searchFilter(data);
 
         const sort = (param) => {
 
@@ -164,6 +176,17 @@ export class PortalViews extends React.Component {
             )
           })
 
+        const download = filteredData.map(camp => {   
+          return {
+            "Label": getLabel(camp),
+            "Total Views": camp.total_views,
+            "Unique Views": camp.unique_views,
+            "Smile": camp.sentiment_total[2],
+            "meh": camp.sentiment_total[1],
+            "frown": camp.sentiment_total[0]
+          }
+        });
+
 
         return(
             <React.Fragment>
@@ -194,13 +217,20 @@ export class PortalViews extends React.Component {
       
             </Menu>
            </div>
-           <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10,display: "inline-block"}}>     <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/></div>
+           <div style={UIStore.responsive.isMobile? {display: 'flex'} : {float: 'right', paddingRight: 10,display: "flex"}}>
+              <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+                <Button primary>export CSV</Button>
+              </CsvDownloader>
+              <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/>
+            </div>
             <br/>
-            <PageSizeSelect 
-              limit={limit}
-              onChangeLimit={this.onChangeLimit} 
-            />
-            <Table basic="very">
+            {
+              this.state.width > 767? <PageSizeSelect 
+                limit={limit}
+                onChangeLimit={this.onChangeLimit} 
+              />: <div />
+            }
+            <Table basic="very" style={this.state.width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
             {templateHeader()}
             
             <Table.Body>
