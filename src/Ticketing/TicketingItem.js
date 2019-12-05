@@ -1,6 +1,6 @@
 import React from "react";
 import {inject, observer} from "mobx-react";
-import { Segment, Icon, Accordion, Dropdown, Button, Label, Header, Form } from "semantic-ui-react";
+import { Segment, Icon, Accordion, Dropdown, Button, Label, Header, Form, Checkbox } from "semantic-ui-react";
 import { Container, Row, Col } from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 // import Avatar from '@material-ui/core/Avatar';
@@ -10,6 +10,7 @@ import _ from "lodash";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import toast  from "../YallToast"
 import ChipInput from 'material-ui-chip-input'
+import Collapse from '@material-ui/core/Collapse';
 
 
 
@@ -19,7 +20,10 @@ export class TicketingItem extends React.Component {
     this.state={optionInput: ""};
   }
   render() {
-  const { id, _requireInfo, data, label, defaultAssignee} = this.props;
+  const { id, data, label, defaultAssignee} = this.props;
+  const _requireInfo = data.length > 0;
+
+
 
   const setField = (obj) => {
     this.props.updateFields(obj, this.props.index) 
@@ -54,16 +58,19 @@ export class TicketingItem extends React.Component {
     if(valid) setField({data: [...this.props.data, {type: "text", label: "", options: []}]});
   }
 
+  const toggleRequiredData = () => {
+    if (this.props.data.length) setField({data:[]});
+    else addDataItem() ;
+  }
+
   const removeRow = () => {
     this.props.removeRow(_id)
   }
 
   const removeDataItem = (index) => {
-    console.log("pressed")
-    // let newData = this.props.data.slice();
-    // newData.splice(index, 1)
-    // console.log(this.props.data, newData)
-    // setField({data: newData})
+    let newData = this.props.data.slice();
+    newData.splice(index, 1)
+    setField({data: newData})
   }
 
   const updateDataItem = async (obj, i) => {
@@ -170,11 +177,12 @@ export class TicketingItem extends React.Component {
         </Col></Row>
         }
         <Row>
-        <div style={{paddingLeft: 10}}>
-        <Accordion>
-          <Accordion.Title onClick={()=>setField({_requireInfo: !_requireInfo})} active={_requireInfo}><Icon name='dropdown' /> Required information for this stage {`${!this.props.index? "(note: user information will automatically be passed along when this ticket is opened)":""}`}</Accordion.Title>
-          <Accordion.Content active={_requireInfo}>
-            <Container>
+        <div style={{paddingLeft: 20, paddingTop: 10}}>
+        <span><Checkbox toggle checked={_requireInfo} 
+        label={`Require information for this stage ${!this.props.index? "(note: user information will automatically be passed along when this ticket is opened)":""}`}
+        onChange={()=> toggleRequiredData()} /></span>
+        <Collapse in={_requireInfo} >
+         <Container>
               <Form>
                 {displayData()}
               </Form>
@@ -185,8 +193,13 @@ export class TicketingItem extends React.Component {
                 </div>
               }
             </Container>
+        </Collapse>
+        {/* <Accordion>
+          <Accordion.Title onClick={()=>setField({_requireInfo: !_requireInfo})} active={_requireInfo}><Icon name='dropdown' /> Require information for this stage {`${!this.props.index? "(note: user information will automatically be passed along when this ticket is opened)":""}`}</Accordion.Title>
+          <Accordion.Content active={_requireInfo}>
+            
           </Accordion.Content>
-        </Accordion>
+        </Accordion> */}
         </div>
        
         </Row>

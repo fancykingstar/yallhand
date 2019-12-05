@@ -19,7 +19,7 @@ const initialState = {id: "",  files: []};
 class ActionsForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {id: "", files: []};
+        this.state = {id: "", files:[]};
         this.resetState = initialState;
     }
 
@@ -50,7 +50,7 @@ class ActionsForm extends React.Component {
         let newValue = {};
         newValue[e.target.name] = true; //File upload labels are uniquely boolean && true, value is replaced later with array of resourceID upon submission
         await this.setState(newValue);
-        await this.setState({files: [...this.state.files, file]});
+        await this.setState({files: this.state.files? [...this.state.files, file] : [file]});
       };
 
    
@@ -150,7 +150,7 @@ class ActionsForm extends React.Component {
         e.preventDefault();
         if(Object.keys(this.state).length > 1) {
         let conditions = {};
-        await Object.keys(this.state).forEach(key => {if(key !== "id") conditions[key] = isBoolean(this.state[key])? this.state[key] : this.state[key].length > 0})
+        await Object.keys(this.state).forEach(key => {if(key !== "id" && key !=="files") conditions[key] = isBoolean(this.state[key])? this.state[key] : this.state[key].length > 0})
         console.log("conditions", conditions)
         const valid = await validate(conditions, true)
         if (valid.valid) this.props.onSubmit(this.state);
@@ -162,7 +162,7 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title">
-                    {JSON.stringify(this.state)}
+                
                     <h4>
                         <IconButton
                         color="inherit"

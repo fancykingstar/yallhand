@@ -52,7 +52,6 @@ export class TicketActions extends React.Component {
 
     if (props.id !== state.id) {
       const base = props.data._parent === "QandA"? [] : [...AccountStore._getUsersSelectOptions([
-        ...props.data._parent.admins,
         ...props.data._parent.collaborators
       ]), ...AccountStore._getAdminSelectOptions()];
       return {

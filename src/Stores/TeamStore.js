@@ -85,7 +85,8 @@ class Store {
 
   }
 
-  loadTags(allTags, allUsers) {
+  async loadTags(allTags) {
+    const allUsers = await AccountStore._allActiveUsers;
     allTags.forEach(tag => {
       tag["count"] =  allUsers.filter(user => user.tags.length > 0? user.tags[0] === tag.tagID : false).length
     });

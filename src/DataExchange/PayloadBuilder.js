@@ -518,20 +518,20 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
   }
 
-
+ 
   ///TICKETING AND SERVICE DESK
   export const ticket = ( data ) => {
     let payload = data;
-    if (data.access === "default")
-    payload.admins = [userID()];
-    payload.config = {
-      simpleDesc: true, 
-      notifyAdminNewTicket: true,
-      deleteTicket: false,
-      updateOpener: true
-    };
+    // if (data.access === "default" && !data.ticketID)
+    // payload.config = {
+    //     simpleDesc: false,
+    //     notifyNewTicket: false,
+    //     deleteTicket: false,
+    // };
     if (data.type === "simple" && data.config.simpleDesc) {
-      payload.ticketItems.splice(0, 1, {type: "text", label: "Description (optional)", options: [], isOpen: true})
+
+      payload.ticketItems.splice(0, 1, {type: "text", label: "Description (optional)", options: [], isOpen: true, data:[]})
+      console.log("ticketItems", payload.ticketItems)
     };
 
     if (payload.assoc.length) payload.assoc = data.assoc.map(i=> i.type === "policy"? ({policyID: i.value}):({announcementID: i.value}))

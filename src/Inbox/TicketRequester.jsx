@@ -38,6 +38,7 @@ export class TicketRequester extends React.Component {
 
     render(){
     const {userImg, requester, userInitials} = this.props;
+    console.log("requester", requester)
     const iconStyle ={fontSize: "1.2em", color: "rgb(65, 131, 196)" };
 
     return(

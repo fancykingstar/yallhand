@@ -78,7 +78,7 @@ export default function InboxList(props) {
                           <Typography
                           style={{fontSize: "0.9em", color: ticket._stage.includes("close")? "#ABACAB": "#000"}}
                           color="textPrimary" >
-                                       {/* {"content" + JSON.stringify(ticket._content)} */}
+                                   
                           {ticket._content? ticket._content.label : ticket._parent? ticket._parent.label : ""}
                         </Typography>
                           </Col>

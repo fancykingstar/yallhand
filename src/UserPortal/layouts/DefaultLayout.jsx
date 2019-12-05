@@ -173,7 +173,9 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
     const account = AccountStore.account;
     const displayInbox = Boolean(
         // !UserStore.user.isAdmin && 
-        UserStore.user.isCollaborator && UserStore.user.isCollaborator.tickets && UserStore.user.isCollaborator.tickets.length);
+        // UserStore.user._isCollaborator && UserStore.user._isCollaborator.tickets && UserStore.user._isCollaborator.tickets.length
+        TicketingStore.allTickets.length
+        );
 
     return (
         <div className={clsx(classes.root, "topBorderBefore", (((width <= mobileWidth) ? !mopen : !open) ? "menuClosed" : 'menuOpen'), (scrollY > 50) ? 'menuSticky' : '')}>

@@ -416,8 +416,8 @@ export const modifyTicket = (payload, toast=false) => {
 )
 }
 
-export const deleteTicket = (surveyID) => {
-  processTemplate(false, "ticketing/" + surveyID, "DELETE", {}, "tickets", 
+export const deleteTicket = (ticketID) => {
+  processTemplate(false, "ticketing/" + ticketID, "DELETE", {}, "tickets", 
   `Selected tickets deleted`, 
   true,{"event": "delete", "type":"ticket"})
 }
