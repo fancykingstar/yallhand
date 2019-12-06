@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     circleIconStyle: {
         color: props => props.color,
         overflow: "visible",
+        fontSize: props => `${parseInt(props.size)}px`,
 
         '&::before': {
             fontSize: props => `${parseInt(props.size)}px`,
@@ -31,16 +32,21 @@ const useStyles = makeStyles({
         paddingLeft: "20px",
         paddingTop: "20px",
         flex: 1
+    },
+    embed: {
+        display: "flex",
+        cursor: "pointer",
+        paddingBottom: "20px"
     }
 });
 
 const CircleIcons = (props) => {
-    const { circleIconStyle, root, label } = useStyles(props);
+    const { embed, circleIconStyle, root, label } = useStyles(props);
     const { title, name } = props;
     let iconName = name.split(/(?=[A-Z])/).join("_").toLowerCase();
     return (
-        <div className="CircleIcon" style={{ display: "flex" }}>
-            <div className={`${root}`} onClick={props.onClick}>
+        <div className={`${embed} CircleIcon`} onClick={props.onClick}>
+            <div className={`${root}`}>
                 <Icon className={circleIconStyle}>{iconName}</Icon>
             </div>
             <p className={`icon-label ${label}`}>{title}</p>
