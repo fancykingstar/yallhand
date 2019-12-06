@@ -51,9 +51,7 @@ export class TicketActions extends React.Component {
   static getDerivedStateFromProps(props, state) {
 
     if (props.id !== state.id) {
-      const base = props.data._parent === "QandA"? [] : [...AccountStore._getUsersSelectOptions([
-        ...props.data._parent.collaborators
-      ]), ...AccountStore._getAdminSelectOptions()];
+      const base = props.data.parent === "QandA"? AccountStore._getAdminSelectOptions() : [...AccountStore._getUsersSelectOptions(props.data._parent.collaborators)];
       return {
         id: props.id,
         stage: props.data._stage,
@@ -141,7 +139,7 @@ export class TicketActions extends React.Component {
     if (type === "stage" && data === stage) return
     if (type === "assignee" && data === selectedAssignee) return
     await this.setState(type === "stage"? {stage: data} : {selectedAssignee: data});
-    const checkFields = await this.addlFields();
+    const checkFields = this.props.data.parent === "QandA" ? [] : await this.addlFields();
     const action = type === "stage" && data === "open" && stage === "open-pending"? "add" : this.addOrReplace(type === "stage"? "stageOnly" : "assignOnly");
     
     if (type === "stage" && checkFields.length && checkFields[0].data.length) this.setState({ addlFieldsSource: checkFields[0].data });
@@ -327,10 +325,10 @@ export class TicketActions extends React.Component {
                 </>
               )}
               {/* <Button onClick={() => this.props.output({messageType: "requester"})} className="SubAction"   style={{fontSize: ".7em"}} size="mini" toggle><Icon name='talk' />Message Requester...</Button> */}
-              {QandA? 
+              {QandA && stage !== "open-pending" && !stage.includes('close')? 
                <>
                   <Button
-                  onClick={() => this.props.output({ messageType: "" })}
+                  onClick={() => this.props.output({ messageType: "reply-public" })}
                   className="SubAction"
                   style={{ fontSize: ".7em" }}
                   size="mini"

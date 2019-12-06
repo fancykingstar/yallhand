@@ -18,7 +18,7 @@ import { TicketContentSource } from "./TicketContentSource";
 import {S3Download} from "../DataExchange/S3Download";
 import {deleteTicket} from "../DataExchange/Up";
 import { addView } from "../DataExchange/PayloadBuilder";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+// import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FadeIn from 'react-fade-in';
 
 class TicketDetailsFrame extends React.Component {
@@ -86,18 +86,17 @@ class TicketDetailsFrame extends React.Component {
     this.setState({ activeItem: name });
   };
 
-
   updateContent = async () => {
     const { _content} = this.props.data;
     const {activity} = this.props.data;
     const vari = _content.variations[0];
-    const payload =  {qanda : [{
+    const qandaentry = {
       q: activity[activity.length - 1].data.q,
       a: this.state.message,
       adminID: UserStore.user.userID,
       update: Date.now()
-    }]};
-
+    };
+    const payload =  {qanda : vari.qanda? [...vari.qanda, qandaentry]: [qandaentry] };
     const mode = _content.policyID? "policy" : "announcement";
     const contentID = _content[`${mode}ID`]
 
@@ -108,12 +107,12 @@ class TicketDetailsFrame extends React.Component {
 
   handleSubmit = async () => {
      const userID = UserStore.user.userID;
-     const newData = this.state.messageType === "internal"? {memo: this.state.message} : !this.state.messageType.includes('reply')? {} : this.state.messageType.includes('public')? {"replied pubicly": this.state.message}: {"replied privately": this.state.message};
+     const newData = this.state.messageType === "internal"? {memo: this.state.message} : !this.state.messageType.includes('reply')? {} : this.state.messageType.includes('public')? {"replied publicly": this.state.message}: {"replied privately": this.state.message};
 
      const newActivity = [
         {
           userID,
-          stage: "closed",
+          stage: this.state.messageType !== "internal"? "close" : "",
           views: [userID],
           updated: Date.now(),
           data: newData,
@@ -197,9 +196,9 @@ class TicketDetailsFrame extends React.Component {
          
    
         <Paper>
-          <div className="section_title" style={{backgroundColor: _stage === "open-pending"? "#da17b1":"#39b6f8"}}>
+          <div className="section_title" style={{backgroundColor: _stage === "open-pending"? "#da17b1": _stage.includes('close')? "#585858" :"#39b6f8"}}>
             <div>
-              <h4 style={{ color: "#FFFFFF" }}>{QandA? _content.label :_parent.label} {deleteEnabled? <span style={{float: "right"}}><HighlightOffIcon onClick={()=>this.updateState({deleteModal: true})} /></span>: ""} </h4>
+              <h4 style={{ color: "#FFFFFF" }}>{QandA? _content.label :_parent.label} {deleteEnabled? <span style={{float: "right"}}><Icon name="trash alternate outline" onClick={()=>this.updateState({deleteModal: true})} /></span>: ""} </h4>
               <p style={{ color: "#e3e8ee", fontSize: ".8em" }}>
                 {QandA? "Content Q & A": "Service Desk"}
               </p>

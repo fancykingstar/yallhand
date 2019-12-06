@@ -241,7 +241,8 @@ body {
 }
 
 .InboxListItemUnread {
-  border-right: 3px solid #e831f2;
+  // border-right: 3px solid #e831f2;
+  background-color: rgb(223, 241, 255);
 }
 
 .ActiveIfHover:hover {

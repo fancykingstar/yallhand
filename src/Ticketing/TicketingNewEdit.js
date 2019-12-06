@@ -46,7 +46,7 @@ class TicketingNewEdit extends React.Component {
       collaborators: [],
       config: {
         simpleDesc: false,
-        notifyNewTicket: false,
+        // notifyNewTicket: false,
         deleteTicket: false,
       }
     };
@@ -234,16 +234,13 @@ class TicketingNewEdit extends React.Component {
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/ticketing')} > Cancel </Button> );
     const del = ( <ConfirmDelete label="Service desk ticket" /> );
 
-    // const launch = ( <Button onClick={e => this.updateTicket(true)} primary> {" "} Launch{" "} </Button> );
-    // const save = <Button onClick={e => this.updateTicket()}> Save </Button>;
-    // const stop = ( <Button negative onClick={() => this.updateTicket(false)}> Stop </Button> );
 
   
     const preview = <Button onClick={e => {}}> Preview </Button>;
     const actions = active ? (
       <div style={{ paddingTop: 5 }}>
         {" "}
-        {save} {stop} 
+        {stop} {save} {cancel}
         {/* {preview} */}
       </div>
     ) : (
@@ -381,7 +378,7 @@ class TicketingNewEdit extends React.Component {
                           </span>
                         </p>
 
-                        <Form.Field>
+                        {/* <Form.Field>
                           <Checkbox
                             checked={this.state.config.notifyNewTicket}
                             onChange={(e, val) =>
@@ -391,7 +388,7 @@ class TicketingNewEdit extends React.Component {
                             }
                             label="Email all collaborators when a new ticket is opened"
                           />
-                        </Form.Field>
+                        </Form.Field> */}
                         <Form.Field>
                           <Checkbox
                             checked={this.state.config.deleteTicket}
