@@ -36,12 +36,12 @@ const useStyles = makeStyles({
 
 const CircleIcons = (props) => {
     const { circleIconStyle, root, label } = useStyles(props);
-    const name = `fa fa-${props.name}`;
-    const { title } = props
+    const { title, name } = props;
+    let iconName = name.split(/(?=[A-Z])/).join("_").toLowerCase();
     return (
         <div className="CircleIcon" style={{ display: "flex" }}>
             <div className={`${root}`} onClick={props.onClick}>
-                <Icon className={`${name} ${circleIconStyle}`} />
+                <Icon className={circleIconStyle}>{iconName}</Icon>
             </div>
             <p className={`icon-label ${label}`}>{title}</p>
         </div>
