@@ -11,15 +11,13 @@ import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
-import { ticket, surveyEdit, schedule } from "../DataExchange/PayloadBuilder";
-import { createTicket, modifySurvey, createSchedule, deleteSchedule, modifyTicket } from "../DataExchange/Up";
-import { ScheduleStore } from "../Stores/ScheduleStore";
+import { ticket, } from "../DataExchange/PayloadBuilder";
+import { createTicket,  modifyTicket } from "../DataExchange/Up";
 import { validate } from "../SharedCalculations/ValidationTemplate";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 
 import { iconKey, iconOptions } from "./IconSelect";
 
-import _ from "lodash";
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 
 @inject("TicketingStore", "ChannelStore", "AccountStore", "UserStore")
@@ -46,9 +44,9 @@ class TicketingNewEdit extends React.Component {
       collaborators: [],
       config: {
         simpleDesc: false,
-        // notifyNewTicket: false,
         deleteTicket: false,
-      }
+      },
+      _iconOptions: false,
     };
   }
 
@@ -60,14 +58,14 @@ class TicketingNewEdit extends React.Component {
           isOpen: true,
           defaultAssignee: "",
           data: [], //{type: "", label: "", options: []}
-          // _requireInfo: false
+ 
         },
         {
           id: giveMeKey(),
           defaultAssignee: "",
           isClose: true,
           data: [], //{type: "", label: "", options: []}
-          // _requireInfo: false
+
         }
       ];
     } else
@@ -75,17 +73,11 @@ class TicketingNewEdit extends React.Component {
         id: giveMeKey(),
         defaultAssignee: "",
         data: [{ type: "text", label: "", options: [] }], //{type: "", label: "", options: []}
-        // _requireInfo: false
+ 
       };
   }
 
-  updateState(obj) {
-    const {UserStore} = this.props;
-    if (obj.access === "default") this.setState({collaborators: [UserStore.user.userID]});
-    if (Object.keys(obj).includes("config"))
-      this.setState({ config: Object.assign(this.state.config, obj.config) });
-    else this.setState(obj);
-  }
+  updateState(obj) { this.setState(obj); }
 
   validateFields = () => {
     const {
@@ -157,7 +149,6 @@ class TicketingNewEdit extends React.Component {
           id={stage.id}
           fileUploadInUse={this.fileUploadInUse()}
           defaultAssignee={stage.defaultAssignee}
-          // _requireInfo={stage._requireInfo}
           data={stage.data}
           updateFields={this.updateFields}
           removeRow={this.removeRow}
@@ -214,9 +205,6 @@ class TicketingNewEdit extends React.Component {
       ? TicketingStore.allTickets.filter(i => i.ticketID === id)[0]
       : false;
     if (loadTicket) {
-      // if(loadTicket.surveyItems.length) {
-      //   loadSurvey.surveyItems.forEach(i=> Object.keys(i).forEach(key=> {if(key[0]==="_") delete i[key]} ))
-      // }
       this.setState(loadTicket);
     }
     else this.setState({collaborators: [me]})
@@ -224,7 +212,7 @@ class TicketingNewEdit extends React.Component {
 
   render() {
     const { ChannelStore, AccountStore, UserStore } = this.props;
-    const { type, active, chanID, label, admins, icon, collaborators, access, assoc } = this.state;
+    const { type, active, chanID, label, _iconOptions, icon, collaborators, access, assoc } = this.state;
     const isNew = Boolean(!this.state.ticketID);
 
 
@@ -241,13 +229,13 @@ class TicketingNewEdit extends React.Component {
       <div style={{ paddingTop: 5 }}>
         {" "}
         {stop} {save} {cancel}
-        {/* {preview} */}
+   
       </div>
     ) : (
       <div style={{ paddingTop: 5 }}>
         {" "}
         {launch} {save} {isNew? cancel: del} 
-        {/* {preview} */}
+  
       </div>
     );
 
@@ -265,9 +253,7 @@ class TicketingNewEdit extends React.Component {
         <Row>
           <Col style={{ marginTop: 10 }}>
             <Segment>
-              {/* <Header style={{ paddingBottom: 15 }} as="h4">
-                General Settings
-              </Header> */}
+ 
               <Form>
                 <Form.Input
                   className="FixSemanticLabel"
@@ -276,21 +262,14 @@ class TicketingNewEdit extends React.Component {
                   required
                   placeholder="e.g. Open service request"
                   value={label}
-                  onChange={(e, val) => this.updateState({ label: val.value })}
+                  onChange={(e, val) => 
+                    this.updateState({ label: val.value })
+                  }
                 >
                   <input maxLength={48} />
                 </Form.Input>
               </Form>
-{/*          
-           
-                  <div style={{ paddingTop: 5, paddingBottom: 10 }}>
-                    {" "}
-                    <ChooseTargeting
-                      label="Grant access to open ticket"
-                      output={val => this.updateState(val)}
-                      input={this.state}
-                    />{" "}
-                  </div> */}
+
 
                   <Form style={{ maxWidth: 400 }}>
                     <Form.Field className="FixSemanticLabel" style={{ minWidth: 370 }}>
@@ -311,7 +290,7 @@ class TicketingNewEdit extends React.Component {
                       </Grid>
                     </Form.Field>
 
-                    {/* <Form.Dropdown value={type} onChange={(e,val)=>this.updateState({type: val.value})} label="Ticketing Type" style={{minWidth: 370}} selection options={[{"text":"Simple", "value":"simple", "description":"basic open/close ticketing"},{"text":"Enhanced", "value":"enhanced", "description":"multistep or customized ticketing"}]} /> */}
+
                     <Form.Dropdown
                       value={access}
                       onChange={(e, val) =>
@@ -325,37 +304,19 @@ class TicketingNewEdit extends React.Component {
                         {
                           text: `${UserStore.user.displayName} (me)`,
                           value: "default",
-                          // description:
-                          //   "Typical settings/Yallhands admin fulfill"
+            
                         },
                         {
                           text: "Customize...",
                           value: "custom",
-                          // description: "Customize access and notifications"
+                   
                         }
                       ]}
                     />
+                           </Form>
                     <Collapse in={this.state.access === "custom"}>
                       <Form>
-                        {/* <Form.Dropdown
-                          onChange={(e, val) =>
-                            this.updateState({ admins: val.value })
-                          }
-                          value={admins}
-                          options={AccountStore._getUsersSelectOptions()}
-                          label="Select admin(s)"
-                          className="FixSemanticLabel"
-                          fluid
-                          multiple
-                          selection
-                          placeholder="Select user(s)..."
-                        />
-                        <p style={{ padding: "0px", marginTop: "-15px" }}>
-                          <span style={{ fontSize: "0.7em" }}>
-                            Admins can edit all tickets and collaborators under
-                            this template
-                          </span>
-                        </p> */}
+          \
 
                         <Form.Dropdown
                           label="Select collaborator(s)"
@@ -378,17 +339,7 @@ class TicketingNewEdit extends React.Component {
                           </span>
                         </p>
 
-                        {/* <Form.Field>
-                          <Checkbox
-                            checked={this.state.config.notifyNewTicket}
-                            onChange={(e, val) =>
-                              this.updateState({
-                                config: { notifyNewTicket: val.checked }
-                              })
-                            }
-                            label="Email all collaborators when a new ticket is opened"
-                          />
-                        </Form.Field> */}
+      
                         <Form.Field>
                           <Checkbox
                             checked={this.state.config.deleteTicket}
@@ -401,17 +352,6 @@ class TicketingNewEdit extends React.Component {
                           />
                         </Form.Field>
 
-                        {/* <Form.Field>
-                          <Checkbox
-                            checked={this.state.config.updateOpener}
-                            onChange={(e, val) =>
-                              this.updateState({
-                                config: { updateOpener: val.checked }
-                              })
-                            }
-                            label="Keep user who opens ticket updated of status"
-                          />
-                        </Form.Field> */}
                       </Form>
                     </Collapse>
                     <Divider />
@@ -431,10 +371,12 @@ class TicketingNewEdit extends React.Component {
                       className="FixSemanticLabel"
                       value={icon}
                       label="Button Icon"
-                      // placeholder="Choose icon..."
+                      onOpen={() => this.updateState({_iconOptions: true})}
+                      onClose={() => this.updateState({_iconOptions: false})}
                       onChange={(e, {value})=>this.updateState({icon: value})}
                       icon={iconKey[`${icon}`]}
-                      selection options={iconOptions}
+                      selection 
+                      options={_iconOptions? iconOptions : []}
                     ></Form.Dropdown>
                       </Form.Group>
                       <Form.Group>
@@ -453,35 +395,10 @@ class TicketingNewEdit extends React.Component {
                       </Form.Group>
                     </Form>
                   
-                  </Form>
+           
             </Segment>
           </Col>
-          {/* {this.state.access === "custom" &&
-          <Col style={{marginTop: 10}}  xl={6}>
-          <Segment className="TicketingAccess" style={{margin: 10}} style={{backgroundColor: "#e9e9e9"}}>
-          <Header style={{paddingBottom: 15}} as="h4">Access</Header>
-                  <Form>
-                <Form.Dropdown onChange={(e, val)=>this.updateState({admins: val.value})} value={admins} options={AccountStore._getUsersSelectOptions()} label="Select admin(s)"  fluid multiple selection placeholder="Select user(s)..." />
-                <p style={{padding: "0px", marginTop: "-15px"}}><span style={{fontSize: "0.7em"}}>Admins can edit all tickets and collaborators under this template</span></p>
-
-                <Form.Dropdown label="Select collaborator(s)" admin={collaborators} onChange={(e, val)=>this.updateState({collaborators: val.value})} options={AccountStore._getUsersSelectOptions()}  fluid multiple selection placeholder="Select user(s)..." />
-                <p style={{padding: "0px", marginTop: "-15px"}}><span style={{fontSize: "0.7em"}}>Collaborators can edit and view history of tickets that have been assigned to them</span></p>
-       
-                <Form.Field>
-                      <Checkbox checked={this.state.config.notifyAdminNewTicket} onChange={(e,val)=> this.updateState({config: {notifyAdminNewTicket: val.checked}})} label="Email admin(s) when a new ticket is opened"/>
-                    </Form.Field>
-                    <Form.Field>
-                      <Checkbox checked={this.state.config.deleteTicket} onChange={(e,val)=> this.updateState({config: {deleteTicket: val.checked}})}  label="Allow admin(s) to delete tickets"/>
-                    </Form.Field>
-                    
-                  <Form.Field>
-                      <Checkbox checked={this.state.config.updateOpener} onChange={(e,val)=> this.updateState({config: {updateOpener: val.checked}})} label="Keep user who opens ticket updated of status"/>
-                    </Form.Field>
-               
-                  </Form>
-                </Segment>
-          </Col>
-          } */}
+         
         </Row>
 
         {type === "simple" ? (

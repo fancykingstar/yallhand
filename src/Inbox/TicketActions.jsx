@@ -377,6 +377,7 @@ export class TicketActions extends React.Component {
               title="Upload a new file"
               output={val => this.addFile(val)}
               includeTeamTag={false}
+              hideFromFeed={true}
         />
         </>
         }

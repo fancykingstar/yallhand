@@ -85,9 +85,9 @@ export class Files extends React.Component {
         UIStore.search.searchFilesData,
         UIStore.search.searchFiles
       );
-      return ResourcesStore.fileResources.filter(item => results.includes(item.resourceID));
+      return ResourcesStore.fileResources.filter(item=>!item.hideFromFeed).filter(item => results.includes(item.resourceID));
     } else {
-      return ResourcesStore.fileResources;
+      return ResourcesStore.fileResources.filter(item=>!item.hideFromFeed);
     }
   };
 

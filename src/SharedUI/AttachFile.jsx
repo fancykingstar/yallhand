@@ -42,7 +42,7 @@ export class AttachFile extends React.Component {
         this.props.output("");
         
       }else{
-        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
+        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label, null, Boolean(this.props.hideFromFeed)))
         .then((r) => {
         this.props.close();
         console.log("fileattached to S3 as ", r)

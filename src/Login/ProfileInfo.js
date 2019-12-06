@@ -28,6 +28,7 @@ class ProfileInfo extends React.Component {
       googleId: props.item && props.item.googleId ? props.item.googleId : '',
       img: props.item && props.item.img ? props.item.img : '',
       boss: props.item && props.item.boss ? props.item.boss : '',
+      adminLimits: props.item.adminLimits ? props.item.adminLimits : {}
     };
 
   }
@@ -70,7 +71,7 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tag, email, dob, password, accountID, now, date, boss, googleId, img } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tag, email, dob, password, accountID, now, date, boss, googleId, img, adminLimits } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     // else if (this.validate('phone', 'phone') !== '') return;
@@ -96,7 +97,8 @@ class ProfileInfo extends React.Component {
       boss: boss,
       date: date,
       googleId: googleId,
-      date: new Date()
+      date: new Date(),
+      adminLimits
     })
     .then((res) => res.json())
     .then((res) => {

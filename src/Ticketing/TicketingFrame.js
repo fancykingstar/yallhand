@@ -67,7 +67,8 @@ class TicketingFrame extends React.Component {
 
     }
     
-    const columns = ["Ticket Title", "Last Updated", "Created By", "Channel"];
+    // const columns = ["Ticket Title", "Last Updated", "Created By", "Channel"];
+    const columns = [{name:"Ticket Title"},{name: "Last Updated"}, {name: "Created By"},{name: "Channel"}];
 
     const data = TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => [ticket.label, UTCtoFriendly(ticket.updated), AccountStore._getDisplayName(ticket.userID), ChannelStore._getLabel(ticket.chanID)]);
     
@@ -77,7 +78,7 @@ class TicketingFrame extends React.Component {
       selectableRows: "none",
       filter:true,
       filterType: 'dropdown',
-      filterList: [["active"]],
+      // filterList: [["active"]],
       print: false,
       responsive: "scrollMaxHeight",
       viewColumns: false,

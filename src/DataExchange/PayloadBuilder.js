@@ -230,7 +230,7 @@ export const urlResourceAssociate = (resourceID, associations) => {
 
 
 ///FILE RESOURCES
-export const newFile = (label, assoc=null) => {
+export const newFile = (label, assoc=null, hideFromFeed=false) => {
  const buildObj = {
   label,
   S3Key: "",
@@ -239,6 +239,7 @@ export const newFile = (label, assoc=null) => {
   type: "",
   size: "", 
   teamID: "",
+  hideFromFeed,
   tags: []
   };
   assoc !== null? buildObj.associations = Object.assign({policies:[], announcements:[], tickets: []}, assoc) : {policies:[], announcements:[], tickets: []};
@@ -522,6 +523,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   ///TICKETING AND SERVICE DESK
   export const ticket = ( data ) => {
     let payload = data;
+    if (payload._iconOptions !== undefined) delete payload._iconOptions;
     // if (data.access === "default" && !data.ticketID)
     // payload.config = {
     //     simpleDesc: false,

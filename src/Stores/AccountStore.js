@@ -108,13 +108,13 @@ class Store {
   _getUsersSelectOptions(arry=false) {
       const selectedUsers = !arry ? this.allUsers : this.allUsers.filter(i=>i.userID && arry.includes(i.userID))
       return selectedUsers.filter(user => user.displayName_full !== "" && user.isActive)
-        .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName_full + " (me) ":user.displayName_full }))
+        .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName + " (me) ":user.displayName }))
   }
 
   _getAdminSelectOptions(arry=false) {
     const selectedUsers = !arry ? this.allUsers.filter(i=>i.isAdmin) : this.allUsers.filter(i=>i.isAdmin).filter(i=>i.userID && arry.includes(i.userID))
     return selectedUsers.filter(user => !user.code && user.isActive)
-      .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName_full + " (me) ":user.displayName_full }))
+      .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName + " (me) ":user.displayName }))
 }
 
   _getUser(ID) {

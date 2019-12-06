@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 // import Avatar from '@material-ui/core/Avatar';
 
 import {AccountStore} from "../Stores/AccountStore";
-import _ from "lodash";
+// import _ from "lodash";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import toast  from "../YallToast"
 import ChipInput from 'material-ui-chip-input'
@@ -52,9 +52,9 @@ export class TicketingItem extends React.Component {
       else if (lastItem.type !== "text" && !lastItem.options.length) toast.error("Please add options for selection", {hideProgressBar: true});
       else valid = true;
     } 
-    // console.log("valid", valid)
+
     // const newData = [...this.props.data, {type: "text", label: "", options: []}];
-    console.log("newData", this.props.data)
+ 
     if(valid) setField({data: [...this.props.data, {type: "text", label: "", options: []}]});
   }
 
@@ -77,7 +77,7 @@ export class TicketingItem extends React.Component {
     let newData = this.props.data
     const updatedRecord = await Object.assign(newData[i], obj);
     await newData.splice(i, 1, updatedRecord);
-    console.log("updatedrecord", newData)
+  
     setField({data:newData});
   }
 

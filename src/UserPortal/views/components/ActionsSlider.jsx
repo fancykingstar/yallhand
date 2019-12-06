@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from 'reactstrap';
 import { TicketingStore } from "../../../Stores/TicketingStore";
 import { AccountStore } from "../../../Stores/AccountStore";
-
+ 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
 import ActionsForm from "./ActionsForm";
@@ -72,7 +72,7 @@ class ActionSlider extends React.Component {
       let resources = [];
       for (let index = 0; index < files.length; index++) {
          const file = files[index];
-         await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}))
+         await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}, true))
          .then((r) => {
          resources.push(r);
          })
@@ -187,7 +187,7 @@ class ActionSlider extends React.Component {
                            )}*/}
 
                         {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name="star" color="#1249bd" bgColor="#e7eefc" size="40" onClick={() => alert("test")} />
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="20" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
                         )}
 
                         </Slider>
