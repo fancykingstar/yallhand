@@ -2,23 +2,26 @@ import React from "react";
 import {inject, observer} from "mobx-react"
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import {giveMeKey} from "../SharedCalculations/GiveMeKey"
-import { Table, Header,Icon, Segment, List, Rating, Modal} from "semantic-ui-react";
+import { Table, Header,Icon, Segment, List, Rating, Modal, Pagination, Button } from "semantic-ui-react";
 import { SearchBox } from "../SharedUI/SearchBox"
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { UIStore } from "../Stores/UIStore";
+import { PageSizeSelect } from "./PageSizeSelect";
 // import Slider from "react-slick";
-
+import CsvDownloader from 'react-csv-downloader';
 import {SurveyStore} from "../Stores/SurveyStore";
 import {TaskStore} from "../Stores/TaskStore";
 import {AccountStore} from "../Stores/AccountStore";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import TimeAgo from 'react-timeago'
-
+import { format } from 'timeago.js';
+import moment from 'moment';
 
 export class SurveyAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[]}
+    this.state={width: 0, height: 0, searchValue: "", data: [], slideIndex: 0, updateCount: 0, surveyDetail: "", userList: [], displayUsers: false, sortsToggled:[], limit: 5, currentPage: 1 }
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     this.sort = (param) => {
       
@@ -46,22 +49,49 @@ export class SurveyAnalytics extends React.Component {
 
 
   componentDidMount(){
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
     this.sort("_updated", "Highest");
     const data = this.props.mode === "survey"? SurveyStore.allSurveys : TaskStore.allTasks
     this.setState({data});
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+
+  onChangeLimit = (event, data) => {
+    if (data.value !== this.state.limit) {
+      this.setState({limit: data.value, currentPage: 1});
+    }
+  }
+
+  onChangePage = (event, data) => {
+    const { activePage } = data;
+    if (activePage !== this.state.currentPage) {
+      this.setState({currentPage: activePage})
+    }
+  };
+
 
   render() {
-    const {searchValue, data, surveyDetail} = this.state;
-
-
-
+    const {searchValue, surveyDetail} = this.state;
 
     const searchFilter = (all) => {
       if(searchValue === "") return all
-      else return all.filter(i => i.label.toLowerCase().includes(searchValue.toLowerCase()))
-  }
+        else return all.filter(i => i.label.toLowerCase().includes(searchValue.toLowerCase()))
+    }
+
+    const { currentPage, data, limit } = this.state;
+    const totalPages = Math.ceil(searchFilter(data).length / limit);
+    const items = searchFilter(data).slice(
+      (currentPage - 1) * limit,
+      (currentPage) * limit
+    );
 
     const settings_components_slide = {
       dots: false,
@@ -75,11 +105,9 @@ export class SurveyAnalytics extends React.Component {
       afterChange: () =>
         this.setState(state => ({ updateCount: state.updateCount + 1 })),
       beforeChange: (current, next) => this.setState({ slideIndex: next }),
-  };
+    };
 
-
-
-    const rows = searchFilter(data).map(survey => {
+    const rows = items.map(survey => {
       return (
         <Table.Row disabled={!survey.instances.length} key={"survey" + giveMeKey()} onClick={e => this.rowSelected(survey)}>
           <Table.Cell width={4} style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  >
@@ -96,6 +124,20 @@ export class SurveyAnalytics extends React.Component {
           </Table.Row>
         )
       })
+
+    const download = searchFilter(data).map(survey => {
+      return {
+        "Title": survey.label,
+        "Last Sent": survey.instances.length === 0 ? "Never" : format(Math.max(...survey.instances.map(i=>i.sent)) - 3600*24*1000, 'en_US'),
+        "Queries": survey._surveys,
+        "Recipients": survey._instances,
+        "Not Started": survey._noStart,
+        "Partial": survey._partial,
+        "Completed": survey._completed,
+        "Cancelled": survey._cancelled,
+        "Deadline": survey.instances.length === 0 || !Math.max(...survey.instances.map(i=>i.deadline)) ? "None" : format(Math.max(...survey.instances.map(i=>i.deadline)) - 3600*24*1000),
+      }
+    })
 
       const userList = (userIDs) => 
             <List>
@@ -195,9 +237,20 @@ export class SurveyAnalytics extends React.Component {
    as="h2"
    content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
     />
-            <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "inline-block"}}>     <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/></div>
+      <div style={UIStore.responsive.isMobile? {display: "flex"} : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "flex"}}>
+        <CsvDownloader datas={download} text="DOWNLOAD" filename={`${this.props.mode === "survey"? "Survey" : "Task"}` + '-' + moment().format('MMDDYY')}>
+          <Button primary>export CSV</Button>
+        </CsvDownloader>
+        <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/>
+      </div>
    <div style={{overflowX: "auto", width: "100%"}}>
-   <Table selectable basic="very" >
+   {
+      this.state.width > 767 ? <PageSizeSelect 
+                      limit={limit}
+                      onChangeLimit={this.onChangeLimit}
+                    />: <div />
+    }
+   <Table selectable basic="very" style={this.state.width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
      <Table.Header>
        <Table.Row>
          <Table.HeaderCell>Title</Table.HeaderCell>
@@ -217,6 +270,25 @@ export class SurveyAnalytics extends React.Component {
      <Table.Body>
          {rows}
      </Table.Body>
+     <Table.Footer>
+        <Table.Row>
+          <Table.HeaderCell style={{border: 'none'}}>
+            { 
+              totalPages > 1?
+              <Pagination 
+                activePage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={this.onChangePage} 
+                ellipsisItem={null}
+                firstItem={null}
+                lastItem={null}
+                siblingRange={1}
+                boundaryRange={0}
+              /> : <div />
+            }
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
    </Table>
    </div>
    </div>

@@ -110,10 +110,10 @@ class ContentDetail extends React.Component {
     :
     <>
     <Input placeholder="Enter your question…" type="text" name="q" id="q" onChange={e=>this.setState({q: e.target.value})} />
-    <div style={{padding: "25px 25px 15px 25px"}}>
-    <Button outline color="primary" size="sm" onClick={()=>this.submitQ()}>
-    Submit <DoneRoundedIcon fontSize="small"/>
-  </Button>
+    <div style={{padding: "25px 25px 15px 25px", textAlign: "center", display: "flex", justifyContent: "center"}}>
+      <Button outline color="primary" size="sm" onClick={()=>this.submitQ()} style={{ display: "flex" }}>
+         Submit <DoneRoundedIcon fontSize="small"/>
+      </Button>
     </div>
     </>
 
@@ -129,7 +129,7 @@ class ContentDetail extends React.Component {
                      <div className="smallContainer">
                         <QuestionAnswer qaData={PostData.variations[0].qanda} />
                      </div>}
-                     <div className="smallContainer" style={{padding: "25px 25px 25px 25px"}}>
+                     <div className="smallContainer" style={{padding: "25px 25px 25px 25px", textAlign: "center"}}>
                         {takeQuestion}
                      </div>
                      

@@ -37,7 +37,7 @@ class TicketingNewEdit extends React.Component {
       type: "simple",
       access: "default",
       active: false,
-      icon: "",
+      icon: "Star",
       isTemplate: true,
       sendTargetType: "all",
       sendToTagID: "",
@@ -428,13 +428,13 @@ class TicketingNewEdit extends React.Component {
                       label="Channel"
                     />
                     <Form.Dropdown
-                      value={"Star"}
+                      className="FixSemanticLabel"
+                      value={icon}
                       label="Button Icon"
                       // placeholder="Choose icon..."
-                      // onChange={(e, val)=>this.updateState({icon: val.value})}
-                      icon={iconKey["Star"]}
-                      disabled
-                      // selection options={iconOptions}
+                      onChange={(e, {value})=>this.updateState({icon: value})}
+                      icon={iconKey[`${icon}`]}
+                      selection options={iconOptions}
                     ></Form.Dropdown>
                       </Form.Group>
                       <Form.Group>

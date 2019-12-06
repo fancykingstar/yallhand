@@ -1,10 +1,12 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
-import { Segment, Header, Menu, Icon, Table, Modal } from "semantic-ui-react"
+import { Segment, Header, Menu, Icon, Table, Modal, Pagination, Button } from "semantic-ui-react"
 import { SearchBox } from "../SharedUI/SearchBox"
-
+import CsvDownloader from 'react-csv-downloader';
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import {SortingChevron} from "../SharedUI/SortingChevron";
+import { PageSizeSelect } from "./PageSizeSelect";
+import moment from 'moment';
 import _ from 'lodash'
 
 @inject("UIStore", "AccountStore", "PoliciesStore", "AnnouncementsStore", "ResourcesStore", "TeamStore")
@@ -12,22 +14,63 @@ import _ from 'lodash'
 export class PortalViews extends React.Component {
     constructor(props){
         super(props);
-        this.state={data: [], sortsToggled:[]};
+        this.state={width: 0, height: 0, data: [], sortsToggled:[], limit: 25, currentPage: 1 };
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
     componentDidMount(){
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
         const {AccountStore} = this.props;
         this.setState({data: AccountStore.analyticData_portal})
     }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+      this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
+
+    onChangeLimit = (event, data) => {
+      if (data.value !== this.state.limit) {
+        this.setState({limit: data.value, currentPage: 1});
+      }
+    }
+
+    onChangePage = (event, data) => {
+      const { activePage } = data;
+      if (activePage !== this.state.currentPage) {
+        this.setState({currentPage: activePage})
+      }
+    };
+
     render(){
         const {UIStore, AccountStore, PoliciesStore, AnnouncementsStore, ResourcesStore, TeamStore} = this.props
+
+        const searchFilter = (all) => {
+            const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file"}
+            const result = all.slice().filter(log => log.type === UItoLogKey[UIStore.menuItem.analyticsHeader])
+            if(UIStore.search.analyticsSearchValue === "") return result
+            else return result.filter(i => getLabel(i).toLowerCase().includes(UIStore.search.analyticsSearchValue.toLowerCase()))
+        }
+
+        const { currentPage, data, limit } = this.state;
+        const totalPages = Math.ceil(searchFilter(data).length / limit);
+        const items = searchFilter(data).slice(
+          (currentPage - 1) * limit,
+          (currentPage) * limit
+        );
+
+        const filteredData = searchFilter(data);
 
         const sort = (param) => {
 
             if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
             else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
             if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
-            else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }  
-            }
+            else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }         
+        }
 
             
         const getLabel = (data) => {
@@ -42,13 +85,6 @@ export class PortalViews extends React.Component {
            }
         //    else {return "No label available"}
            return label === "" || label === undefined? "obsoleted data" : label
-        }
-
-        const searchFilter = (all) => {
-            const UItoLogKey={"announcements": "announcement", "faqs": "policy", "files":"file"}
-            const result = all.slice().filter(log => log.type === UItoLogKey[UIStore.menuItem.analyticsHeader])
-            if(UIStore.search.analyticsSearchValue === "") return result
-            else return result.filter(i => getLabel(i).toLowerCase().includes(UIStore.search.analyticsSearchValue.toLowerCase()))
         }
 
         const templateHeader = (vari=false) =>    
@@ -123,9 +159,10 @@ export class PortalViews extends React.Component {
                 </Modal>
             }
         
-        const displayResults = searchFilter(this.state.data) 
-        .map(log => 
-            <Table.Row key={"analyticsResult" + giveMeKey()}>
+        const displayResults = searchFilter(items) 
+          .map(log => {
+            return (
+              <Table.Row key={"analyticsResult" + giveMeKey()}>
                {varis(log)}
                 <Table.Cell textAlign="center">{log.total_views}</Table.Cell>
                 <Table.Cell textAlign="center">{log.unique_views}</Table.Cell>
@@ -136,10 +173,22 @@ export class PortalViews extends React.Component {
                                <Table.Cell textAlign="center">{log.sentiment_total[0]}</Table.Cell>
                                </React.Fragment>
                                 : null }
-            </Table.Row>
+              </Table.Row>
             )
+          })
 
+        const download = filteredData.map(camp => {   
+          return {
+            "Label": getLabel(camp),
+            "Total Views": camp.total_views,
+            "Unique Views": camp.unique_views,
+            "Smile": camp.sentiment_total[2],
+            "Meh": camp.sentiment_total[1],
+            "Frown": camp.sentiment_total[0]
+          }
+        });
 
+        const type = UIStore.menuItem.analyticsHeader==="announcements" ? "Announcements" : "Faqs";
         return(
             <React.Fragment>
             <Header
@@ -169,15 +218,44 @@ export class PortalViews extends React.Component {
       
             </Menu>
            </div>
-           <div style={UIStore.responsive.isMobile? null : {float: 'right', paddingRight: 10,display: "inline-block"}}>     <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/></div>
-     
-           
-            <Table basic="very">
+           <div style={UIStore.responsive.isMobile? {display: 'flex'} : {float: 'right', paddingRight: 10,display: "flex"}}>
+              <CsvDownloader datas={download} text="DOWNLOAD" filename={"Portal-"+type+"-"+moment().format('MMDDYY')}>
+                <Button primary>export CSV</Button>
+              </CsvDownloader>
+              <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/>
+            </div>
+            <br/>
+            {
+              this.state.width > 767? <PageSizeSelect 
+                limit={limit}
+                onChangeLimit={this.onChangeLimit} 
+              />: <div />
+            }
+            <Table basic="very" style={this.state.width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
             {templateHeader()}
             
             <Table.Body>
             {displayResults}
             </Table.Body>
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell style={{border: 'none'}}>
+                  { 
+                    totalPages > 1 ?
+                      <Pagination 
+                        activePage={currentPage} 
+                        totalPages={totalPages} 
+                        onPageChange={this.onChangePage} 
+                        ellipsisItem={null}
+                        firstItem={null}
+                        lastItem={null}
+                        siblingRange={1}
+                        boundaryRange={0}
+                      /> : <div />
+                    }
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
             </Table>
             </React.Fragment>
   

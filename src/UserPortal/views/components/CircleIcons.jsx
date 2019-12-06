@@ -18,15 +18,32 @@ const useStyles = makeStyles({
         '&::before': {
             fontSize: props => `${parseInt(props.size)}px`,
         }
+    },
+    label: {
+        fontFamily: "Rubik",
+        fontSize: "16px",
+        fontWeight: "normal",
+        fontStretch: "normal",
+        fontStyle: "normal",
+        lineHeight: "1.25",
+        letterSpacing: "normal",
+        color: "#0f141a",
+        paddingLeft: "20px",
+        paddingTop: "20px",
+        flex: 1
     }
 });
 
 const CircleIcons = (props) => {
-    const { circleIconStyle, root } = useStyles(props);
+    const { circleIconStyle, root, label } = useStyles(props);
     const name = `fa fa-${props.name}`;
+    const { title } = props
     return (
-        <div className={`${root}`} onClick={props.onClick}>
-            <Icon className={`${name} ${circleIconStyle}`} />
+        <div style={{ display: "flex" }}>
+            <div className={`${root}`} onClick={props.onClick}>
+                <Icon className={`${name} ${circleIconStyle}`} />
+            </div>
+            <p className={`icon-label ${label}`}>{title}</p>
         </div>
     )
 }

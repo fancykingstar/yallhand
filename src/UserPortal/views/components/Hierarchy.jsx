@@ -63,14 +63,22 @@ class Hierarchy extends React.Component {
       if (newIndex !== 0 && newIndex <= 3) {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
-         this.setState({ boss });
+         var b = []
+         for (var i = 0; i <= newIndex; i ++) {
+            b.push(boss[i]);
+         }
+         this.setState({ boss: b });
       }
    }
    update_boss_slide(newIndex, newBoss) {
       if (newIndex !== 0 && newIndex <= 3) {
          var { boss } = this.state;
          boss[newIndex] = newBoss;
-         this.setState({ boss });
+         var b = []
+         for (var i = 0; i <= newIndex; i ++) {
+            b.push(boss[i]);
+         }
+         this.setState({ boss: b });
          this.slider.slickNext();
       }
    }
@@ -104,9 +112,9 @@ class Hierarchy extends React.Component {
                         {this.get_employee(iboss).map((e, j) =>
                            <StaffDetail
                               update_boss={this.update_boss_slide}
-                              active={(boss[i + 1] === e.displayName_full)}
-                              boss={{ index: (i + 1), boss: e.displayName_full }}
-                              has_child={this.check_employee_has_child(e.displayName_full)}
+                              active={(boss[i + 1] === e.userID)}
+                              boss={{ index: (i + 1), boss: e.userID }}
+                              has_child={this.check_employee_has_child(e.userID)}
                               key={j}
                               view="hierarchy"
 
@@ -130,9 +138,9 @@ class Hierarchy extends React.Component {
                      {this.get_employee(iboss).map((e, j) =>
                         <StaffDetail
                            update_boss={this.update_boss}
-                           active={(boss[i + 1] === e.displayName_full)}
-                           boss={{ index: (i + 1), boss: e.displayName_full }}
-                           has_child={this.check_employee_has_child(e.displayName_full)}
+                           active={(boss[i + 1] === e.userID)}
+                           boss={{ index: (i + 1), boss: e.userID }}
+                           has_child={this.check_employee_has_child(e.userID)}
                            key={j}
                            view="hierarchy"
 

@@ -23,6 +23,25 @@ import "./style.css";
 )
 @observer
 class ContentListingPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+
   getMuiTheme = () =>
     createMuiTheme({
       overrides: {
@@ -151,6 +170,11 @@ class ContentListingPage extends React.Component {
     {name:  "State"}
     ];
 
+    const mobileColumns = [ 
+      {name:  "Title"},
+      {name:  "Last Updated"},
+    ];
+
     const data = all.map(item => [
       item.img,
       item.featured,
@@ -158,6 +182,11 @@ class ContentListingPage extends React.Component {
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
       item.state === "ok" ? "published" : item.state
+    ]);
+
+    const mobileData = all.map(item => [
+      item.label,
+      UTCtoFriendly(item.updated),
     ]);
 
     const options = {
@@ -180,6 +209,7 @@ class ContentListingPage extends React.Component {
       onRowClick: (i, data) => handleClick(all[data.dataIndex])
     };
 
+    const { width } = this.state;
 
     return (
       <React.Fragment>
@@ -202,12 +232,20 @@ class ContentListingPage extends React.Component {
           </MenuContainer>
           <div className="muidatatable-custom" style={{ marginTop: 15 }}>
             <MuiThemeProvider theme={this.getMuiTheme()}>
-              <MUIDataTable
-                // title={"Employee List"}
-                data={data}
-                columns={columns}
-                options={options}
-              />
+              {
+                width > 767?  <MUIDataTable
+                                // title={"Employee List"}
+                                data={data}
+                                columns={columns}
+                                options={options}
+                              />
+                            :
+                              <MUIDataTable
+                                data={mobileData}
+                                columns={mobileColumns}
+                                options={options}
+                              />
+              }
             </MuiThemeProvider>
           </div>
         </div>
