@@ -187,7 +187,7 @@ class ActionSlider extends React.Component {
                            )}*/}
 
                         {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="20" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="40" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
                         )}
 
                         </Slider>
