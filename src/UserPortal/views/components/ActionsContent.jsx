@@ -48,7 +48,7 @@ class ActionsContent extends React.Component {
               <Container>
                 <Row>
                   <Col>
-                    <h4>Suggested content</h4>
+                    <h4>Please review this suggested content</h4>
                    
                   </Col>
                 </Row>
@@ -74,7 +74,7 @@ class ActionsContent extends React.Component {
               <Row className="text-right form-buttons">
       
                 <Col>
-                <p style={{paddingRight: 5}}> Problem resolved? </p>
+                <p style={{paddingRight: 5}}>Is this content helpful ? </p>
                 <Fab
                 variant="extended"
                 size="small"

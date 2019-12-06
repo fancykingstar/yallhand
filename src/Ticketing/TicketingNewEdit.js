@@ -12,7 +12,7 @@ import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
 import { ticket, surveyEdit, schedule } from "../DataExchange/PayloadBuilder";
-import { createTicket, modifySurvey, createSchedule, deleteSchedule } from "../DataExchange/Up";
+import { createTicket, modifySurvey, createSchedule, deleteSchedule, modifyTicket } from "../DataExchange/Up";
 import { ScheduleStore } from "../Stores/ScheduleStore";
 import { validate } from "../SharedCalculations/ValidationTemplate";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
@@ -20,8 +20,9 @@ import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 import { iconKey, iconOptions } from "./IconSelect";
 
 import _ from "lodash";
+import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 
-@inject("TicketingStore", "ChannelStore", "AccountStore")
+@inject("TicketingStore", "ChannelStore", "AccountStore", "UserStore")
 @observer
 class TicketingNewEdit extends React.Component {
   constructor(props) {
@@ -42,13 +43,11 @@ class TicketingNewEdit extends React.Component {
       sendToTagID: "",
       sendToTeamID: "",
       sendToUsers: [],
-      admins: [],
       collaborators: [],
       config: {
         simpleDesc: false,
-        notifyAdminNewTicket: false,
+        // notifyNewTicket: false,
         deleteTicket: false,
-        updateOpener: false
       }
     };
   }
@@ -61,14 +60,14 @@ class TicketingNewEdit extends React.Component {
           isOpen: true,
           defaultAssignee: "",
           data: [], //{type: "", label: "", options: []}
-          _requireInfo: false
+          // _requireInfo: false
         },
         {
           id: giveMeKey(),
           defaultAssignee: "",
           isClose: true,
           data: [], //{type: "", label: "", options: []}
-          _requireInfo: false
+          // _requireInfo: false
         }
       ];
     } else
@@ -76,11 +75,13 @@ class TicketingNewEdit extends React.Component {
         id: giveMeKey(),
         defaultAssignee: "",
         data: [{ type: "text", label: "", options: [] }], //{type: "", label: "", options: []}
-        _requireInfo: false
+        // _requireInfo: false
       };
   }
 
   updateState(obj) {
+    const {UserStore} = this.props;
+    if (obj.access === "default") this.setState({collaborators: [UserStore.user.userID]});
     if (Object.keys(obj).includes("config"))
       this.setState({ config: Object.assign(this.state.config, obj.config) });
     else this.setState(obj);
@@ -89,17 +90,18 @@ class TicketingNewEdit extends React.Component {
   validateFields = () => {
     const {
       label,
-      access,
-      targetType,
-      admins,
-      targetConfig,
-      deadline,
-      surveyItems,
-      instances
+      collaborators,
+      ticketItems,
     } = this.state;
     const conditions = {
       Title: Boolean(label),
-      Admins: access !== "custom" || admins.length
+      Collaborators: Boolean(collaborators.length),
+      Labels: Boolean(!ticketItems.filter(i => {
+        return Boolean(i.data.filter(y => !y.label).length)
+      }).length),
+      "Select Options": Boolean(!ticketItems.filter(i => {
+        return Boolean(i.data.filter(y => y.type.toLowerCase().includes('select') && !y.options.length).length)
+      }).length),
     };
     return validate(conditions).valid;
   };
@@ -134,6 +136,14 @@ class TicketingNewEdit extends React.Component {
     return false;
   };
 
+  fileUploadInUse = () => {
+    let fileUploader = false;
+    this.state.ticketItems.forEach(ticketItem => {
+      if (ticketItem.data.filter(i => i.type === "file").length > 0 && !fileUploader) fileUploader = true;
+    })
+    return fileUploader;
+  }
+
   displayTicketItems = () => {
     return this.state.ticketItems.map((stage, index) => {
       return (
@@ -145,8 +155,9 @@ class TicketingNewEdit extends React.Component {
           totalItemsCount={this.state.ticketItems.length}
           index={index}
           id={stage.id}
+          fileUploadInUse={this.fileUploadInUse()}
           defaultAssignee={stage.defaultAssignee}
-          _requireInfo={stage._requireInfo}
+          // _requireInfo={stage._requireInfo}
           data={stage.data}
           updateFields={this.updateFields}
           removeRow={this.removeRow}
@@ -165,24 +176,17 @@ class TicketingNewEdit extends React.Component {
   };
 
   updateTicket = async (active = null) => {
-    // await this.setState({active});
-    // if (active !== null) await this.setState({active});
-    // if (active === false) modifySurvey({surveyID: this.state.surveyID, updated: Date.now(), active: false, type: this.props.mode});
-    // else if (this.state.surveyID) await modifySurvey(surveyEdit(this.props.mode,this.state));
-    // else {
-
-    if (this.validateFields())
-      await createTicket(ticket(this.state))
-        .then(res => res.json())
-        .then(res => this.setState({ surveyID: res.surveyID }));
-
-    // if (this.validateFields()) await console.log(ticket(this.state)); //TEST
-
-    // }
-    // if (active !== null) {
-    //   if(active && this.state.deadline) createSchedule(schedule(this.state.deadline,`end ${this.props.mode}`,{id: this.state.surveyID}), false);
-    //   else if(!active && this.state.deadline) deleteSchedule(ScheduleStore.allScheduled.filter(sch => sch.data.id === this.state.surveyID && !sch.executed)[0].scheduleID);
-    // }
+    if (!this.validateFields()) return;
+    if (active !== null) await this.setState({active});
+    const isNew = Boolean(!this.state.ticketID);
+    if (isNew) {
+      const updated = await createTicket(ticket(this.state)).then(r=>r.json());
+      await this.setState(updated);
+    }
+    else {
+      modifyTicket(ticket(this.state));
+    };
+    if (active) this.props.history.push('/panel/ticketing');
   };
 
   removeSuggestedContent = val => {
@@ -203,8 +207,9 @@ class TicketingNewEdit extends React.Component {
 
 
   componentDidMount(active = null) {
-    const { TaskStore, TicketingStore } = this.props;
+    const { TaskStore, TicketingStore, UserStore } = this.props;
     const id = this.props.match.params.id;
+    const me = UserStore.user.userID;
     const loadTicket = this.props.match.params.id
       ? TicketingStore.allTickets.filter(i => i.ticketID === id)[0]
       : false;
@@ -214,47 +219,43 @@ class TicketingNewEdit extends React.Component {
       // }
       this.setState(loadTicket);
     }
+    else this.setState({collaborators: [me]})
   }
 
   render() {
-    const { ChannelStore, AccountStore } = this.props;
+    const { ChannelStore, AccountStore, UserStore } = this.props;
+    const { type, active, chanID, label, admins, icon, collaborators, access, assoc } = this.state;
+    const isNew = Boolean(!this.state.ticketID);
 
-    const launch = (
-      <Button onClick={e => this.updateTicket(true)} primary>
-        {" "}
-        Launch{" "}
-      </Button>
-    );
-    const save = <Button onClick={e => this.updateTicket()}> Save </Button>;
-    const stop = (
-      <Button negative onClick={() => this.updateTicket(false)}>
-        Stop
-      </Button>
-    );
-    const cancel = (
-      <Button onClick={e => this.props.history.push("/panel/surveys")}>
-        {" "}
-        Cancel{" "}
-      </Button>
-    );
+
+    const launch = ( <Button onClick={e => this.updateTicket(true)} disabled={ false } primary > Launch </Button> );
+    const save = ( <Button onClick={e => this.updateTicket()}> Save </Button> );
+    const stop = <Button negative onClick={()=> this.updateTicket(false)}>Stop</Button>;
+    const cancel = ( <Button onClick={e => this.props.history.push('/panel/ticketing')} > Cancel </Button> );
+    const del = ( <ConfirmDelete label="Service desk ticket" /> );
+
+
+  
     const preview = <Button onClick={e => {}}> Preview </Button>;
-    const actions = this.state.active ? (
+    const actions = active ? (
       <div style={{ paddingTop: 5 }}>
         {" "}
-        {save} {stop} {preview}
+        {stop} {save} {cancel}
+        {/* {preview} */}
       </div>
     ) : (
       <div style={{ paddingTop: 5 }}>
         {" "}
-        {launch} {save} {cancel} {preview}
+        {launch} {save} {isNew? cancel: del} 
+        {/* {preview} */}
       </div>
     );
 
-    const { type, active, chanID, label, admins, icon, collaborators, access, assoc } = this.state;
+ 
     return (
       <div>
         <BackButton />
-
+   
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           New Request Template  
           <Header.Subheader>
@@ -280,8 +281,8 @@ class TicketingNewEdit extends React.Component {
                   <input maxLength={48} />
                 </Form.Input>
               </Form>
-              {!active && (
-                <>
+{/*          
+           
                   <div style={{ paddingTop: 5, paddingBottom: 10 }}>
                     {" "}
                     <ChooseTargeting
@@ -289,20 +290,20 @@ class TicketingNewEdit extends React.Component {
                       output={val => this.updateState(val)}
                       input={this.state}
                     />{" "}
-                  </div>
+                  </div> */}
 
                   <Form style={{ maxWidth: 400 }}>
                     <Form.Field className="FixSemanticLabel" style={{ minWidth: 370 }}>
                       <label>Ticketing Type</label>
                       <Grid columns={2} relaxed="very" stackable>
                         <Grid.Column>
-                          <div onClick={()=>this.updateState({type: "simple"})} className={type === "simple"? "PlanOption PlanActive" : "PlanOption"}>
+                          <div style={{cursor: "pointer"}} onClick={()=>this.updateState({type: "simple", ticketItems: this.reset(true)})} className={type === "simple"? "PlanOption PlanActive" : "PlanOption"}>
                             <h4>Simple</h4>
                             <p>Basic open/close ticketing</p>
                           </div>
                         </Grid.Column>
                         <Grid.Column>
-                        <div onClick={()=>this.updateState({type: "enhanced"})}  className={type !== "simple"? "PlanOption PlanActive" : "PlanOption"}>
+                        <div style={{cursor: "pointer"}} onClick={()=>this.updateState({type: "enhanced"})}  className={type !== "simple"? "PlanOption PlanActive" : "PlanOption"}>
                             <h4>Enhanced</h4>
                             <p>Design your own multi-step ticketing</p>
                           </div>
@@ -316,13 +317,13 @@ class TicketingNewEdit extends React.Component {
                       onChange={(e, val) =>
                         this.updateState({ access: val.value })
                       }
-                      label="Ticket Admin Settings"
+                      label="Choose ticket collaborators"
                       className="FixSemanticLabel"
                       style={{ minWidth: 370 }}
                       selection
                       options={[
                         {
-                          text: "Yallhands Admin Only",
+                          text: `${UserStore.user.displayName} (me)`,
                           value: "default",
                           // description:
                           //   "Typical settings/Yallhands admin fulfill"
@@ -336,7 +337,7 @@ class TicketingNewEdit extends React.Component {
                     />
                     <Collapse in={this.state.access === "custom"}>
                       <Form>
-                        <Form.Dropdown
+                        {/* <Form.Dropdown
                           onChange={(e, val) =>
                             this.updateState({ admins: val.value })
                           }
@@ -354,15 +355,16 @@ class TicketingNewEdit extends React.Component {
                             Admins can edit all tickets and collaborators under
                             this template
                           </span>
-                        </p>
+                        </p> */}
 
                         <Form.Dropdown
                           label="Select collaborator(s)"
                           className="FixSemanticLabel"
-                          admin={collaborators}
+                          value={collaborators}
                           onChange={(e, val) =>
                             this.updateState({ collaborators: val.value })
                           }
+                          
                           options={AccountStore._getUsersSelectOptions()}
                           fluid
                           multiple
@@ -371,22 +373,22 @@ class TicketingNewEdit extends React.Component {
                         />
                         <p style={{ padding: "0px", marginTop: "-15px" }}>
                           <span style={{ fontSize: "0.7em" }}>
-                            Collaborators can edit and view history of tickets
-                            that have been assigned to them
+                            Grant access for editing and viewing tickets from this template
+                           
                           </span>
                         </p>
 
-                        <Form.Field>
+                        {/* <Form.Field>
                           <Checkbox
-                            checked={this.state.config.notifyAdminNewTicket}
+                            checked={this.state.config.notifyNewTicket}
                             onChange={(e, val) =>
                               this.updateState({
-                                config: { notifyAdminNewTicket: val.checked }
+                                config: { notifyNewTicket: val.checked }
                               })
                             }
-                            label="Email admin(s) when a new ticket is opened"
+                            label="Email all collaborators when a new ticket is opened"
                           />
-                        </Form.Field>
+                        </Form.Field> */}
                         <Form.Field>
                           <Checkbox
                             checked={this.state.config.deleteTicket}
@@ -395,11 +397,11 @@ class TicketingNewEdit extends React.Component {
                                 config: { deleteTicket: val.checked }
                               })
                             }
-                            label="Allow admin(s) to delete tickets"
+                            label="Allow collaborator(s) to delete tickets"
                           />
                         </Form.Field>
 
-                        <Form.Field>
+                        {/* <Form.Field>
                           <Checkbox
                             checked={this.state.config.updateOpener}
                             onChange={(e, val) =>
@@ -409,7 +411,7 @@ class TicketingNewEdit extends React.Component {
                             }
                             label="Keep user who opens ticket updated of status"
                           />
-                        </Form.Field>
+                        </Form.Field> */}
                       </Form>
                     </Collapse>
                     <Divider />
@@ -452,8 +454,6 @@ class TicketingNewEdit extends React.Component {
                     </Form>
                   
                   </Form>
-                </>
-              )}
             </Segment>
           </Col>
           {/* {this.state.access === "custom" &&

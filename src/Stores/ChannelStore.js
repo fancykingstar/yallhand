@@ -39,6 +39,12 @@ class Store {
     return options
   }
 
+  @computed
+  get _channelSelectNoAll() {
+    return ChannelStore.allChannels.map(chan =>({"key": "chan" + giveMeKey(), "text": chan.label, "value": chan.chanID}))
+   
+  }
+
 
 }
 

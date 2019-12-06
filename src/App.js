@@ -7,7 +7,7 @@ import {UserPortal} from "./UserPortal/App";
 import Login from "./Login/Login";
 import Forgot from "./Login/Forgot";
 import { Spinner } from "./Spinner/spinner";
-import { loadAdmin } from "./DataExchange/LoadProfile";
+import { loadProfile } from "./DataExchange/LoadProfile";
 import FullStory from 'react-fullstory';
 import toast from './YallToast'
 import { ToastContainer, Slide } from "react-toastify";
@@ -31,14 +31,12 @@ class AppRoute extends React.Component {
     const { UserStore, UIStore } = this.props;
     const { location } = this.props;
     this.state = {shouldRedirect: false, redirect: "/"}
-
-    this.state = {shouldRedirect: false, redirect: "/"}
     if (getUser() === null && (location.pathname !== '/' && !location.pathname.includes('/forgot'))) this.props.history.push('/');
     else if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
       const loadthings = async ()=>{
-        await loadAdmin();
+        await loadProfile();
         const { isAuthenticated } = getUser() ? UserStore: false;
         const path = location.pathname;
         const loggedOutRoutes = ['/', '/register', '/forgot'];

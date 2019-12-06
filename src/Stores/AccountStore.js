@@ -123,7 +123,18 @@ class Store {
       displayName_full: "Yallhands Admin",
       displayName: "Yallhands",
       img: "https://yallhandsgeneral.s3.amazonaws.com/yh-avatar.png",
-      email: "support@yallhands.com"
+      email: "support@yallhands.com",
+      profile: { Title: "",
+      Department: "",
+      Location: "",
+      "Phone or Extension": "",
+      Mobile: "",
+      "About Me": "",
+      Twitter: "",
+      Medium: "",
+      Github: "",
+      LinkedIn: "" }
+      
     }
     return ID === "*" ? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
   }

@@ -1,20 +1,29 @@
 import React from 'react';
 import {inject, observer} from 'mobx-react';
-import { Form, Icon } from "semantic-ui-react";
+import { Form, Icon, Checkbox } from "semantic-ui-react";
 import { Input } from "../SharedUI/Input";
 import { TeamSelect } from "../SharedUI/TeamSelect";
 import { TagSelect } from "../SharedUI/TagSelect";
 import { AccountStore } from "../Stores/AccountStore";
 import { TeamStore } from "../Stores/TeamStore";
+import { ChannelStore } from "../Stores/ChannelStore";
 import { Col, Row, } from 'reactstrap';
-import { EligibleUsersByTeamTag} from "../SharedCalculations/EligibleUsersByTeamTag";
+import Collapse from '@material-ui/core/Collapse';
 
 export const InviteUser = inject("AccountStore")(observer((props) => {
-  const { teamID, tagID, boss, isAdmin, email } = props.info;
+  const features = ["Teams", "FAQs", "Announcements", "Surveys", "Tasks", "Service Desk", "Email Campaigns"].map(feature => ({text: feature, value: feature}))
+
+  const { teamID, tagID, boss, isAdmin, email, adminLimits } = props.info;
   const { multipleRows } = props
 
   const setField = (content) => {
-    props.updateFields(content, props.id);
+    let adminLimit = false;
+    if (content.features || content.channels) {
+      adminLimit = adminLimits? Object.assign({}, adminLimits) : {features: [], channels: []};
+      adminLimit = Object.assign(adminLimit, content);
+    }
+
+    props.updateFields(adminLimit? {adminLimits: adminLimit} : content, props.id);
   }
 
   const removeRow = () => {
@@ -52,16 +61,27 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
     
        </Row>
                 {
-        !multipleRows && 
+        !multipleRows && <div style={{paddingTop: 10, paddingBottom: 10}}>
         <Row>
-          <Col style={resPadding}>
-          <div style={{float: "right"}}>
-            <Form.Checkbox checked={isAdmin} 
+          <Col>
+            <Checkbox toggle checked={isAdmin} 
             onChange={() => setField({isAdmin: !isAdmin})} 
             label="Admin"/>
-          </div>
           </Col>
           </Row>
+          <Collapse in={isAdmin}>
+                  <Row>
+                  <Col>
+                  <Form>
+ 
+                    <Form.Dropdown className="FixSemanticLabel" options={features} onChange={(e, {value}) => setField({features: value})} selection multiple label="Limit admin to Yallhands select features (optional)" />
+                    <Form.Dropdown className="FixSemanticLabel" options={ChannelStore._channelSelectNoAll} onChange={(e, {value}) => setField({channels: value})} multiple selection label="Limit admin to specific channels (optional)" />
+      
+          
+                  </Form>
+                  </Col>
+                  </Row>
+          </Collapse></div>
       }
 
     

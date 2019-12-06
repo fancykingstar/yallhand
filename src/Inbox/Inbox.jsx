@@ -39,7 +39,7 @@ import {debounce} from "lodash";
 class Inbox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: null, filter: "all", sort: "new", searchBy: "", searching: false, search_results: {}, search_val: ""} ;
+    this.state = { selected: null, filter: "recent", sort: "new", searchBy: "", searching: false, search_results: {}, search_val: ""} ;
     this.filterRef = React.createRef();
     this.openFilter = this.openFilter.bind(this);
   }
@@ -88,7 +88,7 @@ openFilter(){
     else {
       const parent = TicketingStore._getTicket(selected).parent
       // if (parent !== "QandA") 
-      return <TicketDetailsFrame id={this.state.selected} data={TicketingStore._getTicket(this.state.selected)} />;
+      return <TicketDetailsFrame unSelect={() => this.selectInboxItem(null)} id={this.state.selected} data={TicketingStore._getTicket(this.state.selected)} />;
     //   else {return <QnADetailsFrame data={TicketingStore._getTicket(this.state.selected)}/> 
     // }
     }
@@ -152,10 +152,11 @@ openFilter(){
     const {filter,sort, searching, search_results, search_value} = this.state;
     return (
       <React.Fragment>
-        
+        {!this.props.hideHeading &&
         <Header as="h2" style={{ padding: 0, margin: "10px 0 10px" }}>
           Inbox
         </Header>
+        }
         <Row>
           <Col>
 

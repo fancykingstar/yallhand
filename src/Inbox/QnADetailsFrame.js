@@ -98,8 +98,8 @@ toggleContactInfo() {
       // {text: "Re-open", value:"reopen"},
       {text: "Open", value: "open"},
       {text: "Close (Attach question & response to public content)", value: "close"},
-      {text: "Close (Send a reponse to requester privately)", value: "close-cant"},
-      {text: "Close (No decline to respond)", value: "reject"}
+      {text: "Close (Send a response to requester privately)", value: "close-cant"},
+      {text: "Close (Decline to respond)", value: "close-wont"}
     ]
 
     return [ ...baseStages]

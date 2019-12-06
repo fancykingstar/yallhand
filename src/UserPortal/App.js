@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 import { Switch } from 'react-router-dom';
 import { BrowserRouter as Router } from "react-router-dom";
 import { Route } from 'react-router';
-import { loadAdmin } from "../DataExchange/LoadProfile";
+import { loadProfile } from "../DataExchange/LoadProfile";
 
 import Home from './views/pages/Home';
 import Actions from './views/pages/Actions';
@@ -15,6 +15,7 @@ import TaskList from "./views/pages/TaskList";
 import PortalSearchResults from "./views/pages/PortalSearchResults";
 import Settings from "./views/pages/Settings";
 import Storage from "./views/pages/Storage";
+import PortalInbox from "./views/pages/Inbox";
 
 import history from './helpers/history';
 
@@ -28,7 +29,7 @@ export class UserPortal extends React.Component {
   componentDidMount() {
     const { UserStore } = this.props;
     if (UserStore.previewTeam !== "") {
-      loadAdmin().then(()=>this.setState({loaded:true})) 
+      loadProfile().then(()=>this.setState({loaded:true})) 
     }
     else {this.setState({loaded:true})}
   }
@@ -54,6 +55,7 @@ export class UserPortal extends React.Component {
                         {/* <Router history={history}> */}
                             <Route path="/portal" exact component={Home} />
                             <Route path="/portal/actions" exact component={Actions} />
+                            <Route path="/portal/inbox" exact component={PortalInbox} />
                             <Route path="/portal/announcements" exact component={ContentList} />
                             <Route path="/portal/learn" component={ContentList} exact/>
                             <Route path="/portal/surveys" component={SurveyList} exact/>

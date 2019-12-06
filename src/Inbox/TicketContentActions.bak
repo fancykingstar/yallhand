@@ -51,12 +51,17 @@ updateTicket = async () => {
   const { _content} = this.props.data;
   const userID = UserStore.user.userID;
   if (stage === "close") {
-    const payload =  {qanda : [{
+    console.log("this payload", Boolean(vari.qanda), payload)
+    let payload = {
       q: this.props.data.activity[0].data.q,
       a: response,
       adminID: UserStore.user.userID,
       update: Date.now()
-    }]};
+    };
+    if (vari.qanda) payload = {qanda: [...vari.qanda, payload]}
+    else payload = {qanda: [payload]}
+
+
 
     const mode = _content.policyID? "policy" : "announcement";
     const contentID = _content[`${mode}ID`]
