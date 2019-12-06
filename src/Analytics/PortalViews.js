@@ -6,6 +6,7 @@ import CsvDownloader from 'react-csv-downloader';
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import { PageSizeSelect } from "./PageSizeSelect";
+import moment from 'moment';
 import _ from 'lodash'
 
 @inject("UIStore", "AccountStore", "PoliciesStore", "AnnouncementsStore", "ResourcesStore", "TeamStore")
@@ -13,7 +14,7 @@ import _ from 'lodash'
 export class PortalViews extends React.Component {
     constructor(props){
         super(props);
-        this.state={width: 0, height: 0, data: [], sortsToggled:[], limit: 5, currentPage: 1 };
+        this.state={width: 0, height: 0, data: [], sortsToggled:[], limit: 25, currentPage: 1 };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
     componentDidMount(){
@@ -68,8 +69,8 @@ export class PortalViews extends React.Component {
             if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
             else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
             if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
-            else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }  
-            }
+            else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }         
+        }
 
             
         const getLabel = (data) => {
@@ -182,12 +183,12 @@ export class PortalViews extends React.Component {
             "Total Views": camp.total_views,
             "Unique Views": camp.unique_views,
             "Smile": camp.sentiment_total[2],
-            "meh": camp.sentiment_total[1],
-            "frown": camp.sentiment_total[0]
+            "Meh": camp.sentiment_total[1],
+            "Frown": camp.sentiment_total[0]
           }
         });
 
-
+        const type = UIStore.menuItem.analyticsHeader==="announcements" ? "Announcements" : "Faqs";
         return(
             <React.Fragment>
             <Header
@@ -218,7 +219,7 @@ export class PortalViews extends React.Component {
             </Menu>
            </div>
            <div style={UIStore.responsive.isMobile? {display: 'flex'} : {float: 'right', paddingRight: 10,display: "flex"}}>
-              <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+              <CsvDownloader datas={download} text="DOWNLOAD" filename={"Portal-"+type+"-"+moment().format('MMDDYY')}>
                 <Button primary>export CSV</Button>
               </CsvDownloader>
               <SearchBox value={UIStore.search.analyticsSearchValue} output={val => UIStore.set("search", "analyticsSearchValue", val)}/>
@@ -239,16 +240,19 @@ export class PortalViews extends React.Component {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell style={{border: 'none'}}>
-                  <Pagination 
-                    activePage={currentPage} 
-                    totalPages={totalPages} 
-                    onPageChange={this.onChangePage} 
-                    ellipsisItem={null}
-                    firstItem={null}
-                    lastItem={null}
-                    siblingRange={1}
-                    boundaryRange={0}
-                  />
+                  { 
+                    totalPages > 1 ?
+                      <Pagination 
+                        activePage={currentPage} 
+                        totalPages={totalPages} 
+                        onPageChange={this.onChangePage} 
+                        ellipsisItem={null}
+                        firstItem={null}
+                        lastItem={null}
+                        siblingRange={1}
+                        boundaryRange={0}
+                      /> : <div />
+                    }
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>

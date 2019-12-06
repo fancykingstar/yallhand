@@ -8,6 +8,7 @@ import { SearchBox } from "../SharedUI/SearchBox"
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import { CampaignDetails } from "../SharedUI/CampaignDetails";
 import { PageSizeSelect } from "./PageSizeSelect";
+import moment from 'moment';
 
 
 @inject("AccountStore", "EmailStore", "TeamStore", "UIStore")
@@ -15,7 +16,7 @@ import { PageSizeSelect } from "./PageSizeSelect";
 export class CampaignAnalytics extends React.Component {
   constructor(props){
     super(props)
-    this.state={ width: 0, height: 0, data: [], sortsToggled:[], limit: 5, currentPage: 1 };
+    this.state={ width: 0, height: 0, data: [], sortsToggled:[], limit: 25, currentPage: 1 };
     this.clickRate = (camp) => Number.isNaN(Math.round(camp.clicks / camp.total_views * 100))? 0 : Math.round(camp.clicks / camp.total_views * 100)
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
  
@@ -65,33 +66,35 @@ export class CampaignAnalytics extends React.Component {
     const {AccountStore, EmailStore, UIStore} = this.props
     const { currentPage, data, limit } = this.state;
     const { width } = this.state;
-
-    const sort = (param) => {
-      if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
-      else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
-      if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
-      else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }  
-      }
-
+    let items = [];
 
     const searchFilter = (all) => {
       if(UIStore.search.campaignsSearchValue === "") return all
       else return all.filter(i => i.subject.toLowerCase().includes(UIStore.search.campaignsSearchValue.toLowerCase()))
     }
 
-    const filteredData = searchFilter(data);
+    const filteredData = searchFilter(data).filter(camp => {
+      const campaign = EmailStore._getCampaign(camp.campaignID)
+      if (campaign) return camp;
+    });
 
     const totalPages = Math.ceil(filteredData.length / limit);
-    const items = filteredData.slice(
+    items = filteredData.slice(
       (currentPage - 1) * limit,
       (currentPage) * limit
     );
 
-    const download = filteredData.map(camp => {   
+    const sort = (param) => {
+      if (this.state.sortsToggled.includes(param)) this.setState({sortsToggled: this.state.sortsToggled.filter(i=>i !== param)});
+      else (this.setState({sortsToggled: [...this.state.sortsToggled, ...[param]]}))
+      if(this.state.sortsToggled.includes(param)) { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] > b[param])? 1 : -1) })}
+      else { this.setState({data: this.state.data.slice().sort((a,b) => (a[param] < b[param])? 1 : -1)}) }
+    }
+
+    const download = filteredData.map(camp => {
       return {
         "Name": camp.subject,
-        "Sent": UTCtoFriendly(camp.sent),
-        "Sent1": UTCtoFriendly(camp.sent),
+        "Sent": `"${UTCtoFriendly(camp.sent)}"`,
         "Views(All/Unique)": camp.total_views + "/" + camp.unique_views,
         "Open Rate": camp.open_rate + "%",
         "Click Rate": this.clickRate(camp) + "%"
@@ -101,7 +104,10 @@ export class CampaignAnalytics extends React.Component {
     const outbounds = items.map(camp => {
       const campaign = EmailStore._getCampaign(camp.campaignID)
 
-      if(!campaign) return null
+      if(!campaign) {
+        return null
+      }
+
       return (
         <Table.Row key={"camp" + giveMeKey()}>
           <Table.Cell style={{fontSize: "1em !important" , fontFamily: "Rubik, sans-serif" }}  disabled={!camp.completed? EmailStore._getCampaign(camp.campaignID).isTriggered? false:true : false}>
@@ -126,7 +132,7 @@ export class CampaignAnalytics extends React.Component {
           content="Email Campaign Performance"
         />
           <div style={UIStore.responsive.isMobile? { display: 'flex' } : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "flex"}}>
-            <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+            <CsvDownloader datas={download} text="DOWNLOAD" filename={"Campaign-" + moment().format('MMDDYY')}>
               <Button primary>export CSV</Button>
             </CsvDownloader>
             <SearchBox value={UIStore.search.campaignsSearchValue} output={val => UIStore.set("search", "campaignsSearchValue", val)}/>
@@ -137,7 +143,7 @@ export class CampaignAnalytics extends React.Component {
                             onChangeLimit={this.onChangeLimit}
                           />: <div />
           }
-          <Table basic="very" style={width < 768 ? { display: 'none' }: { display: 'inline-block' }}>
+          <Table basic="very"   >
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell><div style={{paddingBottom: 20}}>Name</div></Table.HeaderCell>
@@ -153,9 +159,12 @@ export class CampaignAnalytics extends React.Component {
             <Table.Body>
                 {outbounds}
             </Table.Body>
-            <Table.Footer>
-              <Table.Row>
-                <Table.HeaderCell style={{border: 'none'}}>
+          </Table>
+          <Table>
+            <Table.Row>
+              <Table.HeaderCell className="center" style={{ border: 'none', textAlign: "center" }}>
+                { 
+                  totalPages > 1 ?
                   <Pagination 
                     activePage={currentPage} 
                     totalPages={totalPages} 
@@ -165,10 +174,10 @@ export class CampaignAnalytics extends React.Component {
                     lastItem={null}
                     siblingRange={1}
                     boundaryRange={0}
-                  />
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Footer>
+                  /> : <div />
+                }
+              </Table.HeaderCell>
+            </Table.Row>
           </Table>
       </div>
     );

@@ -14,7 +14,8 @@ import {TaskStore} from "../Stores/TaskStore";
 import {AccountStore} from "../Stores/AccountStore";
 import {SortingChevron} from "../SharedUI/SortingChevron";
 import TimeAgo from 'react-timeago'
-
+import { format } from 'timeago.js';
+import moment from 'moment';
 
 export class SurveyAnalytics extends React.Component {
   constructor(props){
@@ -125,16 +126,16 @@ export class SurveyAnalytics extends React.Component {
       })
 
     const download = searchFilter(data).map(survey => {
-      console.log(Math.max(...survey.instances.map(i=>i.sent)));
       return {
         "Title": survey.label,
-        "Last Sent": survey.label,
+        "Last Sent": survey.instances.length === 0 ? "Never" : format(Math.max(...survey.instances.map(i=>i.sent)) - 3600*24*1000, 'en_US'),
         "Queries": survey._surveys,
+        "Recipients": survey._instances,
         "Not Started": survey._noStart,
         "Partial": survey._partial,
         "Completed": survey._completed,
         "Cancelled": survey._cancelled,
-        "Deadline": survey._cancelled,
+        "Deadline": survey.instances.length === 0 || !Math.max(...survey.instances.map(i=>i.deadline)) ? "None" : format(Math.max(...survey.instances.map(i=>i.deadline)) - 3600*24*1000),
       }
     })
 
@@ -237,7 +238,7 @@ export class SurveyAnalytics extends React.Component {
    content={`${this.props.mode === "survey"? "Survey" : "Task"} Performance`}
     />
       <div style={UIStore.responsive.isMobile? {display: "flex"} : {float: 'right', paddingRight: 10, paddingBottom: 15,display: "flex"}}>
-        <CsvDownloader datas={download} text="DOWNLOAD" filename="myfile">
+        <CsvDownloader datas={download} text="DOWNLOAD" filename={`${this.props.mode === "survey"? "Survey" : "Task"}` + '-' + moment().format('MMDDYY')}>
           <Button primary>export CSV</Button>
         </CsvDownloader>
         <SearchBox value={searchValue} output={val => this.setState({searchValue: val})}/>
@@ -272,16 +273,19 @@ export class SurveyAnalytics extends React.Component {
      <Table.Footer>
         <Table.Row>
           <Table.HeaderCell style={{border: 'none'}}>
-            <Pagination 
-              activePage={currentPage} 
-              totalPages={totalPages} 
-              onPageChange={this.onChangePage} 
-              ellipsisItem={null}
-              firstItem={null}
-              lastItem={null}
-              siblingRange={1}
-              boundaryRange={0}
-            />
+            { 
+              totalPages > 1?
+              <Pagination 
+                activePage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={this.onChangePage} 
+                ellipsisItem={null}
+                firstItem={null}
+                lastItem={null}
+                siblingRange={1}
+                boundaryRange={0}
+              /> : <div />
+            }
           </Table.HeaderCell>
         </Table.Row>
       </Table.Footer>

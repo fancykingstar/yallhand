@@ -29,7 +29,8 @@ const useStyles = makeStyles({
         letterSpacing: "normal",
         color: "#0f141a",
         paddingLeft: "20px",
-        paddingTop: "20px"
+        paddingTop: "20px",
+        flex: 1
     }
 });
 
