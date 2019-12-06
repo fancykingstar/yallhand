@@ -6,6 +6,7 @@ import { TicketContentSource } from "./TicketContentSource";
 import {AccountStore} from "../Stores/AccountStore";
 import {ResourcesStore} from "../Stores/ResourcesStore";
 import {S3Download} from "../DataExchange/S3Download";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 
 const downloadFile = (S3Key, label) => {
@@ -29,7 +30,7 @@ export const TicketData = (props) => {
               Object.keys(act.data)
                 .filter(datapnt => datapnt !== "id")
                 .map(datapnt => (
-                  <>
+                  <div key={giveMeKey + "ticketData"}>
                     <Row style={{ padding: "3px 0 6px" }}>
                       <Col md={6}>
                         <span
@@ -70,7 +71,7 @@ export const TicketData = (props) => {
                       {/* </Col> */}
                     </Row>
                    
-                  </>
+                  </div>
                 ));
               return res;
             })}

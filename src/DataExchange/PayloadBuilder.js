@@ -238,7 +238,7 @@ export const newFile = (label, assoc=null, hideFromFeed=false) => {
   // filename: DataEntryStore.fileForUpload.filename,
   type: "",
   size: "", 
-  teamID: "",
+  teamID: "global",
   hideFromFeed,
   tags: []
   };
@@ -524,16 +524,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   export const ticket = ( data ) => {
     let payload = data;
     if (payload._iconOptions !== undefined) delete payload._iconOptions;
-    // if (data.access === "default" && !data.ticketID)
-    // payload.config = {
-    //     simpleDesc: false,
-    //     notifyNewTicket: false,
-    //     deleteTicket: false,
-    // };
-    if (data.type === "simple" && data.config.simpleDesc) {
-
-      payload.ticketItems.splice(0, 1, {type: "text", label: "Description (optional)", options: [], isOpen: true, data:[]})
-      console.log("ticketItems", payload.ticketItems)
+    if (data.type === "simple") {
+      payload.ticketItems.splice(0, 1, Object.assign(payload.ticketItems[0], data.config.simpleDesc? {defaultAssignee: userID(), data: [{type: "text", label: "Description", options: []}]} : {defaultAssignee: userID()} ));
     };
 
     if (payload.assoc.length) payload.assoc = data.assoc.map(i=> i.type === "policy"? ({policyID: i.value}):({announcementID: i.value}))

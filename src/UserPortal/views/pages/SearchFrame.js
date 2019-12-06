@@ -34,13 +34,13 @@ class SearchFrame extends React.Component {
         initSearchObj(PoliciesStore.allPolicies, "policyID")
       );
     }
-    if (UIStore.search.searchUrlsData.length === 0) {
-      UIStore.set(
-        "search",
-        "searchUrlsData",
-        initSearchObj(ResourcesStore.urlResources, "resourceID")
-      );
-    }
+    // if (UIStore.search.searchUrlsData.length === 0) {
+    //   UIStore.set(
+    //     "search",
+    //     "searchUrlsData",
+    //     initSearchObj(ResourcesStore.urlResources, "resourceID")
+    //   );
+    // }
     if (UIStore.search.searchFilesData.length === 0) {
       UIStore.set(
         "search",

@@ -1,14 +1,17 @@
 import React from "react";
+import { inject, observer} from "mobx-react";
 import { withRouter } from "react-router-dom";
 import { Button, Icon, Header } from "semantic-ui-react";
 import MUIDataTable from "mui-datatables";
 import styled from "styled-components";
-import { TicketingStore } from "../Stores/TicketingStore";
+
 import { AccountStore} from "../Stores/AccountStore";
 import { ChannelStore } from "../Stores/ChannelStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
+@inject("TicketingStore")
+@observer
 class TicketingFrame extends React.Component {
   getMuiTheme = () =>
     createMuiTheme({
@@ -52,6 +55,7 @@ class TicketingFrame extends React.Component {
     });
   
   render() {
+    const {TicketingStore} = this.props;
     const MenuContainer = styled.div`
       display: flex;
       flex-wrap: wrap;

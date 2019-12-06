@@ -1,18 +1,9 @@
 import React from "react";
-import {inject, observer} from "mobx-react";
-import { Segment, Icon, Accordion, Dropdown, Button, Label, Header, Form, Checkbox } from "semantic-ui-react";
+import { Segment, Icon, Button, Label, Header, Form, Checkbox } from "semantic-ui-react";
 import { Container, Row, Col } from "reactstrap";
-import TextField from "@material-ui/core/TextField";
-// import Avatar from '@material-ui/core/Avatar';
-
 import {AccountStore} from "../Stores/AccountStore";
-// import _ from "lodash";
-import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import toast  from "../YallToast"
-import ChipInput from 'material-ui-chip-input'
 import Collapse from '@material-ui/core/Collapse';
-
-
 
 export class TicketingItem extends React.Component {
   constructor(props){
@@ -30,20 +21,7 @@ export class TicketingItem extends React.Component {
   } 
 
 
-
-  const shiftRow = (direction) => {
-    this.props.shiftRow(direction, this.props.index)
-  }
-
-  const getDataItemOptions = (options) => options.map(opt => ({
-    text: opt,
-    key: opt + giveMeKey(),
-    value: opt
-  }))
-
   const addDataItem = () => {
-    //ticketItems: [ {data: [{text, label, options}]} ]
-
     let valid = false;
     if (!this.props.data.length) valid = true;
     else {
@@ -52,9 +30,6 @@ export class TicketingItem extends React.Component {
       else if (lastItem.type !== "text" && !lastItem.options.length) toast.error("Please add options for selection", {hideProgressBar: true});
       else valid = true;
     } 
-
-    // const newData = [...this.props.data, {type: "text", label: "", options: []}];
- 
     if(valid) setField({data: [...this.props.data, {type: "text", label: "", options: []}]});
   }
 
@@ -116,18 +91,7 @@ export class TicketingItem extends React.Component {
     
     </>
 }
-    {/* <Form.Dropdown 
-    className="MultiSelectDropDown"
-    options={getDataItemOptions(dataItem.options)} 
-    onAddItem={(e,val) => updateDataItem({options: [...dataItem.options, val.value]},i)}  
-    additionLabel={<i>Hit enter to add:  </i>}
-    onChange={(e, val) => updateDataItem({options: [...dataItem.options, val.value]},i)} 
-    search
-    multiple
-    selection
-    fluid
-    allowAdditions
-    label="Enter Selection Options" />} */}
+ 
     <Form.Field>
       <div style={{marginTop: 25}}>
        <Button icon>
@@ -143,7 +107,7 @@ export class TicketingItem extends React.Component {
       <Segment secondary={this.props.isClose} >
   
       <Row >
-        {/* <Col style={{maxWidth: 60}} sm={1}><Avatar>{this.props.index + 1}</Avatar> </Col> */}
+        
         <Col>
         <div>
         {
@@ -169,7 +133,7 @@ export class TicketingItem extends React.Component {
       </Row>
         {!this.props.isClose &&
         <Row style={{paddingTop: 10}}><Col>
-        {/* <span>Default Assignee:</span><br/> */}
+
         <Form>
           <Form.Dropdown className="FixSemanticLabel" label="Default Assignee" selection placeholder="Choose..." onChange={(e,val)=>setField({defaultAssignee: val.value})} value={defaultAssignee} options={[...AccountStore._getUsersSelectOptions(), {"text":"None", "value":""}]} />
           {JSON.stringify(this.props.isOpen )}
@@ -196,12 +160,7 @@ export class TicketingItem extends React.Component {
               }
             </Container>
         </Collapse>
-        {/* <Accordion>
-          <Accordion.Title onClick={()=>setField({_requireInfo: !_requireInfo})} active={_requireInfo}><Icon name='dropdown' /> Require information for this stage {`${!this.props.index? "(note: user information will automatically be passed along when this ticket is opened)":""}`}</Accordion.Title>
-          <Accordion.Content active={_requireInfo}>
-            
-          </Accordion.Content>
-        </Accordion> */}
+  
         </div>
        
         </Row>
@@ -211,12 +170,7 @@ export class TicketingItem extends React.Component {
        <div style={{ padding: "20px 0 20px", width: "100%" }}>
 
           <div style={{display: "inline-block", float: "right", display: this.props.index === 0 || this.props.index === this.props.totalItemsCount - 1? "none":"content"}}>
-        {/* <Icon color="grey" name="arrow up" 
-        onClick={()=>shiftRow("up")} 
-        />
-        <Icon color="grey" name="arrow down" 
-        onClick={()=>shiftRow("down")} 
-        /> */}
+       
         <Icon color="grey" name="remove" 
         onClick={removeRow} 
         />

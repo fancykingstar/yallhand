@@ -21,6 +21,11 @@ import { addView } from "../DataExchange/PayloadBuilder";
 // import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import FadeIn from 'react-fade-in';
 
+const markAsRead = async (unread, data) => {
+  if (unread) await modifyTicket(addView(data));
+ }
+
+
 class TicketDetailsFrame extends React.Component {
   constructor(props) {
     super(props);
@@ -49,18 +54,14 @@ class TicketDetailsFrame extends React.Component {
    if (this.props.data._unread) await modifyTicket(addView(this.props.data));
   }
 
-  async componentDidUpdate() {
-    this.markAsRead();
-  }
-
-
   async componentDidMount() {
-    this.markAsRead();
+    markAsRead(this.props.data._unread, this.props.data)
   }
 
 
  static getDerivedStateFromProps(props, state) {
     if (props.data.ticketID !== state.ticketID) {
+      markAsRead(props.data._unread, props.data);
       return {
        message: "",
        messageType: "",
@@ -231,7 +232,7 @@ class TicketDetailsFrame extends React.Component {
                       name="activity"
                       active={activeItem === "activity"}
                       onClick={this.handleMenuClick}
-                      color={activeItem === "activity" && "blue"}
+                      color={activeItem === "activity"? "blue":"black"}
                     />
                     {/* {_content && 
                         <Menu.Item
@@ -245,7 +246,7 @@ class TicketDetailsFrame extends React.Component {
                       name="data"
                       active={activeItem === "data"}
                       onClick={this.handleMenuClick}
-                      color={activeItem === "data" && "blue"}
+                      color={activeItem === "data" ? "blue":"black"}
                     />
                     {/* } */}
                     {/* <Menu.Item

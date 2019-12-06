@@ -39,7 +39,7 @@ const CircleIcons = (props) => {
     const name = `fa fa-${props.name}`;
     const { title } = props
     return (
-        <div style={{ display: "flex" }}>
+        <div className="CircleIcon" style={{ display: "flex" }}>
             <div className={`${root}`} onClick={props.onClick}>
                 <Icon className={`${name} ${circleIconStyle}`} />
             </div>

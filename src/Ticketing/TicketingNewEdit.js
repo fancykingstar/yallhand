@@ -12,7 +12,7 @@ import { BundleContent } from "../SharedUI/Bundle/BundleContent";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 import BackButton from "../SharedUI/BackButton";
 import { ticket, } from "../DataExchange/PayloadBuilder";
-import { createTicket,  modifyTicket } from "../DataExchange/Up";
+import { createTicket,  modifyTicket, deleteTicket } from "../DataExchange/Up";
 import { validate } from "../SharedCalculations/ValidationTemplate";
 import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 
@@ -196,6 +196,11 @@ class TicketingNewEdit extends React.Component {
 
 
 
+  handleDelete = async () => {
+    await deleteTicket(this.state.ticketID);
+    this.props.history.push('/panel/ticketing');
+  }
+
 
   componentDidMount(active = null) {
     const { TaskStore, TicketingStore, UserStore } = this.props;
@@ -220,7 +225,7 @@ class TicketingNewEdit extends React.Component {
     const save = ( <Button onClick={e => this.updateTicket()}> Save </Button> );
     const stop = <Button negative onClick={()=> this.updateTicket(false)}>Stop</Button>;
     const cancel = ( <Button onClick={e => this.props.history.push('/panel/ticketing')} > Cancel </Button> );
-    const del = ( <ConfirmDelete label="Service desk ticket" /> );
+    const del = ( <ConfirmDelete confirm={()=> this.handleDelete()} label="Service desk ticket" /> );
 
 
   

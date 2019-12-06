@@ -8,7 +8,12 @@ export const ConfirmDelete = inject("UIStore")((observer((props) => {
 
     const [isopen, notOpened] = useState(false);
 
-    const toggleOpen = () => {
+    const toggleOpen = (submit=false) => {
+      notOpened(!isopen)
+    };
+
+    const confirmDelete = () => {
+      props.confirm();
       notOpened(!isopen)
     };
 
@@ -35,8 +40,9 @@ export const ConfirmDelete = inject("UIStore")((observer((props) => {
           <Button
             icon="remove circle"
             negative
-            content={term}
-            onClick={toggleOpen}
+            content={term} 
+            onClick={confirmDelete}
+           
           />
             <Button
             content="Cancel"

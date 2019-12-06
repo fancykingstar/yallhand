@@ -5,6 +5,7 @@ import TimeAgo from 'react-timeago'
 import {AccountStore} from "../Stores/AccountStore";
 import {UserStore} from "../Stores/UserStore";
 import {isEmpty} from "lodash";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
 
 
@@ -46,16 +47,16 @@ export const TicketActivity = (props) => {
     return(
         <div style={{maxHeight: "350px", overflowY: "auto", overflowX: "hidden"}}>
             {props.activity.map((act,i) => (
-            <Row style={{ padding: "3px 0 3px" }}>
+            <Row key={giveMeKey() + "datapoint"} style={{ padding: "3px 0 3px" }}>
                 <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} md={6}>
-                <p style={{ fontSize: "0.9em" }}>
+                <span style={{ fontSize: "0.9em" }}>
 
                 { activityMsg(act, i) }
 
                 by{" "} <Label size="mini"> {AccountStore._getUser(act.userID).displayName} </Label>{" "} 
                 
                 
-                </p>
+                </span>
                 </Col>
                 <Col
                 style={{
