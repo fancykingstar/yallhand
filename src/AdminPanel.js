@@ -28,6 +28,8 @@ import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
 import { loadProfile } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+
+import {Content} from "./SharedUI/ManageContent/Content";
 import Inbox from "./Inbox/Inbox";
 import "./CSS/styles.scss";
 
@@ -90,6 +92,8 @@ export class AdminPanel extends React.Component {
 
         <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
+            <Route path="/panel/content/" component={Content} exact />
+            
             <Route path="/panel/announcements" render={props => <ContentListingPage {...props} mode="announcement" />} exact />
             <Route path="/panel/announcements/:contentID" component={ManageContent} exact />
             <Route path="/panel/announcements/:contentID/:variID" component={NewEditVariation} exact />
