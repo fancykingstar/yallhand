@@ -54,8 +54,6 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           const user = isAdmin? {userID} : {userID, teamPath: UserStore.previewTeamPath, tagPath: UserStore.previewTagPath}
           
           const loadedUserData = await apiCall(`/user/load`, `POST`, user).then(res => res.json());
-        
-          console.log("ticketing",loadedUserData.analytics.ticketing)
           
           if (loadedUserData.channels) await ChannelStore.loadChannels(loadedUserData.channels);
           if (loadedUserData.account) await AccountStore.loadAccount(loadedUserData.account[0]);

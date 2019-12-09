@@ -7,27 +7,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ItsLog } from "../DataExchange/PayloadBuilder"
 import * as reload from "../DataExchange/Down"
 import _ from "lodash";
+import { loadProfile } from "../DataExchange/LoadProfile";
 
 
 const accountID = () => AccountStore.account.accountID.slice()
 const userID = () => UserStore.user.userID.slice()
 
-const refresh = {
-  schedule: () => reload.scheduled(accountID()),
-  teams: () => reload.structure(accountID()),
-  tags: () => reload.tags(accountID()),
-  // users: () => reload.users(accountID(), userID()),
-  users: () => reload.users_and_teams(accountID(), userID()),
-  channels: () => reload.channels(accountID()),
-  urlResources: () => reload.urls(accountID()),
-  policies: () => reload.policies(accountID()),
-  announcements: () => reload.announcements(accountID()),
-  files: () => reload.files(accountID()),
-  campaigns: () => reload.campaigns(accountID()),
-  account: () => reload.account(accountID()),
-  surveys: () => reload.surveys(accountID()),
-  tickets: () => reload.tickets(accountID())
-
+const refresh = async (key) => {
+  if(!_.isEmpty(UserStore.user.adminLimits)) await loadProfile();
+  else return {
+    schedule: () => reload.scheduled(accountID()),
+    teams: () => reload.structure(accountID()),
+    tags: () => reload.tags(accountID()),
+    // users: () => reload.users(accountID(), userID()),
+    users: () => reload.users_and_teams(accountID(), userID()),
+    channels: () => reload.channels(accountID()),
+    urlResources: () => reload.urls(accountID()),
+    policies: () => reload.policies(accountID()),
+    announcements: () => reload.announcements(accountID()),
+    files: () => reload.files(accountID()),
+    campaigns: () => reload.campaigns(accountID()),
+    account: () => reload.account(accountID()),
+    surveys: () => reload.surveys(accountID()),
+    tickets: () => reload.tickets(accountID())
+  }[key]()
 }
 
 const processTemplate = (useBody, endpoint, meth, payload, key, success_text, isAction, data, toastEnabled=true) => {
@@ -37,7 +40,7 @@ const processTemplate = (useBody, endpoint, meth, payload, key, success_text, is
     log(ItsLog(isAction, data))
     callApi(endpoint, meth, payload).then((result) => {
       if(result.ok){
-        refresh[key]()
+        refresh(key)
           .then(
             () => {
               toastEnabled? toast.success(success_text, {hideProgressBar: true}): ()=>{}

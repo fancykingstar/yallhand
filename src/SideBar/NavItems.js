@@ -58,7 +58,7 @@ class NavItems extends React.Component {
               </ListItemIcon>
              <ListItemText primary="Admin Dashboard" />
           </ListItem>
-          <ListItem className={!adminLimits || adminLimits.includes('FAQs') || adminLimits.includes('Announcements')? "YHShow": "YHHidden"} style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
+          <ListItem className={!adminLimits || adminLimits.includes('FAQs') || adminLimits.includes('Announcements') || adminLimits.includes('Service Desk')? "YHShow": "YHHidden"} style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
             <ListItemIcon >
             <Badge color="secondary" badgeContent={TicketingStore.allTickets.filter(ticket => ticket._unread).length} 
             >
@@ -116,7 +116,7 @@ class NavItems extends React.Component {
               </ListItemIcon>
              <ListItemText primary="Analytics" />
           </ListItem>
-          <ListItem button style={isActive("storage")} button onClick={e => handleClick("storage")} >
+          <ListItem className={!adminLimits ? "YHShow": "YHHidden"} button style={isActive("storage")} button onClick={e => handleClick("storage")} >
             <ListItemIcon>
                   <CloudRoundedIcon/>
               </ListItemIcon>

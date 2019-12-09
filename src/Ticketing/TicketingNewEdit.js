@@ -25,10 +25,11 @@ import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
 class TicketingNewEdit extends React.Component {
   constructor(props) {
     super(props);
+    const {ChannelStore} = this.props;
     this.state = {
       ticketItems: this.reset(true),
       label: "",
-      chanID: "All",
+      chanID: ChannelStore._channelSelect[0].value,
       teamID: "",
       tags: [],
       assoc: [],

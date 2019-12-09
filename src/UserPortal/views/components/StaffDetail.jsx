@@ -110,8 +110,8 @@ class StaffDetail extends React.Component {
                                 </div>
                             ) : (<div className="staffSocialIcons"></div>)}
                         </div>
-                        <div className="align-right">
-                            <Link to="#/">More</Link></div>
+                        {/* <div className="align-right">
+                            <Link to="#/">More</Link></div> */}
                     </CardActions>
                 </Card>
             )
