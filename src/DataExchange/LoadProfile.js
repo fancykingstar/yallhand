@@ -51,10 +51,11 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
             UserStore.setPreviewTagPath(TeamStore.previewValidPath(UserStore.user.tags.length === 0? "none" : UserStore.user.tags[0], "tag"));
           }
 
-          const user = isAdmin? {userID} : {userID, teamPath: UserStore.previewTeamPath, tagPath: UserStore.setPreviewTagPath}
+          const user = isAdmin? {userID} : {userID, teamPath: UserStore.previewTeamPath, tagPath: UserStore.previewTagPath}
           
           const loadedUserData = await apiCall(`/user/load`, `POST`, user).then(res => res.json());
         
+          console.log("ticketing",loadedUserData.analytics.ticketing)
           
           if (loadedUserData.channels) await ChannelStore.loadChannels(loadedUserData.channels);
           if (loadedUserData.account) await AccountStore.loadAccount(loadedUserData.account[0]);
@@ -65,6 +66,7 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.users) await AccountStore.loadUsers(loadedUserData.users);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_portal(loadedUserData.analytics.portal);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_campaigns(loadedUserData.analytics.campaigns);
+          if (loadedUserData.analytics) await AccountStore.loadAnalyticData_ticketing(loadedUserData.analytics.ticketing);
           if (loadedUserData.announcements) await AnnouncementsStore.loadAnnouncements(loadedUserData.announcements);
           if (loadedUserData.policies) await PoliciesStore.loadPolicies(loadedUserData.policies);
           if (loadedUserData.sentiments) await AccountStore.loadSentiments(loadedUserData.sentiments);

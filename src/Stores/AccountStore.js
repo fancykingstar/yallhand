@@ -15,6 +15,7 @@ class Store {
   @observable logs = []
   @observable analyticData_portal = []
   @observable analyticData_campaigns = []
+  @observable analyticData_ticketing = []
   @observable dashboardData = []
   @observable sentiments = []
   @observable reviewQueue = []
@@ -93,6 +94,11 @@ class Store {
     this.analyticData_campaigns = allLogs
   }
 
+  loadAnalyticData_ticketing(allLogs) { 
+    this.analyticData_ticketing = allLogs
+  }
+
+
   loadDashboardData(allLogs) { 
     this.dashboardData = allLogs
   }
@@ -100,6 +106,8 @@ class Store {
   loadSentiments(allSentiments) {
     this.sentiments = allSentiments
   }
+
+  
 
   loadReviewQueue(all) {
     this.reviewQueue = all

@@ -5,38 +5,38 @@ import Icon from '@material-ui/core/Icon';
 const useStyles = makeStyles({
     root: {
         backgroundColor: props => props.bgColor,
-        width: props => `${parseInt(props.size) + 70}px`,
-        height: props => `${parseInt(props.size) + 70}px`,
-        padding: "35px",
+        width: props => `${props.size || 70}px`,
+        height: props => `${props.size || 70}px`,
+        padding: props => `${props.size? props.size * .185 : 13}px`,
         borderRadius: "50%",
         cursor: "pointer"
     },
     circleIconStyle: {
         color: props => props.color,
         overflow: "visible",
-        fontSize: props => `${parseInt(props.size)}px`,
+        fontSize: props => `${props.size? props.size * .64 : 45}px`,
 
         '&::before': {
-            fontSize: props => `${parseInt(props.size)}px`,
+            fontSize: props => `${props.size? props.size * .64 : 45}px`,
         }
     },
     label: {
         fontFamily: "Rubik",
-        fontSize: "16px",
+        fontSize: props => `${props.size? props.size * .22 : 16}px`,
         fontWeight: "normal",
         fontStretch: "normal",
         fontStyle: "normal",
         lineHeight: "1.25",
         letterSpacing: "normal",
         color: "#0f141a",
-        paddingLeft: "20px",
-        paddingTop: "20px",
+        paddingLeft: props => `${props.size? props.size * .285 : 20}px`,
+        paddingTop:  props => `${props.size? props.size * .285 : 20}px`,
         flex: 1
     },
     embed: {
         display: "flex",
         cursor: "pointer",
-        paddingBottom: "20px"
+        paddingBottom: props => `${props.size? props.size * .285 : 20}px`
     }
 });
 
@@ -49,7 +49,7 @@ const CircleIcons = (props) => {
             <div className={`${root}`}>
                 <Icon className={circleIconStyle}>{iconName}</Icon>
             </div>
-            <p className={`icon-label ${label}`}>{title}</p>
+            <p style={{display: props.noLabel? "none":"content"}} className={`icon-label ${label}`}>{title}</p>
         </div>
     )
 }

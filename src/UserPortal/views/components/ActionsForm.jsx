@@ -13,6 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {validate} from "../../../SharedCalculations/ValidationTemplate";
 import {giveMeKey} from "../../../SharedCalculations/GiveMeKey";
 import {isBoolean} from 'lodash';
+import CircleIcons from './CircleIcons';
 
 const initialState = {id: "",  files: []};
 
@@ -170,13 +171,17 @@ class ActionsForm extends React.Component {
                         edge="start"
                         onClick={this.props.onCancel.bind(this)}
                     ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
-                        {(this.props.actionDetail.label) ?
-                            <Svg class="small-icon" src={this.props.actionDetail.img} default={Star} /> :
-                            ('')}
+                        {/* {(this.props.actionDetail.label) ?
+                          
+                            <div className="small-icon">   <CircleIcons noLabel name={this.props.actionDetail.icon} color="#1249bd" bgColor="#e7eefc" size="30"/></div>
+                         
+                            :
+                            ('')} */}
                         {this.props.actionDetail.label}</h4>
                 </div>
                 <div className="page_content actions">
                     <div className="announce_component faq_announce slick-align-left">
+                       
                     <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
                     <Container>
                         <Row>

@@ -15,16 +15,16 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
         const resources = {
           "policy": {
             "files": ResourcesStore.matchedResources("file", "policy", UIStore.content.policyID, UIStore.content.variationID),
-            "urls": ResourcesStore.matchedResources("url", "policy", UIStore.content.policyID, UIStore.content.variationID)
+            // "urls": ResourcesStore.matchedResources("url", "policy", UIStore.content.policyID, UIStore.content.variationID)
           }
           ,
           "announcement": {
             "files": ResourcesStore.matchedResources("file", "announcement", UIStore.content.announcementID, UIStore.content.variationID),
-            "urls": ResourcesStore.matchedResources("url", "announcement", UIStore.content.announcementID, UIStore.content.variationID),
+            // "urls": ResourcesStore.matchedResources("url", "announcement", UIStore.content.announcementID, UIStore.content.variationID),
           }
         }
         const files = resources[sourceType]["files"]
-        const urls = resources[sourceType]["urls"]
+        // const urls = resources[sourceType]["urls"]
         let tags = props.variation.tags.length > 0 ? props.variation.tags : []
         if (tags.length !== 0) {tags = tags.map(tag => TagID2Friendly(tag, TeamStore.tags))}
   
@@ -32,7 +32,7 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
         const valStyle = {fontWeight: '400', fontStyle: 'italic'}
         
         const filesDisplay = resources[sourceType].files.length !== 0 ? JoinLinksCommas(resources[sourceType].files.length, files, "label", "file") : "none"
-        const urlsDisplay =  urls.length !== 0 ? JoinLinksCommas(urls.length, urls, "label", "url") : "none"
+        // const urlsDisplay =  urls.length !== 0 ? JoinLinksCommas(urls.length, urls, "label", "url") : "none"
        
          return(
           //  <Grid stackable style={{width: "100%"}}>
@@ -52,9 +52,9 @@ export const ManageVariationData = inject("ResourcesStore", "PoliciesStore", "An
               <div >
                 <span>Stage: </span> <span style={valStyle}>{props.variation.stage}</span>
               </div>
-              <div >
+              {/* <div >
                 <span>Resource URLs: </span> <span style={valStyle} className="lightText">{urlsDisplay}</span>
-              </div>
+              </div> */}
               <div >
                 <span>Attached Files: </span> <span style={valStyle} className="lightText">{filesDisplay}</span>
               </div>
