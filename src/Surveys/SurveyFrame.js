@@ -52,6 +52,7 @@ class SurveyFrame extends React.Component {
             }
           },
           MUIDataTableHeadCell: {
+            root: {zIndex: "1 !important"},
             fixedHeader: {
               // position: "relative"
               zIndex: "1 !important"

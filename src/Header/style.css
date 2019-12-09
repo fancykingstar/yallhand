@@ -8,7 +8,7 @@
     /* position: absolute; */
     top: 0;
     position: sticky;
-    z-index: 5;
+    z-index: 101;
 }
 
 .PortalHeader {
@@ -22,7 +22,7 @@
     position: absolute;
     top: 0;
     position: sticky;
-    z-index: 5;
+    z-index: 101;
     /* z-index: 2; */
 }
 
