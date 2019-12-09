@@ -63,7 +63,7 @@ class ActionsForm extends React.Component {
          this.reset();
          let addThis = {id: props.actionDetail.ticketID}
          props.actionDetail.ticketItems[0].data.forEach(dataItem => {   
-             addThis[dataItem.label] = ""
+             addThis[dataItem.label] = dataItem.type.toLowerCase().includes('select')? dataItem.options[0]  : ""
          });
       
          this.setState(addThis);
@@ -163,7 +163,7 @@ class ActionsForm extends React.Component {
         return (
             <>
                 <div className="section_title">
-                
+                   
                     <h4>
                         <IconButton
                         color="inherit"
