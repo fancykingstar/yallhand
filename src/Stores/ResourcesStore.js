@@ -1,12 +1,10 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 
 class Store {
   @observable
   fileResources = [];
 
-  @observable
-  urlResources = [];
- 
+
   @action
   loadFiles(allFiles) {
     return new Promise((resolve, reject) => {
@@ -15,21 +13,12 @@ class Store {
 }) 
   };
 
-  loadUrls(allUrls) {
-    return new Promise((resolve, reject) => {
-    this.urlResources = allUrls
-      resolve(true)
-  }) 
-  }; 
+
 
   _getFile(ID) {
     return Object.assign({}, this.fileResources.filter(file => file.resourceID === ID)[0])
   }
 
-  _getUrl(ID) {
-    return this.urlResources.filter(url => url.resourceID === ID)[0]
-  }
-  
    matchedResources(resource_type, source_type, ID, variID) {
     const resources = {"file": this.fileResources, "url": this.urlResources}
     const assocLabels = {"policy": "policies", "announcement": "announcements"}
@@ -50,17 +39,10 @@ class Store {
       return matchedResources
       }
 
-    
-    // const parentMatch = (list, idtype, id) => {
-    //   return list.filter(item => item[idtype] === id).length > 0 ? true : false;
-    // }
-    // const childMatch = (list, id) => {
-    //   return list.filter(item => item === id)
-    // }
-    // const parents = parentMatch(resources[resource_type], idNames[source_type], ID)
-    
-
-  
+  @computed
+  get _fileResourcesNoHidden() {
+    return this.fileResources.filter(file => !file.hideFromFeed);
+  }
 
   
 }

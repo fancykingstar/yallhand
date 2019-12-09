@@ -31,7 +31,9 @@ class StaffDetail extends React.Component {
         if (this.props.view === 'hierarchy') {
             var cardActionProps = '';
             if (this.props.has_child) {
-                cardActionProps = { onClick: (e) => this.props.update_boss(this.props.boss['index'], this.props.boss['boss']) }
+                cardActionProps = { onClick: (e) => { 
+                    this.props.update_boss(this.props.boss['index'], this.props.boss['boss'])
+                } }
             }
             return (
                 <Card square className={(this.props.has_child ? 'has_child ' : ' ') + (this.props.active ? 'is-active' : '') + " inner_staff_detail hierarchy"}>
@@ -62,6 +64,12 @@ class StaffDetail extends React.Component {
                     />
                     <CardContent>
                         <List component="div">
+                        <ListItem>
+                                <ListItemIcon>
+                                    <img src={department_icon} alt="" />
+                                </ListItemIcon>
+                                <ListItemText secondary={this.props.email} />
+                            </ListItem>
                             <ListItem>
                                 <ListItemIcon>
                                     <img src={department_icon} alt="" />
@@ -102,8 +110,8 @@ class StaffDetail extends React.Component {
                                 </div>
                             ) : (<div className="staffSocialIcons"></div>)}
                         </div>
-                        <div className="align-right">
-                            <Link to="#/">More</Link></div>
+                        {/* <div className="align-right">
+                            <Link to="#/">More</Link></div> */}
                     </CardActions>
                 </Card>
             )

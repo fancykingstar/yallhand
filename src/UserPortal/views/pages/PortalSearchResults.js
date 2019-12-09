@@ -49,13 +49,13 @@ class PortalSearchResults extends React.Component {
         }
       };
 
-      const filteredURLs = () => {
-        if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchUrlsData, UIStore.search.portalSearchValue );
-          return ResourcesStore.urlResources.filter(item => results.includes(item.resourceID));
-        } else {
-          return []
-        }
-      };
+      // const filteredURLs = () => {
+      //   if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchUrlsData, UIStore.search.portalSearchValue );
+      //     return ResourcesStore.urlResources.filter(item => results.includes(item.resourceID));
+      //   } else {
+      //     return []
+      //   }
+      // };
 
     const filteredPeople = () => {
         if (UIStore.search.portalSearchValue !== "") { const results = stupidSearch( UIStore.search.searchPeopleData, UIStore.search.portalSearchValue );
@@ -153,11 +153,11 @@ class PortalSearchResults extends React.Component {
         </Item.Group>
         </React.Fragment>
 
-    const resources = [...filteredFiles(), ...filteredURLs()].length === 0? null : 
+    const resources = [...filteredFiles()].length === 0? null : 
     <React.Fragment>
     <Header style={{color: "#ABACAB", paddingBottom: 15}} as="h2">Files</Header>
     <Item.Group divided>
-        {resourceResults([...filteredURLs(), ...filteredFiles()])}
+        {resourceResults(filteredFiles())}
     </Item.Group>
     </React.Fragment>
 
@@ -175,7 +175,7 @@ class PortalSearchResults extends React.Component {
     const isSearchResults = 
     filteredannouncement().length !== 0 
     || filteredPolicy().length !== 0
-    || filteredURLs().length !== 0
+    // || filteredURLs().length !== 0
     || filteredFiles().length !== 0
     || filteredPeople().length !==0?
     <div style={{width: "100%", height: "100%", overflowY: "scroll", overflowX: "hidden",}}> 

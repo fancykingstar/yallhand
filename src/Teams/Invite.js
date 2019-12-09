@@ -37,6 +37,7 @@ export class Invite extends React.Component  {
       email: "",
       boss: "",
       isAdmin: false,
+      adminLimits: {}
     };
   }
 
@@ -98,7 +99,7 @@ export class Invite extends React.Component  {
 
   getDataNewUser (userObj) {
     const { AccountStore} = this.props;
-    const { teamID, tagID, email, isAdmin, boss } = userObj;
+    const { teamID, tagID, email, isAdmin, boss, adminLimits } = userObj;
     const userData = user()
 
     return {
@@ -109,7 +110,8 @@ export class Invite extends React.Component  {
       accountID: userData.accountID,
       tags: tagID === "none" ? [] : [tagID],
       isAdmin,
-      boss
+      boss,
+      adminLimits,
     }
   }
 
@@ -136,10 +138,10 @@ export class Invite extends React.Component  {
         await users(AccountStore.account.accountID)
       }
       await load.users(AccountStore.account.accountID);
-      await this.setState({userInvites:[]});
+      // await this.setState({userInvites:[]});
       const reset = await [this.reset()];
       await this.setState({
-        userInvites: reset, 
+        userInvites: [this.reset()],
         dropdown: "today", 
         onBoardDate: ''
       });
@@ -152,7 +154,7 @@ export class Invite extends React.Component  {
         <Segment>
           {this.displayUserInvites()}
    
-          <div style={{ paddingBottom: "10px" }}>
+          <div style={{ paddingBottom: "10px", visibility: this.state.userInvites[0].isAdmin? "hidden":"visible" }}>
           <Button primary circular icon="plus" onClick={() => this.handleClick()} />
         </div>
      

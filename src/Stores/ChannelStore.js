@@ -1,5 +1,7 @@
 import { observable, action, computed } from "mobx";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+import { UserStore } from "../Stores/UserStore";
+
 
 
 class Store {
@@ -34,9 +36,16 @@ class Store {
   }
   @computed
   get _channelSelect() {
+    const channelLimits =  UserStore.user && UserStore.user.adminLimits && UserStore.user.adminLimits.channels? UserStore.user.adminLimits.channels : [];
     const options =  ChannelStore.allChannels.map(chan =>({"key": "chan" + giveMeKey(), "text": chan.label, "value": chan.chanID}))
-    options.unshift({"key": "allChan", "text": "All", "value": "All"})
+    if(!channelLimits.length) options.unshift({"key": "allChan", "text": "All", "value": "All"})
     return options
+  }
+
+  @computed
+  get _channelSelectNoAll() {
+    return ChannelStore.allChannels.map(chan =>({"key": "chan" + giveMeKey(), "text": chan.label, "value": chan.chanID}))
+   
   }
 
 

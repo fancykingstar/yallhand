@@ -63,7 +63,7 @@ export class PortalResources extends React.Component {
 //       return ResourcesStore.fileResources;
 //     }
 //   };
-  const allResources = [...ResourcesStore.fileResources, ...ResourcesStore.urlResources]
+  const allResources = [...ResourcesStore.fileResources]
 
 
   const resources = allResources.map(resource => (

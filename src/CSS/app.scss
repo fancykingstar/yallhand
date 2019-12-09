@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
 
 body {
     /* color: rgb(51, 51, 51);  */
@@ -199,3 +205,114 @@ body {
 .Hidden .surveySlider .slick-slide{
   width: 100vw !important;
 }
+
+.MultiSelectDropDown {
+  .message { display: none;}
+  .icon {
+    display: none !important;
+  }
+}
+
+.InboxItem:hover{
+  
+    box-shadow:0px 1px 3px 0px rgba(188, 188, 188, 0.2), 0px 2px 2px ;
+  
+}
+
+.InboxDetails {
+  height: 300px;
+  padding: 25px;
+  background-color: #ffffff;
+}
+
+.InboxListItem {
+  min-height: 70px;
+  border-right: 3px solid #2fc6f800;
+}
+
+.InboxListItem:hover {
+  border-right: 3px solid #2fc7f8;
+  background-color: #fafafa;
+} 
+
+
+.InboxListItemActive {
+  border-right: 3px solid #28a5cf;
+}
+
+.InboxListItemUnread {
+  // border-right: 3px solid #e831f2;
+  background-color: rgb(223, 241, 255);
+}
+
+.ActiveIfHover:hover {
+  transition: color 0.5s ease;
+  color: #2fc7f8;
+}
+
+.FixSemanticLabel {
+  label {font-weight: normal !important}
+}
+
+
+.FixActiveButton {
+  .ui.button.toggle.active{
+      background-color: #6d21ba !important;
+  }
+  .ui.button.toggle.active:hover{
+    background-color: #e831f2 !important;
+}
+ 
+}
+
+.SubAction{
+  background-color: #2185D0 !important;
+  color: #fff !important;
+
+    .icon {
+      height: .8em;
+      line-height: .8em;
+    }
+  
+
+}
+
+.SubAction:hover {
+    background-color: rgb(43, 163, 255) !important;
+}
+
+.SubActionFeatured {
+  background-color: #f52bd7 !important;
+  color: #fff !important;
+  height: 2.6em;
+}
+
+.SubActionFeatured:hover {
+  background-color: #f948de !important;
+}
+
+.ActionButton {
+  .input {
+    button {
+      background-color:#2185D0;
+      color: #fff;
+      
+    }
+   
+  }
+
+}
+
+.SearchResultCompact {
+  .content {
+    padding: 0px !important;
+  }
+
+}
+
+.InboxSearchBox {
+  .input {
+  width: 100%;
+  }
+}
+

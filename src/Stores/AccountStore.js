@@ -15,6 +15,7 @@ class Store {
   @observable logs = []
   @observable analyticData_portal = []
   @observable analyticData_campaigns = []
+  @observable analyticData_ticketing = []
   @observable dashboardData = []
   @observable sentiments = []
   @observable reviewQueue = []
@@ -93,6 +94,11 @@ class Store {
     this.analyticData_campaigns = allLogs
   }
 
+  loadAnalyticData_ticketing(allLogs) { 
+    this.analyticData_ticketing = allLogs
+  }
+
+
   loadDashboardData(allLogs) { 
     this.dashboardData = allLogs
   }
@@ -101,16 +107,23 @@ class Store {
     this.sentiments = allSentiments
   }
 
+  
+
   loadReviewQueue(all) {
     this.reviewQueue = all
   }
 
-  _getUsersSelectOptions(obj="") {
-      const key = obj ? Object.keys(obj)[0] : ""
-      const selectedUsers = !key ? this.allUsers : this.allUsers.filter(i=>i[key] === Object.values(obj)[0])
+  _getUsersSelectOptions(arry=false) {
+      const selectedUsers = !arry ? this.allUsers : this.allUsers.filter(i=>i.userID && arry.includes(i.userID))
       return selectedUsers.filter(user => user.displayName_full !== "" && user.isActive)
-        .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName_full + " (me) ":user.displayName_full }))
+        .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName + " (me) ":user.displayName }))
   }
+
+  _getAdminSelectOptions(arry=false) {
+    const selectedUsers = !arry ? this.allUsers.filter(i=>i.isAdmin) : this.allUsers.filter(i=>i.isAdmin).filter(i=>i.userID && arry.includes(i.userID))
+    return selectedUsers.filter(user => !user.code && user.isActive)
+      .map(user => ({"value": user.userID, "text": user.userID === UserStore.user.userID? user.displayName + " (me) ":user.displayName }))
+}
 
   _getUser(ID) {
     const superadmin = {
@@ -118,7 +131,18 @@ class Store {
       displayName_full: "Yallhands Admin",
       displayName: "Yallhands",
       img: "https://yallhandsgeneral.s3.amazonaws.com/yh-avatar.png",
-      email: "support@yallhands.com"
+      email: "support@yallhands.com",
+      profile: { Title: "",
+      Department: "",
+      Location: "",
+      "Phone or Extension": "",
+      Mobile: "",
+      "About Me": "",
+      Twitter: "",
+      Medium: "",
+      Github: "",
+      LinkedIn: "" }
+      
     }
     return ID === "*" ? superadmin : this.allUsers.filter(user => user.userID === ID)[0]
   }
@@ -126,6 +150,7 @@ class Store {
   _getDisplayName(ID) {
       return this._getUser(ID).displayName
   }
+
 
   @computed
   get _allActiveUsers() {

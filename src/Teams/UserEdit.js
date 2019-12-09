@@ -6,7 +6,8 @@ import { AdminEdit } from "./AdminEdit";
 import { modifyUser,cancelInvite} from "../DataExchange/Up";
 import { Offboard } from "./Offboard";
 import {AccountStore} from "../Stores/AccountStore";
-
+import { ChannelStore } from "../Stores/ChannelStore";
+import Collapse from '@material-ui/core/Collapse';
 
 
 export class UserEdit extends React.Component {
@@ -15,8 +16,30 @@ export class UserEdit extends React.Component {
     this.state={};
   }
 
+  closeModal() {
+    Object.keys(this.state).forEach(key => {
+      if(key !== "id" ) delete this.state[key]
+    });
+    this.props.close()
+  }
+
+  updateState(content) {
+    const {adminLimits} = this.props.data;
+    let adminLimit = false;
+    if (content.features || content.channels) {
+      adminLimit = adminLimits? Object.assign({}, adminLimits) : {features: [], channels: []};
+      adminLimit = Object.assign(adminLimit, content);
+    }
+
+    this.setState(adminLimit? {adminLimits: adminLimit} : content);
+    
+  };
+
+  features = ["Teams", "FAQs", "Announcements", "Surveys", "Tasks", "Service Desk", "Email Campaigns"].map(feature => ({text: feature, value: feature}))
+
   render() {
-    const {img, displayName, displayName_Full, isAdmin, email, teamID, tags, userID, boss} = this.props.data;
+    const {img, displayName, displayName_Full, isAdmin, email, teamID, tags, userID, boss, adminLimits} = this.props.data;
+
 
     const handleUpdate = async () => {
       await modifyUser(Object.assign(this.state, {userID}));
@@ -42,7 +65,7 @@ export class UserEdit extends React.Component {
   </Modal>
 
     return (
-      <Modal open={this.props.open} onClose={()=>this.props.close()} size="small">
+      <Modal open={this.props.open} onClose={()=>this.closeModal()} size="small">
         <Header as="h2">
           {displayAvatar}
           <Header.Content>
@@ -61,33 +84,33 @@ export class UserEdit extends React.Component {
               <Form.Input
               label="Full Name"
               defaultValue={displayName_Full}
-              onChange={(e, val) => this.setState({displayName_Full: val.value})}
+              onChange={(e, val) => this.updateState({displayName_Full: val.value})}
               />
               <Form.Input
               label="Display Name"
               defaultValue={displayName}
-              onChange={(e, val) => this.setState({displayName: val.value})}
+              onChange={(e, val) => this.updateState({displayName: val.value})}
               />
               </React.Fragment>}
               <Form.Input
                 label="Email"
                 disabled={Boolean(this.props.data.code)}
                 defaultValue={email}
-                onChange={(e, val) => this.setState({email: val.value})}
+                onChange={(e, val) => this.updateState({email: val.value})}
               />
               <TeamSelect
                disabled={Boolean(this.props.data.code)}
                 label=""
                 defaultVal={teamID}
                 outputVal={val =>
-                  this.setState({teamID: val.value})}
+                  this.updateState({teamID: val.value})}
               />
               <TagSelect
                disabled={Boolean(this.props.data.code)}
                 label=""
                 defaultVal={tags}
                 outputVal={val =>
-                  this.setState({tags: val==="none"? [] : [val]})
+                  this.updateState({tags: val==="none"? [] : [val]})
                 }
               />
               <Form.Dropdown
@@ -97,7 +120,7 @@ export class UserEdit extends React.Component {
               search
               selection
               defaultValue={boss}
-              onChange={(e, val) => this.setState({boss:val.value})}
+              onChange={(e, val) => this.updateState({boss:val.value})}
               options={AccountStore._getUsersSelectOptions()}
             />
             
@@ -106,14 +129,20 @@ export class UserEdit extends React.Component {
                 <Form.Radio
                  disabled={Boolean(this.props.data.code)}
                   toggle
+                  // checked={this.state.isAdmin? this.state.isAdmin: isAdmin}
                   defaultChecked={isAdmin} 
-                  onChange={e =>
-                    this.setState({isAdmin: !isAdmin})
+                  onChange={(e, val) =>
+                    this.updateState({isAdmin: val.checked})
                   }
                   label="Admin"
                 />
               </Form.Group>
-              {/* {adminSettings} */}
+              <Collapse in={this.state.isAdmin === undefined? isAdmin : this.state.isAdmin}>
+                  <Form>
+                    <Form.Dropdown defaultValue={adminLimits? adminLimits.features: []} className="FixSemanticLabel" onChange={(e, {value}) => this.updateState({features: value})}  options={this.features} selection multiple label="Limit admin to Yallhands select features (optional)" />
+                    <Form.Dropdown defaultValue={adminLimits? adminLimits.channels: []} className="FixSemanticLabel" onChange={(e, {value}) => this.updateState({channels: value})}  options={ChannelStore._channelSelectNoAll} multiple selection label="Limit admin to specific channels (optional)" />
+                  </Form>
+              </Collapse>
             </Form.Field>
           </Form>
         </Modal.Content>
@@ -128,7 +157,7 @@ export class UserEdit extends React.Component {
           </div>
           <div style={{ float: "left", paddingBottom: 10 }}>
             <Button disabled={Boolean(this.props.data.code)} onClick={() => handleUpdate()} primary content="Update" />
-            <Button onClick={()=>this.props.close()}>Cancel</Button>
+            <Button onClick={()=>this.closeModal()}>Cancel</Button>
           </div>
         </Modal.Actions>
       </Modal>

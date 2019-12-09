@@ -1,20 +1,34 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-
+import { TicketingStore } from "../../../Stores/TicketingStore";
+import { AccountStore } from "../../../Stores/AccountStore";
+ 
 import Slider from "react-slick";
 import IconBox from "./IconBox";
 import ActionsForm from "./ActionsForm";
+import ActionsContent from "./ActionsContent";
 
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
-import Star from '../../assets/images/star.svg';
+// import Star from '../../assets/images/star.svg';
+import {getIcon} from "../../../SharedUI/SVGIconStorage";
+import ImportantDevicesRoundedIcon from '@material-ui/icons/ImportantDevicesRounded';
 
-import AskManagement from '../../assets/images/actions/askManagement.svg';
-import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
-import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
-import compensationReview from '../../assets/images/actions/compensationReview.svg';
-import reportSomething from '../../assets/images/actions/reportSomething.svg';
+import {UserStore} from "../../../Stores/UserStore";
+import {createTicket, modifyTicket} from "../../../DataExchange/Up";
+import {ticketOpen, newFile} from "../../../DataExchange/PayloadBuilder";
+import {GenerateFileName} from "../../../SharedCalculations/GenerateFileName";
+import {S3Upload} from "../../../DataExchange/S3Upload";
+import { isBoolean } from 'lodash';
+
+import CircleIcons from './CircleIcons';
+
+// import AskManagement from '../../assets/images/actions/askManagement.svg';
+// import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
+// import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
+// import compensationReview from '../../assets/images/actions/compensationReview.svg';
+// import reportSomething from '../../assets/images/actions/reportSomething.svg';
 
 class ActionSlider extends React.Component {
    constructor(props) {
@@ -22,6 +36,7 @@ class ActionSlider extends React.Component {
       this.state = {
          ActionsData: [],
          selectedActionData: {},
+         loading: false,
       }
    }
    componentDidMount() {
@@ -33,20 +48,67 @@ class ActionSlider extends React.Component {
       });
    }
 
-   showActionForm(item) {
+   showActionForm(data) {
       this.slider.slickGoTo(1);
-      this.setState({ selectedActionData: item });
+      this.setState({ selectedActionData: data });
    }
 
-   hideActionForm() {
+   proceed() {
+      this.slider.slickGoTo(2);
+   }
+
+   backToActions() {
       this.slider.slickGoTo(0);
    }
 
-   handleActionFormSubmit(data) {
-      console.log(data);
+   hideActionForm() {
+      const {assoc} = this.state.selectedActionData;
+      this.slider.slickGoTo(assoc && assoc.length? 1: 0);
+   }
+
+
+   uploadFiles = async (files, ticket) => {
+      this.setState({loading: true});
+      let resources = [];
+      for (let index = 0; index < files.length; index++) {
+         const file = files[index];
+         await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}, true))
+         .then((r) => {
+         resources.push(r);
+         })
+         }
+      let filesLabel = Object.keys(ticket.activity[0].data).filter(i=>isBoolean(ticket.activity[0].data[i]))[0];
+      let filesObj = {};
+      filesObj[filesLabel] = resources.map(file=>file.resourceID);
+      let activityData = Object.assign(ticket.activity[0].data, filesObj);
+      const activity = Object.assign(ticket.activity[0], {data: activityData} );
+      const newTicket = Object.assign(ticket, {activity: [activity]});
+      await modifyTicket(newTicket);
+
+      this.setState({loading: false});
+    }
+   
+  
+
+   async handleActionFormSubmit(toSubmit) {
+      let data = Object.assign({}, toSubmit);
+      let files = [];
+      if (toSubmit.files) {
+         files = toSubmit.files;
+      }
+      delete data.files;
+
+
+      const payload = {parent: this.state.selectedActionData.ticketID, activity: [{data, views:[], stage: "open-pending", updated: Date.now(), userID: UserStore.user.userID}]};
+      const res = await createTicket(ticketOpen(payload)).then(res => res.json());
+      if (files.length) this.uploadFiles(files, res)
+
+
+      this.slider.slickGoTo(0);
    }
    render() {
-      const { generalActions } = this.state
+      const { generalActions, } = this.state
+      const {selectedActionData} = this.state;
       const settings_multi = {
          dots: false,
          infinite: false,
@@ -111,43 +173,45 @@ class ActionSlider extends React.Component {
                   </div>
                   <div className="page_content actions shadow">
                      <div className="announce_component faq_announce slick-align-left">
-                        {/* <Slider {...settings_multi}> */}
-                        <IconBox
-                           key={"i1"}
-                           user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                        {/* <IconBox
-                           key={"AA"}
-                           user_img={Star}
-                           title={"Open Enrollment: Ask Anything"}
-                           showAction={() => { this.showActionForm({ label: "Open Enrollment: Ask Anything", img: Star }) }} />
-                         */}
-                        {/* {(generalActions) ? generalActions.map((item, index) => {
-                              var img = item.img;
-                              // set default img if not return from data
-                              if (index === 0) { img = Star; }
-                              if (index === 1 || index === 4) { img = RefereCandidate; }
-                              if (index === 2 || index === 7) { img = AskManagement; }
-                              if (index === 3) { img = anonymousReport; }
-                              if (index === 5) { img = compensationReview; }
-                              if (index === 6 || index >= 8) { img = reportSomething; }
-                              return <IconBox
-                                 key={index}
-                                 user_img={img}
-                                 title={item.label}
-                                 showAction={() => { this.showActionForm({ label: item.label, img: img }) }} />
-                           }) : ('')} */}
-                        {/* </Slider> */}
+                        <Slider {...settings_multi}>
+
+
+                       {/* {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate).map(ticket => 
+
+                                   <IconBox
+                                   key={"icon" + ticket.ticketID}
+                                   user_img={getIcon("Star")}
+                                   title={ticket.label}
+                                   showAction={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} 
+                                />
+                           )}*/}
+
+                        {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
+                        )}
+
+                        </Slider>
                      </div>
                   </div>
                </Container>
+               {selectedActionData.assoc && selectedActionData.assoc.length? 
                <Container elevation={4} className="action-form">
-                  <ActionsForm
-                     onSubmit={this.handleActionFormSubmit}
-                     onCancel={this.hideActionForm.bind(this)}
+                  <ActionsContent
+                     onProceed={this.proceed.bind(this)}
+                     onCancel={this.backToActions.bind(this)}
                      actionDetail={this.state.selectedActionData}
                   />
+                  
+               </Container>
+               :""}
+               <Container elevation={4} className="action-form">
+                  <ActionsForm
+                     onSubmit={this.handleActionFormSubmit.bind(this)}
+                     onCancel={this.hideActionForm.bind(this)}
+                     actionDetail={this.state.selectedActionData}
+                     loading={this.state.loading}
+                  />
+                  
                </Container>
             </Slider >
          </>

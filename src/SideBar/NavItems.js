@@ -13,8 +13,11 @@ import EmailRoundedIcon from '@material-ui/icons/EmailRounded';
 import BarChartRoundedIcon from '@material-ui/icons/BarChartRounded';
 import CloudRoundedIcon from '@material-ui/icons/CloudRounded';
 import BuildRoundedIcon from '@material-ui/icons/BuildRounded';
+import RoomServiceRoundedIcon from '@material-ui/icons/RoomServiceRounded';
+import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
+import Badge from '@material-ui/core/Badge';
 
-@inject("UIStore", "UserStore")
+@inject("UIStore", "UserStore", "TicketingStore")
 @observer
 class NavItems extends React.Component {
   componentDidMount() {
@@ -23,8 +26,8 @@ class NavItems extends React.Component {
 
 
   render() {
-    const { UIStore, UserStore } = this.props;
-    
+    const { UIStore, UserStore, TicketingStore } = this.props;
+    const adminLimits = UserStore.user && UserStore.user.adminLimits && UserStore.user.adminLimits.features && UserStore.user.adminLimits.features.length?  UserStore.user.adminLimits.features : null;
     const isActive = (val) =>  UIStore.sideNav.activePrimary === val? {backgroundColor: "rgba(87, 193, 222, 0.4)"}  : {visibility: "visible"}
 
     const superAdmin = UserStore.user.isSuperAdmin === true?   
@@ -49,55 +52,71 @@ class NavItems extends React.Component {
    
       <List>
           {superAdmin}
-          <ListItem style={isActive("dashboard")} button onClick={e => handleClick("dashboard")}>
+          <ListItem className={adminLimits? "YHHidden":"YHShow"} style={isActive("dashboard")} button onClick={e => handleClick("dashboard")}>
             <ListItemIcon>
                   <HomeRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Admin Dashboard" />
           </ListItem>
-          <ListItem button style={isActive("teams")} button onClick={e => handleClick("teams")} >
+          <ListItem className={!adminLimits || adminLimits.includes('FAQs') || adminLimits.includes('Announcements') || adminLimits.includes('Service Desk')? "YHShow": "YHHidden"} style={isActive("inbox")} button onClick={e => handleClick("inbox")}>
+            <ListItemIcon >
+            <Badge color="secondary" badgeContent={TicketingStore.allTickets.filter(ticket => ticket._unread).length} 
+            >
+            <InboxRoundedIcon/>
+        </Badge>
+              
+              </ListItemIcon>
+             <ListItemText primary="Inbox" />
+          </ListItem>
+          <ListItem className={!adminLimits || adminLimits.includes('Teams')? "YHShow": "YHHidden"}  button style={isActive("teams")} button onClick={e => handleClick("teams")} >
             <ListItemIcon>
                   <GroupRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Teams" />
           </ListItem>
-          <ListItem button style={isActive("faqs")} button onClick={e => handleClick("faqs")} >
+          <ListItem className={!adminLimits || adminLimits.includes('FAQs')? "YHShow": "YHHidden"} button style={isActive("faqs")} button onClick={e => handleClick("faqs")} >
             <ListItemIcon>
                   <HelpRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="FAQs" />
           </ListItem>
-          <ListItem button style={isActive("announcements")} button onClick={e => handleClick("announcements")} >
+          <ListItem className={!adminLimits || adminLimits.includes('Announcements')? "YHShow": "YHHidden"}  button style={isActive("announcements")} button onClick={e => handleClick("announcements")} >
             <ListItemIcon>
                   <img src={Announcements}/>
               </ListItemIcon>
              <ListItemText primary="Announcements" />
           </ListItem>
-          <ListItem button style={isActive("surveys")} button onClick={e => handleClick("surveys")} >
+          <ListItem button className={!adminLimits || adminLimits.includes('Surveys')? "YHShow": "YHHidden"}  style={isActive("surveys")} button onClick={e => handleClick("surveys")} >
             <ListItemIcon>
                   <BallotRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Surveys" />
           </ListItem>
-          <ListItem button style={isActive("tasks")} button onClick={e => handleClick("tasks")} >
+          <ListItem button className={!adminLimits || adminLimits.includes('Tasks')? "YHShow": "YHHidden"}  style={isActive("tasks")} button onClick={e => handleClick("tasks")} >
             <ListItemIcon>
                   <TocRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Tasks" />
           </ListItem>
-          <ListItem button style={isActive("email")} button onClick={e => handleClick("email")} >
+          <ListItem className={!adminLimits || adminLimits.includes('Service Desk')? "YHShow": "YHHidden"} button style={isActive("ticketing")} button onClick={e => handleClick("ticketing")} >
+            <ListItemIcon>
+                  <RoomServiceRoundedIcon/>
+              </ListItemIcon>
+             <ListItemText primary="Service Desk" />
+          </ListItem>
+          <ListItem className={!adminLimits || adminLimits.includes('Email Campaigns')? "YHShow": "YHHidden"} button style={isActive("email")} button onClick={e => handleClick("email")} >
             <ListItemIcon>
                   <EmailRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Email Campaigns" />
           </ListItem>
-          <ListItem button style={isActive("analytics")} button onClick={e => handleClick("analytics")} >
+          <ListItem className={!adminLimits ? "YHShow": "YHHidden"} button style={isActive("analytics")} button onClick={e => handleClick("analytics")} >
             <ListItemIcon>
                   <BarChartRoundedIcon/>
               </ListItemIcon>
              <ListItemText primary="Analytics" />
           </ListItem>
-          <ListItem button style={isActive("storage")} button onClick={e => handleClick("storage")} >
+          <ListItem className={!adminLimits ? "YHShow": "YHHidden"} button style={isActive("storage")} button onClick={e => handleClick("storage")} >
             <ListItemIcon>
                   <CloudRoundedIcon/>
               </ListItemIcon>
