@@ -1,7 +1,7 @@
 import React from "react"
 import {inject, observer} from "mobx-react"
 import {Header, Segment, Dropdown, Button, Icon} from "semantic-ui-react"
-import { loadAdmin } from "../DataExchange/LoadProfile";
+import { loadProfile } from "../DataExchange/LoadProfile";
 import { deleteAccount } from "../DataExchange/Up"
 import { api_get } from "./Down"
 
@@ -12,7 +12,7 @@ export class EditAccounts extends React.Component {
 render(){
     const {DataEntryStore, UserStore} = this.props
     const loadAccount = () => {
-        loadAdmin(true, {accountID: DataEntryStore.superAdmin.previewAccount, userID: UserStore.user.userID})
+        loadProfile(true, {accountID: DataEntryStore.superAdmin.previewAccount, userID: UserStore.user.userID})
     }
 
     const deleteAcct = () => {

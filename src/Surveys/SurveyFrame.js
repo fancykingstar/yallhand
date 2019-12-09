@@ -10,6 +10,24 @@ import { AccountStore} from "../Stores/AccountStore";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 
 class SurveyFrame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
   
   getMuiTheme = () =>
     createMuiTheme({
@@ -69,10 +87,10 @@ class SurveyFrame extends React.Component {
     }
     
     const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
+    const mobileColumns = ["Survey Title", "Last Updated"];
 
     const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.active? "Active":"Inactive"])
-    
-
+    const mobileData = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated)]);
 
     const options = {
       elevation: 1,
@@ -84,8 +102,10 @@ class SurveyFrame extends React.Component {
       responsive: "scrollMaxHeight",
       viewColumns: false,
       download: false,
-      onRowClick: (i, data) => handleClick(SurveyStore.allSurveys[data.rowIndex])
+      onRowClick: (i, data) => handleClick(SurveyStore.allSurveys[data.dataIndex])
     };
+
+    const { width } = this.state;
 
     return (
       <React.Fragment>
@@ -107,11 +127,19 @@ class SurveyFrame extends React.Component {
   </span>      
         <div style={{ marginTop: 15 }}>
         <MuiThemeProvider theme={this.getMuiTheme()}>
-          <MUIDataTable
-            data={data}
-            columns={columns}
-            options={options}
-          />
+          {
+            width > 380?  <MUIDataTable
+                            data={data}
+                            columns={columns}
+                            options={options}
+                          />
+                        :
+                          <MUIDataTable
+                            data={mobileData}
+                            columns={mobileColumns}
+                            options={options}
+                          />
+          }
           </MuiThemeProvider>
         </div>
       </React.Fragment>

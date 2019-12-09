@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Modal, Form, Header, Message, } from "semantic-ui-react";
+import { Modal, Form, Header, Message, Dimmer, Loader } from "semantic-ui-react";
 import { GenerateFileName } from "../SharedCalculations/GenerateFileName";
 import { S3Upload } from "../DataExchange/S3Upload";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
@@ -11,23 +11,28 @@ import {modifyFile} from "../DataExchange/Up";
 @inject("UIStore", "DataEntryStore", "AccountStore")
 @observer
 export class UploadFile extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={loading: false};
+  }
   render() {
     const { UIStore, DataEntryStore, AccountStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.fileForUpload.label, 48);
     const handleSubmit = async (type) => {
+      this.setState({loading: true});
       if(type === "update" && DataEntryStore.fileForUpload.file === ""){
-        await modifyFile(fileResourceEdit());
+        await await modifyFile(fileResourceEdit());
         UIStore.set("modal", "uploadFile", false);
         this.props.output("");
         
       }else{
-        S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, DataEntryStore.fileForUpload.filename), DataEntryStore.fileForUpload.file, this.props.assoc? fileResource(this.props.assoc): fileResource())
+        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, DataEntryStore.fileForUpload.filename), DataEntryStore.fileForUpload.file, this.props.assoc? fileResource(this.props.assoc): fileResource())
         .then((r) => {
           UIStore.set("modal", "uploadFile", false);
           this.props.output(r);
         })
       }
-      
+      this.setState({loading: false});
     };
 
     const handleFileChange = e => {
@@ -79,6 +84,9 @@ export class UploadFile extends React.Component {
           // onClick={UIStore.set("modal", "uploadFile", true)}
           onClose={e => UIStore.set("modal", "uploadFile", false)}
         >
+          <Dimmer inverted active={this.state.loading}>
+          <Loader inverted>Uploading...</Loader>
+          </Dimmer>
           <Modal.Header>{title}</Modal.Header>
           <Modal.Content>
             <Modal.Description>
@@ -138,6 +146,7 @@ export class UploadFile extends React.Component {
               </p>
             </Modal.Description>
           </Modal.Content>
+ 
         </Modal>
       </React.Fragment>
     );

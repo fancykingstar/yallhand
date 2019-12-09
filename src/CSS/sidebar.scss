@@ -75,6 +75,21 @@
   background-repeat: no-repeat;
     background-position: center; 
   }
+
+  .ContentPreviewImg {
+
+    height: 50px;
+    width: 50px;
+    border: solid;
+    border-width: 1px;
+    border-color: #9a9a9a;
+    -webkit-border-radius: 10%;
+    -moz-border-radius: 10%;
+    border-radius: 10%;
+    background-size: cover;
+  background-repeat: no-repeat;
+    background-position: center; 
+  }
   
   
   
@@ -268,6 +283,14 @@
      
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  .YHShow {
+    display: content;
+  }
+
+  .YHHidden {
+    display: none;
   }
   
   

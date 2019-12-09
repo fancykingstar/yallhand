@@ -24,6 +24,7 @@ import _ from "lodash";
 import { modifyPolicy, modifyAnnouncement } from "../../DataExchange/Up";
 
 
+
 @inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore")
 @observer
 class ManageContent extends React.Component {
@@ -244,12 +245,18 @@ class ManageContent extends React.Component {
         UIStore.set("content", "variationID", val)
       };
 
+      const allowCreateNew = () => {
+        const variLength = obj.variations? obj.variations.filter(i=>i.stage !== "archived").length : 0;
+        return tagList.length * teamList.length !== variLength;
+      }
 
       const vari = () => {
           return this.mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
           :
           AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID)
       }
+
+      const idobject = this.mode === "announcement"? {announcementID:this.props.match.params.contentID,mode: this.mode, variations: [vari()]} : {policyID: this.props.match.params.contentID,mode: this.mode, variations: [vari()]};
 
       const manageContent = () => {
         if(this.mode === "policy" && UIStore.content.policyID === "")
@@ -272,7 +279,7 @@ class ManageContent extends React.Component {
                 />
                 <Segment>
                   <div> 
-                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={Object.assign(Object.assign({}, DataEntryStore.contentmgmt), {variations: [vari()]})} />
+                  <ContentPreview open={this.state.contentPreview} onClose={this.closePreview} data={Object.assign(Object.assign({}, DataEntryStore.contentmgmt), idobject)} />
 
                     <Header>Available Variations</Header>
                     <br />
@@ -281,28 +288,18 @@ class ManageContent extends React.Component {
                       defaultVal={UIStore.content.variationID}
                       whenChanged={handleChange}
                     />
-                    {tagList.length > 0 && teamList.length > 1 ?
                       <Dropdown
                       button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
                       <Dropdown.Menu>
                         <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
-                        {TeamStore.tags.length * TeamStore.structure.length === variations.length? null :
-                        <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>}
-                        <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/>
+                        {allowCreateNew() && <>
+                        <Dropdown.Item text='New' icon="file outline" onClick={e => handleCreateNew(e)}/>
+                        <Dropdown.Item text='Duplicate' icon="copy outline" onClick={e => handleCreateDupe(e)}/> </>}
                         <Dropdown.Divider />
                       {publishOptions()}
                       </Dropdown.Menu>
                       </Dropdown>
-                      :
-                      <Dropdown
-                      button size="small" style={{marginLeft: 5, fontWeight: 800}} text="actions..." icon={false}>
-                      <Dropdown.Menu>
-                        <Dropdown.Item text='Edit' icon="edit outline" onClick={e => handleEdit(e)} />
-                        <Dropdown.Divider />
-                      {publishOptions()}
-                      </Dropdown.Menu>
-                      </Dropdown>
-                    }
+          
                     <div>
 
                     </div>

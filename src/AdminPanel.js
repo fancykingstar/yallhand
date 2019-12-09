@@ -11,7 +11,9 @@ import { TeamFrame } from "./Teams/TeamFrame";
 import { ResourcesFrame } from "./Resources/ResourcesFrame";
 import SurveyFrame from "./Surveys/SurveyFrame";
 import TaskFrame from "./Tasks/TaskFrame";
+import TicketingFrame from "./Ticketing/TicketingFrame";
 import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
+import TicketingNewEdit from "./Ticketing/TicketingNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
 import { BaseSettings } from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
@@ -24,8 +26,9 @@ import { CreateAccounts } from "./SuperAdmin/CreateAccounts"
 import { EditUsers } from "./SuperAdmin/EditUsers"
 import { CreateUsers } from "./SuperAdmin/CreateUsers"
 import { Analytics } from "./SuperAdmin/Analytics"
-import { loadAdmin } from "./DataExchange/LoadProfile";
+import { loadProfile } from "./DataExchange/LoadProfile";
 import {syncAdminNav} from "./SharedCalculations/SyncAdminNav";
+import Inbox from "./Inbox/Inbox";
 import "./CSS/styles.scss";
 
 
@@ -37,7 +40,7 @@ export class AdminPanel extends React.Component {
     if (!UIStore._adminLoadingComplete) {
       UserStore.setPreviewTeam("")
       UserStore.setPreviewTag("")
-      loadAdmin()
+      loadProfile();
     }
   }
   componentDidUpdate() {
@@ -45,6 +48,7 @@ export class AdminPanel extends React.Component {
   }
   render() {
     const { UIStore, UserStore } = this.props;
+    const adminLimits = UserStore.user && UserStore.user.adminLimits && UserStore.user.adminLimits.features && UserStore.user.adminLimits.features.length?  UserStore.user.adminLimits.features : false;
 
     const mobileNavDisplay =  UIStore.responsive.mobileNav?
     <div className="SideBarContainerMobile">
@@ -82,6 +86,8 @@ export class AdminPanel extends React.Component {
 
      {mobileNavDisplay}
 
+     
+
         <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
             <Route path="/panel/announcements" render={props => <ContentListingPage {...props} mode="announcement" />} exact />
@@ -98,9 +104,13 @@ export class AdminPanel extends React.Component {
             <Route path="/panel/tasks/manage-task/:id" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks/manage-task" render={props => <SurveyNewEdit {...props} mode="task" />} exact />
             <Route path="/panel/tasks" component={TaskFrame} exact/>
+            <Route path="/panel/ticketing" component={TicketingFrame} exact/>
+            <Route path="/panel/ticketing/manage-ticket" render={props => <TicketingNewEdit {...props} />} exact />
+            <Route path="/panel/ticketing/manage-ticket/:id" render={props => <TicketingNewEdit {...props} />} exact />
             <Route path="/panel/surveys/manage-survey/:id" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
             <Route path="/panel/surveys/manage-survey" render={props => <SurveyNewEdit {...props} mode="survey" />} exact />
-            <Route path="/panel" component={DashboardFrame} exact/>
+            <Route path="/panel" component={!adminLimits && DashboardFrame} exact/>
+            <Route path="/panel/inbox" component={Inbox} exact/>
             <Route path="/panel/analytics" component={AnalyticsFrame} />
             <Route path="/panel/base-settings" component={BaseSettings} />
             <Route path="/panel/user-settings" component={UserSettings} />

@@ -230,6 +230,24 @@ export const urlResourceAssociate = (resourceID, associations) => {
 
 
 ///FILE RESOURCES
+export const newFile = (label, assoc=null, hideFromFeed=false) => {
+ const buildObj = {
+  label,
+  S3Key: "",
+  url: "", 
+  // filename: DataEntryStore.fileForUpload.filename,
+  type: "",
+  size: "", 
+  teamID: "global",
+  hideFromFeed,
+  tags: []
+  };
+  assoc !== null? buildObj.associations = Object.assign({policies:[], announcements:[], tickets: []}, assoc) : {policies:[], announcements:[], tickets: []};
+  return _.extend({}, base(), buildObj)
+}
+
+
+
 export const fileResource = (assoc=null) => {
   const buildObj = {
   associations: DataEntryStore.fileForUpload.associations,
@@ -367,13 +385,19 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
   export const contentEdit = (obj, mode, contentID, variID) => {
     // const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+
+    const newVariTemplate = { variationID: generateID(), stage: "draft", teamID: "global", label: "",tags: [], contentRAW:"", contentHTML:""}
+
     let updatedFields = {};
-    Object.keys(obj).forEach((key, i) => { if(obj[key]) updatedFields[key] = obj[key]});
+    Object.keys(obj).forEach((key, i) => { if(key[0]!=="_") updatedFields[key] = obj[key]});
 
     let newContentValues = {}
     if (updatedFields.img) newContentValues.img = updatedFields.img;
     if (updatedFields.chanID) newContentValues.chanID = updatedFields.chanID;
-    newContentValues[`${mode}ID`] = contentID;
+    if (mode === "announcement") {newContentValues.announcementID = contentID}
+    else newContentValues.policyID = contentID;
+    newContentValues.accountID = accountID();
+    newContentValues.updated = Date.now();
 
     let newVariValues = {};
     if (updatedFields.label) newVariValues.label = updatedFields.label;
@@ -382,15 +406,22 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
     if (updatedFields.tags) newVariValues.tags = updatedFields.tags;
     if (updatedFields.stage) newVariValues.stage = updatedFields.stage;
+    if (updatedFields.qanda) newVariValues.qanda = updatedFields.qanda;
+    newVariValues.updated = Date.now();
+    newVariValues.userID = userID();
+    newVariValues.variationID = variID? variID : generateID();
 
-    const parent = mode === "policy" ? Object.assign({}, PoliciesStore._getPolicy(contentID)) : Object.assign({}, AnnouncementsStore._getAnnouncement(contentID));
+    //Correct for Nasty MOBX bug --- stringify/parse will release from Observer
+    let parent = mode === "policy" ? JSON.stringify(PoliciesStore._getPolicy(contentID)) : JSON.stringify(AnnouncementsStore._getAnnouncement(contentID));
+    parent = JSON.parse(parent);
+ 
     const variations = parent.variations.slice();
-    const editedVari = variations.filter(i=>i.variationID === variID)[0];
+    const editedVari = variID? variations.filter(i=>i.variationID === variID) : [newVariTemplate];
     const otherVaris = variations.filter(i=> i.variationID !== variID);
-    
-    newContentValues.variations = [...otherVaris, ...[Object.assign(editedVari, newVariValues)]]
+    const combinedVaris = [...otherVaris, Object.assign(editedVari.length? editedVari[0]: {}, newVariValues)];
+    newContentValues.variations = combinedVaris;
     if(updatedFields === "published") newContentValues.everPublished = true;
-    return _.extend({}, base(), newContentValues)
+    return _.extend({}, base(), newContentValues);
   }
   
   export const contentPatch = (newObj) => {
@@ -488,8 +519,70 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
   }
 
+ 
+  ///TICKETING AND SERVICE DESK
+  export const ticket = ( data ) => {
+    let payload = data;
+    if (payload._iconOptions !== undefined) delete payload._iconOptions;
+    if (data.type === "simple") {
+      payload.ticketItems.splice(0, 1, Object.assign(payload.ticketItems[0], data.config.simpleDesc? {defaultAssignee: userID(), data: [{type: "text", label: "Description", options: []}]} : {defaultAssignee: userID()} ));
+    };
 
+    if (payload.assoc.length) payload.assoc = data.assoc.map(i=> i.type === "policy"? ({policyID: i.value}):({announcementID: i.value}))
 
+    payload.teamID = payload.sendToTeamID?  payload.sendToTeamID : "global";
+    delete payload.sendToTeamID;
+    payload.tags = payload.sendToTagID && payload.sendToTagID !== "none"? [payload.sendToTagID] : [];
+    delete payload.sendToTagID;
+
+    return _.extend({}, base(), payload)
+  }
+
+  export const ticketEdit = ( data ) => {
+    return _.extend({}, base(), data); 
+  }
+
+  export const addTicketActivity = (state, props) => {
+    let newVals = Object.assign({}, state);
+    delete newVals.contactExpanded
+    delete newVals.addlFieldsSource
+
+    
+    let buildObj = {
+      ticketID: props.ticketID,
+      accountID: props.accountID,
+    };
+
+    if (state.stage) buildObj.stage = state.stage;
+    if (state.assignee) buildObj.currentAssignee = state.assignee;
+    delete newVals.stage;
+    delete newVals.assignee;
+    Object.keys(newVals).filter(i => !newVals[i]).forEach(i => delete newVals[i]);
+
+    let activity = {updated: Date.now(), userID: userID(), data: newVals};
+ 
+
+    buildObj.activity = [...props.activity, activity];
+    buildObj.update = Date.now();
+
+    return buildObj;
+
+  }
+
+  export const ticketOpen = ( data ) => {
+    let payload = data;
+    if (payload.id) delete payload.id
+    return _.extend({}, base(), payload);
+  }
+
+  export const addView = ( data ) => {
+    let newTicket = {};
+    Object.keys(data).forEach(key => {if (key[0] !== "_") newTicket[key] = data[key]})
+    let latestViews = newTicket.activity[0].views.slice();
+    latestViews.push(userID());
+    const newActivity = newTicket.activity.slice().splice(0, 1, Object.assign(newTicket.activity[0], {views: latestViews}))
+    return Object.assign(newTicket, {activity: newActivity});
+  }
 
 
 

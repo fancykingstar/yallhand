@@ -216,7 +216,7 @@ class SurveyNewEdit extends React.Component {
               <>
               {TeamStore._isTargetingAvail &&
               <div style={{ paddingTop: "10px" }}>
-                <ChooseTargeting label="Survey" output={val=>this.setState(val)} input={this.state}/>
+                <ChooseTargeting label="Send survey" output={val=>this.setState(val)} input={this.state}/>
               </div>
               }
               <div style={{ paddingTop: "10px" }}>

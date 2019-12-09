@@ -22,7 +22,7 @@ export class Files extends React.Component {
       UIStore.set("search",
       "searchFilesData",
       initSearchObj(
-        ResourcesStore.fileResources,
+        ResourcesStore._fileResourcesNoHidden,
         "resourceID"
       ) 
     );
@@ -68,7 +68,7 @@ export class Files extends React.Component {
  const deleteFile =  async (val) => {
   await deleteFileresource(val)
   ///add S3 removal
-  await ResourcesStore.loadFiles(ResourcesStore.fileResources.filter(i => i.resourceID !== val))
+  await ResourcesStore.loadFiles(ResourcesStore._fileResourcesNoHidden.filter(i => i.resourceID !== val))
   this.loadSearch()
 
 }
@@ -85,9 +85,9 @@ export class Files extends React.Component {
         UIStore.search.searchFilesData,
         UIStore.search.searchFiles
       );
-      return ResourcesStore.fileResources.filter(item => results.includes(item.resourceID));
+      return ResourcesStore._fileResourcesNoHidden.filter(item => results.includes(item.resourceID));
     } else {
-      return ResourcesStore.fileResources;
+      return ResourcesStore._fileResourcesNoHidden;
     }
   };
 

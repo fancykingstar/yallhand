@@ -10,6 +10,25 @@ import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 class TaskFrame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+
   getMuiTheme = () =>
     createMuiTheme({
       overrides: {
@@ -69,9 +88,11 @@ class TaskFrame extends React.Component {
     
     const columns = ["Task Title", "Last Updated", "Created By", "Stage"];
 
-    const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.active? "Active":"Inactive"])
-    
+    const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.active? "Active":"Inactive"]);
 
+    const mobileColumns = ["Task Title", "Last Updated"];
+
+    const mobileData = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated)]);
 
     const options = {
       elevation: 1,
@@ -84,8 +105,10 @@ class TaskFrame extends React.Component {
       viewColumns: false,
       download: false,
 
-      onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.rowIndex])
+      onRowClick: (i, data) => handleClick(TaskStore.allTasks[data.dataIndex])
     };
+
+    const { width } = this.state;
 
     return (
       <React.Fragment>
@@ -107,11 +130,19 @@ class TaskFrame extends React.Component {
   </span>      
         <div style={{ marginTop: 15 }}>
         <MuiThemeProvider theme={this.getMuiTheme()}>
-          <MUIDataTable
-            data={data}
-            columns={columns}
-            options={options}
-          />
+          { 
+            width > 380?  <MUIDataTable
+                            data={data}
+                            columns={columns}
+                            options={options}
+                          />
+                        :
+                          <MUIDataTable
+                            data={mobileData}
+                            columns={mobileColumns}
+                            options={options}
+                          />
+          }     
           </MuiThemeProvider>
         </div>
       </React.Fragment>

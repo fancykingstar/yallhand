@@ -8,7 +8,7 @@ class IconBox extends React.Component {
         const { box_type } = this.props;
         if (box_type === 'image-full-width') {
             return (
-                <div className={"icon-box-wrap image-full-width  " + this.props.main_class}>
+                <div onClick={this.props.showAction} className={"icon-box-wrap image-full-width  " + this.props.main_class}>
 
                     <div className="box_img icon bg big text-center">
                         {(this.props.user_img) ? this.props.user_img : <Svg src={this.props.user_img} default={Star} />}

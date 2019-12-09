@@ -27,8 +27,12 @@ export class CommonOptions extends React.Component {
       button text="Options...">
       <Dropdown.Menu>
          <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"View Preview"} onClick={() => this.props.handleClick("preview")}  /> 
+         {this.props.isNewContent && 
+         <>
         <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Choose Channel..."} onClick={() => this.props.handleClick("channel")}  /> 
         <Dropdown.Item key={"pubctrl" + giveMeKey()} text={"Set Featured Image..."} onClick={() => this.props.handleClick("image")}   />
+        </>
+         }
         <Dropdown.Item disabled={this.props.unsavedWarning} key={"pubctrl" + giveMeKey()} text={`Attach Files...${this.props.unsavedWarning? "(requires save)" : ""}`} onClick={() => this.props.handleClick("attach")}   />
       </Dropdown.Menu>
       </Dropdown>
