@@ -74,7 +74,7 @@ export class Users extends React.Component {
           {user.tags.length === 0 ? "None" : getDisplayTags(user.tags, TeamStore.tags)}
         </Table.Cell>
         <Table.Cell>
-          {user.boss && AccountStore._getDisplayName(user.userID)}
+          {user.boss? AccountStore._getDisplayName(user.boss) : ""}
         </Table.Cell>
       </Table.Row>
     ));
