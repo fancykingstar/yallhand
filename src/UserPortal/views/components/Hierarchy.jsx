@@ -24,7 +24,7 @@ class Hierarchy extends React.Component {
       const { AccountStore } = this.props;
       const allUsers = AccountStore._allActiveUsers || [];
       let users = allUsers.map(user => {
-         if (typeof user.boss == 'undefined' || user.boss == "") user = {...user, boss: "self"};
+         if (typeof user.boss == 'undefined' || user.boss == "" || user.boss === user.userID) user = {...user, boss: "self"};
          return user;
       });
 
