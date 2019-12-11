@@ -124,11 +124,12 @@ class ContentListingPage extends React.Component {
       DataEntryStore.set("contentmgmt", "bundle", "queue");
       DataEntryStore.set("contentmgmt", "keywords", content.keywords);
       DataEntryStore.set("contentmgmt", "reviewAlert", content.reviewAlert);
-      this.props.history.push(
+      {/*this.props.history.push(
         `/panel/${mode === "announcement" ? "announcements" : "faqs"}/${
         UIStore.content[id]
         }`
-      );
+      );*/}
+      this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});
     };
 
     const createContent = () => {
@@ -137,6 +138,7 @@ class ContentListingPage extends React.Component {
           ? "/panel/faqs/content/new"
           : `/panel/announcements/content/new`
       );
+      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
     };
 
     const handleFeatured = async (action, tableinfo) => {

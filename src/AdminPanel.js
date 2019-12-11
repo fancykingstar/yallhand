@@ -93,6 +93,7 @@ export class AdminPanel extends React.Component {
         <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
             <Route path="/panel/content/" component={Content} exact />
+            <Route path="/panel/content/:contentID" component={Content} exact />
             
             <Route path="/panel/announcements" render={props => <ContentListingPage {...props} mode="announcement" />} exact />
             <Route path="/panel/announcements/:contentID" component={ManageContent} exact />
