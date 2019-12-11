@@ -4,9 +4,10 @@ import { Modal, Form, Header, Message, Dimmer, Loader } from "semantic-ui-react"
 import { GenerateFileName } from "../SharedCalculations/GenerateFileName";
 import { S3Upload } from "../DataExchange/S3Upload";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
-import { UploadConfig } from "../SharedUI/UploadConfig";
 import { fileResourceEdit, newFile } from "../DataExchange/PayloadBuilder"
 import {modifyFile} from "../DataExchange/Up";
+import toast from "../YallToast";
+
 
 
 export class AttachFile extends React.Component {
@@ -56,10 +57,11 @@ export class AttachFile extends React.Component {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onloadend = () => {
-          this.setState({file})
-        // DataEntryStore.set("fileForUpload", "file", file);
-        // DataEntryStore.set("fileForUpload", "url", reader.result);
-        // DataEntryStore.set("fileForUpload", "filename", file.name);
+        if (file.size > 26214400) {
+          toast.error("Your file cannot exceed 25MB", {hideProgressBar: true})
+        }
+        else this.setState({file})
+      
       };
       reader.readAsDataURL(file);
     };
