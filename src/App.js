@@ -58,6 +58,12 @@ class AppRoute extends React.Component {
     const {UIStore} = this.props;
 
     const theme = createMuiTheme({
+      props: {
+       App : {
+        MuiButtonBase: {
+          disableRipple: true, 
+        },
+      }},
       typography: {
         fontFamily: 'Lato, Arial',
       }

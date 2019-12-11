@@ -17,6 +17,7 @@ import DoneRoundedIcon from '@material-ui/icons/DoneRounded';
 
 import {createTicket} from "../../../DataExchange/Up";
 import {ticketOpen} from "../../../DataExchange/PayloadBuilder";
+import toast  from "../../../YallToast";
 
 
 
@@ -36,7 +37,12 @@ class ContentDetail extends React.Component {
       }
    }
 
+   updateState(val){
+      this.setState(val);
+   }
+
    submitQ = async () => {
+      if (!this.state.q) return toast.error("Your question has no text", {hideProgressBar: true})
       const {UserStore} = this.props;
       const {PostData} = this.state;
       let data = {};
@@ -104,15 +110,18 @@ class ContentDetail extends React.Component {
       const { PostData,displayQ } = this.state;
       console.log("qnada?", PostData.variations)
       const takeQuestion = !displayQ?  
-            <Button outline color="primary" size="sm" onClick={()=> this.setState({displayQ: true})}>
+            <Button outline color="primary" size="sm" onClick={()=> this.updateState({displayQ: true})}>
             Ask a question <HelpOutlineRoundedIcon fontSize="small"/>
          </Button>
     :
     <>
-    <Input placeholder="Enter your question…" type="text" name="q" id="q" onChange={e=>this.setState({q: e.target.value})} />
+    <Input placeholder="Enter your question…" type="text" name="q" id="q" onKeyDown={e => e.keyCode === 13? this.submitQ() : {}} onChange={e=>this.updateState({q: e.target.value})} />
     <div style={{padding: "25px 25px 15px 25px", textAlign: "center", display: "flex", justifyContent: "center"}}>
       <Button outline color="primary" size="sm" onClick={()=>this.submitQ()} style={{ display: "flex" }}>
          Submit <DoneRoundedIcon fontSize="small"/>
+      </Button>
+      <Button outline size="sm" onClick={()=> this.updateState({displayQ: false})} style={{ display: "flex", marginLeft: 5 }}>
+         Cancel
       </Button>
     </div>
     </>
