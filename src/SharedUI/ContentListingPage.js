@@ -133,12 +133,12 @@ class ContentListingPage extends React.Component {
     };
 
     const createContent = () => {
-      this.props.history.push(
-        mode === "policy"
-          ? "/panel/faqs/content/new"
-          : `/panel/announcements/content/new`
-      );
-      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
+      {/*this.props.history.push(
+              mode === "policy"
+                ? "/panel/faqs/content/new"
+                : `/panel/announcements/content/new`
+            );*/}
+      this.props.history.push({pathname: '/panel/content', state: {mode: mode}});
     };
 
     const handleFeatured = async (action, tableinfo) => {
