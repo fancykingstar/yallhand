@@ -1,15 +1,12 @@
 import React from 'react';
 import Layout from '../../layouts/DefaultLayout';
 
-import { Row, Col, } from 'reactstrap';
-import { AppBar, Tabs, Tab } from '@material-ui/core';
+import {sortByUTC} from "../../../SharedCalculations/SortByUTC";
+import { AppBar, } from '@material-ui/core';
 import TabPanel from "../components/TabPanel";
 import ImageBox from '../components/ImageBox';
-import Hierarchy from "../components/Hierarchy";
-import StaffDetail from '../components/StaffDetail';
+import {EmptyPlaceholder} from "../components/EmptyPlaceholder";
 
-import { EmptyPlaceholder } from '../components/EmptyPlaceholder';
-// import ContentListData from '../../data/directory.json';
 
 
 import { AnnouncementsStore } from "../../../Stores/AnnouncementsStore";
@@ -20,11 +17,24 @@ class ContentList extends React.Component {
       super(props);
       this.state = {
          width: 0, height: 0,
-         StaffDetailsData: [],
          tabValue: 0,
          source: [],
          path: "",
          mode: "",
+      }
+   }
+
+   async updateFilter(e) {
+      const path = this.props.match.url;
+      // let source = await path.includes("announcement") ? AnnouncementsStore.allAnnouncements : PoliciesStore.allPolicies;
+      if(e.sort) {
+         const source = await sortByUTC(this.state.source, e.sort === "old"? "Oldest" : "Newest")
+         await this.setState({source})
+      }
+      else if(e.channel){
+         let source = await path.includes("announcement") ? AnnouncementsStore.allAnnouncements : PoliciesStore.allPolicies;
+         source = e.channel === "All"? source : source.filter(content => content.chanID === e.channel); 
+         await this.setState({source})
       }
    }
 
@@ -45,7 +55,8 @@ class ContentList extends React.Component {
 
    static getDerivedStateFromProps(props, state) {
       const path = props.match ? props.match.url : null
-      if (path) return {
+      const newMode = path.includes("announcement") ? "announcement" : "policy";
+      if (path && newMode !== state.mode ) return {
          path: props.match.url,
          mode: path.includes("announcement") ? "announcement" : "policy",
          source: path.includes("announcement") ? AnnouncementsStore.allAnnouncements : PoliciesStore.allPolicies
@@ -56,40 +67,32 @@ class ContentList extends React.Component {
 
 
    render() {
-      //   const { StaffDetailsData } = this.state;
+ 
       const { mode } = this.state;
       return (
-         <Layout pageTitle={mode === "announcement" ? "Announcements" : "FAQs"}>
+         <Layout updateFilter={this.updateFilter.bind(this)} pageTitle={mode === "announcement" ? "Announcements" : "FAQs"}>
             <div className="container">
                <div className="page_container">
-                  {/* <div className="staffDetailTab custom-tabs"> */}
+             
                   <AppBar position="static">
-                     {/* <Tabs indicatorColor="primary"
-                           textColor="primary" value={this.state.tabValue} onChange={this.handleChangeTab.bind(this)} aria-label="simple tabs example">
-                           <Tab label="All Staff" id='simple-tab-0' aria-controls='simple-tabpanel-0' />
-                           <Tab label="Explore Hierarchy" id='simple-tab-1' aria-controls='simple-tabpanel-1' />
-                        </Tabs> */}
+                     
                   </AppBar>
                   <TabPanel value={this.state.tabValue} index={0}>
-
                      {
                         !this.state.source.length?  <EmptyPlaceholder type={mode === "policy"? "FAQ": mode} />  :
-                        this.state.source.map((item, index) => <div className=" all-staff-box" key={index}>
+                        this.state.source.map((item, index) => <div className=" all-staff-box" key={`contentlisting${item[mode === "announcement" ? "announcementID" : "policyID"]}`}>
                            <ImageBox
                               url={`/portal/${mode === "announcement" ? "announcement" : "learn-detail"}/${item[mode === "announcement" ? "announcementID" : "policyID"]}`}
                               main_class={"auto-col"}
                               overlayClass={"box-overlay-color-" + (index < 10? index : (index  % 10))}
                               user_img={item.img}
                               title={item.label}
-                              key={`post-list-key ${index}`} />
+                              key={`post-list-key ${item[mode === "announcement" ? "announcementID" : "policyID"]}`} />
                         </div>
                         )}
 
                   </TabPanel>
-                  {/* <TabPanel value={this.state.tabValue} index={1}>
-                        <Hierarchy />
-                     </TabPanel> */}
-                  {/* </div> */}
+                 
                </div>
             </div>
          </Layout>

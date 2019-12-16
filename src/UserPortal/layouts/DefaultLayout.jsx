@@ -185,7 +185,7 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                     [classes.appBarShift]: (width <= mobileWidth) ? mopen : open,
                 }, (((width <= mobileWidth) ? !mopen : !open) ? "appBarShiftClose" : ''), "topappbar")}
             >
-                <LayoutHeader pageTitle={props.pageTitle} toggleMenu={(width <= mobileWidth) ? handleDrawerToggleMobile : handleDrawerToggle} />
+                <LayoutHeader updateFilter={props.updateFilter}  pageTitle={props.pageTitle} toggleMenu={(width <= mobileWidth) ? handleDrawerToggleMobile : handleDrawerToggle} />
             </AppBar>
             <Drawer
                 variant="permanent"
