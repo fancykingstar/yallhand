@@ -21,6 +21,7 @@ export class UserSettings extends React.Component {
     const { DataEntryStore, UserStore } = this.props;
     DataEntryStore.set("userSettings", "img", UserStore.user.img)
     DataEntryStore.set("userSettings", "timezone", UserStore.user.timezone)
+    DataEntryStore.set("userSettings", "dob", UserStore.user.dob)
     DataEntryStore.set("userSettings", "displayName_full", UserStore.user.displayName_full)
     DataEntryStore.set("userSettings", "displayName", UserStore.user.displayName)
     const profile = Object.keys(UserStore.user.profile)
@@ -77,7 +78,7 @@ export class UserSettings extends React.Component {
 
 
     return (
-      <div style={{ padding: 15, maxWidth: 900 }}>
+      <div style={{ padding: 15}}>
         <Header
           as="h2"
           content="Your Profile Settings"
@@ -110,8 +111,7 @@ export class UserSettings extends React.Component {
                 onChange={(e, val) => handleName(val.value)}
               >
                 {" "}
-                <input maxLength="16" />{" "}
-              </Form.Input>
+                <input maxLength="32" />{" "} </Form.Input>
              
                 {/* <Form.Select
                   label="Default Timezone"
@@ -124,36 +124,41 @@ export class UserSettings extends React.Component {
                 label={"Title"}
                 value={DataEntryStore.userSettings.Title}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Title", val.value)}    
-               />    
+               >     <input maxLength="32" />{" "} </Form.Input>
               <Form.Input
                 label={"Department"}
                 value={DataEntryStore.userSettings.Department}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Department", val.value)}    
-               />     
+               >     <input maxLength="32" />{" "} </Form.Input>     
              <Form.Input
                 label={"Location"}
                 value={DataEntryStore.userSettings.Location}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Location", val.value)}    
-               />      
+               >     <input maxLength="32" />{" "} </Form.Input>      
               <Form.Input
                 label={"Phone or Extension"}
                 value={DataEntryStore.userSettings["Phone or Extension"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Phone or Extension", val.value)}    
-               />     
+               >     <input type="number" maxLength="13" />{" "} </Form.Input>     
                <Form.Input
                 label={"Mobile"}
                 value={DataEntryStore.userSettings["Mobile"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Mobile", val.value)}    
-               />      
-              <Form.Input
+               > <input type="number" maxLength="13" />{" "} </Form.Input>           
+            <Form.Input icon="birthday cake"
+              type="date"
+              label="Birthday"
+              value={DataEntryStore.userSettings.dob}
+              onChange={(e) => DataEntryStore.set("userSettings", "dob", e.target.value)}    />
+              <Form.TextArea
                 label={"About Me"}
                 value={DataEntryStore.userSettings["About Me"]}
-                onChange={(e, val) => DataEntryStore.set("userSettings", "About Me", val.value)}    
-               />     
-
+                onChange={(e, {value}) => DataEntryStore.set("userSettings", "About Me", value.split("\n").join("")) }
+                > <input maxLength="256" />{" "} </Form.TextArea>     
             <Form.Input label={ <span> <Icon name={"twitter"} /> {"Twitter"}{" "} </span> } > {" "}
             <Input
                 label={"@"}
+                maxLength="32"
                 value={DataEntryStore.userSettings["Twitter"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Twitter", val.value)}    
                /> 
@@ -162,6 +167,7 @@ export class UserSettings extends React.Component {
             <Form.Input label={ <span> <Icon name={"medium"} /> {"Medium"}{" "} </span> } > {" "}
             <Input
                 fluid
+                maxLength="62"
                 label={"https://medium.com/@"}
                 value={DataEntryStore.userSettings["Medium"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Medium", val.value)}    
@@ -171,6 +177,7 @@ export class UserSettings extends React.Component {
             <Form.Input label={ <span> <Icon name={"github"} /> {"Github"}{" "} </span> } > {" "}
             <Input
                 fluid
+                maxLength="62"
                 label={"https://github.com/"}
                 value={DataEntryStore.userSettings["Github"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Github", val.value)}    
@@ -180,6 +187,7 @@ export class UserSettings extends React.Component {
             <Form.Input label={ <span> <Icon name={"linkedin"} /> {"LinkedIn"}{" "} </span> } > {" "}
             <Input
                 fluid
+                maxLength="62"
                 label={"https://linkedin.com/"}
                 value={DataEntryStore.userSettings["LinkedIn"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "LinkedIn", val.value)}    

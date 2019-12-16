@@ -29,6 +29,10 @@ export const history = createBrowserHistory();
 @observer
 class PostDetails extends React.Component {
 
+    componentDidMount(){
+        window.scrollTo(0, 0);
+    }
+
     render() {
         const { AccountStore, UserStore, ResourcesStore } = this.props;
         const { mode, contentID } = this.props.data;
