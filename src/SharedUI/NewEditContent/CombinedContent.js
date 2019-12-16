@@ -31,7 +31,22 @@ import { UserStore } from "../../Stores/UserStore";
 class CombinedContent extends React.Component {
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      label: "",
+      contentRAW: "",
+      contentHTML: "",
+      teamID: "",
+      tags: [],
+      stage: "",
+      img: "",
+      imgData: "",
+      chanID: "",
+      resourceID: "",
+      _options: "",
+      _contentPreview: false,
+      _audience_target: "",
+      _errors: []
+    };
   }
   reset() {
     this.setState({   
@@ -54,22 +69,37 @@ class CombinedContent extends React.Component {
   
   componentDidMount(){
     this.reset();
-    this.setState(this.props.data);
   }
 
   updateDraft = (e) => this.setState({contentRAW: e.raw, contentHTML: e.html});
 
 
-  hasBeenChanged() { 
-    return Boolean(Object.values(this.state).filter(i=>i.length).length); 
+  hasBeenChanged() {
+    const state = {
+      label : this.state.label,
+      contentRAW : this.state.contentRAW,
+      contentHTML : this.state.contentHTML,
+      teamID : this.state.teamID,
+      tags : this.state.tags,
+      stage : this.state.stage,
+      img : this.state.img,
+      imgData : this.state.imgData,
+      chanID : this.state.chanID,
+      resourceID : this.state.resourceID,
+      _options : this.state._options,
+      _errors : this.state._errors,
+      _contentPreview : this.state._contentPreview,
+      _audience_target : this.state._audience_target,
+    }
+    return Boolean(Object.values(state).filter(i=>i.length).length); 
   }
 
 
-  /*componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps && nextProps.data.loaded) {
       this.setState(nextProps.data);
     }
-  }*/
+  }
 
   isValid = () => {
     const {isNewContent,variID} = this.props.data;
@@ -149,13 +179,18 @@ class CombinedContent extends React.Component {
 
     const {loaded} = this.props.data;
 
+
     return (
       <div>
+        <Prompt
+          when={this.hasBeenChanged()}
+          message='You have unsaved changes, are you sure you want to leave?'
+        />
         {loaded && <PreviewContent data={this.state} togglePreview={() => this.setState({_contentPreview: false})}/>}
         <Wysiwyg  error={_errors && _errors.includes("Body")} loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
         <div>
             <Row style={{padding: "10px 0 10px 15px"}}>
-              <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
+                <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
               <Button onClick={() => this.setState({_contentPreview: true})}>Preview</Button>
             </Row>
             <br/>

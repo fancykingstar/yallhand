@@ -181,7 +181,7 @@ class VariationContent extends React.Component {
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
           />
-        <ContentPreview 
+        <ContentPreview
           open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} 
           data={this.contentPreviewData()} 
         />

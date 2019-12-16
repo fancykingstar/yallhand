@@ -20,7 +20,6 @@ import { ReviewAlerts } from "./ReviewAlerts";
 import { Schedule } from "./Schedule";
 import { History } from "./History";
 import { Channel } from "./Channel";
-import { HoldLeave } from "../ConfirmLeave";
 import Settings from "./Settings";
 import { PoliciesStore } from "../../Stores/PoliciesStore";
 import { AnnouncementsStore } from "../../Stores/AnnouncementsStore";
@@ -29,29 +28,40 @@ import PreviewContent from "../NewEditContent/PreviewContent";
 import isEmpty from 'lodash.isempty';
 import { format } from 'timeago.js';
 import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
+import { AttachedFiles } from "../NewEditContent/AttachedFiles";
 
-@inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore")
+@inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore", "UserStore")
 @observer
 export class Content extends React.Component {
   constructor(props){
     super(props);
-    const {match} = this.props;
-    const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
+    const {match, UIStore} = this.props;
+
+    this.mode = this.props.location.pathname.includes("faq")
+      ? "policy"
+      : "announcement";
+
+    let obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
+    this.mode === "policy" ? obj = obj : obj = Object.assign(
+            {},
+            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
+          );
     let variId = ""
-    if (!_.isEmpty(obj)) variId = PoliciesStore._toggleGlobalVariation(obj.policyID);
+    if (!_.isEmpty(obj)) variId = obj.variations[0].variationID;
 
     this.state={
       showTargeting: false,
       activeItem:"",
       loaded: false,
-      mode: this.props.history.location.state.mode,
+      mode: this.mode,
       contentID: match.params.contentID !== "content"? match.params.contentID:"", 
       variID: variId,
       isDupe: variId && this.props.match.params.option === "d",
       content: {},
       _contentPreview: false,
       teamID: "",
-      width: 0
+      width: 0,
+      availVariation: 0
     };
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -77,7 +87,7 @@ export class Content extends React.Component {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
     const { UIStore, DataEntryStore, AccountStore } = this.props;
-    const mode = this.props.history.location.state.mode;
+    const mode = this.mode;
     if (!this.props.match.params.contentID) {
       this.setState({showTargeting: true});
     }
@@ -89,11 +99,12 @@ export class Content extends React.Component {
         DataEntryStore._isReset("contentmgmt")
       ) {
         const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
+        console.log(obj, "-------------");
 
         if (!_.isEmpty(obj)) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
-          UIStore.set( "content", "variationID", PoliciesStore._toggleGlobalVariation(obj.policyID) );
-          DataEntryStore.set("contentmgmt", "label", obj.label);
+          UIStore.set("content", "variationID", obj.variations[0].variationID);
+          obj.variations.length > 0 ? obj.variations[0].label !="" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           // DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
@@ -124,12 +135,8 @@ export class Content extends React.Component {
             {},
             AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
           );
-          UIStore.set(
-            "content",
-            "variationID",
-            AnnouncementsStore._toggleGlobalVariation(obj.announcementID)
-          );
-          DataEntryStore.set("contentmgmt", "label", obj.label);
+          UIStore.set("content", "variationID", obj.variations[0].variationID);
+          obj.variations.length > 0 ? obj.variations[0].label !="" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           DataEntryStore.set("contentmgmt", "bundle", "queue");
@@ -138,13 +145,6 @@ export class Content extends React.Component {
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
           DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
           DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
-          UIStore.set(
-            "content",
-            "variationID",
-            AnnouncementsStore._toggleGlobalVariation(
-              UIStore.content.announcementID
-            )
-          );
         } else {
           {/*this.props.history.push("/panel/announcements");*/}
         }
@@ -156,6 +156,9 @@ export class Content extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
+    const {DataEntryStore, UIStore} = this.props
+    DataEntryStore.reset("contentmgmt")
+    UIStore.reset("content");
   }
 
   updateWindowDimensions() {
@@ -223,21 +226,41 @@ export class Content extends React.Component {
   handleItemClick = (e, {name}) => {this.setState({active:name})}
   handleClick = (e, idx) => {this.setState({active: idx.value})}
 
+  onChangeTitle = e => {
+    console.log("sdfsdfdsf", this.state.label);
+    this.setState({label: e.target.value});
+  }
+
   sectionStyle = {paddingTop: 10, paddingBottom: 10}
   managementStyle = {paddingTop: 10, paddingBottom: 10, display: "flex", flexWrap: "wrap"}
   ownerStyle = { display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center" }
 
+  onChangeVariation = (e, index) => {
+    const { UIStore, DataEntryStore } = this.props;
+    const obj = this.mode === "policy" ?
+      PoliciesStore._getPolicy(UIStore.content.policyID)
+      : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
+    this.setState({availVariation: index});
+    this.setState({variID: obj.variations[index].variationID});
+    UIStore.set("content", "variationID", obj.variations[index].variationID);
+    obj.variations[index].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[index].label) : DataEntryStore.set("contentmgmt", "label", obj.label)
+  }
+
   render(){
     const { TeamStore, DataEntryStore, UIStore, AccountStore, match } = this.props;
     const {showTargeting} = this.state;
-    const mode = this.props.history.location.state.mode
-    const menuItems = ["Featured Image","Channel", "Q and A" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => <Menu.Item
+    const mode = this.mode;
+    const {content, isNewContent, isNewVari, variID} = this.state;
+    const menuItems = ["Attached File", "Featured Image","Channel", "Q and A" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
+      <Menu.Item
         name={item}
         active={this.state.activeItem === {item}}
         onClick={this.handleItemClick}
+        disabled={isNewContent}
       />)
 
     const dropDownOptions = [
+      {key: "Attached File", value:"Attached File" , text: "Attached File"},
       {key: "Featured Image", value:"Featured Image" , text: "Featured Image"},
       {key: "Channel", value:"Channel" , text: "Channel"},
       {key: "Q and A" , value: "Q and A" , text: "Q and A"},
@@ -253,6 +276,12 @@ export class Content extends React.Component {
 
     let variation = (obj.variations || []).filter(variation => {return variation.variationID == UIStore.content.variationID})
     let variat = "";
+    variat = (obj.variations || []).map((va, i) => {
+        return (
+          getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? <Chip style={{ marginRight: 10 }} color={ i == this.state.availVariation ? "primary" : "default" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} />
+          : <Chip style={{ marginRight: 10 }} color={ i == this.state.availVariation ? "primary" : "default" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} />
+        )
+      })
     if (variation) {
       let vari = variation.map(va => ({
         key: va.variationID,
@@ -261,24 +290,18 @@ export class Content extends React.Component {
         text: TeamStore.teamKey[va.teamID],
         type: va.type
       }));
-
-      variat = variation.map((va, i) => {
-        return (
-          getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? <Chip color={ i == 0 ? "primary" : "" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} />
-          : <Chip color={ i == 0 ? "primary" : "" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} />
-        )
-      })
     }
 
     const availableVariation = mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
       : AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID);
+    console.log("==========", availableVariation);
 
-    let owner = ""
+    const { UserStore } = this.props;
+    let owner = AccountStore._getDisplayName(UserStore.user.userID);
     if (availableVariation && availableVariation.userID)
       owner = AccountStore._getDisplayName(availableVariation.userID);
     const lastUpdate = format(availableVariation.updated);
 
-    const {content, isNewContent, isNewVari, variID} = this.state;
     const mod = this.state.mode;
     let vari = {};
     let variationTarget = ""
@@ -297,13 +320,16 @@ export class Content extends React.Component {
     }
 
     const { loaded } = this.state;
-    const shouldBlockNavigation = UIStore.content.shouldBlockNavigation;
+
+    const attachFiles = isNewContent? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
+      : <Segment disabled={isNewContent}>
+          <AttachedFiles mode={mode}  />
+        </Segment>
+
 
     return(
       <>
-        <HoldLeave value={shouldBlockNavigation} />
         <BackButton/>
-        { loaded && <PreviewContent data={this.state} /> }
         <Header as="h2"
           style={{padding: 0, margin: 0}}
         >
@@ -314,8 +340,8 @@ export class Content extends React.Component {
         </Header>
         <Form style={this.sectionStyle}>  
           <Form.Dropdown defaultValue={"parent"} options={[{text: "Parent Title", value: "parent"},{text:"Variation Title", value: "vari"}]} />
-          <Form.Input style={{marginTop: -8}} className="FixSemanticLabel"  placeholder="Hi">
-              <input maxLength={72} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} />
+          <Form.Input style={{marginTop: -8}} className="FixSemanticLabel">
+              <input maxLength={72} defaultValue={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} onChange={e => this.onChangeTitle(e)} />
           </Form.Input>
         </Form>
         <div style={this.ownerStyle}>
@@ -351,9 +377,14 @@ export class Content extends React.Component {
               onChange={(e, inx) => {this.handleClick(e, inx)}}
             />
           }
-          {this.state.width > 767 ? <div style={{flex: 1, marginLeft: 10}}>
+          {
+            isNewContent ? <div style={{flex: 1, marginTop: 20, textAlign: "center"}}>Save a draft or publish to access additional settings.</div> :
+              this.state.width > 767 ? <div style={{flex: 1, marginLeft: 10}}>
                       {
-                        this.state.active === 'Featured Image' ?
+                        this.state.active === 'Attached File' ?
+                          <FadeIn delay="500" transitionDuration="500">
+                            {attachFiles}
+                          </FadeIn> : this.state.active === 'Featured Image' ?
                           <FadeIn delay="500" transitionDuration="500">
                             <FeaturedImage
                               mode={mode}
@@ -401,7 +432,10 @@ export class Content extends React.Component {
                     </div> :
                     <div style={{flex: 1, marginTop: 20}}>
                       {
-                        this.state.active === 'Featured Image' ?
+                        this.state.active === 'Attached File' ?
+                          <FadeIn delay="500" transitionDuration="500">
+                            {attachFiles}
+                          </FadeIn> : this.state.active === 'Featured Image' ?
                           <FadeIn delay="500" transitionDuration="500">
                             <FeaturedImage
                               mode={mode}

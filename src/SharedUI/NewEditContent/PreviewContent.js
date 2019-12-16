@@ -17,7 +17,13 @@ import { UserStore } from "../../Stores/UserStore";
 class PreviewContent extends React.Component {
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      label: "",
+      contentHTML: "",
+      img: "",
+      imgData: "",
+      _contentPreview: false,
+    };
   }
   reset() {
     this.setState({   
@@ -29,8 +35,14 @@ class PreviewContent extends React.Component {
     })
   }
   
-  componentDidMount(){ 
-    this.reset();
+  componentDidMount(){
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps) {
+      let { DataEntryStore } = nextProps;
+      this.setState({label: nextProps.data.label, img: DataEntryStore.contentmgmt.img, contentHTML: nextProps.data.contentHTML});
+    }
   }
 
   togglePreview = (bool) => {this.setState({_contentPreview: bool})};
@@ -38,6 +50,7 @@ class PreviewContent extends React.Component {
   contentPreviewData = () => {
     const { label, img, contentHTML} = this.state;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
+
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)[0];
     const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     let updatedState = {};

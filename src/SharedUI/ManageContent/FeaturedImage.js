@@ -159,6 +159,8 @@ export class FeaturedImage extends React.Component {
         <React.Fragment> <div className="imgPreview">{imagePreview} </div> {_.isEmpty(this.props.imgData)?"": <div style={{maxWidth: '100px'}}><p style={{fontSize: "0.7em"}}>Photo by <a target="_blank" href={`https://unsplash.com/@${this.props.imgData.user.username}?utm_source=yallhands&utm_medium=referral`}>{this.props.imgData.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></p></div>} </React.Fragment>
       );
 
+    console.log("*********************", this.props.defaultImgUrl);
+
     return (
       <Segment>
         <Modal open={UIStore.modal.getUnsplash} closeIcon onClose={e => UIStore.set("modal", "getUnsplash", false)}>

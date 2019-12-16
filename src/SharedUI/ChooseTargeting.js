@@ -50,11 +50,6 @@ export class ChooseTargeting extends React.Component {
           this.props.NoSelectUsers? opt.value !== "users": true
         );
 
-    if (this.props.input.sendTargetType && this.props.input.sendToTeamID === "global" && this.props.input.sendToTagID === "") {
-      options = [{ text: "To Everyone", value: "all" }];
-    } 
-
-
     const targetOptions =
       this.state.sendTargetType === "teams" ? (
         <Form style={{ paddingTop: 5 }}>

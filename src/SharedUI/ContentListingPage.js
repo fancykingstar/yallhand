@@ -30,8 +30,11 @@ class ContentListingPage extends React.Component {
   }
 
   componentDidMount() {
+    const { DataEntryStore, UIStore } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    DataEntryStore.reset("contentmgmt");
+    UIStore.reset("content");
   }
 
   componentWillUnmount() {
@@ -124,21 +127,21 @@ class ContentListingPage extends React.Component {
       DataEntryStore.set("contentmgmt", "bundle", "queue");
       DataEntryStore.set("contentmgmt", "keywords", content.keywords);
       DataEntryStore.set("contentmgmt", "reviewAlert", content.reviewAlert);
-      {/*this.props.history.push(
+      this.props.history.push(
         `/panel/${mode === "announcement" ? "announcements" : "faqs"}/${
         UIStore.content[id]
         }`
-      );*/}
-      this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});
+      );
+      {/*this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});*/}
     };
 
     const createContent = () => {
-      {/*this.props.history.push(
+      this.props.history.push(
               mode === "policy"
                 ? "/panel/faqs/content/new"
                 : `/panel/announcements/content/new`
-            );*/}
-      this.props.history.push({pathname: '/panel/content', state: {mode: mode}});
+            );
+      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
     };
 
     const handleFeatured = async (action, tableinfo) => {
