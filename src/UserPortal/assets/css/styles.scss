@@ -594,3 +594,11 @@ button.load-more {
   }
 }
 
+.SuggestContentChip {
+  margin: 5px !important;
+}
+
+.SuggestedContentContainer {
+  display: flex;
+  flex-wrap: wrap;
+}

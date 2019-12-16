@@ -108,7 +108,6 @@ class ContentDetail extends React.Component {
    render() {
 
       const { PostData,displayQ } = this.state;
-      console.log("qnada?", PostData.variations)
       const takeQuestion = !displayQ?  
             <Button outline color="primary" size="sm" onClick={()=> this.updateState({displayQ: true})}>
             Ask a question <HelpOutlineRoundedIcon fontSize="small"/>
