@@ -102,6 +102,8 @@ class ProfileInfo extends React.Component {
     })
     .then((res) => res.json())
     .then((res) => {
+      console.log("res",res)
+      if (res.boss === "self") apiCall(`/users/${res.userID}` , 'PATCH', {accountID: res.accountID, userID: res.userID, boss: res.userID});
       let validateCode = this.props.item;
       validateCode.userId = res.userID;
       const { id } = validateCode

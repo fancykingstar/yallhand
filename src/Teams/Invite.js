@@ -13,7 +13,7 @@ import toast  from "../YallToast"
 import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
 import * as load from "../DataExchange/Down"
 
-@inject("AccountStore")
+@inject("AccountStore", "UserStore")
 @observer
 export class Invite extends React.Component  {
   constructor(props) {
@@ -26,6 +26,7 @@ export class Invite extends React.Component  {
   };
 
   reset () {
+    const {UserStore} = this.props;
     return {
       teamID: "global",
       teamName: "global",
@@ -35,7 +36,7 @@ export class Invite extends React.Component  {
       adminTagID: "none",
       date: "",
       email: "",
-      boss: "",
+      boss: UserStore.user.userID,
       isAdmin: false,
       adminLimits: {}
     };

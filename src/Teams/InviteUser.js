@@ -16,6 +16,13 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
   const { teamID, tagID, boss, isAdmin, email, adminLimits } = props.info;
   const { multipleRows } = props
 
+  const getReportOptions = () => {
+    const {AccountStore} = props;
+    let options = AccountStore._getUsersSelectOptions();
+    options.unshift({text: "Self", value: "self"});
+    return options;
+  }
+
   const setField = (content) => {
     let adminLimit = false;
     if (content.features || content.channels) {
@@ -41,13 +48,13 @@ export const InviteUser = inject("AccountStore")(observer((props) => {
            {TeamStore.structure.length > 1 && <Col xl style={resPadding}><TeamSelect label="Choose Team:" value={teamID} outputVal={e => setField({teamID: e.value, teamName: e.text})}/></Col>}
            {TeamStore.tags.length > 0 && <Col xl style={resPadding}><TagSelect  label="Choose Tag (optional):" value={tagID} outputVal={e => setField({tagID: e})}/></Col>}
        <Col xl style={resPadding}><Form.Dropdown
-          label="Reports to (optional):"
+          label="Reports to:"
           fluid
           search
           selection
           value={boss}
           onChange={(e, val) => setField({boss:val.value})}
-          options={AccountStore._getUsersSelectOptions()}
+          options={getReportOptions()}
         /></Col>
          {
           multipleRows && 

@@ -36,10 +36,10 @@ export class Users extends React.Component {
     const { adminLimits } = userEdit;
     const { dropdown, search } = UIStore;
 
-    const displayFilter = (all) => {
-      if (dropdown.usersFilter === "active") return all.filter(user => user.isActive || (user.password === '' && user.userId === '')) 
-      else if (dropdown.usersFilter === "invited") return all.filter(user => user.code);
-      else return all.filter(user => !user.isActive && (user.password !== '' && user.userId !== ''))
+    const displayFilter = () => {
+      if (dropdown.usersFilter === "active") return AccountStore.activeUsers;
+      else if (dropdown.usersFilter === "invited") return AccountStore.invitedUsers;
+      else return AccountStore.inactiveUsers;
     }
 
     const filteredDisplay = () => {
@@ -47,25 +47,23 @@ export class Users extends React.Component {
         const results = stupidSearch(search.searchUsersData, search.searchUsers);
         return AccountStore.allUsers.filter(item => results.includes(item.email));
       } else {
-        return displayFilter(AccountStore.allUsers)
+        return displayFilter()
       }
     };
 
     const users = filteredDisplay().map(user => (
       <Table.Row  disabled={!user.isActive && !user.code} key={`user${giveMeKey()}`} onClick={() => this.setState({user})}>
         <Table.Cell width={3}>
-          <Header >
-            <Header.Content>
-              {user.displayName_full}
-              <Header.Subheader>
-                <Image src={user.img !== "" && user.img !== undefined ? user.img : UserImgPlaceholder()} avatar />
-                {user.isAdmin ? "Admin" : null}{" "}
-                {!user.code ? null: user.now? "Invite Sent":"Scheduled To Invite"}
-                {!user.code && !user.isActive? `Offboarded ${UTCtoFriendly(user.updated).split(',')[0]}`:null}
-              </Header.Subheader>
-            </Header.Content>
-          </Header>
+        <Image src={user.img !== "" && user.img !== undefined ? user.img : UserImgPlaceholder()} avatar />{" "}{user.displayName_full}
         </Table.Cell>
+        
+        <Table.Cell>
+        {user.isAdmin ? "Admin" : null}{" "}
+        {!user.code ? null: user.now? "Invite Sent":"Scheduled To Invite"}
+        {!user.code && !user.isActive? `Offboarded ${UTCtoFriendly(user.updated).split(',')[0]}`:null}
+        </Table.Cell>
+        
+
         <Table.Cell>{user.email}</Table.Cell>
         <Table.Cell>
           {getDisplayTeams(user.teamID, TeamStore.structure)}
@@ -74,7 +72,7 @@ export class Users extends React.Component {
           {user.tags.length === 0 ? "None" : getDisplayTags(user.tags, TeamStore.tags)}
         </Table.Cell>
         <Table.Cell>
-          {user.boss? AccountStore._getDisplayName(user.boss) : ""}
+          {!user.boss? "": user.boss === "self"? "Self":AccountStore._getDisplayName(user.boss) }
         </Table.Cell>
       </Table.Row>
     ));
@@ -92,6 +90,7 @@ export class Users extends React.Component {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell width={2}>Employee</Table.HeaderCell>
+              <Table.HeaderCell width={1}/>
               <Table.HeaderCell width={2}>Email</Table.HeaderCell>
               <Table.HeaderCell width={1}>Team</Table.HeaderCell>
               <Table.HeaderCell width={1}>Tag</Table.HeaderCell>
