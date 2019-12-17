@@ -99,7 +99,6 @@ export class Content extends React.Component {
         DataEntryStore._isReset("contentmgmt")
       ) {
         const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
-        console.log(obj, "-------------");
 
         if (!_.isEmpty(obj)) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
@@ -227,8 +226,9 @@ export class Content extends React.Component {
   handleClick = (e, idx) => {this.setState({active: idx.value})}
 
   onChangeTitle = e => {
-    console.log("sdfsdfdsf", this.state.label);
+    const { DataEntryStore } = this.props;
     this.setState({label: e.target.value});
+    DataEntryStore.set("contentmgmt", "label", e.target.value);
   }
 
   sectionStyle = {paddingTop: 10, paddingBottom: 10}
@@ -294,7 +294,6 @@ export class Content extends React.Component {
 
     const availableVariation = mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
       : AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID);
-    console.log("==========", availableVariation);
 
     const { UserStore } = this.props;
     let owner = AccountStore._getDisplayName(UserStore.user.userID);
@@ -341,7 +340,7 @@ export class Content extends React.Component {
         <Form style={this.sectionStyle}>  
           <Form.Dropdown defaultValue={"parent"} options={[{text: "Parent Title", value: "parent"},{text:"Variation Title", value: "vari"}]} />
           <Form.Input style={{marginTop: -8}} className="FixSemanticLabel">
-              <input maxLength={72} defaultValue={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} onChange={e => this.onChangeTitle(e)} />
+              <input maxLength={72} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} onChange={e => this.onChangeTitle(e)} />
           </Form.Input>
         </Form>
         <div style={this.ownerStyle}>
