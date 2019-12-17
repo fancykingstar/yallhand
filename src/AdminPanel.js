@@ -87,21 +87,18 @@ export class AdminPanel extends React.Component {
 
 
      {mobileNavDisplay}
-
-     
-
         <div id="ActionFrame" className="ActionFrame" style={UIStore.sideNav.activePrimary === "superadmin"? {  backgroundColor: "#151515", marginLeft: UIStore.responsive.isMobile? 0:230} : {marginLeft: UIStore.responsive.isMobile? 0:230}}>
           <Switch location={this.props.location}>
             <Route path="/panel/content/" component={Content} exact />
             <Route path="/panel/content/:contentID" component={Content} exact />
             
             <Route path="/panel/announcements" render={props => <ContentListingPage {...props} mode="announcement" />} exact />
-            <Route path="/panel/announcements/:contentID" component={ManageContent} exact />
-            <Route path="/panel/announcements/:contentID/:variID" component={NewEditVariation} exact />
-            <Route path="/panel/announcements/:contentID/:variID/:options" component={NewEditVariation} exact />
+            <Route path="/panel/announcements/:contentID" component={Content} exact />
+            <Route path="/panel/announcements/:contentID/:variID" component={Content} exact />
+            <Route path="/panel/announcements/:contentID/:variID/:options" component={Content} exact />
             <Route path="/panel/faqs" render={props => <ContentListingPage {...props} mode="policy" />} exact />
-            <Route path="/panel/faqs/:contentID" component={ManageContent} exact />
-            <Route path="/panel/faqs/:contentID/:variID" component={NewEditVariation} exact />
+            <Route path="/panel/faqs/:contentID" component={Content} exact />
+            <Route path="/panel/faqs/:contentID/:variID" component={Content} exact />
             <Route path="/panel/faqs/:contentID/:variID/:options" component={NewEditVariation} exact />
             <Route path="/panel/teams" component={TeamFrame} />
             <Route path="/panel/storage" component={ResourcesFrame} />
