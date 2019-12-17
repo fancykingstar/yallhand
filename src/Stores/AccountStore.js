@@ -12,6 +12,10 @@ class Store {
 
   @observable account = {}
   @observable allUsers = []
+  @observable activeUsers = []
+  @observable inactiveUsers = []
+  @observable invitedUsers = []
+
   @observable logs = []
   @observable analyticData_portal = []
   @observable analyticData_campaigns = []
@@ -61,6 +65,14 @@ class Store {
     });
   }
 
+  _defaultImg(userarry) {
+    return userarry.map(user => {
+      if (user.img) return user 
+      const img = getDefaultUserImg(user.id? user.id :user.userID);
+      return Object.assign(user, {img});
+    });
+  }
+
   loadAccount(account) {
     return new Promise((resolve, reject) => {
       let accountLoad = Object.assign({}, account)
@@ -68,6 +80,17 @@ class Store {
       this.account = accountLoad
       _.isEmpty(this.account) ? reject(false) : resolve(true)
     })
+  }
+
+  loadAccountUsers(usersObj) {
+    console.log('srobj',usersObj)
+    return new Promise((resolve, reject) => {
+      if (usersObj.activeusers.length) this.activeUsers = this._defaultImg(usersObj.activeusers);
+      if (usersObj.inactiveusers.length) this.inactiveUsers = this._defaultImg(usersObj.inactiveusers);
+      if (usersObj.invitedusers.length) this.invitedUsers = this._defaultImg(usersObj.invitedusers); 
+      this.allUsers = [...this.activeUsers, ...this.inactiveUsers, ...this.invitedUsers];
+      resolve(true);
+    });
   }
 
   loadUsers(allUsers) {

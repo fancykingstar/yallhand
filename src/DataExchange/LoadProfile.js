@@ -58,10 +58,10 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.channels) await ChannelStore.loadChannels(loadedUserData.channels);
           if (loadedUserData.account) await AccountStore.loadAccount(loadedUserData.account[0]);
           if (loadedUserData.files) await ResourcesStore.loadFiles(loadedUserData.files);
-          if (loadedUserData.teams) await TeamStore.loadStructure(loadedUserData.teams);
+          if (loadedUserData.teams) await TeamStore.loadStructure(loadedUserData.teams); 
           if (loadedUserData.tags) await TeamStore.loadTags(loadedUserData.tags);
           if (loadedUserData.email) await EmailStore.loadCampaigns(loadedUserData.email);
-          if (loadedUserData.users) await AccountStore.loadUsers(loadedUserData.users);
+          if (loadedUserData.users) await AccountStore.loadAccountUsers(loadedUserData.users);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_portal(loadedUserData.analytics.portal);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_campaigns(loadedUserData.analytics.campaigns);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_ticketing(loadedUserData.analytics.ticketing);

@@ -176,7 +176,7 @@ class TicketingNewEdit extends React.Component {
       await this.setState(updated);
     }
     else {
-      modifyTicket(ticket(this.state));
+      modifyTicket(ticket(this.state), true);
     };
     if (active) this.props.history.push('/panel/ticketing');
   };

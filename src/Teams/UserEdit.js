@@ -115,7 +115,7 @@ export class UserEdit extends React.Component {
               />
               <Form.Dropdown
                disabled={Boolean(this.props.data.code)}
-              label="Reports to (optional):"
+              label="Reports to:"
               fluid
               search
               selection

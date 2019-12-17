@@ -460,6 +460,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       accountID: accountID(),
       userID: userID(),
       updated: now(),
+      dob: DataEntryStore.userSettings.dob,
       displayName_full: DataEntryStore.userSettings.displayName_full,
       displayName: DataEntryStore.userSettings.displayName,
       img: DataEntryStore.userSettings.img,

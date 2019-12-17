@@ -53,20 +53,22 @@ class ActionsContent extends React.Component {
                   </Col>
                 </Row>
                 <Row style={{paddingTop: 5}}>
-                  <Col md={6}>
+                  <Col md={12}>
+                    <div className="SuggestedContentContainer">
                     {this.props.actionDetail.assoc &&
                       this.props.actionDetail.assoc.map((item, index) => {
                         const content = getContentObj(item);
                         const mode = Object.keys(item).includes('policyID')? "policy" : "announcement";
                         return (
                           <Chip icon={ item.policyID ? ( <HelpRoundedIcon /> ) : ( <img src={Announcements} /> ) }
+                            className="SuggestContentChip"
                             color="primary"
                             label={content.label}
                             onClick={() => this.props.history.push(`/portal/${mode === "announcement" ? "announcement" : "learn-detail"}/${item[mode === "announcement" ? "announcementID" : "policyID"]}`)}
                           />
                         );
                       })}
-
+                  </div>
                   </Col>
                 </Row>
               </Container>

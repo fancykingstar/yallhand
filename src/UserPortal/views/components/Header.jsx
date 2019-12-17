@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown as SemanticDropdown} from 'semantic-ui-react';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { withRouter } from 'react-router';
 import { Col, Button } from 'reactstrap';
@@ -7,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { UserStore } from '../../../Stores/UserStore';
-import { UIStore } from "../../../Stores/UIStore";
+import { ChannelStore } from "../../../Stores/ChannelStore";
 import { deleteUser } from "../../../DataExchange/Fetch";
 
 
@@ -55,6 +56,17 @@ class Header extends React.Component {
                               <MenuIcon fontSize="inherit" />
                            </IconButton>
                            <Typography variant="h4" className="page-title" noWrap>{pageTitle}</Typography>
+                           {this.props.updateFilter &&
+                            <SemanticDropdown style={{marginLeft: 5}} icon="chevron down">
+                            <SemanticDropdown.Menu>
+                               <SemanticDropdown.Item text="Newest" onClick={()=>this.props.updateFilter({sort: "new"})} />
+                               <SemanticDropdown.Item text="Oldest" onClick={()=>this.props.updateFilter({sort: "old"})} />
+                               <SemanticDropdown.Divider/>
+                               {ChannelStore._channelSelect.map(chan => <SemanticDropdown.Item text={chan.text} key={chan.key} onClick={()=>this.props.updateFilter({channel: chan.value})}  />  )}
+                            
+                            </SemanticDropdown.Menu>
+                         </SemanticDropdown>
+                           }
                         </div>
                         <div className="header_right">
                            <div className="header_search">
