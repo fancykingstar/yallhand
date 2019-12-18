@@ -26,7 +26,7 @@ class PreviewContent extends React.Component {
     };
   }
   reset() {
-    this.setState({   
+    this.setState({
       label: "",
       contentHTML: "",
       img: "",
@@ -34,14 +34,14 @@ class PreviewContent extends React.Component {
       _contentPreview: false,
     })
   }
-  
-  componentDidMount(){
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       let { DataEntryStore } = nextProps;
-      this.setState({label: nextProps.data.label, img: DataEntryStore.contentmgmt.img, contentHTML: nextProps.data.contentHTML});
+      if (nextProps.data.label == "")
+        this.setState({label: DataEntryStore.contentmgmt.label, img: DataEntryStore.contentmgmt.prevImg ? DataEntryStore.contentmgmt.prevImg : DataEntryStore.contentmgmt.img, contentHTML: nextProps.data.contentHTML});
+      else
+        this.setState({label: nextProps.data.label, img: DataEntryStore.contentmgmt.prevImg ? DataEntryStore.contentmgmt.prevImg : DataEntryStore.contentmgmt.img, contentHTML: nextProps.data.contentHTML});
     }
   }
 
@@ -49,6 +49,7 @@ class PreviewContent extends React.Component {
   
   contentPreviewData = () => {
     const { label, img, contentHTML} = this.state;
+
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
 
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)[0];
@@ -75,7 +76,7 @@ class PreviewContent extends React.Component {
     return data;
     // return Object.assign(content.label? content : {label: this.state.label, img: this.state.img}, {variations: !isNewVari? vari : tempVari()})
 
-  } 
+  }
 
   render() {
     return (

@@ -29,13 +29,14 @@ import isEmpty from 'lodash.isempty';
 import { format } from 'timeago.js';
 import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
 import { AttachedFiles } from "../NewEditContent/AttachedFiles";
+import VariationChip from "./VariationChip";
 
 @inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore", "UserStore")
 @observer
 export class Content extends React.Component {
   constructor(props){
     super(props);
-    const {match, UIStore} = this.props;
+    const {match, UIStore, DataEntryStore} = this.props;
 
     this.mode = this.props.location.pathname.includes("faq")
       ? "policy"
@@ -47,7 +48,10 @@ export class Content extends React.Component {
             AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
           );
     let variId = ""
-    if (!_.isEmpty(obj)) variId = obj.variations[0].variationID;
+    if (!_.isEmpty(obj)) {
+      variId = obj.variations[0].variationID;
+      DataEntryStore.set('contentmgmt', 'label', obj.variations[0].label);
+    }
 
     this.state={
       showTargeting: false,
@@ -87,8 +91,9 @@ export class Content extends React.Component {
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
     const { UIStore, DataEntryStore, AccountStore } = this.props;
+    UIStore.set("content", "showTargeting", false);
     const mode = this.mode;
-    if (!this.props.match.params.contentID) {
+    if (this.props.location.pathname.includes("new")) {
       this.setState({showTargeting: true});
     }
 
@@ -102,7 +107,8 @@ export class Content extends React.Component {
         if (!_.isEmpty(obj)) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
           UIStore.set("content", "variationID", obj.variations[0].variationID);
-          obj.variations.length > 0 ? obj.variations[0].label !="" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
+          obj.variations.length > 0 ? obj.variations[0].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
+          /*this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});*/
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           // DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
@@ -135,6 +141,7 @@ export class Content extends React.Component {
           );
           UIStore.set("content", "variationID", obj.variations[0].variationID);
           obj.variations.length > 0 ? obj.variations[0].label !="" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
+          /*this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});*/
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           DataEntryStore.set("contentmgmt", "bundle", "queue");
@@ -243,6 +250,17 @@ export class Content extends React.Component {
     this.setState({variID: obj.variations[index].variationID});
     UIStore.set("content", "variationID", obj.variations[index].variationID);
     obj.variations[index].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[index].label) : DataEntryStore.set("contentmgmt", "label", obj.label)
+    this.setState({label: obj.variations[index].label != "" ? obj.variations[index].label : obj.label});
+  }
+
+  newVariant = () => {
+    const {UIStore, DataEntryStore} = this.props;
+    UIStore.reset("content");
+    UIStore.set("content", "showTargeting", true);
+    this.setState({isNewVari: true});
+    DataEntryStore.reset("contentmgmt");
+    DataEntryStore.set("content", "contentRAW", null);
+    DataEntryStore.set("contentmgmt", "label", this.state.content.label);
   }
 
   render(){
@@ -277,8 +295,8 @@ export class Content extends React.Component {
     let variat = "";
     variat = (obj.variations || []).map((va, i) => {
         return (
-          getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? <Chip style={{ marginRight: 10 }} color={ i == this.state.availVariation ? "primary" : "default" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} />
-          : <Chip style={{ marginRight: 10 }} color={ i == this.state.availVariation ? "primary" : "default" } label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} />
+          getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} /> : <div style={{ marginRight: 5 }}><Chip style={{ marginRight: 10 }} color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div> 
+          : i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /> : <div style={{ marginRight: 5 }}><Chip color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div>
         )
       })
     if (variation) {
@@ -325,6 +343,7 @@ export class Content extends React.Component {
         </Segment>
 
 
+
     return(
       <>
         <BackButton/>
@@ -344,7 +363,9 @@ export class Content extends React.Component {
         </Form>
         <div style={this.ownerStyle}>
           <div>
-          {showTargeting? variationTarget : <><span>Variations</span><br/>{variat}<Fab onClick={()=>this.setState({showTargeting: true})} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab></>}
+          {
+            showTargeting ? variationTarget : UIStore.content.showTargeting ? variationTarget : <><span>Variations</span><br/><div style={{ display: "flex", flexWrap: "wrap" }}>{variat}<Fab onClick={()=>this.newVariant()} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab></div></>
+          }
           </div>
           <div style={{ paddingTop: "20px" }}>
             <span style={{fontSize: ".9em", paddingRight: "20px"}}>Owner: <b>{owner}</b></span>

@@ -98,7 +98,7 @@ class CombinedContent extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps && nextProps.data.loaded) {
+    if (nextProps) {
       this.setState(nextProps.data);
     }
   }
@@ -155,11 +155,15 @@ class CombinedContent extends React.Component {
 
   }
 
+  clickPreview = () => {
+    this.setState(this.props.data);
+    this.setState({_contentPreview: true})
+  }
+
   render() {
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
-    console.log(draftToHtml(vari[0].contentRAW));
     const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     const { _options, _errors, _exiting } = this.state;
 
@@ -181,8 +185,6 @@ class CombinedContent extends React.Component {
       }[_options]
 
     const {loaded} = this.props.data;
-
-
     return (
       <div>
         <Prompt
@@ -190,11 +192,11 @@ class CombinedContent extends React.Component {
           message='You have unsaved changes, are you sure you want to leave?'
         />
         {loaded && <PreviewContent data={this.state} togglePreview={() => this.setState({_contentPreview: false})}/>}
-        <Wysiwyg  error={_errors && _errors.includes("Body")} loadContent={!isNewVari? vari[0].contentRAW: {}} border output={e=>this.updateDraft(e)}/>
+        <Wysiwyg  error={_errors && _errors.includes("Body")} loadContent={!this.props.data.isNewVari ? vari[0].contentRAW : {}} border output={e=>this.updateDraft(e)}/>
         <div>
             <Row style={{padding: "10px 0 10px 15px"}}>
                 <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
-              <Button onClick={() => this.setState({_contentPreview: true})}>Preview</Button>
+              <Button onClick={this.clickPreview}>Preview</Button>
             </Row>
             <br/>
         </div>

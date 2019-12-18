@@ -19,7 +19,6 @@ export class Wysiwyg extends React.Component {
             if (!this.props.loadContent
               || typeof(this.props.loadContent) === 'object' && isEmpty(this.props.loadContent))
               {
-                console.log("-------------");
                 this.state = {editorState: EditorState.createEmpty(), raw: null, html: null};
               } else {
                 const contentState = convertFromRaw(this.props.loadContent);
@@ -29,29 +28,21 @@ export class Wysiwyg extends React.Component {
                     html: stateToHTML(contentState)
                 };
         }
-        this.onChange = editorState => this.setState({editorState});
-
-  //       this.handleReturn = (e) => {
-  //     const { editorState } = this.state;
-  //     if (e.key === 'Enter') {
-  //       console.log("entered")
-  //       this.setState({ editorState: RichUtils.insertSoftNewline(editorState) });
-  //       return 'handled';
-  //   }
-  //   return 'not-handled';
-  // }
-
-        
+        this.onChange = editorState => this.setState({editorState});        
     }
 
     componentWillReceiveProps(nextProps) {
-      if (nextProps && nextProps.loadContent != this.props.loadContent) {
-        const contentState = convertFromRaw(nextProps.loadContent);
-        this.setState({
-            editorState: EditorState.createWithContent(contentState),
-            raw: convertToRaw(contentState),
-            html: stateToHTML(contentState)
-        });
+      if (nextProps && nextProps.loadContent !== this.props.loadContent) {
+        if (typeof(nextProps.loadContent) === 'object' && isEmpty(nextProps.loadContent)) {
+          this.setState({editorState: EditorState.createEmpty(), raw: null, html: null});
+        } else {
+          const contentState = convertFromRaw(nextProps.loadContent);
+          this.setState({
+              editorState: EditorState.createWithContent(contentState),
+              raw: convertToRaw(contentState),
+              html: stateToHTML(contentState)
+          });
+        }
       }
     }
 

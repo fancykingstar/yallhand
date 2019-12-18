@@ -4,31 +4,49 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { inject, observer } from "mobx-react";
 
-export default function VariationChip() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
+@inject( "UIStore")
+@observer
+export default class VariationChip extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      anchorEl: false
+    }
+  }
+
+  handleClick = event => {
+    this.setState({anchorEl: event.currentTarget});
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  handleClose = () => {
+    this.setState({anchorEl: null});
   };
 
-  return (
-    <div style={{marginRight: 5}}>
-        <Chip color="primary" label="Global / No Tags" onDelete={handleClick}  deleteIcon={<ExpandMoreIcon/>} />  
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={handleClose}>Create Duplicate</MenuItem>
-      </Menu>
-    </div>
-  );
+  EditVariation = () => {
+    const { UIStore } = this.props;
+    this.setState({anchorEl: null});
+    UIStore.set("content", "showTargeting", true);
+  }
+
+  render() {
+    return (
+      <div style={{marginRight: 5, marginBottom: 10}}>
+          <Chip color="primary" label={this.props.label} onDelete={this.handleClick}  deleteIcon={<ExpandMoreIcon/>} />  
+          <Menu
+            id="simple-menu"
+            anchorEl={this.state.anchorEl}
+            keepMounted
+            open={Boolean(this.state.anchorEl)}
+            onClose={this.handleClose}
+          >
+            <MenuItem onClick={this.EditVariation}>Edit</MenuItem>
+            <MenuItem onClick={this.EditVariation}>Create Duplicate</MenuItem>
+          </Menu>
+      </div>
+    );
+  }
 }
