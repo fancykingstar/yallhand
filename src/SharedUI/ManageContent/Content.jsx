@@ -294,7 +294,6 @@ export class Content extends React.Component {
 
     const availableVariation = mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
       : AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID);
-    console.log("==========", availableVariation);
 
     const { UserStore } = this.props;
     let owner = AccountStore._getDisplayName(UserStore.user.userID);
