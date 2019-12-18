@@ -30,6 +30,7 @@ import { format } from 'timeago.js';
 import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
 import { AttachedFiles } from "../NewEditContent/AttachedFiles";
 import VariationChip from "./VariationChip";
+import { generateID } from "../../SharedCalculations/GenerateID";
 
 @inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore", "UserStore")
 @observer
@@ -254,13 +255,42 @@ export class Content extends React.Component {
   }
 
   newVariant = () => {
-    const {UIStore, DataEntryStore} = this.props;
+    const {match, UIStore, DataEntryStore} = this.props;
     UIStore.reset("content");
     UIStore.set("content", "showTargeting", true);
     this.setState({isNewVari: true});
-    DataEntryStore.reset("contentmgmt");
-    DataEntryStore.set("content", "contentRAW", null);
+    // DataEntryStore.reset("contentmgmt");
+    // DataEntryStore.set("content", "contentRAW", null);
     DataEntryStore.set("contentmgmt", "label", this.state.content.label);
+    DataEntryStore.set("content", "isNew", false);
+    DataEntryStore.set("content", "stage", "draft");
+    const generate = generateID()
+    UIStore.set("content", "variationID", generate);
+    this.setState({variID: generate});
+
+    const mode = this.props.location.pathname.includes("faq")
+      ? "policy"
+      : "announcement";
+
+    let obj = PoliciesStore._getPolicy(match.params.contentID);
+    mode === "policy" ? obj = obj : obj = Object.assign(
+            {},
+            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
+          );
+    let variId = ""
+
+
+    this.setState({
+      showTargeting: false,
+      activeItem:"",
+      variID: variId,
+      isDupe: variId && match.params.option === "d",
+      content: {},
+      _contentPreview: false,
+      teamID: "",
+      width: 0,
+      availVariation: 0
+    });
   }
 
   render(){

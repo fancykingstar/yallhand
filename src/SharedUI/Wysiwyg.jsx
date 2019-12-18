@@ -32,16 +32,16 @@ export class Wysiwyg extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-      if (nextProps && nextProps.loadContent !== this.props.loadContent) {
-        if (typeof(nextProps.loadContent) === 'object' && isEmpty(nextProps.loadContent)) {
-          this.setState({editorState: EditorState.createEmpty(), raw: null, html: null});
-        } else {
-          const contentState = convertFromRaw(nextProps.loadContent);
-          this.setState({
+      if (nextProps && nextProps.isNewVari == true && this.props.isNewVari == false ) {        
+        this.setState({editorState: EditorState.createEmpty(), raw: null, html: null});
+      } else {
+        if (!(typeof(this.props.loadContent) === 'object' && isEmpty(this.props.loadContent)) && nextProps.isNewVari == false) {
+          const contentState = convertFromRaw(this.props.loadContent);
+          this.state={
               editorState: EditorState.createWithContent(contentState),
               raw: convertToRaw(contentState),
               html: stateToHTML(contentState)
-          });
+          };
         }
       }
     }
