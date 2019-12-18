@@ -72,7 +72,7 @@ export class Content extends React.Component {
     if(!variID) {
       let isLoaded = {};
       if(contentID){
-        isLoaded =  mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.contentID): PoliciesStore._getPolicy(contentID);
+        isLoaded = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.contentID): PoliciesStore._getPolicy(contentID);
       }
       this.setState({loaded:true, content: isLoaded, isNewContent: Boolean(!contentID), isNewVari: true});
       return
@@ -99,7 +99,6 @@ export class Content extends React.Component {
         DataEntryStore._isReset("contentmgmt")
       ) {
         const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
-
         if (!_.isEmpty(obj)) {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
           UIStore.set("content", "variationID", obj.variations[0].variationID);

@@ -19,6 +19,7 @@ export class Wysiwyg extends React.Component {
             if (!this.props.loadContent
               || typeof(this.props.loadContent) === 'object' && isEmpty(this.props.loadContent))
               {
+                console.log("-------------");
                 this.state = {editorState: EditorState.createEmpty(), raw: null, html: null};
               } else {
                 const contentState = convertFromRaw(this.props.loadContent);
@@ -41,7 +42,18 @@ export class Wysiwyg extends React.Component {
   // }
 
         
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if (nextProps && nextProps.loadContent != this.props.loadContent) {
+        const contentState = convertFromRaw(nextProps.loadContent);
+        this.setState({
+            editorState: EditorState.createWithContent(contentState),
+            raw: convertToRaw(contentState),
+            html: stateToHTML(contentState)
+        });
       }
+    }
 
 
     passContent() {
@@ -65,11 +77,7 @@ export class Wysiwyg extends React.Component {
              await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
                 return result !== null ? { data: { link: result.file.location}} : null
-              } )
-
-
-
-       
+              } )       
           
         const toolbarConfig = 
         {
@@ -118,14 +126,11 @@ export class Wysiwyg extends React.Component {
         <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
             <Editor
-            //   wrapperClassName="Wrapped"
-            //   editorClassName="WysiwygWrapped"
               editorState={this.state.editorState}
               onEditorStateChange={this.editorStateChanged}
               toolbar={toolbarConfig}
-              // handleReturn={this.handleReturn}
-              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5,margin: 0}}   
-              toolbarStyle={{border: 0}}    
+              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5, margin: 0}}
+              toolbarStyle={{border: 0}}
             />
           </React.Fragment>
         </div>

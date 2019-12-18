@@ -25,6 +25,8 @@ import PreviewContent from "./PreviewContent";
 // import toast from "../../YallToast"
 import _ from "lodash";
 import { UserStore } from "../../Stores/UserStore";
+import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 
 @inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore", "TeamStore")
 @observer
@@ -157,6 +159,7 @@ class CombinedContent extends React.Component {
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
+    console.log(draftToHtml(vari[0].contentRAW));
     const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     const { _options, _errors, _exiting } = this.state;
 
