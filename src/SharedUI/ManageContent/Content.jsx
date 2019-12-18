@@ -10,23 +10,37 @@ import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
 import {ChooseTargeting} from "../../SharedUI/ChooseTargeting";
 import {Wysiwyg} from "../../SharedUI/Wysiwyg";
 import BackButton  from "../../SharedUI/BackButton";
-
+import VariationChip from "./VariationChip";
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 
 export class Content extends React.Component {
     constructor(props){
         super(props);
-        this.state={showTargeting: false, activeItem:""};
+        this.state={showTargeting: false, activeItem:"", expand: false};
     }
 
     handleItemClick = (e, {name}) => {this.setState({active:name})}
 
     sectionStyle = {paddingTop: 10, paddingBottom: 10}
 
+
     variations = <><span>Variations</span><br/>
-    <Chip color="primary" label="Global / No Tags" />  <Chip label="SF / Manager" /> 
-     <Fab onClick={()=>this.setState({showTargeting: true})} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab></>
+    
+    <div style={{display: "flex"}}>
+    <VariationChip/>
+    <VariationChip/>
+    <Chip label="SF / Manager" /> 
+     <Fab onClick={()=>this.setState({showTargeting: true})} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab>
+     
+    </div>
+ 
+
+    
+    
+
+     </>
 
     variationTarget = <>
         
@@ -52,6 +66,7 @@ export class Content extends React.Component {
         return(
             <>
             <BackButton/>
+            {JSON.stringify(this.state.expand)}
               <Header as="h2"
           style={{padding: 0, margin: 0}}
           >
