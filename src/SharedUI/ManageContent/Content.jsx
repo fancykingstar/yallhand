@@ -48,10 +48,13 @@ export class Content extends React.Component {
             {},
             AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
           );
-    let variId = ""
+    let variId = "";
+    let label = "";
+
     if (!_.isEmpty(obj)) {
       variId = obj.variations[0].variationID;
-      DataEntryStore.set('contentmgmt', 'label', obj.variations[0].label);
+      DataEntryStore.set('contentmgmt', 'label', obj.variations[0].label === "" ? obj.label : obj.variations[0].label);
+      label = obj.variations[0].label;
     }
 
     this.state={
@@ -66,7 +69,8 @@ export class Content extends React.Component {
       _contentPreview: false,
       teamID: "",
       width: 0,
-      availVariation: 0
+      availVariation: 0,
+      label: label
     };
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -98,6 +102,7 @@ export class Content extends React.Component {
       this.setState({showTargeting: true});
     }
 
+
     if (mode === "policy") {
       if (
         UIStore.content.policyID === "" ||
@@ -109,10 +114,9 @@ export class Content extends React.Component {
           UIStore.set("content", "policyID", this.props.match.params.contentID);
           UIStore.set("content", "variationID", obj.variations[0].variationID);
           obj.variations.length > 0 ? obj.variations[0].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
-          /*this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});*/
+          this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
-          // DataEntryStore.set("contentmgmt", "bundle", EmailStore.queue.bundleID);
           DataEntryStore.set("contentmgmt", "campaign", "new");
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
@@ -157,14 +161,13 @@ export class Content extends React.Component {
       }
     }
     this.loadContent();
-
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
     const {DataEntryStore, UIStore} = this.props
-    DataEntryStore.reset("contentmgmt")
-    UIStore.reset("content");
+    // DataEntryStore.reset("contentmgmt")
+    // UIStore.reset("content");
   }
 
   updateWindowDimensions() {
@@ -259,8 +262,8 @@ export class Content extends React.Component {
     UIStore.reset("content");
     UIStore.set("content", "showTargeting", true);
     this.setState({isNewVari: true});
-    // DataEntryStore.reset("contentmgmt");
-    // DataEntryStore.set("content", "contentRAW", null);
+    DataEntryStore.reset("contentmgmt");
+    DataEntryStore.set("content", "contentRAW", null);
     DataEntryStore.set("contentmgmt", "label", this.state.content.label);
     DataEntryStore.set("content", "isNew", false);
     DataEntryStore.set("content", "stage", "draft");
@@ -326,7 +329,7 @@ export class Content extends React.Component {
     variat = (obj.variations || []).map((va, i) => {
         return (
           getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} /> : <div style={{ marginRight: 5 }}><Chip style={{ marginRight: 10 }} color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div> 
-          : i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /> : <div style={{ marginRight: 5 }}><Chip color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div>
+          : i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} /> : <div style={{ marginRight: 5 }}><Chip color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div>
         )
       })
     if (variation) {
@@ -371,7 +374,6 @@ export class Content extends React.Component {
       : <Segment disabled={isNewContent}>
           <AttachedFiles mode={mode}  />
         </Segment>
-
 
 
     return(
@@ -424,6 +426,7 @@ export class Content extends React.Component {
               selection
               options={dropDownOptions}
               onChange={(e, inx) => {this.handleClick(e, inx)}}
+              disabled={isNewContent}
             />
           }
           {

@@ -185,7 +185,7 @@ class CombinedContent extends React.Component {
       }[_options]
 
     const {loaded} = this.props.data;
-    console.log(isNewVari);
+
     return (
       <div>
         <Prompt
@@ -193,7 +193,7 @@ class CombinedContent extends React.Component {
           message='You have unsaved changes, are you sure you want to leave?'
         />
         {loaded && <PreviewContent data={this.state} togglePreview={() => this.setState({_contentPreview: false})}/>}
-        <Wysiwyg  error={_errors && _errors.includes("Body")} isNewVari={isNewVari} loadContent={!isNewVari ? vari[0].contentRAW : {}} border output={e=>this.updateDraft(e)}/>
+        <Wysiwyg  error={_errors && _errors.includes("Body")} variID={this.props.data.variID} isNewVari={this.props.data.isNewVari} loadContent={!isNewVari ? vari[0].contentRAW : {}} border output={e=>this.updateDraft(e)}/>
         <div>
             <Row style={{padding: "10px 0 10px 15px"}}>
                 <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
