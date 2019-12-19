@@ -16,7 +16,7 @@ import toast  from "../../YallToast"
 export class FeaturedImage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { input: "", retrievedImg: "", loading: false };
+    this.state = { input: "", retrievedImg: "", loading: false, success: false };
     this.buildUrl = (url, parameters) => {
       let qs = "";
       for (const key in parameters) {
@@ -57,7 +57,7 @@ export class FeaturedImage extends React.Component {
   }
   render() {
     const { AccountStore, DataEntryStore, UIStore } = this.props;
-    let imagePreview = this.props.defaultImgUrl ? (
+    let imagePreview = this.state.url ? <img alt="featured visual" src={this.state.url} /> : this.props.defaultImgUrl ? (
       <img alt="featured visual" src={this.props.defaultImgUrl} />
     ) : (
       <div />
@@ -78,30 +78,67 @@ export class FeaturedImage extends React.Component {
       )
         .then(result => {
           if (result !== null) { 
-            if(this.props.output) this.props.output({img: result.file.location})
-            else DataEntryStore.set("contentmgmt", "img", result.file.location) 
+            this.setState({url: result.file.location});
+            DataEntryStore.set("contentmgmt", "prevImg", result.file.location);
             DataEntryStore.set("contentmgmt", "imgData", {});
           }
         })
-        .then(() => {
-          if (this.props.mode && !this.props.output)
-            this.props.mode === "policy"
-              ? modifyPolicy(featuredImgEdit("policy"))
-              : modifyAnnouncement(featuredImgEdit("announcement"));
-        })
-        .then(() => DataEntryStore.reset("featuredImage"));
     };
+
+    const handleUpdate = e => {
+      e.preventDefault();
+      if (DataEntryStore.featuredImage.splash) {
+        requestDownload().then(() => {
+          DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+          DataEntryStore.set("featuredImage", "splash", false);
+        }).then(() => {
+          if (this.props.mode) this.props.mode === "policy"
+                ? modifyPolicy(featuredImgEdit("policy"))
+                : modifyAnnouncement(featuredImgEdit("announcement"));
+        }).then(() => {
+          DataEntryStore.reset("featuredImage");          
+        });
+      }
+      else {
+        S3Upload(
+          "public-read",
+          "central",
+          GenerateFileName(
+            AccountStore.account,
+            DataEntryStore.featuredImage.filename
+          ),
+          DataEntryStore.featuredImage.file
+        )
+          .then(result => {
+            if (result !== null) { 
+              if(this.props.output) this.props.output({img: result.file.location})
+              else DataEntryStore.set("contentmgmt", "img", result.file.location) 
+              DataEntryStore.set("contentmgmt", "imgData", {});
+            }
+          })
+          .then(() => {
+            if (this.props.mode && !this.props.output)
+              this.props.mode === "policy"
+                ? modifyPolicy(featuredImgEdit("policy"))
+                : modifyAnnouncement(featuredImgEdit("announcement"));
+          })
+          .then(() => {DataEntryStore.reset("featuredImage");});
+        }
+    }
+
+    const handleRemove = e => {
+      DataEntryStore.set("contentmgmt", "imgData", {});
+      DataEntryStore.set("contentmgmt", "img", "");
+    }
 
     const setUnsplash = async () => {
       await requestDownload();
-      if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg}) 
+      this.setState({url: this.state.retrievedImg.urls.regular});
+      if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg})
       else {
-        DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+        DataEntryStore.set("contentmgmt", "prevImg", this.state.retrievedImg.urls.regular);
         DataEntryStore.set("contentmgmt", "imgData", this.state.retrievedImg);
-        if (this.props.mode) await this.props.mode === "policy"
-                ? modifyPolicy(featuredImgEdit("policy"))
-                : modifyAnnouncement(featuredImgEdit("announcement"));
-        DataEntryStore.reset("featuredImage");
+        DataEntryStore.set("featuredImage", "splash", true);
       }
       UIStore.set("modal", "getUnsplash", false)
     }
@@ -200,7 +237,7 @@ export class FeaturedImage extends React.Component {
               size="mini"
               id="fileDisplayArea"
               type="file"
-              onChange={e => handleImageChange(e)}
+              onChange={e => {console.log("sdfsdf"); handleImageChange(e)}}
             />
             <Form.Button
               primary
@@ -216,6 +253,16 @@ export class FeaturedImage extends React.Component {
               onClick={e => UIStore.set("modal", "getUnsplash", true)}
             >
               Stock...
+            </Form.Button>
+            <Form.Button
+              onClick={e => handleUpdate(e)}
+            >
+              Submit
+            </Form.Button>
+            <Form.Button
+              onClick={e => handleRemove(e)}
+            >
+              Remove
             </Form.Button>
           </Form.Group>
         </Form>

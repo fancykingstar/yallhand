@@ -30,8 +30,11 @@ class ContentListingPage extends React.Component {
   }
 
   componentDidMount() {
+    const { DataEntryStore, UIStore } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    DataEntryStore.reset("contentmgmt");
+    UIStore.reset("content");
   }
 
   componentWillUnmount() {
@@ -129,14 +132,16 @@ class ContentListingPage extends React.Component {
         UIStore.content[id]
         }`
       );
+      {/*this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});*/}
     };
 
     const createContent = () => {
       this.props.history.push(
-        mode === "policy"
-          ? "/panel/faqs/content/new"
-          : `/panel/announcements/content/new`
-      );
+              mode === "policy"
+                ? "/panel/faqs/content/new"
+                : `/panel/announcements/content/new`
+            );
+      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
     };
 
     const handleFeatured = async (action, tableinfo) => {

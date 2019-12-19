@@ -171,7 +171,9 @@ class Store {
         policyID: "",
         announcementID: "",
         variationID: "",
-        history: []
+        history: [],
+        shouldBlockNavigation: true,
+        title: ""
     }
 
     @observable portal = {

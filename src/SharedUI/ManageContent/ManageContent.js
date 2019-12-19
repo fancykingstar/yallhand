@@ -36,7 +36,6 @@ class ManageContent extends React.Component {
       ? "policy"
       : "announcement";
         UIStore.reset("content")
-
   }
 
   closePreview = () => this.setState({contentPreview: false});
@@ -44,7 +43,6 @@ class ManageContent extends React.Component {
   componentWillUnmount() {
     const {DataEntryStore} = this.props
     DataEntryStore.reset("contentmgmt")
-
   }
 
   componentDidMount() {

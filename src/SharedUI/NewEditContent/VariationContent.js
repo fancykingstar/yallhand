@@ -51,7 +51,7 @@ class VariationContent extends React.Component {
     })
   }
   
-  componentDidMount(){
+  componentDidMount(){ 
     this.reset();
   }
 
@@ -151,6 +151,7 @@ class VariationContent extends React.Component {
   }
 
   render() {
+
     const { TeamStore } = this.props;
     const {content, isNewContent, isNewVari, mode, variID} = this.props.data;
     const vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
@@ -164,9 +165,6 @@ class VariationContent extends React.Component {
     :  <Segment disabled={isNewContent}>
     <AttachedFiles mode={mode}  />
   </Segment>
-
-
-
 
     const displayOptions = _options && 
       {
@@ -183,11 +181,10 @@ class VariationContent extends React.Component {
             when={this.hasBeenChanged()}
             message='You have unsaved changes, are you sure you want to leave?'
           />
-        <ContentPreview 
+        <ContentPreview
           open={this.state._contentPreview} onClose={()=>this.togglePreview(false)} 
           data={this.contentPreviewData()} 
-          
-          />
+        />
         <BackButton />
         <Header as="h2" style={{padding: 0, marginBottom: 10}}>
           {isNewContent ? "Creating" : "Editing"} {mode.charAt(0).toUpperCase() + mode.slice(1)} 

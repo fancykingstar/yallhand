@@ -28,21 +28,23 @@ export class Wysiwyg extends React.Component {
                     html: stateToHTML(contentState)
                 };
         }
-        this.onChange = editorState => this.setState({editorState});
+        this.onChange = editorState => this.setState({editorState});        
+    }
 
-  //       this.handleReturn = (e) => {
-  //     const { editorState } = this.state;
-  //     if (e.key === 'Enter') {
-  //       console.log("entered")
-  //       this.setState({ editorState: RichUtils.insertSoftNewline(editorState) });
-  //       return 'handled';
-  //   }
-  //   return 'not-handled';
-  // }
-
-        
+    componentWillReceiveProps(nextProps) {
+      if (nextProps && nextProps.isNewVari == true && this.props.isNewVari == false ) {
+        this.setState({editorState: EditorState.createEmpty(), raw: null, html: null});
+      } else {
+        if (!(typeof(nextProps.loadContent) === 'object' && isEmpty(nextProps.loadContent)) && !nextProps.isNewVari && nextProps.variID != this.props.variID) {
+          const contentState = convertFromRaw(nextProps.loadContent);
+          this.setState({
+              editorState: EditorState.createWithContent(contentState),
+              raw: convertToRaw(contentState),
+              html: stateToHTML(contentState)
+          });
+        }
       }
-
+    }
 
     passContent() {
         const contentState = this.state.editorState.getCurrentContent();
@@ -65,11 +67,7 @@ export class Wysiwyg extends React.Component {
              await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
                 return result !== null ? { data: { link: result.file.location}} : null
-              } )
-
-
-
-       
+              } )       
           
         const toolbarConfig = 
         {
@@ -118,14 +116,11 @@ export class Wysiwyg extends React.Component {
         <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
             <Editor
-            //   wrapperClassName="Wrapped"
-            //   editorClassName="WysiwygWrapped"
               editorState={this.state.editorState}
               onEditorStateChange={this.editorStateChanged}
               toolbar={toolbarConfig}
-              // handleReturn={this.handleReturn}
-              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5,margin: 0}}   
-              toolbarStyle={{border: 0}}    
+              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5, margin: 0}}
+              toolbarStyle={{border: 0}}
             />
           </React.Fragment>
         </div>
