@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     embed: {
         display: "flex",
         cursor: "pointer",
-        paddingBottom: props => `${props.size? props.size * .285 : 20}px`
+        paddingBottom:  props => `${props.padding ? props.size ? props.size * .285 : 20 : 0}px`,
     }
 });
 

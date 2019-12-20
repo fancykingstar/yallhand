@@ -106,13 +106,15 @@ class ActionSlider extends React.Component {
 
       this.slider.slickGoTo(0);
    }
+
+   eachCircleIcon = { marginBottom: "20px" }
    render() {
       const { generalActions, } = this.state
       const {selectedActionData} = this.state;
       const settings_multi = {
          dots: false,
          infinite: false,
-         slidesToShow: 6,
+         slidesToShow: 4,
          slidesToScroll: 1,
          nextArrow: <SampleNextArrow />,
          prevArrow: <SamplePrevArrow />,
@@ -120,25 +122,31 @@ class ActionSlider extends React.Component {
          slidesPerRow: 1,
          responsive: [
             {
-               breakpoint: 1600,
-               settings: {
-                  slidesToShow: 4,
-               }
-            },
-            {
                breakpoint: 1440,
                settings: {
                   slidesToShow: 4,
                }
             },
             {
-               breakpoint: 1024,
+               breakpoint: 1280,
                settings: {
                   slidesToShow: 3,
                }
             },
             {
+               breakpoint: 1024,
+               settings: {
+                  slidesToShow: 2,
+               }
+            },
+            {
                breakpoint: 768,
+               settings: {
+                  slidesToShow: 3,
+               }
+            },
+            {
+               breakpoint: 600,
                settings: {
                   slidesToShow: 2,
                }
@@ -187,7 +195,7 @@ class ActionSlider extends React.Component {
                            )}*/}
 
                         {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
                         )}
 
                         </Slider>

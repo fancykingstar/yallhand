@@ -159,24 +159,28 @@ class ActionsForm extends React.Component {
         else this.props.onSubmit(this.state);
 
     }
+
+    smallIconStyle = { display: "flex", alignItems: "center"}
+    h4Style = { display: "flex", alignItems: "center" }
+
     render() {
         return (
             <>
                 <div className="section_title">
                    
-                    <h4>
+                    <h4 style={this.h4Style}>
                         <IconButton
                         color="inherit"
                         aria-label="back to actions"
                         edge="start"
                         onClick={this.props.onCancel.bind(this)}
                     ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
-                        {/* {(this.props.actionDetail.label) ?
+                         {(this.props.actionDetail.label) ?
                           
-                            <div className="small-icon">   <CircleIcons noLabel name={this.props.actionDetail.icon} color="#1249bd" bgColor="#e7eefc" size="30"/></div>
+                            <div className="small-icon" style={this.smallIconStyle}>   <CircleIcons noLabel name={this.props.actionDetail.icon} color="#1249bd" bgColor="#e7eefc" size="30"/></div>
                          
                             :
-                            ('')} */}
+                            ('')} 
                         {this.props.actionDetail.label}</h4>
                 </div>
                 <div className="page_content actions">
