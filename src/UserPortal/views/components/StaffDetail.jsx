@@ -64,25 +64,25 @@ class StaffDetail extends React.Component {
                     />
                     <CardContent>
                         <List component="div">
-                        <ListItem>
+                            <ListItem style={{display: !this.props.email ? "none" : "flex"}}>
                                 <ListItemIcon>
                                     <img src={department_icon} alt="" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.email} />
                             </ListItem>
-                            <ListItem>
+                            <ListItem style={{display: !this.props.department ? "none" : "flex"}}>
                                 <ListItemIcon>
                                     <img src={department_icon} alt="" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.department} />
                             </ListItem>
-                            <ListItem>
+                            <ListItem style={{display: !this.props.location ? "none" : "flex"}}>
                                 <ListItemIcon>
                                     <img src={location_icon} alt="" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.location} />
                             </ListItem>
-                            <ListItem>
+                            <ListItem style={{display: !this.props.contact ? "none" : "flex"}}>
                                 <ListItemIcon>
                                     <img src={mobile_icon} alt="" />
                                 </ListItemIcon>
