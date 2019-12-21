@@ -56,9 +56,14 @@ class Directory extends React.Component {
                   designation={user.profile.Title}
                   department={user.profile.Department}
                   location={user.profile.Location}
-                  contact={user.phone}
+                  contact={user.profile["Phone or Extension"]}
+                  mobile={user.profile['Mobile']}
+                  dob={user.dob}
                   email={user.email}
-                  socials={this.socials(user)} />
+                  socials={this.socials(user)}
+                  aboutme={user.profile["About Me"]}
+                  reportto={user.boss}
+               />
             </Col>
          )
       })

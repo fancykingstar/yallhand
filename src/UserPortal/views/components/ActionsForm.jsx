@@ -79,7 +79,7 @@ class ActionsForm extends React.Component {
 
         else if(formItem.type === "select") return (
             <Input type="select" name={formItem.label} id="props_for" onChange={this.handleInputChange.bind(this)}>
-                {formItem.options.map(opt => <option>{opt}</option>)}
+                {formItem.options.map((opt, i) => <option key={i}>{opt}</option>)}
             </Input>
         )
 
@@ -101,13 +101,14 @@ class ActionsForm extends React.Component {
           </label> 
 
           {
-                             this.state.files.map(file => 
-                             <div 
-                             as="a"
-                             key={"contentresourse" + giveMeKey()}
-                            //  onClick={e => downloadFile(file.S3Key, file.label)}
-                             ><AttachFileIcon/> {file.name}</div>)
-                        }
+                 this.state.files.map((file, index) => 
+                 <div
+                     key={index}
+                     as="a"
+                     key={"contentresourse" + giveMeKey()}
+                    //  onClick={e => downloadFile(file.S3Key, file.label)}
+                 ><AttachFileIcon/> {file.name}</div>)
+            }
 
             </div>
         
@@ -115,9 +116,10 @@ class ActionsForm extends React.Component {
 
         else if(formItem.type === "multiselect") return (
             <FormGroup>
-            {formItem.options.map(opt =>  
+            {formItem.options.map((opt, i) =>  
             
             <FormControlLabel
+                key={i}
                 control={<Checkbox 
                 id={formItem.label}
                 name={opt}
@@ -189,8 +191,8 @@ class ActionsForm extends React.Component {
                     <Form onSubmit={this.handleActionFormSubmit.bind(this)}>
                     <Container>
                         <Row>
-                    {this.props.actionDetail.ticketItems && this.props.actionDetail.ticketItems[0].data.map(formItem => 
-                        <Col md={6}>
+                    {this.props.actionDetail.ticketItems && this.props.actionDetail.ticketItems[0].data.map((formItem, i) => 
+                        <Col md={6} key={i}>
                              <FormGroup>
                                         <Label for="description">{formItem.label}</Label>
                                         {this.getFormItemField(formItem)}

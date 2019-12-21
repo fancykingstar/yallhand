@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Card, CardActionArea, CardContent, CardMedia, Typography, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Card, CardActionArea, CardContent, CardMedia, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,19 +13,42 @@ import github_icon from "../../assets/images/github_icon.svg";
 import department_icon from "../../assets/images/department_icon.svg";
 import location_icon from "../../assets/images/location_icon.svg";
 import mobile_icon from "../../assets/images/mobile_icon.svg";
+import phone_icon from "../../assets/images/old-typical-phone.png";
+import cake_icon from "../../assets/images/cake.png";
 
 class StaffDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeId: null
+            activeId: null,
+            more: false,
+            type: true,
+            expanded: false
+        }
+    }
+
+    componentDidMount() {
+        if ( String(this.props.aboutme).length > 50 ) {
+            this.setState({more: true, text: String(this.props.aboutme).slice(0, 50)});
+        } else {
+            this.setState({more: false, text: String(this.props.aboutme)});
         }
     }
 
     handleClick(event, id) {
         this.setState({ activeId: id });
-        console.log(id);
     }
+
+    showMoreTest = (e) => {
+        this.setState({ type: !this.state.type });
+        !this.state.type ? this.setState({ text: this.props.aboutme.slice(0, 50) }) : this.setState({ text: this.props.aboutme });
+    }
+
+    aboutmeStyle = { fontSize: "14px", color: "#88878f", fontWeight: 400 };
+
+    handleExpandClick = () => {
+        this.setState({expanded: !this.state.expanded});
+    };
 
     render() {
         if (this.props.view === 'hierarchy') {
@@ -63,6 +86,13 @@ class StaffDetail extends React.Component {
                         subheader={this.props.designation}
                     />
                     <CardContent>
+                        <div>
+                            <h6 style={this.aboutmeStyle}>
+                                {this.state.text}
+                                <span style={{ display: !this.state.more ? "none" : "", marginRight: "5px" }}>{this.state.type ? "..." : ""}</span>
+                                <Link to="#" onClick={(e) => this.showMoreTest(e)} style={{ display: !this.state.more ? "none" : "", color: "blue" }}>{this.state.type ? "more" : "less"}</Link>
+                            </h6>
+                        </div>
                         <List component="div">
                             <ListItem style={{display: !this.props.email ? "none" : "flex"}}>
                                 <ListItemIcon>
@@ -82,14 +112,30 @@ class StaffDetail extends React.Component {
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.location} />
                             </ListItem>
+                        </List>
+                    </CardContent>
+                    <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+                        <CardContent>
                             <ListItem style={{display: !this.props.contact ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={mobile_icon} alt="" />
+                                    <img src={phone_icon} alt="" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.contact} />
                             </ListItem>
-                        </List>
-                    </CardContent>
+                            <ListItem style={{display: !this.props.mobile ? "none" : "flex"}}>
+                                <ListItemIcon>
+                                    <img src={mobile_icon} alt="" />
+                                </ListItemIcon>
+                                <ListItemText secondary={this.props.mobile} />
+                            </ListItem>
+                            <ListItem style={{display: !this.props.dob ? "none" : "flex"}}>
+                                <ListItemIcon>
+                                    <img src={cake_icon} alt="" />
+                                </ListItemIcon>
+                                <ListItemText secondary={this.props.dob} />
+                            </ListItem>
+                        </CardContent>
+                    </Collapse>
                     <CardActions disableSpacing>
                         <div className="staffSocial">
                             {(socials) ? (
@@ -110,8 +156,9 @@ class StaffDetail extends React.Component {
                                 </div>
                             ) : (<div className="staffSocialIcons"></div>)}
                         </div>
-                        {/* <div className="align-right">
-                            <Link to="#/">More</Link></div> */}
+                        <div className="align-right">
+                            <Link to="#/" onClick={() => this.handleExpandClick()} aria-expanded={this.state.expanded} aria-label="show more">{!this.state.expanded ? "More" : "Less"}</Link>
+                        </div> 
                     </CardActions>
                 </Card>
             )
