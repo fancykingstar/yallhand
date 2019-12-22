@@ -62,7 +62,7 @@ class Directory extends React.Component {
                   email={user.email}
                   socials={this.socials(user)}
                   aboutme={user.profile["About Me"]}
-                  reportto={user.boss}
+                  reportto={user.boss ? AccountStore._getDisplayName(user.boss) : false}
                />
             </Col>
          )

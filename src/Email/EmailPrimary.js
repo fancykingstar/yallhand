@@ -31,6 +31,7 @@ class EmailPrimary extends React.Component {
   }
   componentDidMount() {
     const {DataEntryStore, UIStore} = this.props
+    DataEntryStore.set('contentmgmt', 'hide', true);
     if(DataEntryStore.emailCampaign.sendContent.length > 0 && UIStore.menuItem.sendEmailBody === "message"){UIStore.set("menuItem", "sendEmailBody", "messagecontent")}
     if(DataEntryStore.emailCampaign.draftHTML !== ""){
       const contentState = convertFromRaw(DataEntryStore.emailCampaign.draftRAW);

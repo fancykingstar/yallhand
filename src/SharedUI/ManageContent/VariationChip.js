@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Chip from '@material-ui/core/Chip';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { inject, observer } from "mobx-react";
-
+import { generateID } from "../../SharedCalculations/GenerateID"
 
 @inject( "UIStore")
 @observer
@@ -32,6 +32,13 @@ export default class VariationChip extends React.Component {
     UIStore.set("content", "showTargeting", true);
   }
 
+  DuplicateVariation = () => {
+    const { UIStore } = this.props;
+    this.setState({anchorEl: null});
+    UIStore.set("content", "showTargeting", true);
+    UIStore.set("content", "duplicate", true);
+  }
+
   render() {
     return (
       <div style={{marginRight: 5, marginBottom: 10}}>
@@ -44,7 +51,7 @@ export default class VariationChip extends React.Component {
             onClose={this.handleClose}
           >
             <MenuItem onClick={this.EditVariation}>Edit</MenuItem>
-            <MenuItem onClick={this.EditVariation}>Create Duplicate</MenuItem>
+            <MenuItem onClick={this.DuplicateVariation}>Create Duplicate</MenuItem>
           </Menu>
       </div>
     );

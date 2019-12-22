@@ -166,8 +166,8 @@ export class Content extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
     const {DataEntryStore, UIStore} = this.props
-    // DataEntryStore.reset("contentmgmt")
-    // UIStore.reset("content");
+    DataEntryStore.reset("contentmgmt")
+    UIStore.reset("content");
   }
 
   updateWindowDimensions() {
@@ -356,7 +356,7 @@ export class Content extends React.Component {
     let variationTarget = ""
     if (isNewVari !== undefined) {
       vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
-    
+
       variationTarget = <>
         <ChooseTargeting
           noPass
@@ -388,7 +388,7 @@ export class Content extends React.Component {
           </Header.Subheader>
         </Header>
         <Form style={this.sectionStyle}>  
-          <Form.Dropdown defaultValue={"parent"} options={[{text: "Parent Title", value: "parent"},{text:"Variation Title", value: "vari"}]} />
+          <Form.Dropdown value={content.label == DataEntryStore.contentmgmt.label ? "parent" : "vari"} options={[{text: "Parent Title", value: "parent"},{text:"Variation Title", value: "vari"}]} />
           <Form.Input style={{marginTop: -8}} className="FixSemanticLabel">
               <input maxLength={72} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} onChange={e => this.onChangeTitle(e)} />
           </Form.Input>

@@ -14,7 +14,7 @@ import department_icon from "../../assets/images/department_icon.svg";
 import location_icon from "../../assets/images/location_icon.svg";
 import mobile_icon from "../../assets/images/mobile_icon.svg";
 import phone_icon from "../../assets/images/old-typical-phone.png";
-import cake_icon from "../../assets/images/cake.png";
+import cake_icon from "../../assets/images/birthday-cake.png";
 
 class StaffDetail extends React.Component {
     constructor(props) {
@@ -85,14 +85,18 @@ class StaffDetail extends React.Component {
                         title={this.props.name}
                         subheader={this.props.designation}
                     />
-                    <CardContent>
-                        <div>
-                            <h6 style={this.aboutmeStyle}>
-                                {this.state.text}
-                                <span style={{ display: !this.state.more ? "none" : "", marginRight: "5px" }}>{this.state.type ? "..." : ""}</span>
-                                <Link to="#" onClick={(e) => this.showMoreTest(e)} style={{ display: !this.state.more ? "none" : "", color: "blue" }}>{this.state.type ? "more" : "less"}</Link>
-                            </h6>
-                        </div>
+                    <CardContent style={{ paddingBottom: this.state.expanded ? 0 : '' }}>
+
+                        {
+                            this.props.aboutme ? 
+                                <div>
+                                    <h6 style={this.aboutmeStyle}>
+                                        {this.state.text}
+                                        <span style={{ display: !this.state.more ? "none" : "", marginRight: "5px" }}>{this.state.type ? "..." : ""}</span>
+                                        <Link to="#" onClick={(e) => this.showMoreTest(e)} style={{ display: !this.state.more ? "none" : "", color: "blue" }}>{this.state.type ? "more" : "less"}</Link>
+                                    </h6>
+                                </div> : ""
+                        }
                         <List component="div">
                             <ListItem style={{display: !this.props.email ? "none" : "flex"}}>
                                 <ListItemIcon>
@@ -124,15 +128,21 @@ class StaffDetail extends React.Component {
                             </ListItem>
                             <ListItem style={{display: !this.props.mobile ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={mobile_icon} alt="" />
+                                    <img src={mobile_icon} alt="" width="20" style={{ marginLeft: "2px" }} />
                                 </ListItemIcon>
-                                <ListItemText secondary={this.props.mobile} />
+                                <ListItemText secondary={this.props.mobile} style={{ marginLeft: "-2px" }} />
                             </ListItem>
                             <ListItem style={{display: !this.props.dob ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={cake_icon} alt="" />
+                                    <img src={cake_icon} alt="" width="20" style={{ marginLeft: "2px" }} />
                                 </ListItemIcon>
-                                <ListItemText secondary={this.props.dob} />
+                                <ListItemText secondary={this.props.dob} style={{ marginLeft: "-2px" }} />
+                            </ListItem>
+                            <ListItem style={{display: !this.props.reportto ? "none" : "flex"}}>
+                                <ListItemIcon>
+                                    <label style={{ color: 'black', marginBottom: 0, fontSize: "14px" }}>Reports To: </label>
+                                </ListItemIcon>
+                                <ListItemText secondary={this.props.reportto} style={{ marginTop: '4px' }} />
                             </ListItem>
                         </CardContent>
                     </Collapse>
