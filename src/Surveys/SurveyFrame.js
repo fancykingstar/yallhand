@@ -87,7 +87,39 @@ class SurveyFrame extends React.Component {
 
     }
     
-    const columns = ["Survey Title", "Last Updated", "Created By", "Stage"];
+    const columns = [
+      { 
+        name: "Survey Title",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Last Updated",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Created By",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Stage",
+        options: {
+          filter: true,
+          filterOptions: {
+            names: ['Active', "InActive"],
+            logic(stage, filterVal) {
+              const show = (filterVal.indexOf("Active") >= 0 && stage == "Active") || (filterVal.indexOf("InActive") >= 0 && stage != "Active");
+              return !show
+            }
+          },
+        }
+      }
+    ];
     const mobileColumns = ["Survey Title", "Last Updated"];
 
     const data = SurveyStore.allSurveys.map(survey => [survey.label, UTCtoFriendly(survey.updated), AccountStore._getDisplayName(survey.userID), survey.active? "Active":"Inactive"])

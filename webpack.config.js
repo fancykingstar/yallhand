@@ -1,5 +1,11 @@
 const Dotenv = require("dotenv-webpack");
 module.exports = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Yallhands',
+      hash: true
+    })
+  ],
   module: {
     rules: [
       {

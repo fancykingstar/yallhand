@@ -30,8 +30,11 @@ class ContentListingPage extends React.Component {
   }
 
   componentDidMount() {
+    const { DataEntryStore, UIStore } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    DataEntryStore.reset("contentmgmt");
+    UIStore.reset("content");
   }
 
   componentWillUnmount() {
@@ -78,6 +81,9 @@ class ContentListingPage extends React.Component {
             boxShadow: "none",
             border: "2px solid #e3e8ee",
             borderRadius: 8
+          },
+          responsiveScrollMaxHeight: {
+            maxHeight: '678px !important'
           }
         }
       }
@@ -129,14 +135,16 @@ class ContentListingPage extends React.Component {
         UIStore.content[id]
         }`
       );
+      {/*this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});*/}
     };
 
     const createContent = () => {
       this.props.history.push(
-        mode === "policy"
-          ? "/panel/faqs/content/new"
-          : `/panel/announcements/content/new`
-      );
+              mode === "policy"
+                ? "/panel/faqs/content/new"
+                : `/panel/announcements/content/new`
+            );
+      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
     };
 
     const handleFeatured = async (action, tableinfo) => {
@@ -151,23 +159,32 @@ class ContentListingPage extends React.Component {
    
     const columns = [
       {
+        name: "images",
         options: {
-          customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; }}
+          customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; },
+          filter: false,
+        },
       }, 
-    {
-      label: "Featured",
-      name: "Featured",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: featured => { return  featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />}
- 
-      }
-    }, 
-    {name:  "Title"},
-    {name:  "Last Updated"},
-    {name:  "Channel"},
-    {name:  "State"}
+      {
+        label: "Featured",
+        name: "Featured",
+        options: {
+          filter: true,
+          sort: false,
+          customBodyRender: featured => { return  featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />},
+          filterOptions: {
+            names: ['Featured', "Not Featured"],
+            logic(featured, filterVal) {
+              const show = (filterVal.indexOf("Featured") >= 0 && featured == true) || (filterVal.indexOf("Not Featured") >= 0 && featured != true);
+              return !show
+            }
+          },
+        }
+      }, 
+      {name:  "Title", options: { filter: false }},
+      {name:  "Last Updated", options: { filter: false }},
+      {name:  "Channel", options: { filter: true }},
+      {name:  "Stage", options: { filter: true }}
     ];
 
     const mobileColumns = [ 
@@ -201,7 +218,6 @@ class ContentListingPage extends React.Component {
       ),
       filter: true,
       filterType: "dropdown",
-      // filterList: [["active"]],
       print: false,
       responsive: "scrollMaxHeight",
       viewColumns: false,

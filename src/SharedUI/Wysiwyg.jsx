@@ -1,7 +1,8 @@
 import React from "react"
-import { Editor } from 'react-draft-wysiwyg';
+import { Editor as TextEditor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
+
 import {S3Upload} from "../DataExchange/S3Upload"
 import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
 import {emojiList} from "./EmojiList"
@@ -12,6 +13,12 @@ import {AccountStore} from "../Stores/AccountStore";
 import './style.css'
 import {debounce, isEmpty} from "lodash";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import createEmojiPlugin from 'draft-js-emoji-plugin';
+const emojiPlugin = createEmojiPlugin();
+const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+const plugins = [emojiPlugin];
 
 export class Wysiwyg extends React.Component {
     constructor(props) {
@@ -28,21 +35,22 @@ export class Wysiwyg extends React.Component {
                     html: stateToHTML(contentState)
                 };
         }
-        this.onChange = editorState => this.setState({editorState});
+    }
 
-  //       this.handleReturn = (e) => {
-  //     const { editorState } = this.state;
-  //     if (e.key === 'Enter') {
-  //       console.log("entered")
-  //       this.setState({ editorState: RichUtils.insertSoftNewline(editorState) });
-  //       return 'handled';
-  //   }
-  //   return 'not-handled';
-  // }
-
-        
+    componentWillReceiveProps(nextProps) {
+      if (nextProps && nextProps.isNewVari == true && this.props.isNewVari == false ) {
+        this.setState({editorState: EditorState.createEmpty(), raw: null, html: null});
+      } else {
+        if (!(typeof(nextProps.loadContent) === 'object' && isEmpty(nextProps.loadContent)) && !nextProps.isNewVari && nextProps.variID != this.props.variID) {
+          const contentState = convertFromRaw(nextProps.loadContent);
+          this.setState({
+              editorState: EditorState.createWithContent(contentState),
+              raw: convertToRaw(contentState),
+              html: stateToHTML(contentState)
+          });
+        }
       }
-
+    }
 
     passContent() {
         const contentState = this.state.editorState.getCurrentContent();
@@ -57,7 +65,6 @@ export class Wysiwyg extends React.Component {
     editorStateChanged = (newEditorState) => {
       debounce(() => this.passContent(), 500)();
       this.setState({editorState: newEditorState});
-
     };
 
     render(){
@@ -65,11 +72,7 @@ export class Wysiwyg extends React.Component {
              await S3Upload("public-read", "central", GenerateFileName(AccountStore.account, file.name), file)
               .then(result => {
                 return result !== null ? { data: { link: result.file.location}} : null
-              } )
-
-
-
-       
+              } )       
           
         const toolbarConfig = 
         {
@@ -117,16 +120,14 @@ export class Wysiwyg extends React.Component {
       return (
         <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
-            <Editor
-            //   wrapperClassName="Wrapped"
-            //   editorClassName="WysiwygWrapped"
+            <TextEditor
               editorState={this.state.editorState}
               onEditorStateChange={this.editorStateChanged}
               toolbar={toolbarConfig}
-              // handleReturn={this.handleReturn}
-              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5,margin: 0}}   
-              toolbarStyle={{border: 0}}    
-            />
+              editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5, margin: 0}}
+              toolbarStyle={{border: 0}}
+            >
+            </TextEditor>
           </React.Fragment>
         </div>
       )

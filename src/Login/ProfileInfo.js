@@ -71,7 +71,7 @@ class ProfileInfo extends React.Component {
   }
 
   register () {
-    const { invitedBy, name, username, isAdmin, teamID, tag, email, dob, password, accountID, now, date, boss, googleId, img, adminLimits } = this.state
+    const { invitedBy, name, username, isAdmin, teamID, tag, email, password, accountID, now, date, boss, googleId, img, adminLimits } = this.state
     if (this.validate('name', 'name') !== '') return;
     else if (this.validate('username', 'display name') !== '') return;
     // else if (this.validate('phone', 'phone') !== '') return;
@@ -90,7 +90,7 @@ class ProfileInfo extends React.Component {
       email: email,
       img: img,
       // phone: phone,
-      dob:dob,
+      // dob:dob,
       password: googleId ? googleId : password,
       accountID: accountID,
       now: now,
@@ -102,6 +102,8 @@ class ProfileInfo extends React.Component {
     })
     .then((res) => res.json())
     .then((res) => {
+      console.log("res",res)
+      if (res.boss === "self") apiCall(`/users/${res.userID}` , 'PATCH', {accountID: res.accountID, userID: res.userID, boss: res.userID});
       let validateCode = this.props.item;
       validateCode.userId = res.userID;
       const { id } = validateCode
@@ -139,10 +141,10 @@ class ProfileInfo extends React.Component {
                           label={<span style={{color: "#000000", fontWeight: 700, fontSize: '0.92em'}}>Display Name<InfoPopUp content="Short name or nickname" /></span>}>
                 <input maxLength="16" />
               </Form.Input>
-              <Form.Input icon="birthday cake"
+              {/* <Form.Input icon="birthday cake"
                           type="date"
                           label="Birthday"
-                          onChange={(e) => this.setState({dob: e.target.value})}/>
+                          onChange={(e) => this.setState({dob: e.target.value})}/> */}
               
               <Form.Input icon="mail"
                           label="email" 

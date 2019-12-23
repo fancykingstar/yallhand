@@ -29,7 +29,7 @@ class SurveyList extends React.Component {
                <div className="page_container">
                   {(SurveyData.length) ? 
                      SurveyData
-                     .map((item, index) => <Survey data={item} index={index} usePaper/> ) : <EmptyPlaceholder type="survey"/> }
+                     .map((item, index) => <Survey data={item} index={index} key={index} usePaper/> ) : <EmptyPlaceholder type="survey"/> }
                </div>
             </div>
          </Layout>

@@ -10,13 +10,15 @@ import _ from "lodash";
 import "./style.css";
 import { apiCall } from "../../DataExchange/Fetch";
 import toast  from "../../YallToast"
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 @inject("DataEntryStore", "AccountStore", "UIStore")
 @observer
 export class FeaturedImage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { input: "", retrievedImg: "", loading: false };
+    this.state = { input: "", retrievedImg: "", loading: false, success: false };
     this.buildUrl = (url, parameters) => {
       let qs = "";
       for (const key in parameters) {
@@ -55,10 +57,113 @@ export class FeaturedImage extends React.Component {
     const { UIStore } = this.props;
     UIStore.set("message", "featuredImage", "");
   }
+
+  handleUpdate = e => {
+    const { DataEntryStore, AccountStore } = this.props;
+    this.setState({ updated: true });
+    e.preventDefault();
+    if (DataEntryStore.featuredImage.splash) {
+      requestDownload().then(() => {
+        DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+        DataEntryStore.set("featuredImage", "splash", false);
+      }).then(() => {
+        if (this.props.mode) this.props.mode === "policy"
+              ? modifyPolicy(featuredImgEdit("policy"))
+              : modifyAnnouncement(featuredImgEdit("announcement"));
+      }).then(() => {
+        DataEntryStore.reset("featuredImage");          
+      });
+    }
+    else {
+      S3Upload(
+        "public-read",
+        "central",
+        GenerateFileName(
+          AccountStore.account,
+          DataEntryStore.featuredImage.filename
+        ),
+        DataEntryStore.featuredImage.file
+      )
+        .then(result => {
+          if (result !== null) { 
+            this.setState({url: result.file.location});
+            if(this.props.output) this.props.output({img: result.file.location})
+            else DataEntryStore.set("contentmgmt", "img", result.file.location) 
+            DataEntryStore.set("contentmgmt", "imgData", {});
+          }
+        })
+        .then(() => {
+          if (this.props.mode && !this.props.output)
+            this.props.mode === "policy"
+              ? modifyPolicy(featuredImgEdit("policy"))
+              : modifyAnnouncement(featuredImgEdit("announcement"));
+        })
+        .then(() => {DataEntryStore.reset("featuredImage");});
+      }
+  }
+
+  handleRemove = e => {
+    const { DataEntryStore, AccountStore } = this.props;
+    DataEntryStore.set("contentmgmt", "imgData", {});
+    DataEntryStore.set("contentmgmt", "img", "");
+    this.setState({ updated: false })
+    e.preventDefault();
+    if (DataEntryStore.featuredImage.splash) {
+      requestDownload().then(() => {
+        DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+        DataEntryStore.set("featuredImage", "splash", false);
+      }).then(() => {
+        if (this.props.mode) this.props.mode === "policy"
+              ? modifyPolicy(featuredImgEdit("policy"))
+              : modifyAnnouncement(featuredImgEdit("announcement"));
+      }).then(() => {
+        DataEntryStore.reset("featuredImage");          
+      });
+    }
+    else {
+      S3Upload(
+        "public-read",
+        "central",
+        GenerateFileName(
+          AccountStore.account,
+          DataEntryStore.featuredImage.filename
+        ),
+        DataEntryStore.featuredImage.file
+      )
+        .then(result => {
+          if (result !== null) { 
+            this.setState({url: false});
+            if(this.props.output) this.props.output({img: result.file.location})
+            else DataEntryStore.set("contentmgmt", "img", "") 
+            DataEntryStore.set("contentmgmt", "imgData", {});
+          }
+        })
+        .then(() => {
+          if (this.props.mode && !this.props.output)
+            this.props.mode === "policy"
+              ? modifyPolicy(featuredImgEdit("policy"))
+              : modifyAnnouncement(featuredImgEdit("announcement"));
+        })
+        .then(() => {DataEntryStore.reset("featuredImage");});
+      }
+  }
+
   render() {
     const { AccountStore, DataEntryStore, UIStore } = this.props;
-    let imagePreview = this.props.defaultImgUrl ? (
-      <img alt="featured visual" src={this.props.defaultImgUrl} />
+    let imagePreview = this.state.url ? 
+      <div style={{ position: 'relative' }}>
+        <img alt="featured visual" src={this.state.url} />
+        { this.state.updated ? <IconButton aria-label="close" style={{ position: 'absolute', top: "-8px", right: "-8px", color: 'white' }} onClick={(e) => this.handleRemove(e)}>
+          <CancelIcon color='white' />
+          </IconButton> : ""
+        }
+      </div> : this.props.defaultImgUrl ? (
+      <div style={{ position: 'relative' }}>
+        <img alt="featured visual" src={this.props.defaultImgUrl} />
+        <IconButton aria-label="close" style={{ position: 'absolute', top: "-8px", right: "-8px", color: 'white' }} onClick={(e) => this.handleRemove(e)}>
+          <CancelIcon color='white' />
+        </IconButton>
+      </div>
     ) : (
       <div />
     );
@@ -78,30 +183,21 @@ export class FeaturedImage extends React.Component {
       )
         .then(result => {
           if (result !== null) { 
-            if(this.props.output) this.props.output({img: result.file.location})
-            else DataEntryStore.set("contentmgmt", "img", result.file.location) 
+            this.setState({url: result.file.location});
+            DataEntryStore.set("contentmgmt", "prevImg", result.file.location);
             DataEntryStore.set("contentmgmt", "imgData", {});
           }
         })
-        .then(() => {
-          if (this.props.mode && !this.props.output)
-            this.props.mode === "policy"
-              ? modifyPolicy(featuredImgEdit("policy"))
-              : modifyAnnouncement(featuredImgEdit("announcement"));
-        })
-        .then(() => DataEntryStore.reset("featuredImage"));
     };
 
     const setUnsplash = async () => {
       await requestDownload();
-      if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg}) 
+      this.setState({url: this.state.retrievedImg.urls.regular});
+      if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg})
       else {
-        DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
+        DataEntryStore.set("contentmgmt", "prevImg", this.state.retrievedImg.urls.regular);
         DataEntryStore.set("contentmgmt", "imgData", this.state.retrievedImg);
-        if (this.props.mode) await this.props.mode === "policy"
-                ? modifyPolicy(featuredImgEdit("policy"))
-                : modifyAnnouncement(featuredImgEdit("announcement"));
-        DataEntryStore.reset("featuredImage");
+        DataEntryStore.set("featuredImage", "splash", true);
       }
       UIStore.set("modal", "getUnsplash", false)
     }
@@ -195,12 +291,13 @@ export class FeaturedImage extends React.Component {
         {preview}
         <br/>
         <Form>
-          <Form.Group>
+          <Form.Group style={{ flexWrap:  "wrap"}}>
             <Form.Input
               size="mini"
               id="fileDisplayArea"
               type="file"
-              onChange={e => handleImageChange(e)}
+              onChange={e => {handleImageChange(e)}}
+              style={{ marginBottom: 20 }}
             />
             <Form.Button
               primary
@@ -209,14 +306,25 @@ export class FeaturedImage extends React.Component {
                 UIStore.message.featuredImage !== ""
               }
               onClick={e => handleSubmit(e)}
+              style={{ marginBottom: 20 }}
             >
               Upload
             </Form.Button>
             <Form.Button
               onClick={e => UIStore.set("modal", "getUnsplash", true)}
+              style={{ marginBottom: 20 }}
             >
               Stock...
             </Form.Button>
+            { !DataEntryStore.contentmgmt.hide ? 
+              <Form.Button
+                onClick={e => this.handleUpdate(e)}
+                style={{ marginBottom: 20 }}
+                disabled={ this.state.url ? false: true }
+              >
+                Submit
+              </Form.Button> : ""
+            }
           </Form.Group>
         </Form>
   

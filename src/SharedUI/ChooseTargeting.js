@@ -36,7 +36,7 @@ export class ChooseTargeting extends React.Component {
       }
 
 
-    const options =
+    let options =
       (TeamStore.structure.length !== 1 || TeamStore.tags.length !== 0 ? ([
         { text: "To Everyone", value: "all" },
         { text: "To Selected Teams/Tags", value: "teams" },
@@ -49,7 +49,6 @@ export class ChooseTargeting extends React.Component {
       ])).filter(opt => 
           this.props.NoSelectUsers? opt.value !== "users": true
         );
-
 
     const targetOptions =
       this.state.sendTargetType === "teams" ? (

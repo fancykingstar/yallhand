@@ -86,7 +86,39 @@ class TaskFrame extends React.Component {
 
     }
     
-    const columns = ["Task Title", "Last Updated", "Created By", "Stage"];
+    const columns = [
+      { 
+        name: "Task Title",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Last Updated",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Created By",
+        options: {
+          filter: false
+        }
+      },
+      {
+        name: "Stage",
+        options: {
+          filter: true,
+          filterOptions: {
+            names: ['Active', "InActive"],
+            logic(stage, filterVal) {
+              const show = (filterVal.indexOf("Active") >= 0 && stage == "Active") || (filterVal.indexOf("InActive") >= 0 && stage != "Active");
+              return !show
+            }
+          },
+        }
+      }
+    ];
 
     const data = TaskStore.allTasks.map(task => [task.label, UTCtoFriendly(task.updated), AccountStore._getDisplayName(task.userID), task.active? "Active":"Inactive"]);
 

@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     embed: {
         display: "flex",
         cursor: "pointer",
-        paddingBottom: props => `${props.size? props.size * .285 : 20}px`
+        paddingBottom:  props => `${props.padding ? props.size ? props.size * .285 : 20 : 0}px`,
     }
 });
 
@@ -49,7 +49,7 @@ const CircleIcons = (props) => {
             <div className={`${root}`}>
                 <Icon className={circleIconStyle}>{iconName}</Icon>
             </div>
-            <p style={{display: props.noLabel? "none":"content"}} className={`icon-label ${label}`}>{title}</p>
+            <p style={{display: props.noLabel? "none":"content", paddingRight: 10}} className={`icon-label ${label}`}>{title}</p>
         </div>
     )
 }

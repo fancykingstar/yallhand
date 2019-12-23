@@ -7,6 +7,7 @@ import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { UploadConfig } from "../SharedUI/UploadConfig";
 import { fileResource, fileResourceEdit } from "../DataExchange/PayloadBuilder"
 import {modifyFile} from "../DataExchange/Up";
+import toast from "../YallToast";
 
 @inject("UIStore", "DataEntryStore", "AccountStore")
 @observer
@@ -40,9 +41,13 @@ export class UploadFile extends React.Component {
       let file = e.target.files[0];
       let reader = new FileReader();
       reader.onloadend = () => {
-        DataEntryStore.set("fileForUpload", "file", file);
+        if (file.size > 26214400) {
+          toast.error("Your file cannot exceed 25MB", {hideProgressBar: true})
+        }
+        else {DataEntryStore.set("fileForUpload", "file", file);
         DataEntryStore.set("fileForUpload", "url", reader.result);
         DataEntryStore.set("fileForUpload", "filename", file.name);
+        }
       };
       reader.readAsDataURL(file);
     };
