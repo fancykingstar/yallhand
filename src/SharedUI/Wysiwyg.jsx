@@ -1,7 +1,8 @@
 import React from "react"
-import { Editor } from 'react-draft-wysiwyg';
+import { Editor as TextEditor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
 import {stateToHTML} from 'draft-js-export-html';
+
 import {S3Upload} from "../DataExchange/S3Upload"
 import {GenerateFileName} from "../SharedCalculations/GenerateFileName"
 import {emojiList} from "./EmojiList"
@@ -12,6 +13,12 @@ import {AccountStore} from "../Stores/AccountStore";
 import './style.css'
 import {debounce, isEmpty} from "lodash";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import createEmojiPlugin from 'draft-js-emoji-plugin';
+const emojiPlugin = createEmojiPlugin();
+const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+const plugins = [emojiPlugin];
 
 export class Wysiwyg extends React.Component {
     constructor(props) {
@@ -28,7 +35,6 @@ export class Wysiwyg extends React.Component {
                     html: stateToHTML(contentState)
                 };
         }
-        this.onChange = editorState => this.setState({editorState});        
     }
 
     componentWillReceiveProps(nextProps) {
@@ -59,7 +65,6 @@ export class Wysiwyg extends React.Component {
     editorStateChanged = (newEditorState) => {
       debounce(() => this.passContent(), 500)();
       this.setState({editorState: newEditorState});
-
     };
 
     render(){
@@ -115,13 +120,14 @@ export class Wysiwyg extends React.Component {
       return (
         <div style={this.props.border !== undefined? {backgroundColor: "#FFFFFF", border: "1px solid", borderColor: this.props.error? "red": "#E8E8E8", borderRadius: 15, padding: 10}: null}>
           <React.Fragment>
-            <Editor
+            <TextEditor
               editorState={this.state.editorState}
               onEditorStateChange={this.editorStateChanged}
               toolbar={toolbarConfig}
               editorStyle={{borderRadius: 5, paddingLeft: 5, paddingRight: 5, margin: 0}}
               toolbarStyle={{border: 0}}
-            />
+            >
+            </TextEditor>
           </React.Fragment>
         </div>
       )

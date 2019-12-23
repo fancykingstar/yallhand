@@ -27,6 +27,7 @@ import _ from "lodash";
 import { UserStore } from "../../Stores/UserStore";
 import { EditorState, convertToRaw, convertFromRaw, RichUtils, Modifier } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import { generateID } from "../../SharedCalculations/GenerateID"
 
 @inject("DataEntryStore", "UIStore", "AnnouncementsStore", "PoliciesStore", "TeamStore")
 @observer
@@ -141,8 +142,16 @@ class CombinedContent extends React.Component {
       await this.reset();
       UIStore.set("content", "shouldBlockNavigation", false);
       await history.push(`${path}`)
+    } else if (UIStore.content.duplicate) {
+      const generate = generateID()
+      UIStore.set("content", "variationID", generate);
+      contentEdit(this.state, mode, contentID, generate)
+      if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, generate));
+      else await modifyAnnouncement(contentEdit(this.state, mode, contentID, generate));
+      await this.reset();
+      UIStore.set("content", "shouldBlockNavigation", false);
+      await history.push(`${path}`);
     }
-
 
     else {
       contentEdit(this.state, mode, contentID, variID)

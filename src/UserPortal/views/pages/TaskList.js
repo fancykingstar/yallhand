@@ -28,7 +28,7 @@ class TaskList extends React.Component {
             <div style={{paddingTop: 20}} className="container">
                <div className="page_container">
                {(TaskData.length) ? TaskData.map((item, index) => 
-               <Task data={item} index={index} usePaper/> ) : <EmptyPlaceholder type="task"/> }
+               <Task data={item} index={index} key={index} usePaper/> ) : <EmptyPlaceholder type="task"/> }
                </div>
             </div>
          </Layout>
