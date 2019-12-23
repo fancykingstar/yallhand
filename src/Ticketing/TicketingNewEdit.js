@@ -249,7 +249,7 @@ class TicketingNewEdit extends React.Component {
     return (
       <div>
         <BackButton />
-   
+      
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           New Request Template  
           <Header.Subheader>

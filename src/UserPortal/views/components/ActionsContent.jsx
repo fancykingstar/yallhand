@@ -60,7 +60,8 @@ class ActionsContent extends React.Component {
                         const content = getContentObj(item);
                         const mode = Object.keys(item).includes('policyID')? "policy" : "announcement";
                         return (
-                          <Chip icon={ item.policyID ? ( <HelpRoundedIcon /> ) : ( <img src={Announcements} /> ) }
+                          <Chip 
+                           icon={ item.policyID ? ( <HelpRoundedIcon /> ) : ( <img src={Announcements} /> ) }
                             key={index}
                             className="SuggestContentChip"
                             color="primary"

@@ -529,7 +529,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
       payload.ticketItems.splice(0, 1, Object.assign(payload.ticketItems[0], data.config.simpleDesc? {defaultAssignee: userID(), data: [{type: "text", label: "Description", options: []}]} : {defaultAssignee: userID()} ));
     };
 
-    if (payload.assoc.length) payload.assoc = data.assoc.map(i=> i.type === "policy"? ({policyID: i.value}):({announcementID: i.value}))
+    // if (payload.assoc.length) payload.assoc = data.assoc.map(i=> i.type === "policy"? ({policyID: i.value}):({announcementID: i.value}))
 
     payload.teamID = payload.sendToTeamID?  payload.sendToTeamID : "global";
     delete payload.sendToTeamID;

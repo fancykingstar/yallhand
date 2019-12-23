@@ -136,7 +136,7 @@ export class TicketingItem extends React.Component {
 
         <Form>
           <Form.Dropdown className="FixSemanticLabel" label="Default Assignee" selection placeholder="Choose..." onChange={(e,val)=>setField({defaultAssignee: val.value})} value={defaultAssignee} options={[...AccountStore._getUsersSelectOptions(), {"text":"None", "value":""}]} />
-          {JSON.stringify(this.props.isOpen )}
+     
           {!this.props.index && !defaultAssignee? <p style={{marginTop: -10, fontSize: ".8em"}}>You don't have a default assignee and Yallhands will email notify all collaborators when a new ticket from this template is created.</p>:""}
         </Form>
 
