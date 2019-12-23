@@ -49,6 +49,7 @@ class ActionSlider extends React.Component {
    }
 
    showActionForm(data) {
+      console.log(data, "========================");
       this.slider.slickGoTo(1);
       this.setState({ selectedActionData: data });
    }
@@ -195,7 +196,7 @@ class ActionSlider extends React.Component {
                            )}*/}
 
                         {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(ticket) }} />
                         )}
 
                         </Slider>
