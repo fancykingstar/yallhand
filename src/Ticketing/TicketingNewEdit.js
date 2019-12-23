@@ -388,7 +388,17 @@ class TicketingNewEdit extends React.Component {
                       <Form.Group>
                       <Form.Field className="FixSemanticLabel">
                         <label>Suggest content to requester</label>
-                        <ContentSearch output={res => {if(!assoc.filter(i=>i.value === res.value).length) this.updateState({assoc: [...assoc, {type: res.type, value: res.value}]})}}/>
+                        <ContentSearch output={res => 
+                          {
+                            if(!assoc.filter(i=>i.value === res.value).length) {
+                              let newVal = {};
+                              newVal[res.type + "ID"] = res.value;
+                              this.updateState({assoc: [...assoc, newVal]})
+                            }
+                        
+                          }
+                        }
+                          />
                         {Boolean(assoc.length) &&
                         <BundleContent
                         input={assoc}
