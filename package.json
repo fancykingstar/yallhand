@@ -98,7 +98,7 @@
   "scripts": {
     "start": "PORT=3020 react-app-rewired start",
     "start-dev": "npm start",
-    "build": "react-app-rewired build",
+    "build": "react-app-rewired --max_old_space_size=8000 build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject"
   },
