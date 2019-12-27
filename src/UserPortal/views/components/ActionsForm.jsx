@@ -214,7 +214,7 @@ class ActionsForm extends React.Component {
                             <Row className="text-right form-buttons">
                                 <Col>
                                     <Button onClick={this.props.onCancel.bind(this)}>Cancel</Button>
-                                    <Button disabled={this.props.loading} color="primary">Submit  {this.props.loading && <Loader style={{marginLeft: 5}} inverted size="small" active inline />} </Button>
+                                    <Button disabled={this.props.loading || this.props.disabled} color="primary">Submit  {this.props.loading && <Loader style={{marginLeft: 5}} inverted size="small" active inline />} </Button>
                                 </Col>
                             </Row>
                         </Form>  

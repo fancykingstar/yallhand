@@ -159,7 +159,6 @@ class ContentListingPage extends React.Component {
    
     const columns = [
       {
-        name: "images",
         options: {
           customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; },
           filter: false,

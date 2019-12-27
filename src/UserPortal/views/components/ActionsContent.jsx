@@ -11,45 +11,41 @@ import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { getContentObj } from "../../../SharedCalculations/GetContentObj";
 import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import Announcements from "../../assets/images/announcements.svg";
-
+import CircleIcons from './CircleIcons';
 
 class ActionsContent extends React.Component {
   handleClick() {}
+
+  smallIconStyle = { display: "flex", alignItems: "center"}
+  h4Style = { display: "flex", alignItems: "center" }
   
   render() {
 
     return (
       <>
         <div className="section_title">
-          <h4>
-            <IconButton
-              color="inherit"
-              aria-label="back to actions"
-              edge="start"
-              onClick={this.props.onCancel.bind(this)}
-            >
-              <KeyboardBackspaceIcon fontSize="inherit" />
-            </IconButton>
-            {this.props.actionDetail.label ? (
-              <Svg
-                class="small-icon"
-                src={this.props.actionDetail.img}
-                default={Star}
-              />
-            ) : (
-              ""
-            )}
-            {this.props.actionDetail.label}
-          </h4>
+            <h4 style={this.h4Style}>
+                <IconButton
+                color="inherit"
+                aria-label="back to actions"
+                edge="start"
+                onClick={this.props.onCancel.bind(this)}
+            ><KeyboardBackspaceIcon fontSize="inherit" /></IconButton>
+                 {(this.props.actionDetail.label) ?
+                  
+                    <div className="small-icon" style={this.smallIconStyle}>   <CircleIcons noLabel name={this.props.actionDetail.icon} color="#1249bd" bgColor="#e7eefc" size="30"/></div>
+                 
+                    :
+                    ('')} 
+                {this.props.actionDetail.label}</h4>
         </div>
         <div className="page_content actions">
           <div className="announce_component faq_announce slick-align-left">
-            <Form onSubmit={this.props.onProceed}>
+            <Form onSubmit={this.props.onProceed} disabled={this.props.disabled}>
               <Container>
                 <Row>
                   <Col>
                     <h4>Please review this suggested content</h4>
-                   
                   </Col>
                 </Row>
                 <Row style={{paddingTop: 5}}>

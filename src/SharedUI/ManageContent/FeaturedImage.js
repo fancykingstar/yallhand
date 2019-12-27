@@ -63,7 +63,7 @@ export class FeaturedImage extends React.Component {
     this.setState({ updated: true });
     e.preventDefault();
     if (DataEntryStore.featuredImage.splash) {
-      requestDownload().then(() => {
+      this.requestDownload().then(() => {
         DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
         DataEntryStore.set("featuredImage", "splash", false);
       }).then(() => {
@@ -109,7 +109,7 @@ export class FeaturedImage extends React.Component {
     this.setState({ updated: false })
     e.preventDefault();
     if (DataEntryStore.featuredImage.splash) {
-      requestDownload().then(() => {
+      this.requestDownload().then(() => {
         DataEntryStore.set("contentmgmt", "img", this.state.retrievedImg.urls.regular);
         DataEntryStore.set("featuredImage", "splash", false);
       }).then(() => {
@@ -148,6 +148,10 @@ export class FeaturedImage extends React.Component {
       }
   }
 
+  requestDownload = async () => {
+    await apiCall('/fileresources/unsplash/reqdownload', 'POST', {url:this.state.retrievedImg.links.download_location});
+  }
+
   render() {
     const { AccountStore, DataEntryStore, UIStore } = this.props;
     let imagePreview = this.state.url ? 
@@ -167,9 +171,6 @@ export class FeaturedImage extends React.Component {
     ) : (
       <div />
     );
-    const requestDownload = async () => {
-      await apiCall('/fileresources/unsplash/reqdownload', 'POST', {url:this.state.retrievedImg.links.download_location});
-    }
     const handleSubmit = e => {
       e.preventDefault();
       S3Upload(
@@ -191,7 +192,7 @@ export class FeaturedImage extends React.Component {
     };
 
     const setUnsplash = async () => {
-      await requestDownload();
+      await this.requestDownload();
       this.setState({url: this.state.retrievedImg.urls.regular});
       if(this.props.output) this.props.output({img: this.state.retrievedImg.urls.regular, imgData: this.state.retrievedImg})
       else {
@@ -276,7 +277,7 @@ export class FeaturedImage extends React.Component {
              <div>
                {!this.state.retrievedImg? "":          <h4>Photo by <a target="_blank" href={`https://unsplash.com/@${this.state.retrievedImg.user.username}?utm_source=yallhands&utm_medium=referral`}>{this.state.retrievedImg.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></h4>}
              <img
-              style={{ maxWidth: 800, overflow: "hidden" }}
+              style={{ overflow: "hidden" }}
               src={this.state.retrievedImg? this.state.retrievedImg.urls.regular: ""}
             />
              </div>

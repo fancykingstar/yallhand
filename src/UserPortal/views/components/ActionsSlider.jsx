@@ -195,7 +195,7 @@ class ActionSlider extends React.Component {
                            )}*/}
 
                         {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(Object.assign(ticket, { img: getIcon("Star") })) }} />
+                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(ticket) }} />
                         )}
 
                         </Slider>
@@ -208,6 +208,7 @@ class ActionSlider extends React.Component {
                      onProceed={this.proceed.bind(this)}
                      onCancel={this.backToActions.bind(this)}
                      actionDetail={this.state.selectedActionData}
+                     disabled={true}
                   />
                   
                </Container>
@@ -218,6 +219,7 @@ class ActionSlider extends React.Component {
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
                      loading={this.state.loading}
+                     disabled={true}
                   />
                   
                </Container>
