@@ -83,8 +83,6 @@ class AppRoute extends React.Component {
           <Route path="/login" component={Login} exact />
           <Route path="/forgot" component={Forgot} />
           <Route path="/" component={Login} exact />
-       
-          
           <Route path="*"> <Redirect push to={this.state.redirect}/> </Route>
         </Switch>
         </div>

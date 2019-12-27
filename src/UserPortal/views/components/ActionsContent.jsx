@@ -15,6 +15,9 @@ import CircleIcons from './CircleIcons';
 
 class ActionsContent extends React.Component {
   handleClick() {}
+
+  smallIconStyle = { display: "flex", alignItems: "center"}
+  h4Style = { display: "flex", alignItems: "center" }
   
   render() {
 
@@ -38,12 +41,11 @@ class ActionsContent extends React.Component {
         </div>
         <div className="page_content actions">
           <div className="announce_component faq_announce slick-align-left">
-            <Form onSubmit={this.props.onProceed}>
+            <Form onSubmit={this.props.onProceed} disabled={this.props.disabled}>
               <Container>
                 <Row>
                   <Col>
                     <h4>Please review this suggested content</h4>
-                   
                   </Col>
                 </Row>
                 <Row style={{paddingTop: 5}}>

@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import { Segment, Button, Form, Header, Checkbox, Grid, Dropdown, Divider } from "semantic-ui-react";
+import { Segment, Button, Form, Header, Checkbox, Grid, Dropdown, Divider, Modal } from "semantic-ui-react";
 import { Collapse } from '@material-ui/core';
 import { TicketingItem } from "./TicketingItem";
 import { Col, Row } from "reactstrap";
@@ -19,6 +19,8 @@ import { arrayValUpOrDown } from "../SharedCalculations/ArrayValUpOrDown";
 import { iconKey, iconOptions } from "./IconSelect";
 
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete";
+import CircleIcons from "../UserPortal/views/components/CircleIcons";
+import ActionSliderPreview from '../UserPortal/views/components/ActionSliderPreview';
 
 @inject("TicketingStore", "ChannelStore", "AccountStore", "UserStore")
 @observer
@@ -181,6 +183,10 @@ class TicketingNewEdit extends React.Component {
     if (active) this.props.history.push('/panel/ticketing');
   };
 
+  preview = () => {
+    // console.log
+  }
+
   removeSuggestedContent = val => {
     const {assoc} = this.state;
     const updatedBundle= assoc.filter(
@@ -230,17 +236,17 @@ class TicketingNewEdit extends React.Component {
 
 
   
-    const preview = <Button onClick={e => {}}> Preview </Button>;
+    const preview = <Button onClick={() => this.setState({openPreview: true})}> Preview </Button>;
     const actions = active ? (
       <div style={{ paddingTop: 5 }}>
         {" "}
-        {stop} {save} {cancel}
+        {stop} {save} {cancel} {preview}
    
       </div>
     ) : (
       <div style={{ paddingTop: 5 }}>
         {" "}
-        {launch} {save} {isNew? cancel: del} 
+        {launch} {save} {isNew? cancel: del} {preview}
   
       </div>
     );
@@ -249,6 +255,20 @@ class TicketingNewEdit extends React.Component {
     return (
       <div>
         <BackButton />
+        <Modal closeIcon onClose={()=>this.setState({openPreview: false})} open={this.state.openPreview}>
+          <Modal.Header>Preview</Modal.Header>
+          <Modal.Content  style={{backgroundColor: "#898989"}}>
+
+          {
+            <div style={{paddingTop: 20}} className="container">
+               <div className="page_container">
+                  <ActionSliderPreview data={this.state} />
+               </div>
+            </div>
+          }
+
+          </Modal.Content>
+        </Modal>
       
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           New Request Template  

@@ -277,7 +277,7 @@ export class FeaturedImage extends React.Component {
              <div>
                {!this.state.retrievedImg? "":          <h4>Photo by <a target="_blank" href={`https://unsplash.com/@${this.state.retrievedImg.user.username}?utm_source=yallhands&utm_medium=referral`}>{this.state.retrievedImg.user.name}</a> on <a target="_blank" href="https://unsplash.com/?utm_source=yallhands&utm_medium=referral">Unsplash</a></h4>}
              <img
-              style={{ maxWidth: 800, overflow: "hidden" }}
+              style={{ overflow: "hidden" }}
               src={this.state.retrievedImg? this.state.retrievedImg.urls.regular: ""}
             />
              </div>

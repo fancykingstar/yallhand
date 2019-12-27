@@ -79,6 +79,9 @@ const useStyles = makeStyles(theme => ({
         flexShrink: 0,
         whiteSpace: 'nowrap',
         border: 'none',
+        position: 'fixed',
+        zIndex: 1,
+        height: '100%'
     },
     drawerOpen: {
         width: drawerWidth,
@@ -188,7 +191,7 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                 <LayoutHeader updateFilter={props.updateFilter}  pageTitle={props.pageTitle} toggleMenu={(width <= mobileWidth) ? handleDrawerToggleMobile : handleDrawerToggle} />
             </AppBar>
             <Drawer
-                variant="permanent"
+                variant="persistent"
                 className={clsx(classes.drawer, {
                     [classes.drawerOpen]: (width <= mobileWidth) ? mopen : open,
                     [classes.drawerClose]: (width <= mobileWidth) ? !mopen : !open
@@ -200,6 +203,8 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                     }),
                 }}
                 open={(width <= mobileWidth) ? mopen : open}
+
+
             >
                 <div className="menuHeader">
                     <h2 className="menu-header ">
