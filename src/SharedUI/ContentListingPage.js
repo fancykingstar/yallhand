@@ -128,6 +128,7 @@ class ContentListingPage extends React.Component {
       DataEntryStore.set("contentmgmt", "label", content.label);
       DataEntryStore.set("contentmgmt", "img", content.img);
       DataEntryStore.set("contentmgmt", "bundle", "queue");
+      DataEntryStore.set("contentmgmt", "qanda", content.variations.filter(i=>i.variationID === UIStore.content.variationID)[0].qanda);
       DataEntryStore.set("contentmgmt", "keywords", content.keywords);
       DataEntryStore.set("contentmgmt", "reviewAlert", content.reviewAlert);
       this.props.history.push(

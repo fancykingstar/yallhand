@@ -30,6 +30,7 @@ import { format } from 'timeago.js';
 import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
 import { AttachedFiles } from "../NewEditContent/AttachedFiles";
 import VariationChip from "./VariationChip";
+import { QandA } from "./QandA";
 import { generateID } from "../../SharedCalculations/GenerateID";
 
 @inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore", "UserStore")
@@ -118,6 +119,7 @@ export class Content extends React.Component {
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
           DataEntryStore.set("contentmgmt", "campaign", "new");
+          DataEntryStore.set("contentmgmt", "qanda", obj.variations[0].qanda);
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
           DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
@@ -149,6 +151,7 @@ export class Content extends React.Component {
           /*this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});*/
           DataEntryStore.set("contentmgmt", "img", obj.img);
           DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
+          DataEntryStore.set("contentmgmt", "qanda", obj.qanda);
           DataEntryStore.set("contentmgmt", "bundle", "queue");
           DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
           DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert)
@@ -301,7 +304,7 @@ export class Content extends React.Component {
     const {showTargeting} = this.state;
     const mode = this.mode;
     const {content, isNewContent, isNewVari, variID} = this.state;
-    const menuItems = ["Attached File", "Featured Image","Channel", "Q and A" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
+    const menuItems = ["Attached File", "Featured Image","Channel", "Question and Answer", "Email Campaign" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
       <Menu.Item
         name={item}
         active={this.state.activeItem === {item}}
@@ -313,7 +316,8 @@ export class Content extends React.Component {
       {key: "Attached File", value:"Attached File" , text: "Attached File"},
       {key: "Featured Image", value:"Featured Image" , text: "Featured Image"},
       {key: "Channel", value:"Channel" , text: "Channel"},
-      {key: "Q and A" , value: "Q and A" , text: "Q and A"},
+      {key: "Q and A", value:"Channel" , text: "Channel"},
+      {key: "Email Campaign" , value: "Email Campaign" , text: "Email Campaign"},
       {key: "Searchability", value:"Searchability" , text: "Searchability"},
       {key: "Review Alerts", value:"Review Alerts" , text: "Review Alerts"},
       {key: "Schedule", value:"Schedule" , text: "Schedule"},
@@ -450,7 +454,10 @@ export class Content extends React.Component {
                               defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
                               submitButton
                             />
-                          </FadeIn> : this.state.active === 'Q and A' ?
+                            </FadeIn> : this.state.active === 'Question and Answer' ?
+                            <FadeIn delay="500" transitionDuration="500">
+                            <QandA updateItems={e=>console.log(e)} data={DataEntryStore.contentmgmt.qanda || []}/>
+                          </FadeIn> : this.state.active === 'Email Campaign' ?
                           <FadeIn delay="500" transitionDuration="500">
                             <AddToEmail
                               mode={mode}
@@ -501,7 +508,7 @@ export class Content extends React.Component {
                               defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
                               submitButton
                             />
-                          </FadeIn> : this.state.active === 'Q and A' ?
+                          </FadeIn> : this.state.active === 'Email Campaign' ?
                           <FadeIn delay="500" transitionDuration="500">
                             <AddToEmail
                               mode={mode}
