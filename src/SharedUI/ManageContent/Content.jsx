@@ -304,7 +304,7 @@ export class Content extends React.Component {
     const {showTargeting} = this.state;
     const mode = this.mode;
     const {content, isNewContent, isNewVari, variID} = this.state;
-    const menuItems = ["Attached File", "Featured Image","Channel", "Question and Answer", "Email Campaign" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
+    const variMenuItems = ["Attached Files", "Question and Answer"].map(item => 
       <Menu.Item
         name={item}
         active={this.state.activeItem === {item}}
@@ -312,8 +312,25 @@ export class Content extends React.Component {
         disabled={isNewContent}
       />)
 
+    const parentMenuItems = ["Featured Image","Channel", "Email Campaign" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
+      <Menu.Item
+        name={item}
+        active={this.state.activeItem === {item}}
+        onClick={this.handleItemClick}
+        disabled={isNewContent}
+      />)
+
+    const menuItems = 
+    <>
+    <Menu.Item><Menu.Header>Variation Settings</Menu.Header><Menu.Menu> {variMenuItems}</Menu.Menu></Menu.Item>
+    <Menu.Item><Menu.Header>General Settings</Menu.Header><Menu.Menu> {parentMenuItems}</Menu.Menu></Menu.Item>
+    </>
+
+
+
+
     const dropDownOptions = [
-      {key: "Attached File", value:"Attached File" , text: "Attached File"},
+      {key: "Attached Files", value:"Attached Files" , text: "Attached Files"},
       {key: "Featured Image", value:"Featured Image" , text: "Featured Image"},
       {key: "Channel", value:"Channel" , text: "Channel"},
       {key: "Q and A", value:"Channel" , text: "Channel"},
@@ -437,7 +454,7 @@ export class Content extends React.Component {
             isNewContent ? <div style={{flex: 1, marginTop: 20, textAlign: "center"}}>Save a draft or publish to access additional settings.</div> :
               this.state.width > 767 ? <div style={{flex: 1, marginLeft: 10}}>
                       {
-                        this.state.active === 'Attached File' ?
+                        this.state.active === 'Attached Files' ?
                           <FadeIn delay="500" transitionDuration="500">
                             {attachFiles}
                           </FadeIn> : this.state.active === 'Featured Image' ?
