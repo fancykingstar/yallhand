@@ -2,6 +2,11 @@ import React from 'react';
 import {Segment, Button, Header, List, Modal, Input} from "semantic-ui-react";
 import TimeAgo from 'react-timeago'
 
+import {UIStore} from "../../Stores/UIStore";
+
+import {contentEdit} from "../../DataExchange/PayloadBuilder";
+import {modifyPolicy, modifyAnnouncement} from "../../DataExchange/Up";
+
 export class QandA extends React.Component {
     constructor(props){
         super(props);
@@ -16,17 +21,24 @@ export class QandA extends React.Component {
 
     updateState(val){this.setState(val)};
 
-    updateItems(i, del=false){
+    async submitUpdate(qanda) {
+        const {mode} = this.props;
+        let patchObj = {qanda};
+        const payload = contentEdit(patchObj, this.props.mode, UIStore.content[mode + "ID"], UIStore.content.variationID);
+        mode === "policy" ? await modifyPolicy(payload) : await modifyAnnouncement(payload);
+      }
+
+    async updateItems(i, del=false){
         let dataCopy = this.state.data.slice();
         if (del) {
             dataCopy.splice(i, 1);
-            this.props.updateItems(dataCopy);
+            await this.submitUpdate(dataCopy);
             this.setState({deleteIndex: "", confirmDelete: false});
         }
         else {
         const newQnA = Object.assign(dataCopy[i], {a: this.state.editedAnswer});
         dataCopy.splice(i, 1, newQnA);
-        this.props.updateItems(dataCopy);
+        await this.submitUpdate(dataCopy);
         }
     }
 

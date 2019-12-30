@@ -55,6 +55,7 @@ class Store {
     img: "",
     imgData: {},
     campaign: "",
+    qanda: [],
     keywordInput: "",
     keywords: [],
     reviewAlert: 0,

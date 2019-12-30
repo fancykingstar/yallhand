@@ -456,7 +456,7 @@ export class Content extends React.Component {
                             />
                             </FadeIn> : this.state.active === 'Question and Answer' ?
                             <FadeIn delay="500" transitionDuration="500">
-                            <QandA updateItems={e=>console.log(e)} data={DataEntryStore.contentmgmt.qanda || []}/>
+                            <QandA mode={mode} data={DataEntryStore.contentmgmt.qanda || []}/>
                           </FadeIn> : this.state.active === 'Email Campaign' ?
                           <FadeIn delay="500" transitionDuration="500">
                             <AddToEmail
