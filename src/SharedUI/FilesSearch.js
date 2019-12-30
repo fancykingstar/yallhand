@@ -73,7 +73,7 @@ export class FilesSearch extends React.Component {
 
     return (
       <div className="fileSearchFrame">
-        <p style={{ fontWeight: "800", color: "black"}}><Icon name="cubes"/>Add From Resources</p>
+        <p style={{color: "black", marginBottom: 0}}><Icon name="cloud"/>Choose from storage</p>
         <Search
           className="fileSearch"
           category

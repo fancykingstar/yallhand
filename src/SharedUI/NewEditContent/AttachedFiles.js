@@ -101,11 +101,11 @@ export class AttachedFiles extends React.Component {
     ));
     return (
       <div style={{maxWidth: 400}} className="ResourceLinks">
-        <Header as="h4">Attach Files</Header>
+        <Header>Attach Files</Header>
         <Form style={{paddingLeft: 10}}>
           <Form.Group>
           <FilesSearch output={val => addFileToContent(val.value)}/>
-          <Form.Button onClick={e => handleAddButton()} style={{marginTop: 35, marginLeft: 15}}>Add New...</Form.Button>
+          <Form.Button onClick={e => handleAddButton()} style={{marginTop: 20, marginLeft: 15}}>Add New...</Form.Button>
           </Form.Group>
         </Form>
      
