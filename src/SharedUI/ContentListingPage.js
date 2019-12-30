@@ -33,8 +33,8 @@ class ContentListingPage extends React.Component {
     const { DataEntryStore, UIStore } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
-    DataEntryStore.reset("contentmgmt");
-    UIStore.reset("content");
+    // DataEntryStore.reset("contentmgmt");
+    // UIStore.reset("content");
   }
 
   componentWillUnmount() {

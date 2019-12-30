@@ -51,9 +51,7 @@ class PostDetails extends React.Component {
             if (!UserStore.user.isAdmin) {
                 createSentiment(sentiment(val, `${mode}ID`, contentID, vari.variationID)).then(r => r.json().then(data => AccountStore.loadSentiments([...AccountStore.sentiments, ...[data]])))
             }
-        }
-
-       
+        }       
 
         return (
             <div className="outerContentDetail">
