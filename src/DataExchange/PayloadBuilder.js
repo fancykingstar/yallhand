@@ -420,7 +420,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     const otherVaris = variations.filter(i=> i.variationID !== variID);
     const combinedVaris = [...otherVaris, Object.assign(editedVari.length? editedVari[0]: {}, newVariValues)];
     newContentValues.variations = combinedVaris;
-    if(updatedFields === "published") newContentValues.everPublished = true;
+    if(updatedFields.stage === "published") newContentValues.everPublished = true;
     return _.extend({}, base(), newContentValues);
   }
   
