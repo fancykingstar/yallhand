@@ -14,8 +14,10 @@ import toast from "../YallToast";
 export class UploadFile extends React.Component {
   constructor(props){
     super(props);
-    this.state={loading: false};
+    this.state={loading: false, key: Date.now()};
+    // this.fileInputRef = React.createRef();
   }
+
   render() {
     const { UIStore, DataEntryStore, AccountStore } = this.props;
     const newLabelStatus = FormCharMax(DataEntryStore.fileForUpload.label, 48);
@@ -40,16 +42,22 @@ export class UploadFile extends React.Component {
       e.preventDefault();
       let file = e.target.files[0];
       let reader = new FileReader();
+      reader.readAsDataURL(file);
       reader.onloadend = () => {
         if (file.size > 26214400) {
           toast.error("Your file cannot exceed 25MB", {hideProgressBar: true})
+          this.setState({key: Date.now()})
+          DataEntryStore.set("fileForUpload", "file", "");
+          DataEntryStore.set("fileForUpload", "url", "");
+          DataEntryStore.set("fileForUpload", "filename", "");
         }
-        else {DataEntryStore.set("fileForUpload", "file", file);
+        else {
+        DataEntryStore.set("fileForUpload", "file", file);
         DataEntryStore.set("fileForUpload", "url", reader.result);
         DataEntryStore.set("fileForUpload", "filename", file.name);
         }
       };
-      reader.readAsDataURL(file);
+
     };
 
     const title =
@@ -113,6 +121,7 @@ export class UploadFile extends React.Component {
 
                 {!DataEntryStore.fileForUpload.isNew? "":  
                 <Form.Input
+                  key={this.state.key}
                   label={!DataEntryStore.fileForUpload.isNew ? "Replace File (optional)" : "Add File (required)"}
                   size="mini"
                   id="fileDisplayArea"
