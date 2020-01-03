@@ -60,6 +60,7 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.files) await ResourcesStore.loadFiles(loadedUserData.files);
           if (loadedUserData.teams) await TeamStore.loadStructure(loadedUserData.teams); 
           if (loadedUserData.tags) await TeamStore.loadTags(loadedUserData.tags);
+          if (loadedUserData.segments) await TeamStore.loadSegmentation(loadedUserData.segments);
           if (loadedUserData.email) await EmailStore.loadCampaigns(loadedUserData.email);
           if (loadedUserData.users) await AccountStore.loadAccountUsers(loadedUserData.users);
           if (loadedUserData.analytics) await AccountStore.loadAnalyticData_portal(loadedUserData.analytics.portal);

@@ -15,6 +15,9 @@ class Store {
   tags = [];
 
   @observable
+  segmentation = [];
+
+  @observable
    //for UI elements
   tagsSelect = [];
 
@@ -99,6 +102,11 @@ class Store {
     return new Promise((resolve, reject) => {
       resolve(true)
   }) 
+  }
+
+
+  async loadSegmentation(allsegments){
+    this.segmentation = allsegments
   }
 
   previewValidPath(id, type) {

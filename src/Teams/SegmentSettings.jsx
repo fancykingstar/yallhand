@@ -3,20 +3,19 @@ import { inject, observer } from "mobx-react";
 import { Button, Icon, Header, Segment } from "semantic-ui-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SegmentCard from "./SegmentCard";
+import FadeIn from 'react-fade-in';
+
 import styled from "styled-components";
+import { giveMeKey } from "../SharedCalculations/GiveMeKey";
+
 
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: 0,
   margin: `10px`,
-
-  // change background colour if dragging
   background: isDragging ? "lightblue" : "",
-
-  // styles we need to apply on draggables
   ...draggableStyle
 });
 
@@ -33,22 +32,30 @@ const getListStyle = isDraggingOver => ({
 
 
 
-@inject("TeamStore", "DataEntryStore", "UIStore")
+@inject("TeamStore")
 @observer
 export class SegmentSettings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selected: "",
+      createNewGroup: false,
+      newRoot: "",
+      groupLabel: "",
+      subTagLabel: "",
       items: [
-        { content: "usa", id: "usa", list: "droppable" },
-        { content: "canada", id: "canada", list: "droppable" },
-        { content: "employee", id: "employee", list: "droppable2" },
-        { content: "director", id: "director", list: "droppable2" }
+        // { content: "usa", id: "usa", list: "droppable" },
+        // { content: "canada", id: "canada", list: "droppable" },
+        // { content: "employee", id: "employee", list: "droppable2" },
+        // { content: "director", id: "director", list: "droppable2" }
       ]
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
   
+  updateState(obj){
+    this.setState(obj);
+  }
 
   reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -69,9 +76,44 @@ export class SegmentSettings extends React.Component {
     this.setState({ items });
   }
 
+  createNewGroup(){
+    console.log(this.state.groupLabel)
+    this.setState({createNewGroup: false, groupLabel: ""})
+  }
+
+  createNewRoot(label){
+    console.log(label)
+    this.setState({newRoot:""})
+  }
+
+  componentDidMount() {
+    const {TeamStore} = this.props;
+    const items = TeamStore.segmentation.filter(s=> !s.isGroup && s.parent === "self");
+    this.setState({items});
+  }
+
   render() {
 
-  const AddNew = <Button size="tiny" color="blue" onClick={() => createContent()} icon="plus" circular/>
+  const {TeamStore} = this.props;
+  const AddNew = <Button size="tiny" color="blue" onClick={() => this.updateState({newRoot: "droppable"})} icon="plus" circular/>
+
+  const temporaryDroppable = <FadeIn> <Droppable droppableId="droppable2" direction="horizontal">
+  {(provided, snapshot) => (
+    <>
+     <input onChange={(e)=>this.updateState({groupLabel: e.currentTarget.value})} placeholder="Enter new group name" style={{fontWeight: 700, fontSize: "1.1em",borderWidth: 0, border: "none", backgroundColor: "#f9f9f9", fontFamily: "Lato" }} type="text" maxlength="24"  />
+  
+       <Button onClick={this.createNewGroup.bind(this)} disabled={!this.state.groupLabel} circular color={"blue"} size="mini">Done</Button>
+       <Button onClick={()=> this.updateState({createNewGroup: false, groupLabel: ""})}  circular size="mini">Cancel</Button>
+   
+    <div
+      ref={provided.innerRef}
+      style={Object.assign(getListStyle(snapshot.isDraggingOver), {minHeight: '125px', marginTop: 10})}
+      {...provided.droppableProps}
+    >
+      {provided.placeholder}
+    </div></>
+  )}
+</Droppable></FadeIn>
 
   const MenuContainer = styled.div`
   margin-top: 10px;
@@ -87,15 +129,16 @@ export class SegmentSettings extends React.Component {
 
     return (
       <div>
+        {JSON.stringify(this.state)}
         <Header
           as="h2"
-          content="Tags"
-          subheader="Design deep segmentation tags for your organization"
+          content="Segmentation"
+          subheader="Use deep tags to effectively route information and access across your organization"
         />
 
         <MenuContainer>
             <div style={{ textAlign: "center" }}>
-              <Button color="blue" onClick={() => createContent()}>
+              <Button disabled={this.state.createNewGroup} color="blue" onClick={() => this.updateState({createNewGroup: true})}>
                 {" "}
                 <Icon name="plus" /> Create New Group...{" "}
               </Button>
@@ -103,36 +146,42 @@ export class SegmentSettings extends React.Component {
           </MenuContainer>
 
         <DragDropContext onDragEnd={this.onDragEnd}>
+
+          {TeamStore.segmentation.filter(s=>s.isGroup).map(group => 
+
           <Droppable droppableId="droppable" direction="horizontal">
-            {(provided, snapshot) => (
-               <>  <h4>Locations {AddNew}</h4>
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-                {...provided.droppableProps}
-              >
-                {this.state.items.filter(i => i.list === "droppable").map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <SegmentCard content={item.content} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div> </>
-            )}
+          {(provided, snapshot) => (
+          <>  <h4>{group.label} {AddNew}</h4>
+            <div
+              ref={provided.innerRef}
+              style={getListStyle(snapshot.isDraggingOver)}
+              {...provided.droppableProps}
+            >
+              {this.state.items.filter(i => i.group === group.segmentationID).map((item, index) => (
+                <Draggable key={"segment" + giveMeKey()} draggableId={item.segmentationID} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={getItemStyle(
+                        snapshot.isDragging,
+                        provided.draggableProps.style
+                      )}
+                    >
+                      <SegmentCard content={item.label} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}{this.state.newRoot === "droppable" &&  <FadeIn><SegmentCard createNewRoot={this.createNewRoot.bind(this)} cancel={()=>this.updateState({newRoot: ""})} newRoot/></FadeIn>}
+              {provided.placeholder}
+            </div> </>
+          )}
           </Droppable>
-                            <br/>
+
+          )}
+          
+                            {/* <br/>
           <Droppable droppableId="droppable2" direction="horizontal">
             {(provided, snapshot) => (
               <>  <h4>Employee Classes {AddNew}</h4>
@@ -161,7 +210,8 @@ export class SegmentSettings extends React.Component {
                 {provided.placeholder}
               </div></>
             )}
-          </Droppable>
+          </Droppable> */}
+          {this.state.createNewGroup && <><br/> {temporaryDroppable} </>}
         </DragDropContext>
       </div>
     );

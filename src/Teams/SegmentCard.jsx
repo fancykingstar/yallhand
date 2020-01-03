@@ -11,6 +11,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Collapse from "@material-ui/core/Collapse";
 import { useSpring, animated } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
+import FadeIn from 'react-fade-in';
 
 const useStyles = makeStyles({
   card: {
@@ -58,14 +59,22 @@ function TransitionComponent(props) {
   );
 }
 
+
 export default function SegmentCard(props) {
+  const [label, setLabel] = React.useState(0);
   const classes = useStyles();
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    props.createNewRoot(label);
+  }
   return (
-    <Card className={classes.card}>
-      <CardContent>
+
+    <Card style={props.newRoot !== undefined? {margin: 10}:{}} className={classes.card}>
+      {
+        props.newRoot === undefined?<>
+        <CardContent>
         <TreeView
-          //   className={classes.root}
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
@@ -83,7 +92,19 @@ export default function SegmentCard(props) {
         <Button size="small">Rename</Button>
         <Button size="small">Move</Button>
         <Button size="small">Delete</Button>
-      </CardActions>
+      </CardActions></>
+      :
+      <CardContent>
+      <form onSubmit={handleSubmit}>
+         <input onChange={e=>setLabel(e.currentTarget.value)} placeholder="Enter new group name" style={{borderWidth: 0, border: "none", fontFamily: "Rubik" }} type="text" maxlength="36"  />
+        <br/>
+       <Button as="input" type="submit" disabled={!label} circular color={"blue"} size="mini">Done</Button>
+       <Button onClick={()=>{props.cancel}}  circular size="mini">Cancel</Button>
+       </form>
+      
+      </CardContent>
+      }
     </Card>
+
   );
 }

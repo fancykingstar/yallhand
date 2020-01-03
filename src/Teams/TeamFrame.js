@@ -23,7 +23,7 @@ export class TeamFrame extends React.Component {
       return name === UIStore.menuItem.teamFrame ? "Visable" : "Hidden";
     };
 
-    const menuItems = ["onboard", "users", "tags"];
+    const menuItems = ["onboard", "users", "segmentation"];
     const handleSearch = val => {
       UIStore.set("search", "searchUsers", val);
     };
@@ -45,7 +45,7 @@ export class TeamFrame extends React.Component {
             {" "}
             <Users />
           </div>
-          <div className={isVisable("tags")}>
+          <div className={isVisable("segmentation")}>
             {" "}
             <SegmentSettings />
           </div> 
