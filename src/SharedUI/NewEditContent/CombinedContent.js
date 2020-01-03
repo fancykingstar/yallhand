@@ -140,7 +140,7 @@ class CombinedContent extends React.Component {
       const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
       const id = res[typeId];
       await this.reset();
-      UIStore.set("content", "shouldBlockNavigation", false);
+      // UIStore.set("content", "shouldBlockNavigation", false);
       await history.push(`${path}`)
     } else if (UIStore.content.duplicate) {
       const generate = generateID()
@@ -149,7 +149,7 @@ class CombinedContent extends React.Component {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, generate));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, generate));
       await this.reset();
-      UIStore.set("content", "shouldBlockNavigation", false);
+      // UIStore.set("content", "shouldBlockNavigation", false);
       await history.push(`${path}`);
     }
 
@@ -158,7 +158,7 @@ class CombinedContent extends React.Component {
       if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
       else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
       await this.reset();
-      UIStore.set("content", "shouldBlockNavigation", false);
+      // UIStore.set("content", "shouldBlockNavigation", false);
       await history.push(`${path}`);
     }
 

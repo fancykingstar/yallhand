@@ -177,14 +177,14 @@ export class Content extends React.Component {
     this.setState({ width: window.innerWidth });
   }
 
-  componentDidUpdate = () => {
-    const {UIStore} = this.props;
-    if (UIStore.content.shouldBlockNavigation) {
-      window.onbeforeunload = () => true
-    } else {
-      window.onbeforeunload = undefined
-    }
-  }
+  // componentDidUpdate = () => {
+  //   const {UIStore} = this.props;
+  //   if (UIStore.content.shouldBlockNavigation) {
+  //     window.onbeforeunload = () => true
+  //   } else {
+  //     window.onbeforeunload = undefined
+  //   }
+  // }
 
   isValid = () => {
     const {isNewContent,variID} = this.props.data;
