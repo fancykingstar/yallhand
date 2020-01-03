@@ -57,6 +57,7 @@ class ActionsContent extends React.Component {
                         const mode = Object.keys(item).includes('policyID')? "policy" : "announcement";
                         return (
                           <Chip 
+                            disabled={this.props.disabled !== undefined}
                            icon={ item.policyID ? ( <HelpRoundedIcon /> ) : ( <img src={Announcements} /> ) }
                             key={index}
                             className="SuggestContentChip"

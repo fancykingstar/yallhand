@@ -226,12 +226,12 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                     <List>
                         {
                             UserStore.user.isAdmin &&
-                            <ListItem button key="home" component={Link} to="/panel">
+                            <ListItem button component={Link} to="/panel">
                                 <ListItemIcon><ArrowBackRoundedIcon /></ListItemIcon>
                                 <ListItemText primary="Leave Portal View" />
                             </ListItem>
                         }
-                        <ListItem button key="home" component={Link} to="/portal">
+                        <ListItem button  component={Link} to="/portal">
                             <ListItemIcon><HomeIcon /></ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>

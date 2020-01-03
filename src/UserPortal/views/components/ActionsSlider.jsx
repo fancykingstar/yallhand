@@ -208,7 +208,6 @@ class ActionSlider extends React.Component {
                      onProceed={this.proceed.bind(this)}
                      onCancel={this.backToActions.bind(this)}
                      actionDetail={this.state.selectedActionData}
-                     disabled={true}
                   />
                   
                </Container>
@@ -219,7 +218,6 @@ class ActionSlider extends React.Component {
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
                      loading={this.state.loading}
-                     disabled={true}
                   />
                   
                </Container>
