@@ -162,9 +162,10 @@ export class CampaignAnalytics extends React.Component {
           </Table>
           <Table>
             <Table.Row>
-              <Table.HeaderCell className="center" style={{ border: 'none', textAlign: "center" }}>
+
                 { 
                   totalPages > 1 ?
+                  <Table.HeaderCell className="center" style={{ border: 'none', textAlign: "center" }}>
                   <Pagination 
                     activePage={currentPage} 
                     totalPages={totalPages} 
@@ -174,9 +175,9 @@ export class CampaignAnalytics extends React.Component {
                     lastItem={null}
                     siblingRange={1}
                     boundaryRange={0}
-                  /> : <div />
+                  />   </Table.HeaderCell> : <div />
                 }
-              </Table.HeaderCell>
+            
             </Table.Row>
           </Table>
       </div>
