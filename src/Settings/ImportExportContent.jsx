@@ -1,39 +1,39 @@
 import React from "react";
 import {Segment, Header, Button, Form, Radio, Icon, Divider, Dimmer, Loader} from "semantic-ui-react";
+import {ChannelStore} from '../Stores/ChannelStore';
 import { Collapse } from '@material-ui/core';
 import { Row, Col} from 'reactstrap';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
 
-import {ChannelStore} from '../Stores/ChannelStore';
-
-import Dropzone from 'react-dropzone-uploader'
-import 'react-dropzone-uploader/dist/styles.css'
 import { ContentPreview } from '../SharedUI/ContentPreview'
 import { generateID } from "../SharedCalculations/GenerateID"
-import { inject, observer } from "mobx-react";
 import { UserStore } from "../Stores/UserStore";
-import { createPolicy, createAnnouncement, createHistory } from "../DataExchange/Up"
-import { content } from "../DataExchange/PayloadBuilder"
 import { markdownToDraft } from 'markdown-draft-js'
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
+
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Dropzone from 'react-dropzone-uploader'
+import 'react-dropzone-uploader/dist/styles.css'
 
 export class ImportExportContent extends React.Component {
     constructor(props){
         super(props);
         this.state={viewSetting:"", uploadedFiles: [], checked: true, titles: [], secondTitles: [], currentIndex: 0, _contentPreview: false, selected: 0, contents: [], load: false};
+        this.dropzoneRef = React.createRef();
     }
+    
     reset(){
         this.setState({viewSetting: "", importTitle: "",  importType: "faqs", importChannel: "All", importStage: "draft", importFiles:[], titles: [], secondTitles: [], currentIndex: 0, checked: true, contents: [], load:false});
     }
+
+    componentDidMount(){ this.reset()}
 
     updateState(val){
         this.setState(val);
     }
 
-    componentDidMount(){ this.reset()}
 
     handleChange = () => {
         this.setState({checked: !this.state.checked});
@@ -48,9 +48,8 @@ export class ImportExportContent extends React.Component {
     contentPreviewData = () => {
         const { selected } = this.state;
         const label = !this.state.checked ? this.state.titles[selected] : this.state.secondTitles[selected]
-
-        // const idobject = mode === "announcement"? {announcementID:this.props.match.params.contentID,mode} : {policyID: this.props.match.params.contentID,mode};
-        const contentHTML = selected && stateToHTML(convertFromRaw(this.state.contents[selected]))
+        const contentHTML = selected !== undefined && stateToHTML(convertFromRaw(this.state.contents[selected]))
+        const contentRAW = selected !== undefined && this.state.contents[selected];
 
         const data = { 
             label: label,
@@ -59,7 +58,8 @@ export class ImportExportContent extends React.Component {
             variations: [{
                 variationID: generateID(),
                 userID: UserStore.user.userID,
-                contentHTML: contentHTML,
+                contentHTML,
+                contentRAW,
                 updated: Date.now()
             }]
         }
@@ -67,32 +67,21 @@ export class ImportExportContent extends React.Component {
     }
 
     importAll = async () => {
-        const mode = this.state.importType === "faqs" ? "policy" : "announcement"
-        const titles = !this.state.checked ? this.state.titles : this.state.secondTitles;
-        const typeId = `${mode}ID`;
         this.setState({load: true})
+        const titles = !this.state.checked ? this.state.titles : this.state.secondTitles;
         const importAll = new Array;
         for (let i = 0; i < titles.length; i ++) {
             let data = { 
                 label: titles[i],
-                img: "",
-                mode: mode,
-                variations: [{
-                    variationID: generateID(),
-                    userID: UserStore.user.userID,
-                    contentHTML: "",
-                    updated: Date.now()
-                }],
-                chanID: this.state.importChannel,
-                state: this.state.importStage,
-                contentHTML: "",
+                contentHTML: stateToHTML(convertFromRaw(this.state.contents[i])),
                 contentRAW: this.state.contents[i]
             }
             importAll.push(data);            
         }
-        console.log("=========Import All MD Files========\n", importAll);
-        await this.setState({load: true});
+        console.log("new array", importAll)
+        await this.setState({load: false});
     }
+
 
     render(){
           // specify upload params and url for your files
@@ -101,12 +90,14 @@ export class ImportExportContent extends React.Component {
             return { url, meta: { fileUrl: `${url}/${encodeURIComponent(meta.name)}` } }
         }
         
-        // called every time a file's `status` changes
-        const handleChangeStatus = ({ meta, file }, status) => {
-            if (status === "done") {
+
+        const handleSubmit = async (files, allFiles) => {
+            this.setState({uploadedFiles:[], titles: [], secondTitles: [], contents: []})
+            for (const f of allFiles) {
+                const {file, meta} = f;
                 let reader = new FileReader();
                 let self = this;
-                reader.onload = (function(theFile) {
+                reader.onload = await (function(theFile) {
                     return function(e) {
                         let rawObject = markdownToDraft(e.target.result);
                         let lines = e.target.result.split('\n');
@@ -124,18 +115,14 @@ export class ImportExportContent extends React.Component {
 
                 // Read in the image file as a data URL.
                 reader.readAsText(file);
-
                 this.setState({uploadedFiles: [...this.state.uploadedFiles, file]})
                 this.setState({titles: [...this.state.titles, meta.name.slice(0, -3)]})
             }
-        }
-        
-        // receives array of files that are done uploading when submit button is clicked
-        const handleSubmit = (files, allFiles) => {
-            allFiles.forEach(f => f.remove())
+
+           
         }
 
-        const {viewSetting, importChannel, importType, importFiles, importStage} = this.state;
+        const {viewSetting, importChannel, importType, importFiles, importStage, _contentPreview} = this.state;
 
         const titles = !this.state.checked ? this.state.titles.map((title, index) => {
             return { text: title, value: index }
@@ -161,14 +148,15 @@ export class ImportExportContent extends React.Component {
            
                  </Stepper>
                  <Divider style={{paddingBottom: 10}}/>
-                    {viewSetting === 'import' &&
-                    <div>
+                    
+                    <div className={viewSetting==="import"? "YHShow":"YHHide"}>
                     <Row>
                         <Col>
                         <span style={{fontSize: "0.8em"}}>Import only accepts markdown (.md) files, contact us for other options</span>
                         <Dropzone
+                            ref={this.dropzoneRef}
                             getUploadParams={getUploadParams}
-                            onChangeStatus={handleChangeStatus}
+                            // onChangeStatus={handleChangeStatus}
                             onSubmit={handleSubmit}
                             accept=".md"
                             styles={{ submitButtonContainer: {display: 'none'}, inputLabelWithFiles: {fontFamily: 'Rubik'} }}
@@ -179,7 +167,7 @@ export class ImportExportContent extends React.Component {
                     <Row>
                         <Col>
                             <Form>
-                                <Form.Dropdown selection label="Content type" defaultValue={importType} options={[{text: "FAQs", value:"faqs"},{text: "Announcements", value: "announcements"}]}
+                                <Form.Dropdown selection label="Content type" value={importType} options={[{text: "FAQs", value:"faqs"},{text: "Announcements", value: "announcements"}]}
                                     onChange={(e, val) => {this.setState({importType: val.value})}}
                                 />
                             </Form>
@@ -200,7 +188,8 @@ export class ImportExportContent extends React.Component {
                         </Col>
                     </Row>
                     </div>
-                    }
+                    {/* } */}
+
                     {viewSetting === 'importTitle' &&
                     <div>
                         <Row>
@@ -250,15 +239,13 @@ export class ImportExportContent extends React.Component {
                                 </Form>
                             </Col>
                         </Row>
-                        <ContentPreview 
-                            open={this.state._contentPreview} onClose={(e) => this.togglePreview()} 
-                            data={this.contentPreviewData()} />
+                        {_contentPreview && <ContentPreview open={this.state._contentPreview} onClose={(e) => this.togglePreview()} data={this.contentPreviewData()} />}
                     </div>
                     }
                     <div style={{marginTop: 10}}>
                     {
                         viewSetting !== 'importConfirm'?  
-                        <Button primary name={viewSetting === 'import'? 'importTitle' : 'importConfirm'} onClick={(e)=> this.updateState({viewSetting: e.currentTarget.name})}>Next...</Button> :
+                        <Button primary name={viewSetting === 'import'? 'importTitle' : 'importConfirm'} onClick={(e)=> {this.dropzoneRef.current.handleSubmit(); this.updateState({viewSetting: e.currentTarget.name})}}>Next...</Button> :
                         <Button primary name={viewSetting === 'import'? 'importTitle' : 'importConfirm'} onClick={(e)=> {this.updateState({viewSetting: e.currentTarget.name}); this.importAll()}}>Import All</Button>
                     }
                         <Button onClick={this.reset.bind(this)}>Cancel</Button>

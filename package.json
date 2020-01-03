@@ -75,7 +75,7 @@
     "react-moment": "^0.8.4",
     "react-render-html": "^0.6.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.1.1",
+    "react-scripts": "^3.3.0",
     "react-simple-img": "^2.3.6",
     "react-slick": "^0.25.2",
     "react-stripe-elements": "^3.0.0",
