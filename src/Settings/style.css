@@ -63,3 +63,17 @@
 .infoError {
     border-bottom: 2px solid red;
 }
+
+.dzu-dropzone {
+    overflow-x: unset;
+    overflow-y: scroll;
+    font-family: 'Rubik';
+}
+
+.dzu-dropzone label {
+    font-family: 'Rubik'
+}
+
+.dzu-dropzone .dzu-previewFileName {
+    font-family: "Rubik"
+}

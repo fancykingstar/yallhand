@@ -9,6 +9,7 @@ import { baseSettingsEdit} from "../DataExchange/PayloadBuilder"
 import { modifyAccount } from "../DataExchange/Up"
 import { ConfirmDelete } from "../SharedUI/ConfirmDelete.js";
 
+import { ImportExportContent } from "./ImportExportContent";
 import { Billing } from "./Billing";
 import { getStripeAcct, getStripePlan, getInvoicePreview } from "../DataExchange/ThirdParty";
 import {deleteUser} from "../DataExchange/Fetch";
@@ -117,8 +118,9 @@ export class BaseSettings extends React.Component {
             modifyAccount(baseSettingsEdit())
           }}
         />
-        
+        <ImportExportContent/>
         <Billing/>
+  
         <Segment >
           <div style={{height: 50}}>  
           <Form>
