@@ -15,7 +15,13 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Dropzone from 'react-dropzone-uploader'
+import { apiCall } from "../DataExchange/Fetch";
+import { allContent } from "../DataExchange/Down";
+import toast from '../YallToast'
+
 import 'react-dropzone-uploader/dist/styles.css'
+
+
 
 export class ImportExportContent extends React.Component {
     constructor(props){
@@ -78,8 +84,23 @@ export class ImportExportContent extends React.Component {
             }
             importAll.push(data);            
         }
-        console.log("new array", importAll)
-        await this.setState({load: false});
+        const payload = {
+            format: "md",
+            userID: UserStore.user.userID,
+            accountID: UserStore.user.accountID, 
+            chanID: this.state.importChannel,
+            stage: this.state.importStage,
+            type: this.state.importType,
+            data: importAll
+        }
+        await apiCall('content/import', 'POST', payload).then(r=>r.json()).then(r=> {
+            if(r.success) {
+                toast.success(`${importAll.length.toString()} items successful imported`, {hideProgressBar: true, closeOnClick: false}) 
+                allContent(UserStore.user.accountID)
+            }
+            else toast.error("Import was not successful, please check your files for proper formatting", {hideProgressBar: true})
+        })
+        await this.reset();
     }
 
 
@@ -137,7 +158,7 @@ export class ImportExportContent extends React.Component {
             <Header>Import/Export Content</Header>
             <Collapse in={!viewSetting}>
             <Button onClick={()=>this.updateState({viewSetting: "import"})}  >Import...</Button>
-            <Button  >Export...</Button>
+            {/* <Button  >Export...</Button> */}
             </Collapse>
             <Collapse in={viewSetting.slice(0,6) === 'import'}>
                 <div>
