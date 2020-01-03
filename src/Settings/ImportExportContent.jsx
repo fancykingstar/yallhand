@@ -16,7 +16,9 @@ import { inject, observer } from "mobx-react";
 import { UserStore } from "../Stores/UserStore";
 import { createPolicy, createAnnouncement, createHistory } from "../DataExchange/Up"
 import { content } from "../DataExchange/PayloadBuilder"
-import { markdownToDraft } from 'markdown-draft-js';
+import { markdownToDraft } from 'markdown-draft-js'
+import { convertFromRaw } from 'draft-js'
+import { stateToHTML } from 'draft-js-export-html'
 
 export class ImportExportContent extends React.Component {
     constructor(props){
@@ -48,8 +50,7 @@ export class ImportExportContent extends React.Component {
         const label = !this.state.checked ? this.state.titles[selected] : this.state.secondTitles[selected]
 
         // const idobject = mode === "announcement"? {announcementID:this.props.match.params.contentID,mode} : {policyID: this.props.match.params.contentID,mode};
-
-
+        const contentHTML = selected && stateToHTML(convertFromRaw(this.state.contents[selected]))
 
         const data = { 
             label: label,
@@ -58,7 +59,7 @@ export class ImportExportContent extends React.Component {
             variations: [{
                 variationID: generateID(),
                 userID: UserStore.user.userID,
-                contentHTML: "",
+                contentHTML: contentHTML,
                 updated: Date.now()
             }]
         }
@@ -70,8 +71,9 @@ export class ImportExportContent extends React.Component {
         const titles = !this.state.checked ? this.state.titles : this.state.secondTitles;
         const typeId = `${mode}ID`;
         this.setState({load: true})
+        const importAll = new Array;
         for (let i = 0; i < titles.length; i ++) {
-            const data = { 
+            let data = { 
                 label: titles[i],
                 img: "",
                 mode: mode,
@@ -86,11 +88,10 @@ export class ImportExportContent extends React.Component {
                 contentHTML: "",
                 contentRAW: this.state.contents[i]
             }
-
-            const res = mode === "policy"?  await createPolicy(content(data)) : await createAnnouncement(content(data));
-            const id = res[typeId];
+            importAll.push(data);            
         }
-        await this.reset();
+        console.log("=========Import All MD Files========\n", importAll);
+        await this.setState({load: true});
     }
 
     render(){
