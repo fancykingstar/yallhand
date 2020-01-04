@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
         border: 'none',
         position: 'fixed',
         zIndex: 1,
-        height: '100%'
+        // height: '100%'
     },
     drawerOpen: {
         width: drawerWidth,
@@ -179,7 +179,7 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
         // UserStore.user._isCollaborator && UserStore.user._isCollaborator.tickets && UserStore.user._isCollaborator.tickets.length
         TicketingStore.allTickets.length
         );
-
+ 
     return (
         <div className={clsx(classes.root, "topBorderBefore", (((width <= mobileWidth) ? !mopen : !open) ? "menuClosed" : 'menuOpen'), (scrollY > 50) ? 'menuSticky' : '')}>
             <CssBaseline />
@@ -191,7 +191,8 @@ const DefaultLayout = inject("SurveyStore", "TaskStore")(observer(({ ...props })
                 <LayoutHeader updateFilter={props.updateFilter}  pageTitle={props.pageTitle} toggleMenu={(width <= mobileWidth) ? handleDrawerToggleMobile : handleDrawerToggle} />
             </AppBar>
             <Drawer
-                variant="persistent"
+                // variant="persistent"
+                variant="permanent"
                 className={clsx(classes.drawer, {
                     [classes.drawerOpen]: (width <= mobileWidth) ? mopen : open,
                     [classes.drawerClose]: (width <= mobileWidth) ? !mopen : !open
