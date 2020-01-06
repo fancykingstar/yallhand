@@ -14,7 +14,7 @@ export default class VariationChip extends React.Component {
     super(props);
 
     this.state = {
-      anchorEl: false
+      anchorEl: null
     }
   }
 

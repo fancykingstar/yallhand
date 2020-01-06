@@ -176,22 +176,22 @@ class CombinedContent extends React.Component {
     const tempVari = () => [{label: this.state.label,userID: UserStore.user.userID, contentRAW: this.state.contentRAW, contentHTML: this.state.contentHTML}];
     const { _options, _errors, _exiting } = this.state;
 
-    let attachedStyle = {paddingTop: 35, maxWidth: 450}
-    if (isNewContent) attachedStyle.pointerEvents = "none";
+    // let attachedStyle = {paddingTop: 35, maxWidth: 450}
+    // if (isNewContent) attachedStyle.pointerEvents = "none";
 
-    const attachFiles = isNewContent ? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
-    :  <Segment disabled={isNewContent}>
-    <AttachedFiles mode={mode}  />
-  </Segment>
+  //   const attachFiles = isNewContent ? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
+  //   :  <Segment disabled={isNewContent}>
+  //   <AttachedFiles mode={mode}  />
+  // </Segment>
 
 
-    const displayOptions = _options && 
-      {
-        "attach": attachFiles,
-        "image": <FeaturedImage mode={mode} defaultImgUrl={this.state.img? this.state.img : content.img} imgData={content.imgData} output={val => this.setState({img: val.img, imgData: val.imgData? val.imgData: ""})} />,
-        "channel": <Channel mode={mode} defaultChannel={content.chanID} output={val => this.setState({chanID: val})} />
+    // const displayOptions = _options && 
+    //   {
+    //     "attach": attachFiles,
+    //     "image": <FeaturedImage mode={mode} defaultImgUrl={this.state.img? this.state.img : content.img} imgData={content.imgData} output={val => this.setState({img: val.img, imgData: val.imgData? val.imgData: ""})} />,
+    //     "channel": <Channel mode={mode} defaultChannel={content.chanID} output={val => this.setState({chanID: val})} />
 
-      }[_options]
+    //   }[_options]
 
     const {loaded} = this.props.data;
 

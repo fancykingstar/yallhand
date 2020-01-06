@@ -38,6 +38,7 @@ class PostDetails extends React.Component {
         const { mode, contentID } = this.props.data;
         const content = this.props.data;
         const vari = content && content.variations[0];
+        console.log(mode, content, content.variations[0].variationID)
         const fileResources = ResourcesStore.matchedResources("file", mode, content[mode + "ID"], content.variations[0].variationID)
         const downloadFile = (S3Key, label) => {
             const ext = "." + S3Key.split(".")[1]

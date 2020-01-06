@@ -1,18 +1,13 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import FadeIn from 'react-fade-in'
-import {TeamStore} from "../../Stores/TeamStore";
-import {Row, Col} from "reactstrap";
-import { Header, Input, Form, Dropdown, Button, Menu, Segment, } from "semantic-ui-react";
-import {Chip, Fab} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-
-import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
-
-import {ChooseTargeting} from "../../SharedUI/ChooseTargeting";
+import { Prompt } from 'react-router'
+import FadeIn from "react-fade-in";
+import { Header, Input, Form, Dropdown, Button, Menu, Segment } from "semantic-ui-react";
+import { Chip, Fab } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
 import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
-import {Wysiwyg} from "../../SharedUI/Wysiwyg";
-import BackButton  from "../../SharedUI/BackButton";
+import BackButton from "../../SharedUI/BackButton";
 import { FeaturedImage } from "./FeaturedImage";
 import { AddToEmail } from "./AddToEmail";
 import { Keywords } from "./Keywords";
@@ -21,544 +16,479 @@ import { Schedule } from "./Schedule";
 import { History } from "./History";
 import { Channel } from "./Channel";
 import Settings from "./Settings";
-import { PoliciesStore } from "../../Stores/PoliciesStore";
-import { AnnouncementsStore } from "../../Stores/AnnouncementsStore";
-import CombinedContent from "../NewEditContent/CombinedContent";
-import PreviewContent from "../NewEditContent/PreviewContent";
-import isEmpty from 'lodash.isempty';
-import { format } from 'timeago.js';
-import UTCtoFriendly from "../../SharedCalculations/UTCtoFriendly"
+
+import { ContentPreview } from "../../SharedUI/ContentPreview";
+import TimeAgo from 'react-timeago';
 import { AttachedFiles } from "../NewEditContent/AttachedFiles";
 import VariationChip from "./VariationChip";
 import { QandA } from "./QandA";
 import { generateID } from "../../SharedCalculations/GenerateID";
+import { Row, Col, } from 'reactstrap';
+import { Wysiwyg } from "../../SharedUI/Wysiwyg";
+import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
+import {getContentObj} from "../../SharedCalculations/GetContentObj";
+import {getGlobalVari} from "../../SharedCalculations/GetContentObj";
+import {isEmpty} from "lodash";
+import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
-@inject( "TeamStore", "DataEntryStore", "UIStore", "EmailStore", "AccountStore", "UserStore")
+import { contentHistory, contentEdit, content } from "../../DataExchange/PayloadBuilder";
+import { createHistory, createAnnouncement, createPolicy, modifyAnnouncement, modifyPolicy } from "../../DataExchange/Up"; 
+
+
+
+@inject("DataEntryStore", "UIStore", "TeamStore", "UserStore", "AccountStore")
 @observer
 export class Content extends React.Component {
-  constructor(props){
-    super(props);
-    const {match, UIStore, DataEntryStore} = this.props;
-
-    this.mode = this.props.location.pathname.includes("faq")
-      ? "policy"
-      : "announcement";
-
-    let obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
-    this.mode === "policy" ? obj = obj : obj = Object.assign(
-            {},
-            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
-          );
-    let variId = "";
-    let label = "";
-
-    if (!_.isEmpty(obj)) {
-      variId = obj.variations[0].variationID;
-      DataEntryStore.set('contentmgmt', 'label', obj.variations[0].label === "" ? obj.label : obj.variations[0].label);
-      label = obj.variations[0].label;
+    constructor(props){
+        super(props);
+        this.state={
+            labelSource: "parent",
+            showVariations: true,
+            showSegmentation: false,
+            loaded: false,
+            contentPreview: false,
+            width: 0,
+            activeItem: ""
+        }
     }
-
-    this.state={
-      showTargeting: false,
-      activeItem:"",
-      loaded: false,
-      mode: this.mode,
-      contentID: match.params.contentID !== "content"? match.params.contentID:"", 
-      variID: variId,
-      isDupe: variId && this.props.match.params.option === "d",
-      content: {},
-      _contentPreview: false,
-      teamID: "",
-      width: 0,
-      availVariation: 0,
-      label: label
+    updateState(obj){this.setState(obj);}
+    updateTargeting(val){
+      const {DataEntryStore} = this.props;
+      if (val.sendTargetType==="all"){
+        DataEntryStore.set("contentmgmt", "teamID", "global")
+        DataEntryStore.set("contentmgmt", "tags", [])
+      }
+      else {
+        if (val.sendToTeamID) {
+          DataEntryStore.set("contentmgmt", "teamID", val.sendToTeamID)
+        }
+        else {
+          if (!val.sendToTagID || val.sendToTagID==="none") DataEntryStore.set("contentmgmt", "tags", []);
+          else DataEntryStore.set("contentmgmt", "tags", [val.sendToTagID]);
+        }
+      }           
     };
 
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-  }
+    componentWillUnmount(){
+        window.removeEventListener('resize', this.updateWindowDimensions);
 
-  async loadContent() {
-    const {mode, variID, contentID, isDupe} = this.state;
-    if(!variID) {
-      let isLoaded = {};
-      if(contentID){
-        isLoaded = mode === "announcement"? AnnouncementsStore._getAnnouncement(this.props.match.params.contentID): PoliciesStore._getPolicy(contentID);
-      }
-      this.setState({loaded:true, content: isLoaded, isNewContent: Boolean(!contentID), isNewVari: true});
-      return
+        const {DataEntryStore, UIStore} = this.props;
+        DataEntryStore.reset("contentmgmt");
+        UIStore.reset("content");
+   
     }
 
-    const isLoaded = mode === "announcement"? AnnouncementsStore._searchVariation(variID): PoliciesStore._searchVariation(variID);
-    await this.setState({content: isLoaded, loaded:true, isNewContent: Boolean(!contentID), isNewVari: Boolean(!variID)});
-    if((variID && isEmpty(isLoaded)) || (!isDupe && this.props.match.params.options ) ) this.props.history.push(`/panel/${mode === "announcement"? "announcements":"faqs"}`);
-  }
-
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
-    const { UIStore, DataEntryStore, AccountStore } = this.props;
-    UIStore.set("content", "showTargeting", false);
-    const mode = this.mode;
-    if (this.props.location.pathname.includes("new")) {
-      this.setState({showTargeting: true});
+    leave(mode){
+        this.props.history.push(`/panel/${mode === "announcement"? "announcements":"faqs"}`)
     }
 
+    updateWindowDimensions() {
+      this.setState({ width: window.innerWidth });
+    }
 
-    if (mode === "policy") {
-      if (
-        UIStore.content.policyID === "" ||
-        this.props.match.params.contentID !== UIStore.content.policyID ||
-        DataEntryStore._isReset("contentmgmt")
-      ) {
-        const obj = PoliciesStore._getPolicy(this.props.match.params.contentID);
-        if (!_.isEmpty(obj)) {
-          UIStore.set("content", "policyID", this.props.match.params.contentID);
-          UIStore.set("content", "variationID", obj.variations[0].variationID);
-          obj.variations.length > 0 ? obj.variations[0].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
-          this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});
-          DataEntryStore.set("contentmgmt", "img", obj.img);
-          DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
-          DataEntryStore.set("contentmgmt", "campaign", "new");
-          DataEntryStore.set("contentmgmt", "qanda", obj.variations[0].qanda);
-          DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
-          DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert);
-          DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
-          DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
-          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
-          UIStore.set(
-            "content",
-            "variationID",
-            PoliciesStore._toggleGlobalVariation(UIStore.content.policyID)
-          );
-        } else {
-          {/*this.props.history.push("/panel/faqs");*/}
+    
+    ejectContent(obj, mode, variID=false){
+        const isNewVari = variID === "new";
+        const {DataEntryStore, UIStore} = this.props;
+        const contentID = obj[`${mode}ID`] || "new";
+        const isNewContent = contentID === "new";
+        const variationID = variID || getGlobalVari(obj);
+        const variation = isNewVari? {} : getContentObj(obj, variationID).variations[0];
+        //UIStore due to several references in additonal settings
+         UIStore.set("content", `${mode}ID`, contentID);
+         UIStore.set("content", "variationID", variationID);
+
+         DataEntryStore.set("contentmgmt", "contentData", isNewContent? {} : obj, "*");
+         DataEntryStore.set("contentmgmt", "variData", variation, "*");
+         DataEntryStore.set("contentmgmt", "mode", mode, "*");
+         DataEntryStore.set("contentmgmt", "contentLabel",  isNewContent? "" : obj.label, "*");
+         DataEntryStore.set("contentmgmt", "variLabel", isNewVari? "" : variation.label, "*")
+         DataEntryStore.set("contentmgmt", "contentRAW", isNewVari? null : variation.contentRAW, "*")
+         DataEntryStore.set("contentmgmt", "contentHTML", isNewVari? "" : variation.contentHTML, "*")
+         DataEntryStore.set("contentmgmt", "img",  isNewContent? "" : obj.img, "*");
+         DataEntryStore.set("contentmgmt", "imgData",  isNewContent? {} : obj.imgData, "*");
+         DataEntryStore.set("contentmgmt", "keywords",  isNewContent? [] : obj.keywords, "*");
+         DataEntryStore.set("contentmgmt", "reviewAlert",  isNewContent? 0 : obj.reviewAlert, "*");
+         DataEntryStore.set("contentmgmt", "chanID",  isNewContent? "All" : obj.chanID, "*")
+         DataEntryStore.set("contentmgmt", "everPublished",  isNewContent? false : obj.everPublished, "*")
+         DataEntryStore.set("contentmgmt", "qanda", variation.qanda || [], "*");
+
+         DataEntryStore.set("contentmgmt", "updatedSinceReset", false);
+         this.setState({labelSource: DataEntryStore.contentmgmt.variLabel? "vari":"parent", showSegmentation: isNewVari? true: false, loaded: true })
+
+    }
+
+    componentDidMount(){
+         this.updateWindowDimensions();
+         window.addEventListener('resize', this.updateWindowDimensions.bind(this));
+
+         const {DataEntryStore} = this.props;
+         DataEntryStore.reset("contentmgmt");
+
+        const contentID = this.props.match.params.contentID;
+        const mode = this.props.location.pathname.includes("faq")? "policy":"announcement";
+        if (this.props.match.params.contentID === "content" && this.props.match.params.variID === "new") {
+          this.ejectContent({}, mode, "new")
         }
-      }
-    } else if (mode === "announcement") {
-      if (
-        UIStore.content.announcementID === "" ||
-        this.props.match.params.contentID !== UIStore.content.announcementID ||
-        DataEntryStore._isReset("contentmgmt")
-      ) {
-        if (!_.isEmpty(AnnouncementsStore._getAnnouncement(this.props.match.params.contentID))) {
-          UIStore.set("content", "announcementID", this.props.match.params.contentID);
-          const obj = Object.assign(
-            {},
-            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
-          );
-          UIStore.set("content", "variationID", obj.variations[0].variationID);
-          obj.variations.length > 0 ? obj.variations[0].label !="" ? DataEntryStore.set("contentmgmt", "label", obj.variations[0].label) : DataEntryStore.set("contentmgmt", "label", obj.label) : DataEntryStore.set("contentmgmt", "label", obj.label)
-          /*this.setState({label: obj.variations[0].label != "" ? obj.variations[0].label : obj.label});*/
-          DataEntryStore.set("contentmgmt", "img", obj.img);
-          DataEntryStore.set("contentmgmt", "imgData", obj.imgData);
-          DataEntryStore.set("contentmgmt", "qanda", obj.qanda);
-          DataEntryStore.set("contentmgmt", "bundle", "queue");
-          DataEntryStore.set("contentmgmt", "keywords", obj.keywords);
-          DataEntryStore.set("contentmgmt", "reviewAlert", obj.reviewAlert)
-          DataEntryStore.set("contentmgmt", "settingsLabel", obj.label)
-          DataEntryStore.set("contentmgmt", "settingsChannel", obj.chanID)
-          DataEntryStore.set("contentmgmt", "everPublished", obj.everPublished)
-        } else {
-          {/*this.props.history.push("/panel/announcements");*/}
+        else if (contentID) {
+            let id = {};
+            id[mode + "ID"] = contentID;
+            const toLoad = getContentObj(id);
+            if (isEmpty(toLoad)) this.leave(mode);
+            else {this.ejectContent(toLoad, mode)}
         }
+        else this.leave(mode);
+      
+   
+    }
+
+    sectionStyle = {paddingTop: 10, paddingBottom: 10};
+    ownerStyle = { display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center" };
+    managementStyle = {paddingTop: 10, paddingBottom: 10, display: "flex", flexWrap: "wrap"};
+
+    newVariant(){
+        const {DataEntryStore} = this.props;
+        const {contentData, mode} = DataEntryStore.contentmgmt;
+        this.ejectContent(contentData, mode, "new")
+    };
+
+    onChangeVariation(variID){
+        const {DataEntryStore} = this.props;
+        const {contentData, mode} = DataEntryStore.contentmgmt;
+        this.ejectContent(contentData, mode, variID)
+    };
+
+    
+    async changeStage(stage) {
+      const { UIStore, DataEntryStore, history } = this.props;
+      const { variationID } = UIStore.content;
+      const {mode} = DataEntryStore.contentmgmt;
+      const isNewContent = UIStore.content[`${mode}ID`] === "new";
+
+      // if (!this.isValid()) {
+      //   return;
+      // }
+
+      const isPolicy = mode === "policy";
+      const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
+      const typeId = `${mode}ID`;
+      const contentID = isNewContent? "" : UIStore.content[typeId];
+      const payload = Object.assign(DataEntryStore.contentmgmt, {stage});
+
+      if (stage === "published") {
+        const historyMode = contentHistory(mode, contentID, content(payload));
+        await createHistory(historyMode);
       }
-    }
-    this.loadContent();
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
-    const {DataEntryStore, UIStore} = this.props
-    DataEntryStore.reset("contentmgmt")
-    UIStore.reset("content");
-  }
+      if (isNewContent) {
+        const res = isPolicy?  await createPolicy(content(payload)) : await createAnnouncement(content(payload));
+        const id = res[typeId];
+        await DataEntryStore.set("contentmgmt", "updatedSinceReset", false);
+        this.props.history.push(`${path}`)
+      }
 
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth });
-  }
 
-  // componentDidUpdate = () => {
-  //   const {UIStore} = this.props;
-  //   if (UIStore.content.shouldBlockNavigation) {
-  //     window.onbeforeunload = () => true
-  //   } else {
-  //     window.onbeforeunload = undefined
-  //   }
-  // }
+      else {
+        if (isPolicy) await modifyPolicy(contentEdit(payload, mode, contentID, variationID));
+        else await modifyAnnouncement(contentEdit(payload, mode, contentID, variationID));
+        await DataEntryStore.set("contentmgmt", "updatedSinceReset", false);
+        this.props.history.push(`${path}`);
+      }
 
-  isValid = () => {
-    const {isNewContent,variID} = this.props.data;
-    const conditions = {
-      Title: isNewContent? this.state.label : true,
-      Body: !this.state.contentHTML && !variID? false : true,
-    }
-   const result = validate(conditions);
-   this.setState({_errors: result.errors});
-   return result.valid
-  }
-
-  async changeStage(stage) {
-    const { UIStore, history } = this.props;
-    const {mode, isNewContent, contentID, variID} = this.state;
-    if (!this.isValid()) {
-      return;
     }
 
-    await this.setState({stage});
+  render() {
+      const {DataEntryStore, TeamStore, UserStore, AccountStore, UIStore} = this.props;
+      const {labelSource, showVariations, showSegmentation, loaded, contentPreview, width, activeItem} = this.state;
+      const {variData,mode} = DataEntryStore.contentmgmt;
+      const isNewContent = UIStore.content[`${mode}ID`] === "new";
+      const isNewVari = UIStore.content.variationID === "new";
 
-    const isPolicy = mode === "policy";
-    const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
-    const typeId = `${mode}ID`;
-
-
-
-    if (stage === "published") {
-      const historyMode = contentHistory(mode, contentID, content(this.state));
-      createHistory(historyMode);
-    }
-
-    if (isNewContent) {
-      const res = isPolicy?  await createPolicy(content(this.state)) : await createAnnouncement(content(this.state));
-      const id = res[typeId];
-      await this.reset();
-      await history.push(`${path}${res[id]}`)
-    }
-
-
-    else {
-      contentEdit(this.state, mode, contentID, variID)
-      if (isPolicy) await modifyPolicy(contentEdit(this.state, mode, contentID, variID));
-      else await modifyAnnouncement(contentEdit(this.state, mode, contentID, variID));
-      await this.reset();
-      await history.push(`${path}${UIStore.content[mode + "ID"]}`);
-    }
-
-  }
-
-  handleItemClick = (e, {name}) => {this.setState({active:name})}
-  handleClick = (e, idx) => {this.setState({active: idx.value})}
-
-  onChangeTitle = e => {
-    const { DataEntryStore } = this.props;
-    this.setState({label: e.target.value});
-    DataEntryStore.set("contentmgmt", "label", e.target.value);
-  }
-
-  sectionStyle = {paddingTop: 10, paddingBottom: 10}
-  managementStyle = {paddingTop: 10, paddingBottom: 10, display: "flex", flexWrap: "wrap"}
-  ownerStyle = { display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center" }
-
-  onChangeVariation = (e, index) => {
-    const { UIStore, DataEntryStore } = this.props;
-    const obj = this.mode === "policy" ?
-      PoliciesStore._getPolicy(UIStore.content.policyID)
-      : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
-    this.setState({availVariation: index});
-    this.setState({variID: obj.variations[index].variationID});
-    UIStore.set("content", "variationID", obj.variations[index].variationID);
-    obj.variations[index].label != "" ? DataEntryStore.set("contentmgmt", "label", obj.variations[index].label) : DataEntryStore.set("contentmgmt", "label", obj.label)
-    this.setState({label: obj.variations[index].label != "" ? obj.variations[index].label : obj.label});
-  }
-
-  newVariant = () => {
-    const {match, UIStore, DataEntryStore} = this.props;
-    UIStore.reset("content");
-    UIStore.set("content", "showTargeting", true);
-    this.setState({isNewVari: true});
-    DataEntryStore.reset("contentmgmt");
-    DataEntryStore.set("content", "contentRAW", null);
-    DataEntryStore.set("contentmgmt", "label", this.state.content.label);
-    DataEntryStore.set("content", "isNew", false);
-    DataEntryStore.set("content", "stage", "draft");
-    const generate = generateID()
-    UIStore.set("content", "variationID", generate);
-    this.setState({variID: generate});
-
-    const mode = this.props.location.pathname.includes("faq")
-      ? "policy"
-      : "announcement";
-
-    let obj = PoliciesStore._getPolicy(match.params.contentID);
-    mode === "policy" ? obj = obj : obj = Object.assign(
-            {},
-            AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
-          );
-    let variId = ""
-
-
-    this.setState({
-      showTargeting: false,
-      activeItem:"",
-      variID: variId,
-      isDupe: variId && match.params.option === "d",
-      content: {},
-      _contentPreview: false,
-      teamID: "",
-      width: 0,
-      availVariation: 0
-    });
-  }
-
-  render(){
-    const { TeamStore, DataEntryStore, UIStore, AccountStore, match } = this.props;
-    const {showTargeting} = this.state;
-    const mode = this.mode;
-    const {content, isNewContent, isNewVari, variID} = this.state;
-    const variMenuItems = ["Attached Files", "Question and Answer"].map(item => 
-      <Menu.Item
-        name={item}
-        active={this.state.activeItem === {item}}
-        onClick={this.handleItemClick}
-        disabled={isNewContent}
-      />)
-
-    const parentMenuItems = ["Featured Image","Channel", "Email Campaign" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
-      <Menu.Item
-        name={item}
-        active={this.state.activeItem === {item}}
-        onClick={this.handleItemClick}
-        disabled={isNewContent}
-      />)
-
-    const menuItems = 
-    <>
-    <Menu.Item><Menu.Header>Variation Settings</Menu.Header><Menu.Menu> {variMenuItems}</Menu.Menu></Menu.Item>
-    <Menu.Item><Menu.Header>General Settings</Menu.Header><Menu.Menu> {parentMenuItems}</Menu.Menu></Menu.Item>
-    </>
-
-
-
-
-    const dropDownOptions = [
-      {key: "Attached Files", value:"Attached Files" , text: "Attached Files"},
-      {key: "Featured Image", value:"Featured Image" , text: "Featured Image"},
-      {key: "Channel", value:"Channel" , text: "Channel"},
-      {key: "Q and A", value:"Channel" , text: "Channel"},
-      {key: "Email Campaign" , value: "Email Campaign" , text: "Email Campaign"},
-      {key: "Searchability", value:"Searchability" , text: "Searchability"},
-      {key: "Review Alerts", value:"Review Alerts" , text: "Review Alerts"},
-      {key: "Schedule", value:"Schedule" , text: "Schedule"},
-      {key: "History", value:"History" , text: "History"},
-      {key: "Settings", value: "Settings", text: "Settings"},
-    ]
-    const obj = mode === "policy" ?
-      PoliciesStore._getPolicy(UIStore.content.policyID)
-      : AnnouncementsStore._getAnnouncement(UIStore.content.announcementID)
-
-    let variation = (obj.variations || []).filter(variation => {return variation.variationID == UIStore.content.variationID})
-    let variat = "";
-    variat = (obj.variations || []).map((va, i) => {
-        return (
-          getDisplayTags(va.tags, TeamStore.tags).includes("No Tag") ? i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} /> : <div style={{ marginRight: 5 }}><Chip style={{ marginRight: 10 }} color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div> 
-          : i == this.state.availVariation ? <VariationChip label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} /> : <div style={{ marginRight: 5 }}><Chip color="default" label={`${TeamStore.teamKey[va.teamID]} / ${getDisplayTags(va.tags, TeamStore.tags)[0]}`} key={i} onClick={(e) => this.onChangeVariation(e, i)} /></div>
-        )
-      })
-    if (variation) {
-      let vari = variation.map(va => ({
-        key: va.variationID,
-        value: va.variationID,
-        description: getDisplayTags(va.tags, TeamStore.tags),
-        text: TeamStore.teamKey[va.teamID],
-        type: va.type
-      }));
-    }
-
-    const availableVariation = mode === "policy"? PoliciesStore._getVariation(UIStore.content.policyID, UIStore.content.variationID)
-      : AnnouncementsStore._getVariation(UIStore.content.announcementID, UIStore.content.variationID);
-
-    const { UserStore } = this.props;
-    let owner = AccountStore._getDisplayName(UserStore.user.userID);
-    if (availableVariation && availableVariation.userID)
-      owner = AccountStore._getDisplayName(availableVariation.userID);
-    const lastUpdate = format(availableVariation.updated);
-
-    const mod = this.state.mode;
-    let vari = {};
-    let variationTarget = ""
-    if (isNewVari !== undefined) {
-      vari = isNewVari? {} : content.variations.filter(v => v.variationID === variID)
-
-      variationTarget = <>
-        <ChooseTargeting
-          noPass
-          NoSelectUsers 
-          label={"share " + mod} 
-          input= {isNewVari? false : {sendTargetType: vari[0].teamID === "global" && !vari[0].tags.length? "all": "teams", sendToTeamID: !this.state.teamID? vari[0].teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID : !vari[0].tags.length? "": vari[0].tags[0]}}
-          output={val=> this.setState(val.sendTargetType==="all"? {"teamID": "global", "tags": []}: val.sendToTeamID? {teamID:val.sendToTeamID}:{tags: !val.sendToTagID || val.sendToTagID==="none"? []:[val.sendToTagID]})}
-        />
-      </>
-    }
-
-    const { loaded } = this.state;
-
-    const attachFiles = isNewContent? <span style={{fontSize: "0.9em",fontWeight: '400', fontStyle: 'italic'}}>Want to attach a file? Please save as a draft first</span>
-      : <Segment disabled={isNewContent}>
-          <AttachedFiles mode={mode}  />
-        </Segment>
-
-
-    return(
+      const variChips = (DataEntryStore.contentmgmt.contentData.variations || []).map((vari, i) => 
+             vari.variationID === UIStore.content.variationID?
+             <VariationChip label={`${TeamStore.teamKey[vari.teamID]} / ${getDisplayTags(vari.tags, TeamStore.tags)}`} key={giveMeKey()+ "variChip"} /> 
+             :<div key={giveMeKey()+ "variChip"} style={{ marginRight: 5 }}><Chip style={{ marginRight: 10 }}  variant="outlined" color="primary" label={`${TeamStore.teamKey[vari.teamID]} / ${getDisplayTags(vari.tags, TeamStore.tags)}`} key={giveMeKey()+ "variChip"} onClick={() => this.onChangeVariation(vari.variationID)} /></div> 
+      );
+   
+      const getPreviewObj = () => Object.assign({mode, label: DataEntryStore.contentmgmt.contentLabel, img: DataEntryStore.contentmgmt.img, variations: [{variationID: UIStore.content.variationID, label: DataEntryStore.contentmgmt.variLabel, contentRAW: DataEntryStore.contentmgmt.contentRAW, contentHTML: DataEntryStore.contentmgmt.contentHTML, qanda: DataEntryStore.contentmgmt.qanda, userID: UserStore.user.userID, updated: Date.now()}]}, mode === "policy"? {policyID: UIStore.content[`${mode}ID`]}:{announcmentID: UIStore.content[`${mode}ID`]});
+ 
+      const variMenuItems = ["Attached Files", "Question and Answer"].map(item => 
+        <Menu.Item
+          key={giveMeKey()+"contentMenuItem"}
+          name={item}
+          active={activeItem === item}
+          onClick={() => this.updateState({activeItem: item})}
+          disabled={isNewVari}
+        />)
+  
+      const parentMenuItems = ["Featured Image","Channel", "Email Campaign" , "Searchability", "Review Alerts", "Schedule", "History", "Settings"].map(item => 
+        <Menu.Item
+         key={giveMeKey()+"contentMenuItem"}
+          name={item}
+          active={activeItem === item}
+          onClick={() => this.updateState({activeItem: item})}
+          disabled={isNewVari}
+        />)
+  
+      const menuItems = 
       <>
-        <BackButton/>
-        <Header as="h2"
-          style={{padding: 0, margin: 0}}
-        >
+      <Menu.Item><Menu.Header>Variation Settings</Menu.Header><Menu.Menu> {variMenuItems}</Menu.Menu></Menu.Item>
+      <Menu.Item><Menu.Header>General Settings</Menu.Header><Menu.Menu> {parentMenuItems}</Menu.Menu></Menu.Item>
+      </>
+
+    return (
+      <>
+        <BackButton />
+        <Prompt
+            when={DataEntryStore.contentmgmt.updatedSinceReset}
+            message='You have unsaved changes, are you sure you want to leave this page?'
+          />
+        <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Manage Content
+          {JSON.stringify(this.state)}
           <Header.Subheader>
-              {mode === 'policy'? "FAQ" : "Announcement"}
+            {mode === "policy" ? "FAQ" : "Announcement"}
           </Header.Subheader>
         </Header>
-        <Form style={this.sectionStyle}>  
-          <Form.Dropdown value={content.label == DataEntryStore.contentmgmt.label ? "parent" : "vari"} options={[{text: "Parent Title", value: "parent"},{text:"Variation Title", value: "vari"}]} />
-          <Form.Input style={{marginTop: -8}} className="FixSemanticLabel">
-              <input maxLength={72} value={this.props.match.params.contentID ? DataEntryStore.contentmgmt.label : ""} onChange={e => this.onChangeTitle(e)} />
+        <Form style={this.sectionStyle} >
+          <Form.Dropdown
+            value={ labelSource }
+            options={[ { text: "Parent Title", value: "parent" }, { text: "Variation Title", value: "vari", disabled: isNewContent } ]}
+            onChange={(e, {value}) => this.updateState({labelSource: value})}
+          />
+          <Form.Input style={{ marginTop: -8 }} className="FixSemanticLabel">
+            <input
+              maxLength={72}
+              value={ labelSource === "parent"? DataEntryStore.contentmgmt.contentLabel : DataEntryStore.contentmgmt.variLabel }
+              onChange={(e) => {labelSource === "parent"? DataEntryStore.set("contentmgmt", "contentLabel",  e.currentTarget.value) : DataEntryStore.set("contentmgmt", "variLabel",  e.currentTarget.value) }}
+            />
           </Form.Input>
         </Form>
         <div style={this.ownerStyle}>
           <div>
-          {
-            showTargeting ? variationTarget : UIStore.content.showTargeting ? variationTarget : <><span>Variations</span><br/><div style={{ display: "flex", flexWrap: "wrap" }}>{variat}<Fab onClick={()=>this.newVariant()} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab></div></>
-          }
+          
+            {showVariations && !showSegmentation? <><span>Variations</span><br/><div style={{ display: "flex", flexWrap: "wrap" }}>{variChips}
+            <Fab onClick={()=>this.newVariant()} style={{marginLeft: 5, marginTop: -3}} size="small"><AddIcon/></Fab></div></> : "" }
+            {showVariations && showSegmentation? 
+            <ChooseTargeting
+            noPass
+            NoSelectUsers 
+            label={"share " + mode} 
+            input= {isNewVari? false : {sendTargetType: variData.teamID === "global" && !variData.tags.length? "all": "teams", sendToTeamID: !this.state.teamID?  variData.teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID :  variData.tags.length? "":  variData.tags[0]}}
+            output={val=> this.updateTargeting(val) } />
+            : ""}
+
           </div>
-          <div style={{ paddingTop: "20px" }}>
-            <span style={{fontSize: ".9em", paddingRight: "20px"}}>Owner: <b>{owner}</b></span>
-            <span style={{fontSize: ".9em"}}>Last Update: <b>{lastUpdate}</b></span>
+          <div className={isNewVari? "YHHidden" : "YHShow"} style={{ paddingTop: "20px" }}>
+            <span style={{ fontSize: ".9em", paddingRight: "20px" }}>
+              Owner: <b>{loaded? AccountStore._getDisplayName(DataEntryStore.contentmgmt.variData.userID): ""}</b>
+            </span>
+            <span style={{ fontSize: ".9em" }}>
+             Last Update: <b> {loaded? <TimeAgo date={DataEntryStore.contentmgmt.variData.updated} /> : "" }</b>
+            </span>
           </div>
         </div>
-        <div style={this.sectionStyle}>
-          {loaded &&
+        <div style={this.sectionStyle} >
+          {loaded && (
             <>
-              <CombinedContent data={this.state}/>
+               <div>
+       
+               {loaded && 
+               <ContentPreview  
+                data={getPreviewObj()} 
+                open={contentPreview} 
+                onClose={() => this.updateState({contentPreview: false})} 
+                />
+                }
+               
+                <Wysiwyg  
+                error={false} 
+                variID={UIStore.content.variationID} 
+                isNewVari={isNewVari} 
+                loadContent={DataEntryStore.contentmgmt.contentRAW} 
+                border 
+                output={e=> {DataEntryStore.set("contentmgmt", "contentRAW", e.raw);DataEntryStore.set("contentmgmt", "contentHTML", e.html)}}
+                />
+
+                <div>
+                    <Row style={{padding: "10px 0 10px 15px"}}>
+                        <PublishControls 
+                        unsavedWarning={isNewVari} 
+                        stage={isNewContent? "draft" : isNewVari? "draft" : DataEntryStore.contentmgmt.variData.stage} 
+                        onClick={val => this.changeStage(val)} 
+                        />
+
+                        <Button onClick={()=>this.updateState({contentPreview: true})}>Preview</Button>
+                        {isNewVari && <Button onClick={()=>this.leave()}>Cancel</Button>}
+                    </Row>
+                    <br/>
+                </div>
+                </div>
             </>
-          }
-{/*          <div>
-            <Row style={{padding: "10px 0 10px 15px"}}>
-              <PublishControls unsavedWarning={isNewContent} stage={isNewContent? "draft" : isNewVari? "draft" : vari[0].stage} onClick={val => this.changeStage(val)} />
-              <Button onClick={() => this.setState({_contentPreview: true})}>Preview</Button>
-            </Row>
-            <br/>
-          </div>*/}
+          )}
         </div>
         <div style={this.managementStyle}>
-          {
-            this.state.width > 767 ? <Menu vertical> {menuItems} </Menu> : <Dropdown
-              placeholder='Please select'
+          {this.state.width > 767 ? (
+            <Menu vertical> {menuItems} </Menu>
+          ) : (
+            <Dropdown
+              placeholder="Please select"
               fluid
               selection
-              options={dropDownOptions}
-              onChange={(e, inx) => {this.handleClick(e, inx)}}
-              disabled={isNewContent}
+              options={
+                [
+                  {key: "Attached Files", value:"Attached Files" , text: "Attached Files"},
+                  {key: "Featured Image", value:"Featured Image" , text: "Featured Image"},
+                  {key: "Channel", value:"Channel" , text: "Channel"},
+                  {key: "Question and Answer", value:"Question and Answer" , text: "Question and Answer"},
+                  {key: "Email Campaign" , value: "Email Campaign" , text: "Email Campaign"},
+                  {key: "Searchability", value:"Searchability" , text: "Searchability"},
+                  {key: "Review Alerts", value:"Review Alerts" , text: "Review Alerts"},
+                  {key: "Schedule", value:"Schedule" , text: "Schedule"},
+                  {key: "History", value:"History" , text: "History"},
+                  {key: "Settings", value: "Settings", text: "Settings"},
+                ]
+              }
+              onChange={(e, {value}) => { this.updateState({activeItem: value}); }}
+              disabled={isNewVari}
             />
-          }
-          {
-            isNewContent ? <div style={{flex: 1, marginTop: 20, textAlign: "center"}}>Save a draft or publish to access additional settings.</div> :
-              this.state.width > 767 ? <div style={{flex: 1, marginLeft: 10}}>
-                      {
-                        this.state.active === 'Attached Files' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            {attachFiles}
-                          </FadeIn> : this.state.active === 'Featured Image' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <FeaturedImage
-                              mode={mode}
-                              defaultImgUrl={DataEntryStore.contentmgmt.img}
-                              imgData={DataEntryStore.contentmgmt.imgData}
-                            />
-                          </FadeIn> : this.state.active === 'Channel' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Channel 
-                              mode={mode}
-                              defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
-                              submitButton
-                            />
-                            </FadeIn> : this.state.active === 'Question and Answer' ?
-                            <FadeIn delay="500" transitionDuration="500">
-                            <QandA mode={mode} data={DataEntryStore.contentmgmt.qanda || []}/>
-                          </FadeIn> : this.state.active === 'Email Campaign' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <AddToEmail
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'Searchability' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Keywords mode={mode} />
-                          </FadeIn> : this.state.active === 'Review Alerts' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <ReviewAlerts
-                              defaultVal={DataEntryStore.contentmgmt.reviewAlert}
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'Schedule' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Schedule
-                              state={obj.state}
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'History' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <History mode={mode} />
-                          </FadeIn> : this.state.active === 'Settings' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Settings
-                              mode={mode}
-                              defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
-                            />
-                          </FadeIn> : <div />
-                      }
-                    </div> :
-                    <div style={{flex: 1, marginTop: 20}}>
-                      {
-                        this.state.active === 'Attached File' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            {attachFiles}
-                          </FadeIn> : this.state.active === 'Featured Image' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <FeaturedImage
-                              mode={mode}
-                              defaultImgUrl={DataEntryStore.contentmgmt.img}
-                              imgData={DataEntryStore.contentmgmt.imgData}
-                            />
-                          </FadeIn> : this.state.active === 'Channel' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Channel 
-                              mode={mode}
-                              defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
-                              submitButton
-                            />
-                          </FadeIn> : this.state.active === 'Email Campaign' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <AddToEmail
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'Searchability' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Keywords mode={mode} />
-                          </FadeIn> : this.state.active === 'Review Alerts' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <ReviewAlerts
-                              defaultVal={DataEntryStore.contentmgmt.reviewAlert}
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'Schedule' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Schedule
-                              state={obj.state}
-                              mode={mode}
-                            />
-                          </FadeIn> : this.state.active === 'History' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <History mode={mode} />
-                          </FadeIn> : this.state.active === 'Settings' ?
-                          <FadeIn delay="500" transitionDuration="500">
-                            <Settings
-                              mode={mode}
-                              defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
-                            />
-                          </FadeIn> : <div />
-                      }
-                    </div>}
+          )}
+          {isNewVari ? (
+            <div style={{ flex: 1, marginTop: 20, textAlign: "center" }}>
+              Save a draft or publish to access additional settings.
+            </div>
+          ) : width > 767 ? (
+            <div style={{ flex: 1, marginLeft: 10 }}>
+               {activeItem === "Attached Files" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Segment disabled={isNewVari}> <AttachedFiles mode={mode}  /> </Segment> 
+               </FadeIn> ) 
+            
+               : activeItem === "Featured Image" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <FeaturedImage
+                    mode={mode}
+                    defaultImgUrl={DataEntryStore.contentmgmt.img}
+                    imgData={DataEntryStore.contentmgmt.imgData}
+                  />
+              </FadeIn> 
+                )  : activeItem === "Channel" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Channel
+                    mode={mode}
+                    defaultChannel={DataEntryStore.contentmgmt.chanID}
+                    submitButton
+                  />
+                </FadeIn>
+              ) : activeItem === "Question and Answer" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <QandA
+                    mode={mode}
+                    content={mode === "announcement"? UIStore.content.announcmentID : UIStore.content.policyID}
+                    vari={UIStore.content.variationID}
+                  />
+                </FadeIn>
+              ) : activeItem === "Email Campaign" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <AddToEmail mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Searchability" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Keywords mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Review Alerts" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <ReviewAlerts
+                    defaultVal={DataEntryStore.contentmgmt.reviewAlert}
+                    mode={mode}
+                  />
+                </FadeIn>
+              ) : activeItem === "Schedule" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Schedule state={DataEntryStore.contentmgmt.contentData._state} mode={mode} />
+                </FadeIn>
+              ) : activeItem === "History" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <History mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Settings" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Settings
+                    mode={mode}
+                    defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                  />
+                </FadeIn>
+              ) : ( 
+                <div />
+              )}
+            </div>
+          ) : (
+            <div style={{ flex: 1, marginTop: 20 }}>
+              {activeItem === "Attached File" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  {attachFiles}
+                </FadeIn>
+              ) : activeItem === "Featured Image" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <FeaturedImage
+                    mode={mode}
+                    defaultImgUrl={DataEntryStore.contentmgmt.img}
+                    imgData={DataEntryStore.contentmgmt.imgData}
+                  />
+                </FadeIn>
+              ) : activeItem === "Channel" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Channel
+                    mode={mode}
+                    defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                    submitButton
+                  />
+                </FadeIn>
+              ) : activeItem === "Question and Answer" ? (
+              <FadeIn delay="500" transitionDuration="500">
+                <QandA
+                  mode={mode}
+                  content={mode === "announcement"? UIStore.content.announcmentID : UIStore.content.policyID}
+                  vari={UIStore.content.variationID}
+                />
+              </FadeIn>
+              ) : activeItem === "Email Campaign" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <AddToEmail mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Searchability" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Keywords mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Review Alerts" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <ReviewAlerts
+                    defaultVal={DataEntryStore.contentmgmt.reviewAlert}
+                    mode={mode}
+                  />
+                </FadeIn>
+              ) : activeItem === "Schedule" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Schedule state={obj.state} mode={mode} />
+                </FadeIn>
+              ) : activeItem === "History" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <History mode={mode} />
+                </FadeIn>
+              ) : activeItem === "Settings" ? (
+                <FadeIn delay="500" transitionDuration="500">
+                  <Settings
+                    mode={mode}
+                    defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                  />
+                </FadeIn>
+              ) : (
+                <div />
+              )}
+            </div>
+          )}
         </div>
       </>
-    )
+    );
   }
 }
