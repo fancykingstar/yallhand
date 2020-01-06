@@ -1,13 +1,19 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { Prompt } from 'react-router'
-import FadeIn from "react-fade-in";
-import { Header, Input, Form, Dropdown, Button, Menu, Segment } from "semantic-ui-react";
+
+import { Header, Form, Dropdown, Button, Menu, Segment } from "semantic-ui-react";
 import { Chip, Fab } from "@material-ui/core";
+import { Row } from 'reactstrap';
 import AddIcon from "@material-ui/icons/Add";
-import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
-import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
 import BackButton from "../../SharedUI/BackButton";
+import { getDisplayTags } from "../../SharedCalculations/GetDisplayTags";
+import FadeIn from "react-fade-in";
+import TimeAgo from 'react-timeago';
+import {isEmpty} from "lodash";
+import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
+
+import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
 import { FeaturedImage } from "./FeaturedImage";
 import { AddToEmail } from "./AddToEmail";
 import { Keywords } from "./Keywords";
@@ -18,21 +24,17 @@ import { Channel } from "./Channel";
 import Settings from "./Settings";
 
 import { ContentPreview } from "../../SharedUI/ContentPreview";
-import TimeAgo from 'react-timeago';
 import { AttachedFiles } from "../NewEditContent/AttachedFiles";
 import VariationChip from "./VariationChip";
 import { QandA } from "./QandA";
-import { generateID } from "../../SharedCalculations/GenerateID";
-import { Row, Col, } from 'reactstrap';
 import { Wysiwyg } from "../../SharedUI/Wysiwyg";
 import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
 import {getContentObj} from "../../SharedCalculations/GetContentObj";
 import {getGlobalVari} from "../../SharedCalculations/GetContentObj";
-import {isEmpty} from "lodash";
-import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
 import { contentHistory, contentEdit, content } from "../../DataExchange/PayloadBuilder";
 import { createHistory, createAnnouncement, createPolicy, modifyAnnouncement, modifyPolicy } from "../../DataExchange/Up"; 
+import {validate} from "../../SharedCalculations/ValidationTemplate";
 
 
 
@@ -48,7 +50,8 @@ export class Content extends React.Component {
             loaded: false,
             contentPreview: false,
             width: 0,
-            activeItem: ""
+            activeItem: "",
+            errors: []
         }
     }
     updateState(obj){this.setState(obj);}
@@ -75,18 +78,28 @@ export class Content extends React.Component {
         const {DataEntryStore, UIStore} = this.props;
         DataEntryStore.reset("contentmgmt");
         UIStore.reset("content");
-   
     }
 
     leave(mode){
         this.props.history.push(`/panel/${mode === "announcement"? "announcements":"faqs"}`)
     }
 
+    async isValid(){
+      const {DataEntryStore} = this.props;
+      const {contentLabel, contentHTML} = DataEntryStore.contentmgmt;
+      const conditions = {
+        "parent label": contentLabel,
+        "content body": contentHTML,
+      };
+      const valid = await validate(conditions, true)
+      await this.setState({errors: valid.errors.length? valid.errors: []})
+      return valid.valid;
+    }
+
     updateWindowDimensions() {
       this.setState({ width: window.innerWidth });
     }
 
-    
     ejectContent(obj, mode, variID=false){
         const isNewVari = variID === "new";
         const {DataEntryStore, UIStore} = this.props;
@@ -105,6 +118,8 @@ export class Content extends React.Component {
          DataEntryStore.set("contentmgmt", "variLabel", isNewVari? "" : variation.label, "*")
          DataEntryStore.set("contentmgmt", "contentRAW", isNewVari? null : variation.contentRAW, "*")
          DataEntryStore.set("contentmgmt", "contentHTML", isNewVari? "" : variation.contentHTML, "*")
+         DataEntryStore.set("contentmgmt", "teamID", isNewVari? "global" : variation.teamID, "*")
+         DataEntryStore.set("contentmgmt", "tags", isNewVari? [] : variation.tags, "*")
          DataEntryStore.set("contentmgmt", "img",  isNewContent? "" : obj.img, "*");
          DataEntryStore.set("contentmgmt", "imgData",  isNewContent? {} : obj.imgData, "*");
          DataEntryStore.set("contentmgmt", "keywords",  isNewContent? [] : obj.keywords, "*");
@@ -115,7 +130,6 @@ export class Content extends React.Component {
 
          DataEntryStore.set("contentmgmt", "updatedSinceReset", false);
          this.setState({labelSource: DataEntryStore.contentmgmt.variLabel? "vari":"parent", showSegmentation: isNewVari? true: false, loaded: true })
-
     }
 
     componentDidMount(){
@@ -138,18 +152,23 @@ export class Content extends React.Component {
             else {this.ejectContent(toLoad, mode)}
         }
         else this.leave(mode);
-      
-   
     }
 
     sectionStyle = {paddingTop: 10, paddingBottom: 10};
     ownerStyle = { display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center" };
     managementStyle = {paddingTop: 10, paddingBottom: 10, display: "flex", flexWrap: "wrap"};
 
-    newVariant(){
-        const {DataEntryStore} = this.props;
-        const {contentData, mode} = DataEntryStore.contentmgmt;
-        this.ejectContent(contentData, mode, "new")
+    newVariant(dupe=false){
+        const {DataEntryStore, UIStore} = this.props;
+        const {contentData, mode,contentRAW, contentHTML} = DataEntryStore.contentmgmt;
+        if (dupe) {
+          UIStore.set("content", "variationID", "dupe");
+          DataEntryStore.set("contentmgmt", "teamID", "global");
+          DataEntryStore.set("contentmgmt", "tags", []);
+          DataEntryStore.set("contentmgmt", "updatedSinceReset", false);
+          this.setState({showSegmentation: true});
+        }
+        else this.ejectContent(contentData, mode, "new")
     };
 
     onChangeVariation(variID){
@@ -160,14 +179,13 @@ export class Content extends React.Component {
 
     
     async changeStage(stage) {
+      const isValid = await this.isValid();
+      if (!isValid) return;
       const { UIStore, DataEntryStore, history } = this.props;
       const { variationID } = UIStore.content;
       const {mode} = DataEntryStore.contentmgmt;
       const isNewContent = UIStore.content[`${mode}ID`] === "new";
-
-      // if (!this.isValid()) {
-      //   return;
-      // }
+    
 
       const isPolicy = mode === "policy";
       const path = isPolicy ? `/panel/faqs/` : `/panel/announcements/`;
@@ -199,14 +217,18 @@ export class Content extends React.Component {
 
   render() {
       const {DataEntryStore, TeamStore, UserStore, AccountStore, UIStore} = this.props;
-      const {labelSource, showVariations, showSegmentation, loaded, contentPreview, width, activeItem} = this.state;
-      const {variData,mode} = DataEntryStore.contentmgmt;
+      const {labelSource, showVariations, showSegmentation, loaded, contentPreview, width, activeItem, errors} = this.state;
+      const {variData,mode, teamID, tags} = DataEntryStore.contentmgmt;
       const isNewContent = UIStore.content[`${mode}ID`] === "new";
       const isNewVari = UIStore.content.variationID === "new";
 
       const variChips = (DataEntryStore.contentmgmt.contentData.variations || []).map((vari, i) => 
              vari.variationID === UIStore.content.variationID?
-             <VariationChip label={`${TeamStore.teamKey[vari.teamID]} / ${getDisplayTags(vari.tags, TeamStore.tags)}`} key={giveMeKey()+ "variChip"} /> 
+             <VariationChip 
+             edit={()=>this.updateState({showSegmentation: true})} 
+             dupe={()=>this.newVariant(true)}
+             label={`${TeamStore.teamKey[vari.teamID]} / ${getDisplayTags(vari.tags, TeamStore.tags)}`} 
+             key={giveMeKey()+ "variChip"} /> 
              :<div key={giveMeKey()+ "variChip"} style={{ marginRight: 5 }}><Chip style={{ marginRight: 10 }}  variant="outlined" color="primary" label={`${TeamStore.teamKey[vari.teamID]} / ${getDisplayTags(vari.tags, TeamStore.tags)}`} key={giveMeKey()+ "variChip"} onClick={() => this.onChangeVariation(vari.variationID)} /></div> 
       );
    
@@ -255,7 +277,7 @@ export class Content extends React.Component {
             options={[ { text: "Parent Title", value: "parent" }, { text: "Variation Title", value: "vari", disabled: isNewContent } ]}
             onChange={(e, {value}) => this.updateState({labelSource: value})}
           />
-          <Form.Input style={{ marginTop: -8 }} className="FixSemanticLabel">
+          <Form.Input error={errors.includes("parent label")} style={{ marginTop: -8 }} className="FixSemanticLabel">
             <input
               maxLength={72}
               value={ labelSource === "parent"? DataEntryStore.contentmgmt.contentLabel : DataEntryStore.contentmgmt.variLabel }
@@ -273,7 +295,7 @@ export class Content extends React.Component {
             noPass
             NoSelectUsers 
             label={"share " + mode} 
-            input= {isNewVari? false : {sendTargetType: variData.teamID === "global" && !variData.tags.length? "all": "teams", sendToTeamID: !this.state.teamID?  variData.teamID : this.state.teamID, sendToTagID: this.state.tagID? this.state.tagID :  variData.tags.length? "":  variData.tags[0]}}
+            input= {isNewVari? false : {sendTargetType: teamID === "global" && !tags.length? "all": "teams", sendToTeamID: teamID, sendToTagID: tags.length? tags[0]: ""}}
             output={val=> this.updateTargeting(val) } />
             : ""}
 
@@ -301,7 +323,7 @@ export class Content extends React.Component {
                 }
                
                 <Wysiwyg  
-                error={false} 
+                error={errors.includes("content body")} 
                 variID={UIStore.content.variationID} 
                 isNewVari={isNewVari} 
                 loadContent={DataEntryStore.contentmgmt.contentRAW} 
@@ -360,7 +382,7 @@ export class Content extends React.Component {
             <div style={{ flex: 1, marginLeft: 10 }}>
                {activeItem === "Attached Files" ? (
                 <FadeIn delay="500" transitionDuration="500">
-                  <Segment disabled={isNewVari}> <AttachedFiles mode={mode}  /> </Segment> 
+                  <Segment> <AttachedFiles mode={mode}  /> </Segment> 
                </FadeIn> ) 
             
                : activeItem === "Featured Image" ? (
@@ -425,7 +447,7 @@ export class Content extends React.Component {
             <div style={{ flex: 1, marginTop: 20 }}>
               {activeItem === "Attached File" ? (
                 <FadeIn delay="500" transitionDuration="500">
-                  {attachFiles}
+                  <AttachedFiles mode={mode}  />
                 </FadeIn>
               ) : activeItem === "Featured Image" ? (
                 <FadeIn delay="500" transitionDuration="500">
@@ -439,7 +461,7 @@ export class Content extends React.Component {
                 <FadeIn delay="500" transitionDuration="500">
                   <Channel
                     mode={mode}
-                    defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                    defaultChannel={DataEntryStore.contentmgmt.chanID}
                     submitButton
                   />
                 </FadeIn>
@@ -447,7 +469,7 @@ export class Content extends React.Component {
               <FadeIn delay="500" transitionDuration="500">
                 <QandA
                   mode={mode}
-                  content={mode === "announcement"? UIStore.content.announcmentID : UIStore.content.policyID}
+                  content={mode === "announcement"? UIStore.content.announcementID : UIStore.content.policyID}
                   vari={UIStore.content.variationID}
                 />
               </FadeIn>
@@ -478,7 +500,7 @@ export class Content extends React.Component {
                 <FadeIn delay="500" transitionDuration="500">
                   <Settings
                     mode={mode}
-                    defaultChannel={DataEntryStore.contentmgmt.settingsChannel}
+                    defaultChannel={DataEntryStore.contentmgmt.chanID}
                   />
                 </FadeIn>
               ) : (
