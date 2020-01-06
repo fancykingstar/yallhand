@@ -245,7 +245,6 @@ export class Content extends React.Component {
           />
         <Header as="h2" style={{ padding: 0, margin: 0 }}>
           Manage Content
-          {JSON.stringify(this.state)}
           <Header.Subheader>
             {mode === "policy" ? "FAQ" : "Announcement"}
           </Header.Subheader>
