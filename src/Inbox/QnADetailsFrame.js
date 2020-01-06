@@ -104,38 +104,6 @@ toggleContactInfo() {
 
     return [ ...baseStages]
   }
-
-//     getFormItemField(formItem) {
-//       if(formItem.type === "text") return (
-//       <InputGroup>
-//           <Input placeholder="" type="text" name={formItem.label} id="description" onChange={() => console.log("fix")} />
-//       </InputGroup> )
-
-//       else if(formItem.type === "select") return (
-//           <Input type="select" name={formItem.label} id="props_for" onChange={() => console.log("fix")}>
-//               {formItem.options.map(opt => <option>{opt}</option>)}
-//           </Input>
-//       )
-
-//       else if(formItem.type === "multi") return (
-//           <FormGroup>
-//           {formItem.options.map(opt =>  
-          
-//           <FormControlLabel
-//               control={<Checkbox 
-//               id={formItem.label}
-//               name={opt}
-//               onChange={() => console.log("fix")}
-//               />}
-//           label={opt}
-//           />
-
-//           )}
-//         </FormGroup>
-//       )
-      
-//   }
-
   
 
   render() {

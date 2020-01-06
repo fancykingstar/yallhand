@@ -5,7 +5,7 @@ import PostDetails from '../UserPortal/views/components/PostDetails';
 import QuestionAnswer from '../UserPortal/views/components/QuestionAnswer';
 
 export const ContentPreview = (props) => {
-
+    const qanda = props.data.variations[0].qanda;
     return(
         <Modal open={props.open} closeIcon onClose={()=>props.onClose()}>
             <Modal.Header>Preview</Modal.Header>
@@ -18,9 +18,9 @@ export const ContentPreview = (props) => {
 
            
                   <div className="page_content_bg">
-                  {props.data.variations[0].qanda.length? 
+                  {qanda && qanda.length? 
                      <div className="smallContainer">
-                        <QuestionAnswer qaData={props.data.variations[0].qanda} />
+                        <QuestionAnswer qaData={qanda} />
                      </div>:""}
                
                   </div>  
