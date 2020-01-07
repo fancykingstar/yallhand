@@ -171,8 +171,9 @@ class Store {
         policyID: "",
         announcementID: "",
         variationID: "",
+        
         history: [],
-        shouldBlockNavigation: true,
+        shouldBlockNavigation: false,
         title: ""
     }
 

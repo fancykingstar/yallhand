@@ -142,13 +142,13 @@ class VariationContent extends React.Component {
 
   }
 
-  componentDidUpdate(){
-    if (this.hasBeenChanged()) {
-      window.onbeforeunload = () => true
-    } else {
-      window.onbeforeunload = undefined
-    }
-  }
+  // componentDidUpdate(){
+  //   if (this.hasBeenChanged()) {
+  //     window.onbeforeunload = () => true
+  //   } else {
+  //     window.onbeforeunload = undefined
+  //   }
+  // }
 
   render() {
 

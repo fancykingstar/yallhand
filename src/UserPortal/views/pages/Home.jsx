@@ -128,11 +128,11 @@ class Home extends React.Component {
                         </div>
                         <div className="page_content shadow">
 
-                           {(TaskStore.allTasks.length) ? TaskStore.allTasks.map((item, index) => {
+                           {(TaskStore.allTasks.filter(t=>t.active).length) ? TaskStore.allTasks.filter(t=>t.active).map((item, index) => {
                               return <Task data={item} index={"hometask" + giveMeKey()} key={index} />
                            }) : ('')}
 
-                           {(SurveyStore.allSurveys.length) ? SurveyStore.allSurveys.map((item, index) => {
+                           {(SurveyStore.allSurveys.filter(t=>t.active).length) ? SurveyStore.allSurveys.filter(t=>t.active).map((item, index) => {
                               return <Survey data={item} index={"homesurvey" + giveMeKey()} key={index} />
                            }) : ('')}
 

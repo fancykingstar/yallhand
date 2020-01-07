@@ -1,26 +1,13 @@
 import React from 'react';
 import { Container } from 'reactstrap';
-import { TicketingStore } from "../../../Stores/TicketingStore";
-import { AccountStore } from "../../../Stores/AccountStore";
- 
+
 import Slider from "react-slick";
-import IconBox from "./IconBox";
+
 import ActionsForm from "./ActionsForm";
 import ActionsContent from "./ActionsContent";
 
 import ActionsData from '../../data/actions.json';
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
-
-// import Star from '../../assets/images/star.svg';
-import {getIcon} from "../../../SharedUI/SVGIconStorage";
-import ImportantDevicesRoundedIcon from '@material-ui/icons/ImportantDevicesRounded';
-
-import {UserStore} from "../../../Stores/UserStore";
-import {createTicket, modifyTicket} from "../../../DataExchange/Up";
-import {ticketOpen, newFile} from "../../../DataExchange/PayloadBuilder";
-import {GenerateFileName} from "../../../SharedCalculations/GenerateFileName";
-import {S3Upload} from "../../../DataExchange/S3Upload";
-import { isBoolean } from 'lodash';
 
 import CircleIcons from './CircleIcons';
 
@@ -61,26 +48,26 @@ class ActionSliderPreview extends React.Component {
    }
 
 
-   uploadFiles = async (files, ticket) => {
-      this.setState({loading: true});
-      let resources = [];
-      for (let index = 0; index < files.length; index++) {
-         const file = files[index];
-         await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}, true))
-         .then((r) => {
-         resources.push(r);
-         })
-         }
-      let filesLabel = Object.keys(ticket.activity[0].data).filter(i=>isBoolean(ticket.activity[0].data[i]))[0];
-      let filesObj = {};
-      filesObj[filesLabel] = resources.map(file=>file.resourceID);
-      let activityData = Object.assign(ticket.activity[0].data, filesObj);
-      const activity = Object.assign(ticket.activity[0], {data: activityData} );
-      const newTicket = Object.assign(ticket, {activity: [activity]});
-      await modifyTicket(newTicket);
+   // uploadFiles = async (files, ticket) => {
+   //    this.setState({loading: true});
+   //    let resources = [];
+   //    for (let index = 0; index < files.length; index++) {
+   //       const file = files[index];
+   //       await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, newFile(file.name, {tickets: [ticket.ticketID]}, true))
+   //       .then((r) => {
+   //       resources.push(r);
+   //       })
+   //       }
+   //    let filesLabel = Object.keys(ticket.activity[0].data).filter(i=>isBoolean(ticket.activity[0].data[i]))[0];
+   //    let filesObj = {};
+   //    filesObj[filesLabel] = resources.map(file=>file.resourceID);
+   //    let activityData = Object.assign(ticket.activity[0].data, filesObj);
+   //    const activity = Object.assign(ticket.activity[0], {data: activityData} );
+   //    const newTicket = Object.assign(ticket, {activity: [activity]});
+   //    await modifyTicket(newTicket);
 
-      this.setState({loading: false});
-    }
+   //    this.setState({loading: false});
+   //  }
    
   
 
@@ -93,9 +80,9 @@ class ActionSliderPreview extends React.Component {
       delete data.files;
 
 
-      const payload = {parent: this.state.selectedActionData.ticketID, activity: [{data, views:[], stage: "open-pending", updated: Date.now(), userID: UserStore.user.userID}]};
-      const res = await createTicket(ticketOpen(payload)).then(res => res.json());
-      if (files.length) this.uploadFiles(files, res)
+      // const payload = {parent: this.state.selectedActionData.ticketID, activity: [{data, views:[], stage: "open-pending", updated: Date.now(), userID: UserStore.user.userID}]};
+      // const res = await createTicket(ticketOpen(payload)).then(res => res.json());
+      // if (files.length) this.uploadFiles(files, res)
 
 
       this.slider.slickGoTo(0);
@@ -197,6 +184,7 @@ class ActionSliderPreview extends React.Component {
                {selectedActionData.assoc && selectedActionData.assoc.length? 
                <Container elevation={4} className="action-form">
                   <ActionsContent
+                     disabled
                      onProceed={this.proceed.bind(this)}
                      onCancel={this.backToActions.bind(this)}
                      actionDetail={this.state.selectedActionData}
@@ -210,6 +198,7 @@ class ActionSliderPreview extends React.Component {
                      onCancel={this.hideActionForm.bind(this)}
                      actionDetail={this.state.selectedActionData}
                      loading={this.state.loading}
+                     disabled={true}
                   />
                   
                </Container>

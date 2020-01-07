@@ -14,7 +14,7 @@ export default class VariationChip extends React.Component {
     super(props);
 
     this.state = {
-      anchorEl: false
+      anchorEl: null
     }
   }
 
@@ -27,16 +27,13 @@ export default class VariationChip extends React.Component {
   };
 
   EditVariation = () => {
-    const { UIStore } = this.props;
     this.setState({anchorEl: null});
-    UIStore.set("content", "showTargeting", true);
+    this.props.edit();
   }
 
   DuplicateVariation = () => {
-    const { UIStore } = this.props;
     this.setState({anchorEl: null});
-    UIStore.set("content", "showTargeting", true);
-    UIStore.set("content", "duplicate", true);
+    this.props.dupe();
   }
 
   render() {

@@ -32,18 +32,17 @@ class ActionsForm extends React.Component {
         this.setState({files: []})
       }
 
-    //  uploadFiles = async (type) => {
-    //     this.setState({loading: true});
+     uploadFiles = async (type) => {
+        this.setState({loading: true});
    
-    //     await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
-    //     .then((r) => {
-    //     this.props.close();
-    //     console.log("fileattached to S3 as ", r)
-    //     this.props.output(r);
-    //     })
+        await S3Upload("authenticated-read", "gramercy", GenerateFileName(AccountStore.account, file.name), file, this.props.assoc? newFile(label, this.props.assoc): newFile(label))
+        .then((r) => {
+        this.props.close();
+        this.props.output(r);
+        })
     
-    //     this.setState({loading: false});
-    //   };
+        this.setState({loading: false});
+      };
   
     handleFileChange = async (e) => {
         e.preventDefault();
@@ -72,6 +71,11 @@ class ActionsForm extends React.Component {
      } 
 
     getFormItemField(formItem) {
+        if(formItem.type !== "file" && this.state[formItem.label]=== undefined) {
+            let setInput = {};
+            setInput[formItem.label] = formItem.type !== "multiselect"? "": [];
+            this.setState(setInput);
+        }
         if(formItem.type === "text") return (
         <InputGroup>
             <Input placeholder="" type="text" name={formItem.label} id="description" onChange={this.handleInputChange.bind(this)} />
@@ -149,7 +153,9 @@ class ActionsForm extends React.Component {
         } 
         this.setState(newValue);
     }
-    async handleActionFormSubmit(e) {
+    
+
+     async handleActionFormSubmit(e) {
         e.preventDefault();
         if(Object.keys(this.state).length > 1) {
         let conditions = {};
@@ -159,8 +165,8 @@ class ActionsForm extends React.Component {
         if (valid.valid) this.props.onSubmit(this.state);
         }
         else this.props.onSubmit(this.state);
-
     }
+
 
     smallIconStyle = { display: "flex", alignItems: "center"}
     h4Style = { display: "flex", alignItems: "center" }

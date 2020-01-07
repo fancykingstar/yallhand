@@ -34,9 +34,9 @@ export class AttachedFiles extends React.Component {
   render() {
     const {ResourcesStore, UIStore, DataEntryStore, AccountStore} = this.props
     const source = this.props.source? this.props.source : {mode: this.props.mode, contentID: UIStore.content[this.props.mode + "ID"], variID:UIStore.content.variationID}
-  
+    const isNew = UIStore.content.variationID === "new" || UIStore.content.variationID === "dupe";
     const handleAddButton = () => {
-      DataEntryStore.reset("fileForUpload", {"isNew": true, "teamID": "global", "tagID": "none", "associations": {"policies": [], "announcements": []}})
+      DataEntryStore.reset("fileForUpload", { "isNew": true, "teamID": "global", "tagID": "none", "associations": {"policies": [], "announcements": []}})
       UIStore.set("modal", "uploadAssocEdit", false)
       UIStore.set("modal", "uploadFile", true)
     }
@@ -69,7 +69,7 @@ export class AttachedFiles extends React.Component {
 
 
     const getFiles = () => ResourcesStore.matchedResources("file", source.mode, source.contentID, source.variID) 
-    const currentFiles = DataEntryStore.content.isNew !== true ? getFiles() : []
+    const currentFiles = isNew !== true ? getFiles() : []
     const attachedList = currentFiles.map(attach => (
       <ListItem key={"attachedResource" + giveMeKey()}>
       <ListItemAvatar>

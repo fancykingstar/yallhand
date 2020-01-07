@@ -3,7 +3,7 @@ import {sortByUTC} from "./SortByUTC";
 const addPolicyState = (policy) => {
     const stages = new Set(policy.variations.map(pol => pol.stage));
     if (stages.has("published") && stages.size === 1) {
-      return "ok";
+      return "published";
     } else if (stages.has("published") && stages.size > 1) {
       return "partial";
     } else if (stages.has("draft") && stages.size >= 1) {

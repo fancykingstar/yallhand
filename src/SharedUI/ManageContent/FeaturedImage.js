@@ -317,15 +317,16 @@ export class FeaturedImage extends React.Component {
             >
               Stock...
             </Form.Button>
-            { !DataEntryStore.contentmgmt.hide ? 
+            {/* { !DataEntryStore.contentmgmt.hide ?  */}
               <Form.Button
                 onClick={e => this.handleUpdate(e)}
                 style={{ marginBottom: 20 }}
                 disabled={ this.state.url ? false: true }
               >
                 Submit
-              </Form.Button> : ""
-            }
+              </Form.Button> 
+              {/* : "" */}
+            {/* } */}
           </Form.Group>
         </Form>
   

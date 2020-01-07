@@ -196,7 +196,7 @@ class TicketDetailsFrame extends React.Component {
         <FadeIn>
          
    
-        <Paper>
+        <Paper className="ServiceDeskTicket" elevation={2}>
           <div className="section_title" style={{backgroundColor: _stage === "open-pending"? "#da17b1": _stage.includes('close')? "#585858" :"#39b6f8"}}>
             <div>
               <h4 style={{ color: "#FFFFFF" }}>{QandA? _content.label :_parent.label} {deleteEnabled? <span style={{float: "right"}}><Icon name="trash alternate outline" onClick={()=>this.updateState({deleteModal: true})} /></span>: ""} </h4>

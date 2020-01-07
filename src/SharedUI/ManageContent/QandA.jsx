@@ -3,7 +3,8 @@ import {Segment, Button, Header, List, Modal, Input} from "semantic-ui-react";
 import TimeAgo from 'react-timeago'
 
 import {UIStore} from "../../Stores/UIStore";
-
+import { PoliciesStore } from "../../Stores/PoliciesStore";
+import { AnnouncementsStore } from "../../Stores/AnnouncementsStore";
 import {contentEdit} from "../../DataExchange/PayloadBuilder";
 import {modifyPolicy, modifyAnnouncement} from "../../DataExchange/Up";
 
@@ -13,10 +14,22 @@ export class QandA extends React.Component {
         this.answerInput = React.createRef();
         this.state = {data: [], editingIndex: "", editedAnswer: "", deleteIndex: "", confirmDelete: false}
     }
-    componentDidMount(){
-        if(this.props.data) this.setState({data: this.props.data});
+
+    async setData(){
+        const {content, vari} = this.props;
+        const source = this.props.mode === "announcement"? AnnouncementsStore:PoliciesStore;
+        const variation = await source._getVariation(content, vari);
+        this.setState({content, vari, data: variation.qanda || []})
     }
-    
+
+    componentDidMount(){
+        if(UIStore.content.variationID) this.setData();
+    } 
+
+    componentDidUpdate(){
+        if (this.props.vari !== this.state.vari) this.setData();
+    }
+
     focus(){this.answerInput.current.focus()}
 
     updateState(val){this.setState(val)};
@@ -55,7 +68,7 @@ export class QandA extends React.Component {
 
         const qaitem = (item, i) => 
         <List.Item>
-        <List.Content>
+        <List.Content style={{paddingLeft: 0}}>
             <List.Header as='a'>{item.q}</List.Header>
             {
                 editingIndex !== i? <>

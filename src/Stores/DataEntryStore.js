@@ -40,18 +40,25 @@ class Store {
     payload: {}
   }
 
-  @observable content = {
-    variationID: "",
-    label: "",
-    teamID: "",
-    tagID: "",
-    stage: "draft",
-    isNew: false
-  }
+  // @observable content = {
+  //   variationID: "",
+  //   label: "",
+  //   teamID: "",
+  //   tagID: "",
+  //   stage: "draft",
+  //   isNew: false
+  // }
 
   @observable contentmgmt = {
-    label: "",
-    variationID: "",
+    updatedSinceReset: false,
+
+    mode: "",
+    contentData: {},
+    variData: {},
+
+    contentLabel: "",
+    variLabel: "",
+
     img: "",
     imgData: {},
     campaign: "",
@@ -59,12 +66,19 @@ class Store {
     keywordInput: "",
     keywords: [],
     reviewAlert: 0,
-    schedAlert: 0,
-    eventType: "",
-    eventDateTime: "",
-    settingsLabel: "",
-    settingsChannel: "",
-    everPublished: ""
+    chanID: "",
+
+    contentRAW: {},
+    contentHTML: "",
+    teamID: "",
+    tags: [],
+    // schedAlert: 0,
+    // eventType: "",
+    // eventDateTime: "",
+    // settingsLabel: "",
+    // settingsChannel: "",
+    everPublished: "",
+    prevImg: "" /* featured image */
   }
 
   @observable teamEditFields = {
@@ -294,9 +308,11 @@ class Store {
 
   set(target, key, val, deepval = null) {
     try {
-      deepval === null
+      deepval === null || deepval === "*"
         ? (this.keys[target][key] = val)
         : (this.keys[target][key][val] = deepval);
+        const isReset = this.keys[target].updatedSinceReset;
+        if (isReset !== undefined && !isReset && key !== "updatedSinceReset" && deepval !== "*") this.keys[target].updatedSinceReset = true;
     } catch (error) {
       console.log("Is the request value set in DataStore Keys?..targeting " + target, error);
     }
@@ -330,7 +346,6 @@ class Store {
         }
       }
       });
-      // this.resetDraft()
     }
   _isReset(target) {
     let reset = true

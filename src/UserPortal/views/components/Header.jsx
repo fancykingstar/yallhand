@@ -15,7 +15,7 @@ import { deleteUser } from "../../../DataExchange/Fetch";
 class Header extends React.Component {
    constructor(props) {
       super(props);
-      this.state = { user: null, profileMenuOpen: false }
+      this.state = { user: null, profileMenuOpen: false, filter: "", title: "" }
       this.toggleProfileMenu = this.toggleProfileMenu.bind(this);
    }
 
@@ -27,15 +27,31 @@ class Header extends React.Component {
       this.props.history.push("/");
    }
 
-   componentDidMount() {
+   updateFilter(obj) {
+      this.setState({filter: obj.channel});
+      this.props.updateFilter(obj);
+   }
 
+   componentDidMount() {
       this.setState({ user: UserStore.user })
    }
+
    toggleProfileMenu() {
       this.setState(prevState => ({
          profileMenuOpen: !prevState.profileMenuOpen
       }));
    }
+
+   static getDerivedStateFromProps(props, state) {
+      if (props.pageTitle !== state.title) {
+        return {
+         title: props.pageTitle,
+         filter: ""
+        };
+      }
+      else return null;
+    }
+
    render() {
       const pageTitle = this.props.pageTitle;
       const user = this.state.user;
@@ -62,7 +78,7 @@ class Header extends React.Component {
                                <SemanticDropdown.Item text="Newest" onClick={()=>this.props.updateFilter({sort: "new"})} />
                                <SemanticDropdown.Item text="Oldest" onClick={()=>this.props.updateFilter({sort: "old"})} />
                                <SemanticDropdown.Divider/>
-                               {ChannelStore._channelSelect.map(chan => <SemanticDropdown.Item text={chan.text} key={chan.key} onClick={()=>this.props.updateFilter({channel: chan.value})}  />  )}
+                               {ChannelStore._channelSelect.map(chan => <SemanticDropdown.Item active={this.state.filter === chan.value} text={chan.text} key={chan.key} onClick={()=>this.updateFilter({channel: chan.value})}  />  )}
                             
                             </SemanticDropdown.Menu>
                          </SemanticDropdown>

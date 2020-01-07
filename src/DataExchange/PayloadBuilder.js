@@ -358,21 +358,21 @@ export const emailCampaign = (isSendNow, isScheduled) => {
   ///POLICIES (FAQs) & ANNOUNCEMENT
 
   export const content = (obj) => {
-    const {label, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
+    const {contentLabel, variLabel, contentRAW, contentHTML, teamID, tagID, stage, img, chanID} = obj;
     return {
       chanID: !chanID? "All": chanID,
-      label,
+      label: contentLabel,
       accountID: accountID(),
       img,
       everPublished: stage === "published",
       reviewAlert: 0,
       keywords: [],
       variations: [
-        {
+        { 
         variationID: generateID(),
         stage: !stage? "draft": stage,
         teamID: !teamID? "global": teamID,
-        label: teamID === !teamID && !tagID? "": label,
+        label: variLabel || "",
         tags: tagID? [tagID]:[],
         contentRAW,
         contentHTML,
@@ -392,6 +392,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     Object.keys(obj).forEach((key, i) => { if(key[0]!=="_") updatedFields[key] = obj[key]});
 
     let newContentValues = {}
+    if (updatedFields.contentLabel) newContentValues.label = updatedFields.contentLabel;
     if (updatedFields.img) newContentValues.img = updatedFields.img;
     if (updatedFields.chanID) newContentValues.chanID = updatedFields.chanID;
     if (mode === "announcement") {newContentValues.announcementID = contentID}
@@ -400,7 +401,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     newContentValues.updated = Date.now();
 
     let newVariValues = {};
-    if (updatedFields.label) newVariValues.label = updatedFields.label;
+    if (updatedFields.variLabel) newVariValues.label = updatedFields.variLabel;
     if (updatedFields.contentRAW) newVariValues.contentRAW = updatedFields.contentRAW;
     if (updatedFields.contentHTML) newVariValues.contentHTML = updatedFields.contentHTML;
     if (updatedFields.teamID) newVariValues.teamID = updatedFields.teamID;
@@ -409,7 +410,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     if (updatedFields.qanda) newVariValues.qanda = updatedFields.qanda;
     newVariValues.updated = Date.now();
     newVariValues.userID = userID();
-    newVariValues.variationID = variID? variID : generateID();
+    newVariValues.variationID = variID === 'new' || variID === "dupe"? generateID() : variID;
 
     //Correct for Nasty MOBX bug --- stringify/parse will release from Observer
     let parent = mode === "policy" ? JSON.stringify(PoliciesStore._getPolicy(contentID)) : JSON.stringify(AnnouncementsStore._getAnnouncement(contentID));
@@ -420,7 +421,7 @@ export const emailCampaign = (isSendNow, isScheduled) => {
     const otherVaris = variations.filter(i=> i.variationID !== variID);
     const combinedVaris = [...otherVaris, Object.assign(editedVari.length? editedVari[0]: {}, newVariValues)];
     newContentValues.variations = combinedVaris;
-    if(updatedFields === "published") newContentValues.everPublished = true;
+    if(updatedFields.stage === "published") newContentValues.everPublished = true;
     return _.extend({}, base(), newContentValues);
   }
   
