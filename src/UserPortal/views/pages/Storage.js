@@ -33,7 +33,7 @@ class Storage extends React.Component {
   
     const getIcon = (filetype) => {return FileTypeIcons[filetype] }
 
-    const allResources = [...ResourcesStore.fileResources, ...ResourcesStore.urlResources]
+    const allResources = [...ResourcesStore.fileResources]
 
     const downloadFile = (S3Key, label) => {
         const ext = "." + S3Key.split(".")[1]

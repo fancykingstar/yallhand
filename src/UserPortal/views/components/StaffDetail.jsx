@@ -16,6 +16,9 @@ import mobile_icon from "../../assets/images/mobile_icon.svg";
 import phone_icon from "../../assets/images/old-typical-phone.png";
 import cake_icon from "../../assets/images/birthday-cake.png";
 
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+
+
 class StaffDetail extends React.Component {
     constructor(props) {
         super(props);
@@ -100,7 +103,7 @@ class StaffDetail extends React.Component {
                         <List component="div">
                             <ListItem style={{display: !this.props.email ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={department_icon} alt="" />
+                                <img src={department_icon} alt="" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.email} />
                             </ListItem>
