@@ -24,12 +24,6 @@ import { isBoolean } from 'lodash';
 
 import CircleIcons from './CircleIcons';
 
-// import AskManagement from '../../assets/images/actions/askManagement.svg';
-// import RefereCandidate from '../../assets/images/actions/refereCandidate.svg';
-// import anonymousReport from '../../assets/images/actions/anonymousReport.svg';
-// import compensationReview from '../../assets/images/actions/compensationReview.svg';
-// import reportSomething from '../../assets/images/actions/reportSomething.svg';
-
 class ActionSliderPreview extends React.Component {
    constructor(props) {
       super(props);
