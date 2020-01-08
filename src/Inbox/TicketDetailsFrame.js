@@ -152,6 +152,7 @@ class TicketDetailsFrame extends React.Component {
     const fileLabels = _parent.ticketItems && _parent.ticketItems[0].data.filter(i => i.type === "file");
     const firstActivity = activity[activity.length - 1];
 
+
     const featuredData = QandA ? 
       <>
         <Col> <span style={{fontWeight: 800}}>Question</span><br/> <span>{firstActivity.data.q}</span> </Col>
