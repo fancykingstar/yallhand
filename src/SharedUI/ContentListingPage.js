@@ -1,36 +1,48 @@
-import React from "react";
-import { inject, observer } from "mobx-react";
-import { Header, Button, Icon } from "semantic-ui-react";
-import { withRouter } from "react-router-dom";
-import { LazyImg } from "./LazyImg";
-import MUIDataTable from "mui-datatables";
-import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly";
-import CustomToolbarSelect from "./CustomToolbarSelect";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import { modifyAnnouncement, modifyPolicy } from "../DataExchange/Up";
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import { inject, observer } from 'mobx-react';
+import { Header, Button, Icon } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import MUIDataTable from 'mui-datatables';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import Chip from '@material-ui/core/Chip';
-import styled from "styled-components";
-import "./style.css";
+import styled from 'styled-components';
+
+import { LazyImg } from './LazyImg';
+import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly';
+import CustomToolbarSelect from './CustomToolbarSelect';
+import { modifyAnnouncement, modifyPolicy } from '../DataExchange/Up';
+import './style.css';
+
+const MenuContainer = styled.div`
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  paddingbottom: 30px;
+  @media (max-width: 580px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+`;
 
 @inject(
-  "AnnouncementsStore",
-  "PoliciesStore",
-  "AccountStore",
-  "UIStore",
-  "DataEntryStore",
-  "ChannelStore"
+  'AnnouncementsStore',
+  'PoliciesStore',
+  'AccountStore',
+  'UIStore',
+  'DataEntryStore',
+  'ChannelStore',
 )
 @observer
 class ContentListingPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0 };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.state = { width: 0 };
   }
 
   componentDidMount() {
-    const { DataEntryStore, UIStore } = this.props;
+    const { DataEntryStore, UIStore, } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
     // DataEntryStore.reset("contentmgmt");
@@ -41,8 +53,8 @@ class ContentListingPage extends React.Component {
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  updateWindowDimensions = () => {
+    this.setState({ width: window.innerWidth });
   }
 
   getMuiTheme = () =>
@@ -50,146 +62,196 @@ class ContentListingPage extends React.Component {
       overrides: {
         MUIDataTableBodyCell: {
           root: {
-            fontFamily: "Lato",
-            fontSize: "1em"
-          }
+            fontFamily: 'Lato',
+            fontSize: '1em',
+          },
         },
         MUIDataTableBodyRow: {
           root: {
-            zIndex: "1 !important"
-          }
+            zIndex: '1 !important',
+          },
         },
         MUIDataTableSelectCell: {
           fixedHeader: {
-            zIndex: "1 !important"
+            zIndex: '1 !important',
           },
           headerCell: {
-            zIndex: "1 !important"
-          }
+            zIndex: '1 !important',
+          },
         },
         MUIDataTableHeadCell: {
           fixedHeader: {
             // position: "relative"
-            zIndex: "1 !important"
-          }
+            zIndex: '1 !important',
+          },
         },
         MUIDataTable: {
           root: {
-            backgroundColor: "#FF000"
+            backgroundColor: '#FF000',
           },
           paper: {
-            boxShadow: "none",
-            border: "2px solid #e3e8ee",
-            borderRadius: 8
+            boxShadow: 'none',
+            border: '2px solid #e3e8ee',
+            borderRadius: 8,
           },
           responsiveScrollMaxHeight: {
-            maxHeight: '678px !important'
-          }
-        }
+            maxHeight: '678px !important',
+          },
+        },
+      },
+    });
+
+  handleClick = val => {
+    const {
+      AnnouncementsStore,
+      UIStore,
+      DataEntryStore,
+      PoliciesStore,
+    } = this.props;
+    const { mode, history } = this.props;
+    const id = `${mode}ID`;
+    const source = mode === 'announcement' ? AnnouncementsStore : PoliciesStore;
+    const content = { ...val };
+
+    UIStore.set('content', id, val[id]);
+    UIStore.set(
+      'content',
+      'variationID',
+      source._toggleGlobalVariation(content[id])
+    );
+    DataEntryStore.set('contentmgmt', 'label', content.label);
+    DataEntryStore.set('contentmgmt', 'img', content.img);
+    DataEntryStore.set('contentmgmt', 'bundle', 'queue');
+    DataEntryStore.set(
+      'contentmgmt',
+      'qanda',
+      content.variations.filter(
+        i => i.variationID === UIStore.content.variationID
+      )[0].qanda
+    );
+    DataEntryStore.set('contentmgmt', 'keywords', content.keywords);
+    DataEntryStore.set('contentmgmt', 'reviewAlert', content.reviewAlert);
+    history.push(
+      `/panel/${mode === 'announcement' ? 'announcements' : 'faqs'}/${
+      UIStore.content[id]
+      }`
+    );
+  };
+
+  createContent = () => {
+    const { mode, history } = this.props;
+    history.push(
+      mode === 'policy'
+        ? '/panel/faqs/content/new'
+        : '/panel/announcements/content/new'
+    );
+  };
+
+  handleFeatured = async (action, tableinfo) => {
+    const {
+      AnnouncementsStore,
+      PoliciesStore,
+      AccountStore,
+    } = this.props;
+    const { mode } = this.props;
+    const { accountID } = AccountStore.account;
+
+    tableinfo.data.forEach(async i => {
+      const ID = mode === 'announcement'
+        ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID
+        : PoliciesStore.allPolicies[i.dataIndex].policyID;
+
+      if (mode === 'announcement') {
+        await modifyAnnouncement({
+          accountID,
+          announcementID: ID,
+          featured: action === 'feature',
+        }, false);
+      }
+      else {
+        await modifyPolicy({
+          accountID,
+          policyID: ID,
+          featured: action === 'feature',
+        }, false);
       }
     });
+  };
 
   render() {
     const {
       AnnouncementsStore,
-      UIStore,
       PoliciesStore,
-      DataEntryStore,
       ChannelStore,
-      AccountStore
     } = this.props;
-    const mode = this.props.mode;
-    const source = mode === "announcement" ? AnnouncementsStore : PoliciesStore;
+    const { mode, } = this.props;
     const all =
-      mode === "announcement"
+      mode === 'announcement'
         ? AnnouncementsStore.allAnnouncements
         : PoliciesStore.allPolicies;
-    const id = `${mode}ID`;
 
-    const MenuContainer = styled.div`
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      paddingbottom: 30px;
-      @media (max-width: 580px) {
-        justify-content: center;
-        flex-direction: column;
-      }
-    `;
-
-    const handleClick = val => {
-      UIStore.set("content", id, val[id]);
-      const content = Object.assign({}, val);
-      UIStore.set(
-        "content",
-        "variationID",
-        source._toggleGlobalVariation(content[id])
-      );
-      DataEntryStore.set("contentmgmt", "label", content.label);
-      DataEntryStore.set("contentmgmt", "img", content.img);
-      DataEntryStore.set("contentmgmt", "bundle", "queue");
-      DataEntryStore.set("contentmgmt", "qanda", content.variations.filter(i=>i.variationID === UIStore.content.variationID)[0].qanda);
-      DataEntryStore.set("contentmgmt", "keywords", content.keywords);
-      DataEntryStore.set("contentmgmt", "reviewAlert", content.reviewAlert);
-      this.props.history.push(
-        `/panel/${mode === "announcement" ? "announcements" : "faqs"}/${
-        UIStore.content[id]
-        }`
-      );
-      {/*this.props.history.push({pathname: `/panel/content/${UIStore.content[id]}`, state: {mode: mode}});*/}
-    };
-
-    const createContent = () => {
-      this.props.history.push(
-              mode === "policy"
-                ? "/panel/faqs/content/new"
-                : `/panel/announcements/content/new`
-            );
-      {/*this.props.history.push({pathname: '/panel/content', state: {mode: mode}});*/}
-    };
-
-    const handleFeatured = async (action, tableinfo) => {
-      const accountID = AccountStore.account.accountID;
-      tableinfo.data.forEach(async i => {
-        const ID = mode === "announcement" ? AnnouncementsStore.allAnnouncements[i.dataIndex].announcementID : PoliciesStore.allPolicies[i.dataIndex].policyID;
-        if (mode === "announcement") await modifyAnnouncement({ accountID, announcementID: ID, featured: action === "feature" }, false);
-        else await modifyPolicy({ accountID, policyID: ID, featured: action === "feature" }, false)
-      });
-    };
-
-   
     const columns = [
       {
         options: {
-          customBodyRender: img => { return  <LazyImg style={{ height: 75, width: 120, objectFit: img ? "cover" : "contain" }} alt="" height={75} width={120} img={img} src={ img ? img : "https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png" } /> ; },
+          customBodyRender: img => (
+            <LazyImg
+              style={{
+                height: 75,
+                width: 120,
+                objectFit: img ? 'cover' : 'contain',
+              }}
+              alt=""
+              height={75}
+              width={120}
+              img={img}
+              src={
+                img || 'https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png'
+              }
+            />
+          ),
           filter: false,
         },
-      }, 
+      },
       {
-        label: "Featured",
-        name: "Featured",
+        label: 'Featured',
+        name: 'Featured',
         options: {
           filter: true,
           sort: false,
-          customBodyRender: featured => { return  featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />},
-          filterOptions: {
-            names: ['Featured', "Not Featured"],
-            logic(featured, filterVal) {
-              const show = (filterVal.indexOf("Featured") >= 0 && featured == true) || (filterVal.indexOf("Not Featured") >= 0 && featured != true);
-              return !show
-            }
+          customBodyRender: featured => {
+            return featured && (
+              <Chip
+                icon={<StarRoundedIcon />}
+                label="Featured"
+                variant="outlined"
+              />
+            );
           },
-        }
-      }, 
-      {name:  "Title", options: { filter: false }},
-      {name:  "Last Updated", options: { filter: false }},
-      {name:  "Channel", options: { filter: true }},
-      {name:  "Stage", options: { filter: true }}
+          filterOptions: {
+            names: [
+              'Featured',
+              'Not Featured',
+            ],
+            logic(featured, filterVal) {
+              const show = (
+                filterVal.indexOf('Featured') >= 0 && featured === true
+              ) || (
+                  filterVal.indexOf('Not Featured') >= 0 && featured !== true
+                );
+              return !show;
+            },
+          },
+        },
+      },
+      { name: 'Title', options: { filter: false, }, },
+      { name: 'Last Updated', options: { filter: false, }, },
+      { name: 'Channel', options: { filter: true, }, },
+      { name: 'Stage', options: { filter: true, }, },
     ];
 
-    const mobileColumns = [ 
-      {name:  "Title"},
-      {name:  "Last Updated"},
+    const mobileColumns = [
+      { name: 'Title', },
+      { name: 'Last Updated', },
     ];
 
     const data = all.map(item => [
@@ -198,7 +260,7 @@ class ContentListingPage extends React.Component {
       item.label,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
-      item.state === "ok" ? "published" : item.state
+      item.state === 'ok' ? 'published' : item.state,
     ]);
 
     const mobileData = all.map(item => [
@@ -208,65 +270,81 @@ class ContentListingPage extends React.Component {
 
     const options = {
       elevation: 1,
-      selectableRows: "multiple",
+      selectableRows: 'multiple',
       customToolbarSelect: selectedRows => (
         <CustomToolbarSelect
           data={all}
           selectedRows={selectedRows}
-          handleClick={(e, v) => handleFeatured(e, v)}
+          handleClick={(e, v) => { this.handleFeatured(e, v); }}
         />
       ),
       filter: true,
-      filterType: "dropdown",
+      filterType: 'dropdown',
       print: false,
-      responsive: "scrollMaxHeight",
+      responsive: 'scrollMaxHeight',
       viewColumns: false,
       download: false,
-      onRowClick: (i, data) => handleClick(all[data.dataIndex])
+      onRowClick: (i, rowData) => { this.handleClick(all[rowData.dataIndex]); },
     };
 
-    const { width } = this.state;
+    const { width, } = this.state;
 
     return (
-      <React.Fragment>
+      <>
         <div>
-          <Header as="h2" style={{ padding: 0, margin: 0 }}>
-            {mode === "announcement" ? "Announcements Feed" : "FAQs"}
+          <Header
+            as="h2"
+            style={{
+              padding: 0,
+              margin: 0,
+            }}
+          >
+            {mode === 'announcement' ? 'Announcements Feed' : 'FAQs'}
             <Header.Subheader>
-              {mode === "announcement"
-                ? "Post relevant content for news and other updates"
-                : "Add frequently asked questions and answers"}
+              {mode === 'announcement'
+                ? 'Post relevant content for news and other updates'
+                : 'Add frequently asked questions and answers'}
             </Header.Subheader>
           </Header>
           <MenuContainer>
-            <div style={{ textAlign: "center" }}>
-              <Button color="blue" onClick={() => createContent()}>
-                {" "}
-                <Icon name="plus" /> Create New...{" "}
+            <div style={{ textAlign: 'center', }}>
+              <Button
+                color="blue"
+                onClick={this.createContent}
+              >
+                {' '}
+                <Icon name="plus" />
+                Create New...
+                {' '}
               </Button>
             </div>
           </MenuContainer>
-          <div className="muidatatable-custom" style={{ marginTop: 15 }}>
+          <div
+            className="muidatatable-custom"
+            style={{ marginTop: 15, }}
+          >
             <MuiThemeProvider theme={this.getMuiTheme()}>
               {
-                width > 767?  <MUIDataTable
-                                // title={"Employee List"}
-                                data={data}
-                                columns={columns}
-                                options={options}
-                              />
-                            :
-                              <MUIDataTable
-                                data={mobileData}
-                                columns={mobileColumns}
-                                options={options}
-                              />
+                width > 767 ? (
+                  <MUIDataTable
+                    data={data}
+                    columns={columns}
+                    options={options}
+                  />
+                ) : (
+                  <MUIDataTable
+                    data={mobileData}
+                    columns={mobileColumns}
+                    options={options}
+                  />
+                )
               }
             </MuiThemeProvider>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
+
 export default withRouter(ContentListingPage);
