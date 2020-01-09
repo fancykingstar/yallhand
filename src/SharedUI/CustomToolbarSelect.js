@@ -15,7 +15,9 @@ const defaultToolbarSelectStyles = {
     position: "relative",
     transform: "translate(-10px, -40%)",
     top: "20px",
-    color: "#8F8F8F"
+    color: "#8F8F8F",
+    paddingBottom: "8px",
+    cursor: "pointer"
   },
 
   featured: {
@@ -54,10 +56,10 @@ class CustomToolbarSelect extends React.Component {
     return (
       <div className={"custom-toolbar-select"}>
         <Tooltip title={this.hasFeatured()? "Remove Feature":"Feature" }>
-          <IconButton className={classes.iconStyle} onClick={()=> this.handleClick(this.hasFeatured()? "remove feature":"feature")}>
+          <label className={classes.iconStyle} onClick={()=> this.handleClick(this.hasFeatured()? "remove feature":"feature")}>
            {/*{this.hasFeatured()?  <StarBorderIcon className={classes.starIcon} />: <StarIcon className={classes.starIcon} />}*/}
            {this.hasFeatured()?  <span className={classes.featured}>Feature</span>: <span className={classes.featured}>Feature</span>}
-          </IconButton>
+          </label>
         </Tooltip>
         {/* <Tooltip title={this.hasPublished()? "Archive":"Delete"}>
           <IconButton className={classes.iconStyle} onClick={()=>this.handleClick("archive")}>

@@ -5,6 +5,8 @@ import StaffDetail from './StaffDetail';
 import DirectoryData from '../../data/directory.json';
 import Slider from "react-slick";
 import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
+import superviseduser_icon from "../../assets/images/superviseduser_grey.svg";
+import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 
 @inject("AccountStore")
 @observer
@@ -94,6 +96,7 @@ class Hierarchy extends React.Component {
 
    render() {
       const { boss, width } = this.state;
+      const { AccountStore } = this.props;
 
       if (width < 600) {
          const settings = {
@@ -132,28 +135,46 @@ class Hierarchy extends React.Component {
          );
       } else {
          return (
-            <Grid className="hierarchy-wrap bg-white rounded-corners" container spacing={1}>
-               {boss.map((iboss, i) =>
-                  <Grid key={i} className="hierarchy-group" item xs={12} sm={3}>
-                     {this.get_employee(iboss).map((e, j) =>
-                        <StaffDetail
-                           update_boss={this.update_boss}
-                           active={(boss[i + 1] === e.userID)}
-                           boss={{ index: (i + 1), boss: e.userID }}
-                           has_child={this.check_employee_has_child(e.userID)}
-                           key={j}
-                           view="hierarchy"
+            <>
+               <Grid className="rounded-corners" container spacing={1}>
+                  {boss.map((iboss, i) => {
+                     const user = AccountStore._getUser(iboss)
+                     let department = user ? user.profile['Department'] ? user.profile['Department'] : "" : ""
+                     let boss = user ? user.displayName_full + " (" + department + ")" : ""
+                     return <Grid className="hierarchy-group" item xs={12} sm={3} key={i}>
+                        <ListItem style={{ display: i === 0 ? "none" : "flex" }} className="justify-content-center">
+                           <ListItemIcon style={{ marginRight: "-3px" }}>
+                              <img src={superviseduser_icon} alt="" width="20" />
+                           </ListItemIcon>
+                           <ListItemText secondary={<Typography type="body2" style={{ fontFamily: "Rubik", color: "#88878f" }}>{boss}</Typography>} style={{ flex: "inherit" }} />
+                        </ListItem>
+                     </Grid>
+                     }
+                  )}
+               </Grid>
+               <Grid className="hierarchy-wrap bg-white rounded-corners" container spacing={1}>
+                  {boss.map((iboss, i) => 
+                     <Grid key={i} className="hierarchy-group" item xs={12} sm={3}>
+                        {this.get_employee(iboss).map((e, j) =>
+                           <StaffDetail
+                              update_boss={this.update_boss}
+                              active={(boss[i + 1] === e.userID)}
+                              boss={{ index: (i + 1), boss: e.userID }}
+                              has_child={this.check_employee_has_child(e.userID)}
+                              key={j}
+                              view="hierarchy"
 
-                           profile={e.img}
-                           name={e.displayName_full}
-                           designation={e.profile.Title}
-                           department={e.profile.Department}
-                           location={e.profile.Location}
-                           contact={e.phone}
-                           email={e.email}
-                           socials={this.socials(e)} />)}
-                  </Grid>)}
-            </Grid>
+                              profile={e.img}
+                              name={e.displayName_full}
+                              designation={e.profile.Title}
+                              department={e.profile.Department}
+                              location={e.profile.Location}
+                              contact={e.phone}
+                              email={e.email}
+                              socials={this.socials(e)} />)}
+                     </Grid>)}
+               </Grid>
+            </>
          );
       }
 

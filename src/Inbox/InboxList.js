@@ -4,11 +4,12 @@ import { Label } from "semantic-ui-react";
 import { Row, Col } from "reactstrap";
 import { AccountStore } from "../Stores/AccountStore";
 import { TicketingStore } from "../Stores/TicketingStore";
+import Icon from '@material-ui/core/Icon';
 
 import TimeAgo from 'react-timeago';
 import moment from "moment";
 
-
+import announcement_icon from "../UserPortal/assets/images/announcements-grey.svg";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +22,22 @@ const useStyles = makeStyles(theme => ({
   },
   inline: {
     display: "inline"
+  },
+  IconStyle: {
+    color: "darkgrey",
+    overflow: "visible",
+    fontSize: `18px`,
+    float: "left",
+    marginRight: '5px',
+
+    '&::before': {
+        fontSize: `18px`,
+    }
+  },
+  IconImageStyle: {
+    float: "left",
+    marginRight: '5px',
+    overflow: "visible",
   }
 }));
 
@@ -66,7 +83,7 @@ export default function InboxList(props) {
           data
           .sort((a, b) => a["_updated"] - b["_updated"]);       
   }
-
+  console.log(sortdata(source()));
   return (
     <List className={classes.root}>
       {sortdata(source()).filter(i=>!i.isTemplate).map((ticket, i) => (
@@ -78,9 +95,9 @@ export default function InboxList(props) {
                       <React.Fragment>
                         <Row>
                           <Col sm={8}>
-                 
+                          {ticket._content? Object.keys(ticket._content).includes("policyID") ? <Icon className={classes.IconStyle}>help</Icon> : <img className={classes.IconImageStyle} src={announcement_icon} alt="announcements" width="18" /> : ticket._parent ? <Icon className={classes.IconStyle}>{ticket._parent.icon.split(/(?=[A-Z])/).join("_").toLowerCase()}</Icon> : ""}
                           <Typography
-                          style={{fontSize: "0.9em", color: ticket._stage.includes("close")? "#ABACAB": "#000"}}
+                          style={{fontSize: "0.9em", color: ticket._stage && ticket._stage.includes("close")? "#ABACAB": "#000"}}
                           color="textPrimary" >
                                    
                           {ticket._content? ticket._content.label : ticket._parent? ticket._parent.label : ""}
@@ -91,7 +108,7 @@ export default function InboxList(props) {
                         </Row>
                         <Row>
                         <Col sm={6}>
-                          {!ticket._stage.includes("close") &&
+                          {ticket._stage && !ticket._stage.includes("close") &&
                             <MobileStepper
                     
                               style={{paddingLeft: 0, paddingTop: 10,  backgroundColor: "transparent" }}
@@ -103,7 +120,7 @@ export default function InboxList(props) {
                             />
                           }
                         </Col>
-                        {!ticket._stage.includes("close") &&
+                        {ticket._stage && !ticket._stage.includes("close") &&
                         <Col className="text-right">
                         
                         <Label color={ticket._currentAssignee? "blue" : "red"} size="mini">
