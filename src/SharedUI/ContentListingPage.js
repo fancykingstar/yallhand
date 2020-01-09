@@ -3,16 +3,15 @@ import { inject, observer } from 'mobx-react';
 import { Header, Button, Icon } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import MUIDataTable from 'mui-datatables';
-import styled from 'styled-components';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import Chip from '@material-ui/core/Chip';
+import styled from 'styled-components';
 
+import { LazyImg } from './LazyImg';
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly';
 import CustomToolbarSelect from './CustomToolbarSelect';
 import { modifyAnnouncement, modifyPolicy } from '../DataExchange/Up';
-import { LazyImg } from './LazyImg';
-
 import './style.css';
 
 const MenuContainer = styled.div`
