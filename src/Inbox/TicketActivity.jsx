@@ -43,32 +43,40 @@ export const TicketActivity = (props) => {
         }
     
 
+    let isClosed = props.parent === "QandA" ? props.activity ? props.activity[0].data ? Object.keys(props.activity[0].data)[0].includes("replied") ? true : false : false : false : false
 
     return(
         <div style={{maxHeight: "350px", overflowY: "auto", overflowX: "hidden"}}>
-            {props.activity.map((act,i) => (
-            <Row key={giveMeKey() + "datapoint"} style={{ padding: "3px 0 3px" }}>
-                <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} md={6}>
-                <span style={{ fontSize: "0.9em" }}>
+            {props.activity.map((act,i) => {
+                return <>
+                <Row key={giveMeKey() + "datapoint"} style={{ padding: "3px 0 3px" }}>
+                    <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} md={6}>
+                    <span style={{ fontSize: "0.9em" }}>
 
-                { activityMsg(act, i) }
+                    { activityMsg(act, i) }
 
-                by{" "} <Label size="mini"> {AccountStore._getUser(act.userID).displayName} </Label>{" "} 
-                
-                
-                </span>
-                </Col>
-                <Col
-                style={{
-                    color: "rgba(0, 0, 0, 0.54)",
-                    fontSize: "0.9em"
-                }}
-                >
-                {" "}
-                <TimeAgo date={act.updated} />
-                </Col>
-            </Row>
-            ))}
+                    by{" "} <Label size="mini"> {AccountStore._getUser(act.userID).displayName} </Label>{" "} 
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <TimeAgo date={act.updated} style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} />
+                    </Col>
+                </Row>
+                {
+                    i === 0 && act.stage.includes('close') && isClosed ?
+                    <Row key={giveMeKey() + "datapoint1"} style={{ padding: "3px 0 3px" }}>
+                        <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} md={6}>
+                        <span style={{ fontSize: "0.9em" }}>
+
+                        Replied by{" "} <Label size="mini"> {AccountStore._getUser(act.userID).displayName} </Label>{" "} 
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        </span>
+                        <TimeAgo date={act.updated} style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} />
+                        </Col>
+                    </Row> : ""
+                }
+                </>
+
+            })}
         </div>
 
     )
