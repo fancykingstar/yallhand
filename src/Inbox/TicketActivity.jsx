@@ -3,7 +3,6 @@ import {Row, Col} from "reactstrap";
 import {Label} from "semantic-ui-react";
 import TimeAgo from 'react-timeago'
 import {AccountStore} from "../Stores/AccountStore";
-import {UserStore} from "../Stores/UserStore";
 import {isEmpty} from "lodash";
 import { giveMeKey } from "../SharedCalculations/GiveMeKey";
 
@@ -35,15 +34,14 @@ export const TicketActivity = (props) => {
 
 
     const activityMsg = (act, i) => {
-        if (act.stage.includes('open')) return openMsg(act.stage, i)
-        else if (act.stage.includes('close')) return closeMsg(act.stage, i)
-        else if (!act.stage && isEmpty(act.data)) return <>{`Assigned to `}<Label size="mini"> {!act.assignee? "Unassigned": act.userID === act.assignee? "Self" : AccountStore._getUser(act.userID)} </Label>{" "} </>
+        if (!act.stage && isEmpty(act.data)) return <>{`Assigned to `}<Label size="mini"> {!act.assignee? "Unassigned": act.userID === act.assignee? "Self" : AccountStore._getUser(act.userID)} </Label>{" "} </>
         else if (!act.stage) return <>{`${Object.keys(act.data).includes("memo")? "Memo" : "File    "} added `}</> 
+        else if (act.stage.includes('open')) return openMsg(act.stage, i)
+        else if (act.stage.includes('close') && isEmpty(act.data)) return closeMsg(act.stage, i)
+        else if (act.stage.includes('close') && !isEmpty(act.data) && Object.keys(act.data)[0].includes("replied"))  return <>{`Replied and Closed`}{" "} </> 
+        else if (act.stage.includes('close')) return closeMsg(act.stage, i)
         else return <>{`Set as `}<span style={{ color: "rgb(60, 60, 60)" }}> {act.stage} </span>{" "} </> 
         }
-    
-
-    let isClosed = props.parent === "QandA" ? props.activity ? props.activity[0].data ? Object.keys(props.activity[0].data)[0].includes("replied") ? true : false : false : false : false
 
     return(
         <div style={{maxHeight: "350px", overflowY: "auto", overflowX: "hidden"}}>
@@ -61,19 +59,6 @@ export const TicketActivity = (props) => {
                     <TimeAgo date={act.updated} style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} />
                     </Col>
                 </Row>
-                {
-                    i === 0 && act.stage.includes('close') && isClosed ?
-                    <Row key={giveMeKey() + "datapoint1"} style={{ padding: "3px 0 3px" }}>
-                        <Col style={{ color: "rgba(0, 0, 0, 0.54)" }} md={6}>
-                        <span style={{ fontSize: "0.9em" }}>
-
-                        Replied by{" "} <Label size="mini"> {AccountStore._getUser(act.userID).displayName} </Label>{" "} 
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>
-                        <TimeAgo date={act.updated} style={{ color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }} />
-                        </Col>
-                    </Row> : ""
-                }
                 </>
 
             })}
