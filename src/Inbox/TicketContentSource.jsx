@@ -31,6 +31,7 @@ export class TicketContentSource extends React.Component {
       
   render() {
     const {content} = this.props;
+    console.log("conent", content)
     const {toggleContentPreview} = this.state;
     const vari = content.variations[0];
   return (

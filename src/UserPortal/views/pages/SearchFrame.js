@@ -5,7 +5,7 @@ import { Icon } from "semantic-ui-react";
 import { Event as EventIcon, Close as CloseIcon, Search as SearchIcon, } from '@material-ui/icons';
 import { initSearchObj, stupidSearch } from "../../../SharedCalculations/StupidSearch";
 
-@inject( "UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore" )
+@inject( "UIStore", "AnnouncementsStore", "PoliciesStore", "ResourcesStore", "AccountStore", "TicketingStore" )
 @observer
 class SearchFrame extends React.Component {
   constructor(props) {
@@ -18,7 +18,8 @@ class SearchFrame extends React.Component {
       PoliciesStore,
       ResourcesStore,
       UIStore,
-      AccountStore
+      AccountStore,
+      TicketingStore
     } = this.props;
     if (UIStore.search.searchAnnouncementsData.length === 0) {
       UIStore.set(
@@ -34,13 +35,13 @@ class SearchFrame extends React.Component {
         initSearchObj(PoliciesStore.allPolicies, "policyID")
       );
     }
-    // if (UIStore.search.searchUrlsData.length === 0) {
-    //   UIStore.set(
-    //     "search",
-    //     "searchUrlsData",
-    //     initSearchObj(ResourcesStore.urlResources, "resourceID")
-    //   );
-    // }
+    if (UIStore.search.searchTicketsData.length === 0) {
+      UIStore.set(
+        "search",
+        "searchTicketsData",
+        initSearchObj(TicketingStore.allTickets.filter(t=>t.isTemplate), "ticketID")
+      );
+    }
     if (UIStore.search.searchFilesData.length === 0) {
       UIStore.set(
         "search",

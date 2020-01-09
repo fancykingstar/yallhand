@@ -72,6 +72,7 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.tasks) await TaskStore.loadTasks(loadedUserData.tasks);
           if (loadedUserData.scheduled) await ScheduleStore.loadScheduled(loadedUserData.scheduled);
           if (loadedUserData.tickets) await TicketingStore.loadTickets(loadedUserData.tickets);
+          console.log("ticketscheck", TicketingStore.allTickets)
           if (loadedUserData.logs) await AccountStore.loadLogs(loadedUserData.logs);
 
           UIStore.set("adminLoadingComplete", "all", true);

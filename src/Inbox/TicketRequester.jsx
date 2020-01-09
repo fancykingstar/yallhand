@@ -1,13 +1,7 @@
 import React from "react";
 import { Paper, Avatar, List, ListItem, ListItemIcon, ListItemText, Collapse } from "@material-ui/core";
 import {Row, Col, Container} from "reactstrap";
-// import {department_icon} from "../Assets/Icons/department_icon";
-// import {location_icon} from "../Assets/Icons/location_icon";
-// import {mobile_icon }from "../Assets/Icons/mobile_icon";
 import MailOutlineRoundedIcon from "@material-ui/icons/MailOutlineRounded";
-import KeyboardArrowDownRoundedIcon from "@material-ui/icons/KeyboardArrowDownRounded";
-import {AccountStore} from "../Stores/AccountStore";
-// import SvgIcon from '@material-ui/core/SvgIcon';
 import RoomRoundedIcon from '@material-ui/icons/RoomRounded';
 import GroupIcon from '@material-ui/icons/Group';
 import PhoneIcon from '@material-ui/icons/Phone';
@@ -39,6 +33,15 @@ export class TicketRequester extends React.Component {
     render(){
     const {userImg, requester, userInitials} = this.props;
     const iconStyle ={fontSize: "1.2em", color: "rgb(65, 131, 196)" };
+    const pTags = {
+      fontSize: "0.9em",
+      marginLeft: "2px"
+    }
+    const divTags = {
+      padding: "1px 5px 1px 5px",
+      display: "flex",
+      wordBreak: "break-all"
+    }
 
     return(
       <React.Fragment>
@@ -58,21 +61,18 @@ export class TicketRequester extends React.Component {
                 </p>
               )}
             </div>
-       
-        
-             
-           
-              { requester.profile && requester.email && <> <span style={{whiteSpace: "nowrap"}}> <MailOutlineRoundedIcon style={iconStyle} /> {requester.email} </span></>}
-              { requester.profile && requester.profile.Department && <> <span> <GroupIcon style={iconStyle} /> {requester.profile.Department}  </span></>}
-    
-      
-             { requester.profile && requester.profile.Location && <>  <span>   <RoomRoundedIcon style={iconStyle} /> {requester.profile.Location}</span></>}
-             { requester.profile && requester.profile.Mobile && <>  <span>  <PhoneIcon style={iconStyle} />  {requester.profile.Mobile} </span> </>}
  
-            </Col>
-            </Row>
-            </React.Fragment>
-
+          </Col>
+        </Row>
+        <Row style={{ padding: "3px 0 3px",color: "rgba(0, 0, 0, 0.54)", fontSize: "0.9em" }}>
+          <Col>
+            <div style={{ display: "flex", flexWrap: "wrap" }}>
+              { requester.profile && requester.email && <> <div style={divTags}> <MailOutlineRoundedIcon style={iconStyle} /><p style={pTags}>{requester.email}</p> </div></>}
+              { requester.profile && requester.profile.Department && <> <div style={divTags}> <GroupIcon style={iconStyle} /><p style={pTags}>{requester.profile.Department}</p>  </div></>}
+              { requester.profile && requester.profile.Location && <>  <div style={divTags}><RoomRoundedIcon style={iconStyle} /><p style={pTags}>{requester.profile.Location}</p></div></>}
+              { requester.profile && requester.profile.Mobile && <>  <div style={divTags}>  <PhoneIcon style={iconStyle} /> <p style={pTags}>{requester.profile.Mobile}</p> </div> </>}
+            </div>
+          </Col>
+        </Row>
+      </React.Fragment>
 )}};
-    
-    

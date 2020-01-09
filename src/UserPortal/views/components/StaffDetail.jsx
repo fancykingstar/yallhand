@@ -13,11 +13,17 @@ import github_icon from "../../assets/images/github_icon.svg";
 import department_icon from "../../assets/images/department_icon.svg";
 import location_icon from "../../assets/images/location_icon.svg";
 import mobile_icon from "../../assets/images/mobile_icon.svg";
-import phone_icon from "../../assets/images/old-typical-phone.png";
+import phone_icon from "../../assets/images/telephone-handle-silhouette.svg";
 import cake_icon from "../../assets/images/birthday-cake.png";
+import envelope_icon from "../../assets/images/envelope.svg";
+import superviseduser_icon from "../../assets/images/superviseduser.svg";
 
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import moment from 'moment'
 
+const Image = (props) => {
+    return <img src={props.name} alt={props.alt} width="20" style={{ marginLeft: "2px" }} />
+}
 
 class StaffDetail extends React.Component {
     constructor(props) {
@@ -47,11 +53,12 @@ class StaffDetail extends React.Component {
         !this.state.type ? this.setState({ text: this.props.aboutme.slice(0, 50) }) : this.setState({ text: this.props.aboutme });
     }
 
-    aboutmeStyle = { fontSize: "14px", color: "#88878f", fontWeight: 400 };
+    aboutmeStyle = { fontSize: "15px", color: "rgb(96, 96, 101)", lineHeight: "1.4em", fontWeight: 400 };
 
     handleExpandClick = () => {
         this.setState({expanded: !this.state.expanded});
     };
+
 
     render() {
         if (this.props.view === 'hierarchy') {
@@ -79,6 +86,7 @@ class StaffDetail extends React.Component {
             );
         } else {
             var { socials } = this.props;
+
             return (
                 <Card className="inner_staff_detail all-staff">
                     <CardHeader
@@ -103,7 +111,7 @@ class StaffDetail extends React.Component {
                         <List component="div">
                             <ListItem style={{display: !this.props.email ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                <img src={department_icon} alt="" />
+                                    <Image name={envelope_icon} alt="envelope" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.email} />
                             </ListItem>
@@ -125,25 +133,25 @@ class StaffDetail extends React.Component {
                         <CardContent>
                             <ListItem style={{display: !this.props.contact ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={phone_icon} alt="" />
+                                    <Image name={phone_icon} alt="phone" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.contact} />
                             </ListItem>
                             <ListItem style={{display: !this.props.mobile ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={mobile_icon} alt="" width="20" style={{ marginLeft: "2px" }} />
+                                    <Image name={mobile_icon} alt="mobile phone" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.mobile} style={{ marginLeft: "-2px" }} />
                             </ListItem>
                             <ListItem style={{display: !this.props.dob ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <img src={cake_icon} alt="" width="20" style={{ marginLeft: "2px" }} />
+                                    <Image name={cake_icon} alt="birthday" />
                                 </ListItemIcon>
-                                <ListItemText secondary={this.props.dob} style={{ marginLeft: "-2px" }} />
+                                <ListItemText secondary={moment(this.props.dob).format('MMMM Do')} style={{ marginLeft: "-2px" }} />
                             </ListItem>
                             <ListItem style={{display: !this.props.reportto ? "none" : "flex"}}>
                                 <ListItemIcon>
-                                    <label style={{ color: 'black', marginBottom: 0, fontSize: "14px" }}>Reports To: </label>
+                                    <img src={superviseduser_icon} alt="reportto" width="24" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.reportto} style={{ marginTop: '4px' }} />
                             </ListItem>

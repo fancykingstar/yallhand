@@ -139,7 +139,7 @@ class TicketDetailsFrame extends React.Component {
     
     return {
     "requester":  <TicketRequester requester={_requester} userImg={_userImg} userInitials={_userInitials} />,
-    "activity":  <TicketActivity activity={activity} />,
+    "activity":  <TicketActivity activity={activity} parent={_parent} />,
     "data" : <TicketData activity={activity} content={this.props.data._content} />,
     }
   };
@@ -151,6 +151,7 @@ class TicketDetailsFrame extends React.Component {
     const QandA = this.props.data.parent === "QandA";
     const fileLabels = _parent.ticketItems && _parent.ticketItems[0].data.filter(i => i.type === "file");
     const firstActivity = activity[activity.length - 1];
+
 
     const featuredData = QandA ? 
       <>

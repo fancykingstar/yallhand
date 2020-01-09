@@ -126,25 +126,33 @@ export class UserSettings extends React.Component {
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Title", val.value)}    
                >     <input maxLength="32" />{" "} </Form.Input>
               <Form.Input
+                icon="building"
                 label={"Department"}
                 value={DataEntryStore.userSettings.Department}
-                onChange={(e, val) => DataEntryStore.set("userSettings", "Department", val.value)}    
-               >     <input maxLength="32" />{" "} </Form.Input>     
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Department", val.value)}
+                maxLength="32"
+               />
              <Form.Input
+                icon="map marker alternate"
                 label={"Location"}
                 value={DataEntryStore.userSettings.Location}
-                onChange={(e, val) => DataEntryStore.set("userSettings", "Location", val.value)}    
-               >     <input maxLength="32" />{" "} </Form.Input>      
-              <Form.Input
+                onChange={(e, val) => DataEntryStore.set("userSettings", "Location", val.value)}
+                maxLength="32"
+               />
+              <Form.Input icon="phone"
+                type="number"
+                maxLength="13"
                 label={"Phone or Extension"}
                 value={DataEntryStore.userSettings["Phone or Extension"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Phone or Extension", val.value)}    
-               >     <input type="number" maxLength="13" />{" "} </Form.Input>     
-               <Form.Input
+               />
+               <Form.Input icon="mobile alternate"
+                type="number"
+                maxLength="13"
                 label={"Mobile"}
                 value={DataEntryStore.userSettings["Mobile"]}
                 onChange={(e, val) => DataEntryStore.set("userSettings", "Mobile", val.value)}    
-               > <input type="number" maxLength="13" />{" "} </Form.Input>           
+               />
             <Form.Input icon="birthday cake"
               type="date"
               label="Birthday"
