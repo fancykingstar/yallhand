@@ -15,7 +15,7 @@ import TicketingFrame from "./Ticketing/TicketingFrame";
 import SurveyNewEdit from "./SharedUI/SurveyNewEdit";
 import TicketingNewEdit from "./Ticketing/TicketingNewEdit";
 import ContentListingPage from "./SharedUI/ContentListingPage";
-import { BaseSettings } from "./Settings/BaseSettings";
+import BaseSettings from "./Settings/BaseSettings";
 import { UserSettings } from "./Settings/UserSettings";
 import { EmailFrame } from "./Email/EmailFrame";
 import  DashboardFrame  from "./Dashboard/DashboardFrame";
