@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Header, Button, Icon } from 'semantic-ui-react';
@@ -42,7 +41,7 @@ class ContentListingPage extends React.Component {
   }
 
   componentDidMount() {
-    const { DataEntryStore, UIStore, } = this.props;
+    // const { DataEntryStore, UIStore, } = this.props;
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
     // DataEntryStore.reset("contentmgmt");
@@ -68,21 +67,20 @@ class ContentListingPage extends React.Component {
         },
         MUIDataTableBodyRow: {
           root: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableSelectCell: {
           fixedHeader: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
           headerCell: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableHeadCell: {
           fixedHeader: {
-            // position: "relative"
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTable: {
@@ -95,9 +93,39 @@ class ContentListingPage extends React.Component {
             borderRadius: 8,
           },
           responsiveScrollMaxHeight: {
-            maxHeight: '678px !important',
+            maxHeight: '678px',
           },
         },
+        MUIDataTableFilter: {
+          title: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiButton: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputLabel: {
+          animated: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputBase: {
+          root: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiChip: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiTablePagination: {
+          caption: {
+            fontFamily: "Rubik"
+          }
+        }
       },
     });
 
@@ -167,8 +195,7 @@ class ContentListingPage extends React.Component {
           announcementID: ID,
           featured: action === 'feature',
         }, false);
-      }
-      else {
+      } else {
         await modifyPolicy({
           accountID,
           policyID: ID,
@@ -184,7 +211,7 @@ class ContentListingPage extends React.Component {
       PoliciesStore,
       ChannelStore,
     } = this.props;
-    const { mode, } = this.props;
+    const { mode } = this.props;
     const all =
       mode === 'announcement'
         ? AnnouncementsStore.allAnnouncements
@@ -213,7 +240,6 @@ class ContentListingPage extends React.Component {
         },
       },
       {
-        label: 'Featured',
         name: 'Featured',
         options: {
           filter: true,
@@ -227,6 +253,13 @@ class ContentListingPage extends React.Component {
               />
             );
           },
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
           filterOptions: {
             names: [
               'Featured',
@@ -243,10 +276,74 @@ class ContentListingPage extends React.Component {
           },
         },
       },
+      {
+        name: 'Stage',
+        options: {
+          customBodyRender: state => {
+            if (state === "published" || state === "partial") {
+              return (
+                <div
+                  className="ico-status"
+                  style={{
+                    backgroundColor: "#2FC7F8",
+                    right: 0,
+                  }}
+                />
+              );
+            } if (state === "archived") {
+              return (
+                <div
+                  className="ico-status"
+                  style={{
+                    backgroundColor: "#585858",
+                    right: 0,
+                  }}
+                />
+              );
+            }
+            return (
+              <div
+                className="ico-status"
+                style={{
+                  borderColor: "#585858",
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                }}
+              />
+            );
+          },
+          filter: true,
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
+          filterList: ['All Active'],
+          filterOptions: {
+            names: ['All Active', 'Published', 'Draft', 'Archived'],
+            logic(state, filterVal) {
+              if (filterVal.indexOf('All Active') >= 0 && state !== 'archived') {
+                return false;
+              } if (
+                filterVal.indexOf('Published') >= 0
+                && (state === 'published' || state === 'partial')
+              ) {
+                return false;
+              } if (filterVal.indexOf('Draft') >= 0 && state === 'draft') {
+                return false;
+              } if (filterVal.indexOf('Archived') >= 0 && state === 'archived') {
+                return false;
+              }
+              return true;
+            }
+          }
+        }
+      },
       { name: 'Title', options: { filter: false, }, },
       { name: 'Last Updated', options: { filter: false, }, },
       { name: 'Channel', options: { filter: true, }, },
-      { name: 'Stage', options: { filter: true, }, },
     ];
 
     const mobileColumns = [
@@ -257,10 +354,10 @@ class ContentListingPage extends React.Component {
     const data = all.map(item => [
       item.img,
       item.featured,
+      item.state === "ok" ? "published" : item.state,
       item.label,
       UTCtoFriendly(item.updated),
       ChannelStore._getLabel(item.chanID),
-      item.state === 'ok' ? 'published' : item.state,
     ]);
 
     const mobileData = all.map(item => [
