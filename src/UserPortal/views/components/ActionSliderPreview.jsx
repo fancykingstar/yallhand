@@ -11,7 +11,6 @@ import { SampleNextArrow, SamplePrevArrow } from '../../helpers/Helpers';
 
 import CircleIcons from './CircleIcons';
 
-
 class ActionSliderPreview extends React.Component {
    constructor(props) {
       super(props);

@@ -127,7 +127,7 @@ export class TicketActions extends React.Component {
       assignOnly:   !lastActivity.stage && isEmpty(lastActivity.data),
       stageOnly: lastActivity.stage && isEmpty(lastActivity.data),
       dataOnly: !lastActivity.stage && !isEmpty(lastActivity.data),
-      complete: lastActivity.stage && !isEmpty(lastActivity.data)
+      complete: lastActivity.stage && !isEmpty(lastActivity.data),
     }
     const sameType = Object.keys(evalu).filter(ev => evalu[ev])[0] === type;
     return sameType && underThreeMin? "replace":"add";

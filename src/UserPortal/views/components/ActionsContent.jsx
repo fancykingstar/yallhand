@@ -63,7 +63,7 @@ class ActionsContent extends React.Component {
                             className="SuggestContentChip"
                             color="primary"
                             label={content.label}
-                            onClick={() => this.props.history.push(`/portal/${mode === "announcement" ? "announcement" : "learn-detail"}/${item[mode === "announcement" ? "announcementID" : "policyID"]}`)}
+                            disabled={true}
                           />
                         );
                       })}

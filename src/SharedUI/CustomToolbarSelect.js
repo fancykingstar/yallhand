@@ -5,11 +5,14 @@ import { withStyles } from '@material-ui/core/styles';
 
 const defaultToolbarSelectStyles = {
   iconStyle: {
-    display: 'inline-block',
-    position: 'relative',
-    transform: 'translate(-10px, -40%)',
-    top: '20px',
-    color: '#8F8F8F',
+
+    display: "inline-block",
+    position: "relative",
+    transform: "translate(-10px, -40%)",
+    top: "20px",
+    color: "#8F8F8F",
+    paddingBottom: "8px",
+    cursor: "pointer"
   },
   featured: {
     fontSize: '1rem',
@@ -46,18 +49,13 @@ class CustomToolbarSelect extends React.Component {
     const isFeatured = this.hasFeatured();
 
     return (
-      <div className="custom-toolbar-select">
-        <Tooltip title={isFeatured ? 'Remove Feature' : 'Feature'}>
-          <IconButton
-            className={classes.iconStyle}
-            onClick={() => this.handleClick(isFeatured ? 'remove feature' : 'feature')}
-          >
-            {isFeatured ? (
-              <span className={classes.featured}>Feature</span>
-            ) : (
-              <span className={classes.featured}>Feature</span>
-            )}
-          </IconButton>
+
+      <div className={"custom-toolbar-select"}>
+        <Tooltip title={this.hasFeatured()? "Remove Feature":"Feature" }>
+          <label className={classes.iconStyle} onClick={()=> this.handleClick(this.hasFeatured()? "remove feature":"feature")}>
+           {/*{this.hasFeatured()?  <StarBorderIcon className={classes.starIcon} />: <StarIcon className={classes.starIcon} />}*/}
+           {this.hasFeatured()?  <span className={classes.featured}>Feature</span>: <span className={classes.featured}>Feature</span>}
+          </label>
         </Tooltip>
       </div>
     );
