@@ -177,7 +177,7 @@ class ActionSlider extends React.Component {
             } {...settings_components_slide}>
                <Container className="actions-container">
                   <div className="section_title shadow">
-                     <h4>General Actions</h4>
+                     <h4>{this.props.data ? "Actions" : "General Actions"}</h4>
                   </div>
                   <div className="page_content actions shadow">
                      <div className="announce_component faq_announce slick-align-left">
@@ -194,9 +194,13 @@ class ActionSlider extends React.Component {
                                 />
                            )}*/}
 
-                        {TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
-                           <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(ticket) }} />
-                        )}
+                        {
+                           this.props.data ? this.props.data.map(ticket => 
+                              <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(ticket) }} />
+                           ) : TicketingStore.allTickets.filter(ticket=>ticket.isTemplate && ticket.active).map(ticket => 
+                              <CircleIcons key={"icon" + ticket.ticketID} title={ticket.label} name={ticket.icon} color="#1249bd" bgColor="#e7eefc" size="72" padding="true" onClick={() => { this.showActionForm(ticket) }} />
+                           )
+                        }
 
                         </Slider>
                      </div>

@@ -188,7 +188,8 @@ body{font-family: 'Rubik', sans-serif;}
 .announce_box{
     position: relative;
     width: 240px;
-    margin: 16px;
+    margin-right: 16px;
+    margin-bottom: 16px;
     @media (max-width: 480px){
         margin-left: 0;
         margin-right: 0;
