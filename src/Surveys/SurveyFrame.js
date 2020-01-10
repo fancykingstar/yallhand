@@ -10,10 +10,25 @@ import styled from 'styled-components';
 
 import CustomToolbarSelect from '../SharedUI/CustomToolbarSelect';
 import { AccountStore } from '../Stores/AccountStore';
+import { ChannelStore } from '../Stores/ChannelStore';
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly';
 import { modifySurvey } from '../DataExchange/Up';
+import '../SharedUI/style.css';
 
-@inject('SurveyStore')
+const MenuContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  paddingbottom: 30px;
+  @media (max-width: 580px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+`;
+
+@inject(
+  'SurveyStore',
+  'TaskStore',
+)
 @observer
 class SurveyFrame extends React.Component {
   constructor(props) {
@@ -74,50 +89,73 @@ class SurveyFrame extends React.Component {
             borderRadius: 8,
           },
         },
+        MUIDataTableFilter: {
+          title: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiButton: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputLabel: {
+          animated: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputBase: {
+          root: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiChip: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiTablePagination: {
+          caption: {
+            fontFamily: "Rubik"
+          }
+        }
       },
     });
 
   handleClick = survey => {
-    const { history } = this.props;
-    history.push(`/panel/surveys/manage-survey/${survey ? survey.surveyID : ''}`);
+    const { history, mode } = this.props;
+    if (mode === 'survey') {
+      history.push(`/panel/surveys/manage-survey/${survey ? survey.surveyID : ''}`);
+    } else {
+      history.push(`/panel/tasks/manage-task/${survey ? survey.surveyID : ''}`);
+    }
   };
 
   handleFeatured = async (action, tableinfo) => {
-    const { SurveyStore } = this.props;
+    const { SurveyStore, TaskStore, mode } = this.props;
     const {accountID} = AccountStore.account;
     tableinfo.data.forEach(async i => {
-      const ID = SurveyStore.allSurveys[i.dataIndex].surveyID;
+      const ID = mode === 'survey'
+        ? SurveyStore.allSurveys[i.dataIndex].surveyID
+        : TaskStore.allTasks[i.dataIndex].surveyID;
       await modifySurvey({
         accountID,
         surveyID: ID,
-        type: 'survey',
+        type: mode === 'survey' ? 'survey' : 'task',
         featured: action === 'feature',
       });
     });
   };
 
   render() {
-    const { SurveyStore } = this.props;
-    const MenuContainer = styled.div`
-      display: flex;
-      flex-wrap: wrap;
-      paddingbottom: 30px;
-      @media (max-width: 580px) {
-        justify-content: center;
-        flex-direction: column;
-      }
-    `;
-
+    const {
+      SurveyStore,
+      TaskStore,
+      mode
+    } = this.props;
     const columns = [
       {
-        name: 'Survey Title',
-        options: {
-          filter: false,
-        },
-      },
-      {
-        label: 'Featured',
-        name: 'Featured',
+        name: 'Feature',
         options: {
           filter: true,
           sort: false,
@@ -126,7 +164,15 @@ class SurveyFrame extends React.Component {
               featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />
             );
           },
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
           filterOptions: {
+            title: 'Featured',
             names: ['Featured', 'Not Featured'],
             logic(featured, filterVal) {
               const show =
@@ -135,6 +181,59 @@ class SurveyFrame extends React.Component {
               return !show;
             },
           },
+        },
+      },
+      {
+        name: 'Active',
+        options: {
+          customBodyRender: state => {
+            if (state === "active") {
+              return (
+                <div
+                  className="ico-status"
+                  style={{
+                    backgroundColor: "#2FC7F8",
+                    right: 0,
+                  }}
+                />
+              );
+            }
+            return (
+              <div
+                className="ico-status"
+                style={{
+                  borderColor: "#585858",
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                }}
+              />
+            );
+          },
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
+          filter: true,
+          filterOptions: {
+            names: ['Active Only', 'Inactive Only'],
+            logic(state, filterVal) {
+              if (filterVal.indexOf('Active Only') >= 0 && state === 'active') {
+                return false;
+              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'active') {
+                return false;
+              }
+              return true;
+            }
+          }
+        }
+      },
+      {
+        name: mode === 'survey' ? 'Survey Title' : 'Task Title',
+        options: {
+          filter: false,
         },
       },
       {
@@ -150,41 +249,56 @@ class SurveyFrame extends React.Component {
         },
       },
       {
-        name: 'Stage',
+        name: 'Channel',
         options: {
           filter: true,
-          filterOptions: {
-            names: ['Active', 'InActive'],
-            logic(stage, filterVal) {
-              const show =
-                (filterVal.indexOf('Active') >= 0 && stage === 'Active') ||
-                (filterVal.indexOf('InActive') >= 0 && stage !== 'Active');
-              return !show;
-            },
-          },
         },
       },
     ];
-    const mobileColumns = ['Survey Title', 'Last Updated'];
+    const mobileColumns = mode === 'survey'
+      ? ['Survey Title', 'Last Updated']
+      : ['Task Title', 'Last Updated'];
+    let data = null;
+    let mobileData = null;
 
-    const data = SurveyStore.allSurveys.map(survey => [
-      survey.label,
-      survey.featured,
-      UTCtoFriendly(survey.updated),
-      AccountStore._getDisplayName(survey.userID),
-      survey.active ? 'Active' : 'Inactive',
-    ]);
-    const mobileData = SurveyStore.allSurveys.map(survey => [
-      survey.label,
-      UTCtoFriendly(survey.updated),
-    ]);
+    if (mode === 'survey') {
+      data = SurveyStore.allSurveys.map(survey => [
+        survey.featured,
+        survey.active ? 'Active' : 'Inactive',
+        survey.label,
+        UTCtoFriendly(survey.updated),
+        AccountStore._getDisplayName(survey.userID),
+        ChannelStore._getLabel(survey.chanID),
+      ]);
+      mobileData = SurveyStore.allSurveys.map(survey => [
+        survey.label,
+        UTCtoFriendly(survey.updated),
+      ]);
+    } else {
+      data = TaskStore.allTasks.map(task => [
+        task.featured,
+        task.active ? 'Active' : 'Inactive',
+        task.label,
+        UTCtoFriendly(task.updated),
+        AccountStore._getDisplayName(task.userID),
+        ChannelStore._getLabel(task.chanID),
+      ]);
+      mobileData = TaskStore.allTasks.map(task => [
+        task.label,
+        UTCtoFriendly(task.updated),
+      ]);
+    }
 
     const options = {
       elevation: 1,
       selectableRows: 'multiple',
       customToolbarSelect: selectedRows => (
         <CustomToolbarSelect
-          data={SurveyStore.allSurveys}
+          data={
+            mode === 'survey'
+              ? SurveyStore.allSurveys
+              : TaskStore.allTasks
+          }
           selectedRows={selectedRows}
           handleClick={(e, v) => {
             this.handleFeatured(e, v);
@@ -198,7 +312,11 @@ class SurveyFrame extends React.Component {
       viewColumns: false,
       download: false,
       onRowClick: (i, rowData) => {
-        this.handleClick(SurveyStore.allSurveys[rowData.dataIndex]);
+        this.handleClick(
+          mode === 'survey'
+            ? SurveyStore.allSurveys[rowData.dataIndex]
+            : TaskStore.allTasks[rowData.dataIndex]
+        );
       },
     };
 
@@ -213,8 +331,14 @@ class SurveyFrame extends React.Component {
             margin: '10px 0 10px',
           }}
         >
-          Surveys
-          <Header.Subheader>Get valuable feedback with custom surveys and polls</Header.Subheader>
+          {mode === 'survey' ? 'Surveys' : 'Tasks'}
+          <Header.Subheader>
+            {
+              mode === 'survey'
+                ? 'Get valuable feedback with custom surveys and polls'
+                : 'Assign tasks to better track progress'
+            }
+          </Header.Subheader>
         </Header>
         <MenuContainer>
           <div style={{ textAlign: 'center' }}>
@@ -232,12 +356,23 @@ class SurveyFrame extends React.Component {
           </div>
         </MenuContainer>
         <span />
-        <div style={{ marginTop: 15 }}>
+        <div
+          className="muidatatable-custom"
+          style={{ marginTop: 15 }}
+        >
           <MuiThemeProvider theme={this.getMuiTheme()}>
-            {width > 380 ? (
-              <MUIDataTable data={data} columns={columns} options={options} />
+            {width > 767 ? (
+              <MUIDataTable
+                data={data}
+                columns={columns}
+                options={options}
+              />
             ) : (
-              <MUIDataTable data={mobileData} columns={mobileColumns} options={options} />
+              <MUIDataTable
+                data={mobileData}
+                columns={mobileColumns}
+                options={options}
+              />
             )}
           </MuiThemeProvider>
         </div>

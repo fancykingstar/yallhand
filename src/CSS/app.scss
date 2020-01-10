@@ -195,6 +195,14 @@ body {
     position: relative !important;
     z-index: 0 !important;
 }
+.ico-status {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  border-radius: 50%;
+  right: 0px;
+  top: calc(50% - 5px);
+}
 .surveySlider{
   display: none;
 }

@@ -13,6 +13,17 @@ import { ChannelStore } from '../Stores/ChannelStore';
 import CustomToolbarSelect from '../SharedUI/CustomToolbarSelect';
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly';
 import { modifyTicket } from '../DataExchange/Up';
+import '../SharedUI/style.css';
+
+const MenuContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  paddingbottom: 30px;
+  @media (max-width: 580px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+`;
 
 @inject('TicketingStore')
 @observer
@@ -54,6 +65,36 @@ class TicketingFrame extends React.Component {
             borderRadius: 8,
           },
         },
+        MUIDataTableFilter: {
+          title: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiButton: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputLabel: {
+          animated: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiInputBase: {
+          root: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiChip: {
+          label: {
+            fontFamily: "Rubik"
+          }
+        },
+        MuiTablePagination: {
+          caption: {
+            fontFamily: "Rubik"
+          }
+        }
       },
     });
 
@@ -80,26 +121,26 @@ class TicketingFrame extends React.Component {
 
   render() {
     const { TicketingStore } = this.props;
-    const MenuContainer = styled.div`
-      display: flex;
-      flex-wrap: wrap;
-      paddingbottom: 30px;
-      @media (max-width: 580px) {
-        justify-content: center;
-        flex-direction: column;
-      }
-    `;
-
     const columns = [
-      { name: 'Ticket Title' },
       {
-        label: 'Featured',
         name: 'Featured',
         options: {
           filter: true,
           sort: false,
-          customBodyRender: featured =>
-            featured && <Chip icon={<StarRoundedIcon />} label="Featured" variant="outlined" />,
+          customBodyRender: featured => featured && (
+            <Chip
+              icon={<StarRoundedIcon />}
+              label="Featured"
+              variant="outlined"
+            />
+          ),
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
           filterOptions: {
             names: ['Featured', 'Not Featured'],
             logic(featured, filterVal) {
@@ -111,16 +152,70 @@ class TicketingFrame extends React.Component {
           },
         },
       },
+      {
+        name: 'Active',
+        options: {
+          customBodyRender: state => {
+            if (state === "active") {
+              return (
+                <div
+                  className="ico-status"
+                  style={{
+                    backgroundColor: "#2FC7F8",
+                    right: 0,
+                  }}
+                />
+              );
+            }
+            return (
+              <div
+                className="ico-status"
+                style={{
+                  borderColor: "#585858",
+                  borderWidth: 2,
+                  borderStyle: "solid",
+                }}
+              />
+            );
+          },
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
+          filter: true,
+          filterOptions: {
+            names: ['Active Only', 'Inactive Only'],
+            logic(state, filterVal) {
+              if (filterVal.indexOf('Active Only') >= 0 && state === 'active') {
+                return false;
+              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'active') {
+                return false;
+              }
+              return true;
+            }
+          }
+        }
+      },
+      { name: 'Ticket Title' },
       { name: 'Last Updated' },
       { name: 'Created By' },
-      { name: 'Channel' },
+      {
+        name: 'Channel',
+        options: {
+          filter: true,
+        },
+      },
     ];
 
     const data = TicketingStore.allTickets
       .filter(ticket => ticket.isTemplate)
       .map(ticket => [
-        ticket.label,
         ticket.featured,
+        ticket.active ? 'Active' : 'Inactive',
+        ticket.label,
         UTCtoFriendly(ticket.updated),
         AccountStore._getDisplayName(ticket.userID),
         ChannelStore._getLabel(ticket.chanID),
@@ -177,7 +272,10 @@ class TicketingFrame extends React.Component {
           </div>
         </MenuContainer>
         <span />
-        <div style={{ marginTop: 15 }}>
+        <div
+          className="muidatatable-custom"
+          style={{ marginTop: 15 }}
+        >
           <MuiThemeProvider theme={this.getMuiTheme()}>
             <MUIDataTable data={data} columns={columns} options={options} />
           </MuiThemeProvider>
