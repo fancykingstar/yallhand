@@ -240,7 +240,6 @@ class ContentListingPage extends React.Component {
         },
       },
       {
-        label: '',
         name: 'Featured',
         options: {
           filter: true,
@@ -254,6 +253,13 @@ class ContentListingPage extends React.Component {
               />
             );
           },
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
           filterOptions: {
             names: [
               'Featured',
@@ -271,59 +277,56 @@ class ContentListingPage extends React.Component {
         },
       },
       {
-        name: "Stage",
+        name: 'Stage',
         options: {
           customBodyRender: state => {
             if (state === "published" || state === "partial") {
               return (
                 <div
+                  className="ico-status"
                   style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
                     backgroundColor: "#2FC7F8",
-                    position: 'absolute',
                     right: 0,
-                    top: 50
                   }}
                 />
               );
             } if (state === "archived") {
               return (
                 <div
+                  className="ico-status"
                   style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
                     backgroundColor: "#585858",
-                    position: 'absolute',
                     right: 0,
-                    top: 50
                   }}
                 />
               );
             }
             return (
               <div
+                className="ico-status"
                 style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
                   borderColor: "#585858",
                   borderWidth: 2,
                   borderStyle: "solid",
-                  position: 'absolute',
-                  right: 0,
-                  top: 50
                 }}
               />
             );
           },
           filter: true,
+          customHeadRender: () => (
+            <th
+              className="MuiTableCell-root"
+            >
+              {' '}
+            </th>
+          ),
+          filterList: ['All Active'],
           filterOptions: {
-            names: ['Published', 'Draft', 'Archived'],
+            names: ['All Active', 'Published', 'Draft', 'Archived'],
             logic(state, filterVal) {
-              if (
+              if (filterVal.indexOf('All Active') >= 0 && state !== 'archived') {
+                return false;
+              } if (
                 filterVal.indexOf('Published') >= 0
                 && (state === 'published' || state === 'partial')
               ) {
