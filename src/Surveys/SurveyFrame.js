@@ -187,7 +187,7 @@ class SurveyFrame extends React.Component {
         name: 'Active',
         options: {
           customBodyRender: state => {
-            if (state === "active") {
+            if (state === "Active") {
               return (
                 <div
                   className="ico-status"
@@ -220,9 +220,10 @@ class SurveyFrame extends React.Component {
           filterOptions: {
             names: ['Active Only', 'Inactive Only'],
             logic(state, filterVal) {
-              if (filterVal.indexOf('Active Only') >= 0 && state === 'active') {
+              console.log('state and filterVal: ', state, filterVal);
+              if (filterVal.indexOf('Active Only') >= 0 && state === 'Active') {
                 return false;
-              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'active') {
+              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'Active') {
                 return false;
               }
               return true;

@@ -156,7 +156,7 @@ class TicketingFrame extends React.Component {
         name: 'Active',
         options: {
           customBodyRender: state => {
-            if (state === "active") {
+            if (state === "Active") {
               return (
                 <div
                   className="ico-status"
@@ -189,9 +189,9 @@ class TicketingFrame extends React.Component {
           filterOptions: {
             names: ['Active Only', 'Inactive Only'],
             logic(state, filterVal) {
-              if (filterVal.indexOf('Active Only') >= 0 && state === 'active') {
+              if (filterVal.indexOf('Active Only') >= 0 && state === 'Active') {
                 return false;
-              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'active') {
+              } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'Active') {
                 return false;
               }
               return true;
@@ -199,9 +199,24 @@ class TicketingFrame extends React.Component {
           }
         }
       },
-      { name: 'Ticket Title' },
-      { name: 'Last Updated' },
-      { name: 'Created By' },
+      {
+        name: 'Ticket Title',
+        options: {
+          filter: false,
+        },
+      },
+      {
+        name: 'Last Updated',
+        options: {
+          filter: false,
+        },
+      },
+      {
+        name: 'Created By',
+        options: {
+          filter: false,
+        },
+      },
       {
         name: 'Channel',
         options: {
