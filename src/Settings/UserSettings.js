@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Segment, Form, Button, Message, Icon, Input } from "semantic-ui-react";
+import { Header, Segment, Form, Button, Message, Icon, Input, Dropdown } from "semantic-ui-react";
 import { FeaturedAvatar} from "../SharedUI/ManageContent/FeaturedAvatar";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
@@ -8,6 +8,7 @@ import { userSettingsEdit} from "../DataExchange/PayloadBuilder";
 import { modifyUser } from "../DataExchange/Up";
 import { apiCall }from "../DataExchange/Fetch";
 import toast from '../YallToast';
+import { skilllist } from '../TemplateData/skills';
 
 
 @inject("UserStore", "DataEntryStore")
@@ -17,7 +18,11 @@ export class UserSettings extends React.Component {
     super(props);
     this.state={pwd1: "", pwd2: "", changePassword: false, errorMsg:"",  }
   }
+
   componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions.bind(this));
+
     const { DataEntryStore, UserStore } = this.props;
     DataEntryStore.set("userSettings", "img", UserStore.user.img)
     DataEntryStore.set("userSettings", "timezone", UserStore.user.timezone)
@@ -27,7 +32,14 @@ export class UserSettings extends React.Component {
     const profile = Object.keys(UserStore.user.profile)
     profile.forEach(attribute => DataEntryStore.set("userSettings", attribute, UserStore.user.profile[attribute]))
     window.scrollTo(0, 0);
-    
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth });
   }
 
   isInvalidPassword (value) {
@@ -72,10 +84,54 @@ export class UserSettings extends React.Component {
     const handleTitle = val =>{
       DataEntryStore.set("userSettings", "Title", val)
     }
+    const handleSkills = val => {
+      DataEntryStore.set("userSettings", "Skills", val);
+    }
     const profileLabels = ["Title", "Department", "Location", "Phone or Extension", "Mobile", "About Me"].map(i => ({label: i, prefix: null, value: i}))
     const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network}))
     const multipleInputs = [...profileLabels,...socialLabels]
+    const { width } = this.state
 
+    const skillOptions = skilllist.map((skill, i) => {
+      return {
+        key: i,
+        text: skill,
+        value: skill
+      }
+    })
+
+    const skillLabelStyle = {
+      display: "block",
+      margin: "0em 0em 0.28571429rem 0em",
+      color: "rgba(0, 0, 0, 0.87)",
+      fontSize: "0.92857143em",
+      fontWeight: "bold",
+      textTransform: "none"
+    }
+
+    const aboutAndSkills = <>
+      <Form.TextArea
+        style={{ marginBottom: width > 767 ? "45px" : 0 }}
+        label={"About Me"}
+        value={DataEntryStore.userSettings["About Me"]}
+        onChange={(e, {value}) => DataEntryStore.set("userSettings", "About Me", value.split("\n").join("")) }> 
+        <input maxLength="256" />{" "}
+      </Form.TextArea>
+      <label style={skillLabelStyle}>Skills</label>
+      <Dropdown
+        placeholder="Add skills and experience..."
+        fluid
+        multiple
+        search
+        selection
+        allowAdditions
+        options={skillOptions}
+        style={{ marginBottom: "1em" }}
+        icon="wrench"
+        value={DataEntryStore.userSettings.Skills}
+        onChange={(e, val) => handleSkills(val.value)}
+      />
+    </>
 
     return (
       <div style={{ padding: 15}}>
@@ -96,8 +152,8 @@ export class UserSettings extends React.Component {
 
         <Segment>
           <div>
-            <Form>
-              <div style={{ maxWidth: 400, float: "left"}}>
+            <Form style={{ display: "flex" }}>
+              <div style={{ width: 400, marginRight: 30 }}>
                 <Form.Input className="FixSemanticLabel"
                   label="Full Name"
                   value={DataEntryStore.userSettings.displayName_full}
@@ -115,6 +171,8 @@ export class UserSettings extends React.Component {
                   {" "}
                   <input maxLength="32" />{" "} 
                 </Form.Input>
+
+                { width < 768 ? aboutAndSkills : null }
                  
                 {/* <Form.Select
                   label="Default Timezone"
@@ -220,14 +278,12 @@ export class UserSettings extends React.Component {
                   Update
                 </Button>
               </div>
-              <div style={{ maxWidth: 400, float: "left"}}>
-                <Form.TextArea
-                  label={"About Me"}
-                  value={DataEntryStore.userSettings["About Me"]}
-                  onChange={(e, {value}) => DataEntryStore.set("userSettings", "About Me", value.split("\n").join("")) }> 
-                  <input maxLength="256" />{" "}
-                </Form.TextArea>
-              </div>
+              {
+                width > 767 ?
+                <div style={{ width: 400 }}>
+                  {aboutAndSkills}
+                </div> : null
+              }
             </Form>
             <Message error attached hidden={newLabelStatus_full.messageHide}>
               {newLabelStatus_full.message}
