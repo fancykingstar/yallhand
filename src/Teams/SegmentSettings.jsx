@@ -43,12 +43,7 @@ export class SegmentSettings extends React.Component {
       newRoot: "",
       groupLabel: "",
       subTagLabel: "",
-      items: [
-        // { content: "usa", id: "usa", list: "droppable" },
-        // { content: "canada", id: "canada", list: "droppable" },
-        // { content: "employee", id: "employee", list: "droppable2" },
-        // { content: "director", id: "director", list: "droppable2" }
-      ]
+      items: [],
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -97,6 +92,18 @@ export class SegmentSettings extends React.Component {
   const {TeamStore} = this.props;
   const AddNew = <Button size="tiny" color="blue" onClick={() => this.updateState({newRoot: "droppable"})} icon="plus" circular/>
 
+  const MenuContainer = styled.div`
+  margin-top: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  paddingbottom: 30px;
+  @media (max-width: 580px) {
+    justify-content: center;
+    flex-direction: column;
+  }
+`;
+
   const temporaryDroppable = <FadeIn> <Droppable droppableId="droppable2" direction="horizontal">
   {(provided, snapshot) => (
     <>
@@ -114,18 +121,6 @@ export class SegmentSettings extends React.Component {
     </div></>
   )}
 </Droppable></FadeIn>
-
-  const MenuContainer = styled.div`
-  margin-top: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  paddingbottom: 30px;
-  @media (max-width: 580px) {
-    justify-content: center;
-    flex-direction: column;
-  }
-`;
 
     return (
       <div>
@@ -157,8 +152,8 @@ export class SegmentSettings extends React.Component {
               style={getListStyle(snapshot.isDraggingOver)}
               {...provided.droppableProps}
             >
-              {this.state.items.filter(i => i.group === group.segmentationID).map((item, index) => (
-                <Draggable key={"segment" + giveMeKey()} draggableId={item.segmentationID} index={index}>
+              {TeamStore.segmentation.filter(i => !i.isGroup && !i.root).map((item, index) => (
+                <Draggable key={"segment" + giveMeKey()} draggableId={item.segmentID} index={index}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
@@ -169,7 +164,7 @@ export class SegmentSettings extends React.Component {
                         provided.draggableProps.style
                       )}
                     >
-                      <SegmentCard content={item.label} />
+                      <SegmentCard root={item.segmentID}  content={item.label} />
                     </div>
                   )}
                 </Draggable>
@@ -180,37 +175,7 @@ export class SegmentSettings extends React.Component {
           </Droppable>
 
           )}
-          
-                            {/* <br/>
-          <Droppable droppableId="droppable2" direction="horizontal">
-            {(provided, snapshot) => (
-              <>  <h4>Employee Classes {AddNew}</h4>
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-                {...provided.droppableProps}
-              >
-                {this.state.items.filter(i => i.list === "droppable2").map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <SegmentCard content={item.content} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div></>
-            )}
-          </Droppable> */}
+
           {this.state.createNewGroup && <><br/> {temporaryDroppable} </>}
         </DragDropContext>
       </div>

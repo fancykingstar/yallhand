@@ -12,6 +12,7 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import Collapse from "@material-ui/core/Collapse";
 import { useSpring, animated } from "react-spring/web.cjs"; // web.cjs is required for IE 11 support
 import FadeIn from 'react-fade-in';
+import { TeamStore } from "../Stores/TeamStore";
 
 const useStyles = makeStyles({
   card: {
@@ -59,6 +60,18 @@ function TransitionComponent(props) {
   );
 }
 
+const getNestedChildren = (arr, parent) => {
+  var out = []
+  for(var i in arr) {
+      if(arr[i].parent === parent) {
+          var children = getNestedChildren(arr, arr[i].segmentID)
+          if(children.length) { arr[i].children = children }
+          out.push(arr[i])
+      }
+  }
+  return out
+}
+
 
 export default function SegmentCard(props) {
   const [label, setLabel] = React.useState(0);
@@ -68,6 +81,12 @@ export default function SegmentCard(props) {
     e.preventDefault();
     props.createNewRoot(label);
   }
+
+  const relatedSegments = TeamStore.segmentation.filter(s => !s.isGroup).filter(s=> s.root === props.root);
+  const nestedObjForTree = Object.assign(TeamStore._getSegment(props.root), {children: getNestedChildren(relatedSegments, props.root)});
+  console.log(JSON.stringify(nestedObjForTree));
+
+
   return (
 
     <Card style={props.newRoot !== undefined? {margin: 10}:{}} className={classes.card}>
@@ -96,7 +115,7 @@ export default function SegmentCard(props) {
       :
       <CardContent>
       <form onSubmit={handleSubmit}>
-         <input onChange={e=>setLabel(e.currentTarget.value)} placeholder="Enter new group name" style={{borderWidth: 0, border: "none", fontFamily: "Rubik" }} type="text" maxlength="36"  />
+         <input onChange={e=>setLabel(e.currentTarget.value)} placeholder="Enter group name" style={{borderWidth: 0, border: "none", fontFamily: "Rubik" }} type="text" maxlength="36"  />
         <br/>
        <Button as="input" type="submit" disabled={!label} circular color={"blue"} size="mini">Done</Button>
        <Button onClick={()=>{props.cancel}}  circular size="mini">Cancel</Button>

@@ -177,6 +177,12 @@ class Store {
     )
    }
 
+
+ _getSegment(id){
+    const item = this.segmentation.filter(s => s.segmentID === id);
+    return item.length? item[0]:{};
+
+   }
    
 
    @computed
