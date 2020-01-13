@@ -354,7 +354,11 @@ i.icon.wrench {
   z-index: 3;
   margin: -0.78571429em;
   padding: 0.91666667em;
-  opacity: 0.8;
+  opacity: 0.5;
   transition: opacity 0.1s;
   float: right;
+}
+
+.dropdown-skills:focus i.icon.wrench, .dropdown-skills:active i.icon.wrench, .dropdown-skills:focus-within i.icon.wrench, .dropdown-skills:focus-visible i.icon.wrench {
+  opacity: 1;
 }
