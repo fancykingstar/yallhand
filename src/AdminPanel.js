@@ -36,7 +36,7 @@ import "./CSS/styles.scss";
 
 @inject( "UserStore", "UIStore", )
 @observer
-export class AdminPanel extends React.Component {
+class AdminPanel extends React.Component {
   componentDidMount() {
     const { UserStore, UIStore } = this.props;
     if (!UIStore._adminLoadingComplete) {
@@ -139,3 +139,5 @@ export class AdminPanel extends React.Component {
     return <React.Fragment>{loadingDisplay}</React.Fragment>;
   }
 }
+
+export default AdminPanel

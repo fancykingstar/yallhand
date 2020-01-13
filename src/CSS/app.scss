@@ -341,3 +341,13 @@ body {
 .ServiceDeskTicket {
   max-width: 800px;
 }
+
+.actions-container, .action-form {
+  min-height: 267px;
+  display: flex !important;
+  flex-direction: column;
+
+  .page_content {
+    flex: 1;
+  }
+}
