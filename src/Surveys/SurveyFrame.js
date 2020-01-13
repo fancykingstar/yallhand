@@ -18,7 +18,7 @@ import '../SharedUI/style.css';
 const MenuContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  paddingbottom: 30px;
+  padding-bottom: 30px;
   @media (max-width: 580px) {
     justify-content: center;
     flex-direction: column;
@@ -62,21 +62,21 @@ class SurveyFrame extends React.Component {
         },
         MUIDataTableBodyRow: {
           root: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableSelectCell: {
           fixedHeader: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
           headerCell: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableHeadCell: {
-          root: { zIndex: '1 !important' },
+          root: { zIndex: '1' },
           fixedHeader: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTable: {
