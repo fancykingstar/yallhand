@@ -15,6 +15,9 @@ class Store {
   tags = [];
 
   @observable
+  segmentation = [];
+
+  @observable
    //for UI elements
   tagsSelect = [];
 
@@ -101,6 +104,11 @@ class Store {
   }) 
   }
 
+
+  async loadSegmentation(allsegments){
+    this.segmentation = allsegments
+  }
+
   previewValidPath(id, type) {
     //type needs to be "team" or "tag"
     //returns object to transverse valid sub items in tags and teams when displaying to user
@@ -169,6 +177,12 @@ class Store {
     )
    }
 
+
+ _getSegment(id){
+    const item = this.segmentation.filter(s => s.segmentID === id);
+    return item.length? item[0]:{};
+
+   }
    
 
    @computed
