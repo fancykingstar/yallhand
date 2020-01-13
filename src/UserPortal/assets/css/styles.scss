@@ -471,7 +471,7 @@ button.load-more {
 /** Responsive fix*/
 @media screen and (min-width: 1366px){
   .container {
-    max-width: 100%;
+    max-width: 100% !important;
   }
 }
 @media screen and (max-width:768px){
