@@ -16,7 +16,7 @@ import { skilllist } from '../TemplateData/skills';
 export class UserSettings extends React.Component {
   constructor(props){
     super(props);
-    this.state={pwd1: "", pwd2: "", changePassword: false, errorMsg:"",  }
+    this.state={pwd1: "", pwd2: "", changePassword: false, errorMsg:"", skills: skilllist  }
   }
 
   componentDidMount() {
@@ -87,12 +87,17 @@ export class UserSettings extends React.Component {
     const handleSkills = val => {
       DataEntryStore.set("userSettings", "Skills", val);
     }
+    const addSkills = val => {
+      this.setState((prevState) => ({
+        skills: [val, ...prevState.skills],
+      }))
+    }
     const profileLabels = ["Title", "Department", "Location", "Phone or Extension", "Mobile", "About Me"].map(i => ({label: i, prefix: null, value: i}))
     const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network}))
     const multipleInputs = [...profileLabels,...socialLabels]
     const { width } = this.state
 
-    const skillOptions = skilllist.map((skill, i) => {
+    const skillOptions = this.state.skills.map((skill, i) => {
       return {
         key: i,
         text: skill,
@@ -130,6 +135,8 @@ export class UserSettings extends React.Component {
         icon="wrench"
         value={DataEntryStore.userSettings.Skills}
         onChange={(e, val) => handleSkills(val.value)}
+        onAddItem={(e, val) => addSkills(val.value)}
+        className="dropdown-skills"
       />
     </>
 

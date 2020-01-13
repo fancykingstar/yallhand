@@ -157,13 +157,13 @@ class StaffDetail extends React.Component {
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.reportto} style={{ marginTop: '4px' }} />
                             </ListItem>
-                            <ListItem style={{display: !this.props.skills ? "none" : "flex"}}>
+                            <ListItem style={{display: !this.props.skills ? "none" : "flex", marginTop: 10}}>
                                 <ListItemIcon>
                                     <Image name={build_icon} alt="skills" />
                                 </ListItemIcon>
                                 <div className="flex" style={{ flexWrap: "wrap" }}>
                                 {
-                                    this.props.skills ? this.props.skills.map((skill, i) => <Label size="tiny" key={i}><span>{skill}</span></Label>) : null
+                                    this.props.skills ? this.props.skills.map((skill, i) => <Label size="tiny" key={i} style={{ marginRight: 5, marginBottom: 5 }}><span>{skill}</span></Label>) : null
                                 }
                                 </div>
                             </ListItem>
