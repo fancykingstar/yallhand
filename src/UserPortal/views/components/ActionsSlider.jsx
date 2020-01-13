@@ -170,9 +170,9 @@ class ActionSlider extends React.Component {
     };
 
     return (
-      <>
+      <Container>
         <Slider ref={slider => (this.slider = slider)} {...settings_components_slide}>
-          <Container className="actions-container">
+          <div className="actions-container">
             <div className="section_title shadow">
               <h4>General Actions</h4>
             </div>
@@ -198,28 +198,24 @@ class ActionSlider extends React.Component {
                 </Slider>
               </div>
             </div>
-          </Container>
+          </div>
           {selectedActionData.assoc && selectedActionData.assoc.length ? (
-            <Container elevation={4} className="action-form">
-              <ActionsContent
-                onProceed={this.proceed}
-                onCancel={this.backToActions}
-                actionDetail={selectedActionData}
-              />
-            </Container>
+            <ActionsContent
+              onProceed={this.proceed}
+              onCancel={this.backToActions}
+              actionDetail={selectedActionData}
+            />
           ) : (
             ''
           )}
-          <Container elevation={4} className="action-form">
-            <ActionsForm
-              onSubmit={this.handleActionFormSubmit}
-              onCancel={this.hideActionForm}
-              actionDetail={selectedActionData}
-              loading={loading}
-            />
-          </Container>
+          <ActionsForm
+            onSubmit={this.handleActionFormSubmit}
+            onCancel={this.hideActionForm}
+            actionDetail={selectedActionData}
+            loading={loading}
+          />
         </Slider>
-      </>
+      </Container>
     );
   }
 }
