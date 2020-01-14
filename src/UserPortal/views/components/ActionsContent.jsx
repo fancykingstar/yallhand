@@ -1,14 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Container, Col, Row, Button, Form } from 'reactstrap';
-import Star from '../../assets/images/star.svg';
-import { Svg } from '../../helpers/Helpers';
+import { Container, Col, Row, Form } from 'reactstrap';
 import IconButton from '@material-ui/core/IconButton';
 import { Chip, Fab } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
-import { getContentObj } from '../../../SharedCalculations/GetContentObj';
 import HelpRoundedIcon from '@material-ui/icons/HelpRounded';
+import { getContentObj } from '../../../SharedCalculations/GetContentObj';
 import Announcements from '../../assets/images/announcements.svg';
 import CircleIcons from './CircleIcons';
 
@@ -16,6 +14,7 @@ class ActionsContent extends React.Component {
   handleClick() {}
 
   smallIconStyle = { display: 'flex', alignItems: 'center' };
+
   h4Style = { display: 'flex', alignItems: 'center' };
 
   render() {
@@ -76,7 +75,7 @@ class ActionsContent extends React.Component {
                               className="SuggestContentChip"
                               color="primary"
                               label={content.label}
-                              disabled={true}
+                              disabled
                             />
                           );
                         })}
@@ -91,7 +90,7 @@ class ActionsContent extends React.Component {
                   <Fab
                     variant="extended"
                     size="small"
-                    color={'default'}
+                    color="default"
                     aria-label="yes"
                     onClick={this.props.onCancel.bind(this)}
                     style={{ margin: '0 15px 0' }}
@@ -102,7 +101,7 @@ class ActionsContent extends React.Component {
                   <Fab
                     variant="extended"
                     size="small"
-                    color={'secondary'}
+                    color="secondary"
                     aria-label="no"
                     onClick={this.props.onProceed}
                     style={{ margin: '0 15px 0' }}
