@@ -3,7 +3,7 @@ import "./style.css";
 import { Invite } from "./Invite";
 import { Users } from "./Users";
 import { SecondaryMenu } from "../SharedUI/SecondaryMenu";
-import { SegmentSettings } from "./SegmentSettings";
+import { Teams } from "./Teams";
 import { Tags } from "./Tags";
 import { Directory } from "./Directory";
 import { inject, observer } from "mobx-react";
@@ -24,7 +24,7 @@ export class TeamFrame extends React.Component {
       return name === UIStore.menuItem.teamFrame ? "Visable" : "Hidden";
     };
 
-    const menuItems = ["onboard", "user management", "directory", "segmentation"];
+    const menuItems = ["onboard", "user management", "directory", "teams", "tags"];
     const handleSearch = val => {
       UIStore.set("search", "searchUsers", val);
     };
@@ -50,9 +50,13 @@ export class TeamFrame extends React.Component {
             {" "}
             <Directory />
           </div>
-          <div className={isVisable("segmentation")}>
+          <div className={isVisable("teams")}>
             {" "}
-            <SegmentSettings />
+            <Teams />
+          </div>
+          <div className={isVisable("tags")}>
+            {" "}
+            <Tags />
           </div> 
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Header, Segment, Form, Button, Message, Icon, Input, Dropdown } from "semantic-ui-react";
+import { Header, Segment, Form, Button, Message, Icon, Input, Dropdown, Row, Col } from "semantic-ui-react";
 import { FeaturedAvatar} from "../SharedUI/ManageContent/FeaturedAvatar";
 import { FormCharMax } from "../SharedValidations/FormCharMax";
 import { InfoPopUp } from "../SharedUI/InfoPopUp.js";
@@ -96,8 +96,8 @@ export class UserSettings extends React.Component {
     const socialLabels = [{"network": "Twitter", "prefix": "@"},{"network": "Medium", "prefix": "https://medium.com/@"},{"network": "Github", "prefix": "https://github.com/"}, {"network": "LinkedIn", "prefix": "https://www.linkedin.com/in/"}].map(i => ({label: i.network, prefix: i.prefix, value: i.network}))
     const multipleInputs = [...profileLabels,...socialLabels]
     const { width } = this.state
-
-    const skillOptions = this.state.skills.map((skill, i) => {
+    let fullSkills = DataEntryStore.userSettings.Skills ? [...this.state.skills, ...DataEntryStore.userSettings.Skills] : this.state.skills
+    const skillOptions = fullSkills.map((skill, i) => {
       return {
         key: i,
         text: skill,
@@ -105,24 +105,24 @@ export class UserSettings extends React.Component {
       }
     })
 
-    const skillLabelStyle = {
+    const labelStyle= {
       display: "block",
       margin: "0em 0em 0.28571429rem 0em",
       color: "rgba(0, 0, 0, 0.87)",
       fontSize: "0.92857143em",
-      fontWeight: "bold",
-      textTransform: "none"
+      textTransform: "none",
     }
 
     const aboutAndSkills = <>
       <Form.TextArea
-        style={{ marginBottom: width > 767 ? "45px" : 0 }}
+        className="FixSemanticLabel"
+        style={{ marginBottom: width > 767 ? "33px" : 0 }}
         label={"About Me"}
         value={DataEntryStore.userSettings["About Me"]}
         onChange={(e, {value}) => DataEntryStore.set("userSettings", "About Me", value.split("\n").join("")) }> 
         <input maxLength="256" />{" "}
       </Form.TextArea>
-      <label style={skillLabelStyle}>Skills</label>
+      <label style={labelStyle} className="FixSemanticLabel">Skills</label>
       <Dropdown
         placeholder="Add skills and experience..."
         fluid
