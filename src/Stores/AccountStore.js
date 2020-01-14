@@ -170,7 +170,8 @@ class Store {
   }
 
   _getDisplayName(ID) {
-      return this._getUser(ID).displayName
+      const name = this._getUser(ID).displayName
+      return name? name : "Invalid User"
   }
 
 
