@@ -7,7 +7,7 @@ import NavItems from "./NavItems";
 
 @inject("UIStore")
 @observer
-export class SideBar extends React.Component {
+class SideBar extends React.Component {
   render() {
     const { UIStore } = this.props;
     return (
@@ -24,3 +24,5 @@ export class SideBar extends React.Component {
     );
   }
 }
+
+export default SideBar

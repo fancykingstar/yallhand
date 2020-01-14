@@ -6,7 +6,7 @@ import { contentPatch } from "../../DataExchange/PayloadBuilder"
 import { modifyAnnouncement, modifyPolicy} from "../../DataExchange/Up"
 import { createSchedule } from "../../DataExchange/Up"
 import { schedule } from "../../DataExchange/PayloadBuilder"
-import { DateTimeSelect } from "../../SharedUI/DateTimeSelect";
+import DateTimeSelect from "../../SharedUI/DateTimeSelect";
 import "./style.css";
 
 export const ReviewAlerts = inject("UIStore", "AccountStore", "DataEntryStore")(

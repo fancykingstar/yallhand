@@ -13,7 +13,7 @@ import TimeAgo from 'react-timeago';
 import {isEmpty} from "lodash";
 import { giveMeKey } from "../../SharedCalculations/GiveMeKey";
 
-import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
+import ChooseTargeting from "../../SharedUI/ChooseTargeting";
 import { FeaturedImage } from "./FeaturedImage";
 import { AddToEmail } from "./AddToEmail";
 import { Keywords } from "./Keywords";

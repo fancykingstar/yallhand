@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "mobx-react";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 // import registerServiceWorker from "./registerServiceWorker";
 import { unregister } from './registerServiceWorker';
-import { Provider } from "mobx-react";
-import { BrowserRouter } from "react-router-dom";
 import { ChannelStore } from "./Stores/ChannelStore";
 import { PoliciesStore } from "./Stores/PoliciesStore";
 import { UserStore } from "./Stores/UserStore";
