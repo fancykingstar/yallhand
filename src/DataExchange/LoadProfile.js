@@ -13,6 +13,7 @@ import { DataEntryStore } from "../Stores/DataEntryStore"
 import { SurveyStore } from "../Stores/SurveyStore";
 import { TaskStore } from "../Stores/TaskStore";
 import { TicketingStore } from "../Stores/TicketingStore";
+import { PollStore } from "../Stores/PollStore";
 
 // import * as load from "./Down";
 import { apiCall_noBody, deleteUser, getUser, apiCall } from "../DataExchange/Fetch";
@@ -71,9 +72,9 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.sentiments) await AccountStore.loadSentiments(loadedUserData.sentiments);
           if (loadedUserData.surveys) await SurveyStore.loadSurveys(loadedUserData.surveys);
           if (loadedUserData.tasks) await TaskStore.loadTasks(loadedUserData.tasks);
+          if (loadedUserData.polls) await PollStore.loadPolls(loadedUserData.polls);
           if (loadedUserData.scheduled) await ScheduleStore.loadScheduled(loadedUserData.scheduled);
           if (loadedUserData.tickets) await TicketingStore.loadTickets(loadedUserData.tickets);
-          console.log("ticketscheck", TicketingStore.allTickets)
           if (loadedUserData.logs) await AccountStore.loadLogs(loadedUserData.logs);
 
           UIStore.set("adminLoadingComplete", "all", true);
