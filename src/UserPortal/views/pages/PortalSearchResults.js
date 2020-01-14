@@ -153,11 +153,12 @@ class PortalSearchResults extends React.Component {
 
     return(
       <Layout pageTitle={"Search Results"}>
-      <div style={{ paddingTop: 20 }} className="container">
+      <div className="page_content_bg">
+        <div style={{ paddingTop: 20 }} className="container">
         <div className="page_container">
 
     {filteredannouncement().length + filteredPolicy().length + filteredFiles().length + filteredPeople().length + filteredActions().length !== 0? isSearchResults():  <PortalSearchLogo />}
-    </div> </div>
+    </div> </div></div>
       </Layout>
  
     )
