@@ -100,6 +100,8 @@ class SurveyNewEdit extends React.Component {
       _id: giveMeKey(),
       q: '',
       resRequired: true,
+      multiConfig: 'custom',
+      resChoices: [],
     };
   };
 
