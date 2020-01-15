@@ -90,7 +90,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
-        zIndex: '9999',
+        // zIndex: '9999',
     },
     drawerClose: {
         transition: theme.transitions.create('width', {
