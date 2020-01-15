@@ -1,6 +1,5 @@
 import React from 'react';
 import {inject, observer} from "mobx-react"
-import Layout from '../UserPortal/layouts/DefaultLayout';
 import { Form, Segment, Header } from "semantic-ui-react";
 import { Row, Col, } from 'reactstrap';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
