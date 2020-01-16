@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom"
 import { inject, observer } from "mobx-react";
 import { Segment, Header, Icon, Form, Checkbox, Menu, Button, Message } from "semantic-ui-react";
 import { LabelGroup, validateAdd, labelsOneRemoved } from "../SharedUI/LabelGroup";
-import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import DateTimeSelect from "../SharedUI/DateTimeSelect";
 import { flashDraft } from "../SharedCalculations/FlashDraft"
 
 import { emailCampaign, emailPreview, schedule } from "../DataExchange/PayloadBuilder";

@@ -6,7 +6,7 @@ import {periods} from "../TemplateData/periods"
 import { createAccount } from "../DataExchange/Up";
 import { account } from "../DataExchange/PayloadBuilder"
 import { api_get } from "./Down"
-import {DateTimeSelect} from "../SharedUI/DateTimeSelect"
+import DateTimeSelect from "../SharedUI/DateTimeSelect"
 // const timezones = require("../TemplateData/timezones.json")
 
 @inject("DataEntryStore")

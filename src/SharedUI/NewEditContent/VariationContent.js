@@ -9,7 +9,7 @@ import { Row, Col, } from 'reactstrap';
 import BackButton  from "../../SharedUI/BackButton";
 import { AttachedFiles } from "./AttachedFiles";
 import { Wysiwyg } from "../../SharedUI/Wysiwyg";
-import { ChooseTargeting } from "../../SharedUI/ChooseTargeting";
+import ChooseTargeting from "../../SharedUI/ChooseTargeting";
 import { PublishControls } from "../../SharedUI/NewEditContent/PublishControls";
 import { CommonOptions } from "../../SharedUI/NewEditContent/CommonOptions";
 import { ContentPreview } from "../../SharedUI/ContentPreview";

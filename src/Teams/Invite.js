@@ -10,7 +10,7 @@ import { createSchedule } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { users } from "../DataExchange/Down";
 import toast  from "../YallToast"
-import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import DateTimeSelect from "../SharedUI/DateTimeSelect";
 import * as load from "../DataExchange/Down"
 
 @inject("AccountStore", "UserStore")

@@ -18,7 +18,7 @@ const MenuContainer = styled.div`
   margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
-  paddingbottom: 30px;
+  padding-bottom: 30px;
   @media (max-width: 580px) {
     justify-content: center;
     flex-direction: column;

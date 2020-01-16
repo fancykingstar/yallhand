@@ -18,7 +18,7 @@ import '../SharedUI/style.css';
 const MenuContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  paddingbottom: 30px;
+  padding-bottom: 30px;
   @media (max-width: 580px) {
     justify-content: center;
     flex-direction: column;
@@ -28,6 +28,7 @@ const MenuContainer = styled.div`
 @inject(
   'SurveyStore',
   'TaskStore',
+  'PollStore'
 )
 @observer
 class SurveyFrame extends React.Component {
@@ -62,21 +63,21 @@ class SurveyFrame extends React.Component {
         },
         MUIDataTableBodyRow: {
           root: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableSelectCell: {
           fixedHeader: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
           headerCell: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTableHeadCell: {
-          root: { zIndex: '1 !important' },
+          root: { zIndex: '1' },
           fixedHeader: {
-            zIndex: '1 !important',
+            zIndex: '1',
           },
         },
         MUIDataTable: {
@@ -126,33 +127,46 @@ class SurveyFrame extends React.Component {
     const { history, mode } = this.props;
     if (mode === 'survey') {
       history.push(`/panel/surveys/manage-survey/${survey ? survey.surveyID : ''}`);
-    } else {
+    } else if (mode === 'task') {
       history.push(`/panel/tasks/manage-task/${survey ? survey.surveyID : ''}`);
+    } else {
+      history.push(`/panel/polls/manage-poll/${survey ? survey.surveyID : ''}`);
     }
   };
 
   handleFeatured = async (action, tableinfo) => {
-    const { SurveyStore, TaskStore, mode } = this.props;
+    const { SurveyStore, TaskStore, PollStore, mode } = this.props;
     const {accountID} = AccountStore.account;
     tableinfo.data.forEach(async i => {
-      const ID = mode === 'survey'
-        ? SurveyStore.allSurveys[i.dataIndex].surveyID
-        : TaskStore.allTasks[i.dataIndex].surveyID;
+      let ID = null;
+      
+      if (mode === 'survey') {
+        ID = SurveyStore.allSurveys[i.dataIndex].surveyID
+      } else if (mode === 'task') {
+        ID = TaskStore.allTasks[i.dataIndex].surveyID;
+      } else {
+        ID = PollStore.allPolls[i.dataIndex].surveyID;
+      }
+
       await modifySurvey({
         accountID,
         surveyID: ID,
-        type: mode === 'survey' ? 'survey' : 'task',
+        type: mode,
         featured: action === 'feature',
       });
     });
   };
 
   render() {
-    const {
-      SurveyStore,
-      TaskStore,
-      mode
-    } = this.props;
+    const { SurveyStore, TaskStore, PollStore, mode } = this.props;
+    let title = '';
+    if (mode === 'survey') {
+      title = 'Survey Title';
+    } else if (mode === 'task') {
+      title = 'Task Title';
+    } else {
+      title = 'Poll Title';
+    }
     const columns = [
       {
         name: 'Feature',
@@ -165,11 +179,7 @@ class SurveyFrame extends React.Component {
             );
           },
           customHeadRender: () => (
-            <th
-              className="MuiTableCell-root"
-            >
-              {' '}
-            </th>
+            <th className="MuiTableCell-root">{' '}</th>
           ),
           filterOptions: {
             title: 'Featured',
@@ -210,17 +220,12 @@ class SurveyFrame extends React.Component {
             );
           },
           customHeadRender: () => (
-            <th
-              className="MuiTableCell-root"
-            >
-              {' '}
-            </th>
+            <th className="MuiTableCell-root">{' '}</th>
           ),
           filter: true,
           filterOptions: {
             names: ['Active Only', 'Inactive Only'],
             logic(state, filterVal) {
-              console.log('state and filterVal: ', state, filterVal);
               if (filterVal.indexOf('Active Only') >= 0 && state === 'Active') {
                 return false;
               } if (filterVal.indexOf('Inactive Only') >= 0 && state !== 'Active') {
@@ -232,7 +237,7 @@ class SurveyFrame extends React.Component {
         }
       },
       {
-        name: mode === 'survey' ? 'Survey Title' : 'Task Title',
+        name: title,
         options: {
           filter: false,
         },
@@ -256,9 +261,14 @@ class SurveyFrame extends React.Component {
         },
       },
     ];
-    const mobileColumns = mode === 'survey'
-      ? ['Survey Title', 'Last Updated']
-      : ['Task Title', 'Last Updated'];
+    let mobileColumns = null;
+    if (mode === 'survey') {
+      mobileColumns = ['Survey Title', 'Last Updated'];
+    } else if (mode === 'task') {
+      mobileColumns = ['Task Title', 'Last Updated'];
+    } else {
+      mobileColumns = ['Poll Title', 'Last Updated'];
+    }
     let data = null;
     let mobileData = null;
 
@@ -275,7 +285,7 @@ class SurveyFrame extends React.Component {
         survey.label,
         UTCtoFriendly(survey.updated),
       ]);
-    } else {
+    } else if (mode === 'task') {
       data = TaskStore.allTasks.map(task => [
         task.featured,
         task.active ? 'Active' : 'Inactive',
@@ -288,18 +298,35 @@ class SurveyFrame extends React.Component {
         task.label,
         UTCtoFriendly(task.updated),
       ]);
+    } else {
+      data = PollStore.allPolls.map(poll => [
+        poll.featured,
+        poll.active ? 'Active' : 'Inactive',
+        poll.label,
+        UTCtoFriendly(poll.updated),
+        AccountStore._getDisplayName(poll.userID),
+        ChannelStore._getLabel(poll.chanID)
+      ]);
+      mobileData = PollStore.allPolls.map(poll => [
+        poll.label,
+        UTCtoFriendly(poll.updated),
+      ]);
     }
 
+    let toolbarData = null;
+    if (mode === 'survey') {
+      toolbarData = SurveyStore.allSurveys;
+    } else if (mode === 'task') {
+      toolbarData = TaskStore.allTasks;
+    } else {
+      toolbarData = PollStore.allPolls;
+    }
     const options = {
       elevation: 1,
       selectableRows: 'multiple',
       customToolbarSelect: selectedRows => (
         <CustomToolbarSelect
-          data={
-            mode === 'survey'
-              ? SurveyStore.allSurveys
-              : TaskStore.allTasks
-          }
+          data={toolbarData}
           selectedRows={selectedRows}
           handleClick={(e, v) => {
             this.handleFeatured(e, v);
@@ -313,16 +340,32 @@ class SurveyFrame extends React.Component {
       viewColumns: false,
       download: false,
       onRowClick: (i, rowData) => {
-        this.handleClick(
-          mode === 'survey'
-            ? SurveyStore.allSurveys[rowData.dataIndex]
-            : TaskStore.allTasks[rowData.dataIndex]
-        );
+        let selectedData = null;
+        if (mode === 'survey') {
+          selectedData = SurveyStore.allSurveys[rowData.dataIndex];
+        } else if (mode === 'task') {
+          selectedData = TaskStore.allTasks[rowData.dataIndex];
+        } else {
+          selectedData = PollStore.allPolls[rowData.dataIndex];
+        }
+        this.handleClick(selectedData);
       },
     };
 
     const { width } = this.state;
 
+    let header = '';
+    let desc = '';
+    if (mode === 'survey') {
+      header = 'Surveys';
+      desc = 'Get valuable feedback with custom surveys';
+    } else if (mode === 'task') {
+      header = 'Tasks';
+      desc = 'Assign tasks to better track progress';
+    } else {
+      header = 'Polls';
+      desc = 'Get valuable feedback with custom polls';
+    }
     return (
       <>
         <Header
@@ -332,13 +375,9 @@ class SurveyFrame extends React.Component {
             margin: '10px 0 10px',
           }}
         >
-          {mode === 'survey' ? 'Surveys' : 'Tasks'}
+          {header}
           <Header.Subheader>
-            {
-              mode === 'survey'
-                ? 'Get valuable feedback with custom surveys and polls'
-                : 'Assign tasks to better track progress'
-            }
+            {desc}
           </Header.Subheader>
         </Header>
         <MenuContainer>

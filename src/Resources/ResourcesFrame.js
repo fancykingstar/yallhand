@@ -6,7 +6,7 @@ import "./style.css";
 
 @inject("UIStore")
 @observer
-export class ResourcesFrame extends React.Component {
+class ResourcesFrame extends React.Component {
   componentWillUnmount(){
     const {UIStore} = this.props;
     UIStore.set("search", "searchFiles", "");
@@ -42,3 +42,5 @@ export class ResourcesFrame extends React.Component {
     );
   }
 }
+
+export default ResourcesFrame
