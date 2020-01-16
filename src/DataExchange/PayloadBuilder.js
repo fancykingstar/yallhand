@@ -590,5 +590,3 @@ export const emailCampaign = (isSendNow, isScheduled) => {
 
 
   
-  
-  

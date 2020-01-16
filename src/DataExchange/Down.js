@@ -240,6 +240,13 @@ export const tickets = async accountID => {
     `ticketing/all?filter={"where":{"accountID":"${accountID}"}}`,
     'GET',
   );
-  await TicketingStore.loadTickets(result);
-  
-};
+  const result = await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}) .then(r => r.json())
+  await SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
+  await TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
+  return
+}
+
+export const automations = async () => {
+  const result = await apiCall_noBody("automations/" + AccountStore.account.accountID, "GET");
+  return result
+}
