@@ -153,6 +153,11 @@ export const surveys = async (accountID, userID) => {
   return
 }
 
+export const automations = async () => {
+  const result = await apiCall_noBody("automations/" + AccountStore.account.accountID, "GET");
+  return result
+}
+
 export const tickets = async (accountID) => {
   const result = await apiCall_noBody(`ticketing/all?filter={"where":{"accountID":"${accountID}"}}`, "GET")
   await TicketingStore.loadTickets(result);

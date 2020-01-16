@@ -14,10 +14,12 @@ import { SurveyStore } from "../Stores/SurveyStore";
 import { TaskStore } from "../Stores/TaskStore";
 import { TicketingStore } from "../Stores/TicketingStore";
 import { PollStore } from "../Stores/PollStore";
+import { AutomationStore } from "../Stores/AutomationStore";
 
 // import * as load from "./Down";
 import { apiCall_noBody, deleteUser, getUser, apiCall } from "../DataExchange/Fetch";
 import { reviewAlertCheck } from "../SharedCalculations/ReviewAlertCheck";
+
 
 
 export const loadProfile = async (superStatus = false, superUser = {}) => {
@@ -75,6 +77,7 @@ export const loadProfile = async (superStatus = false, superUser = {}) => {
           if (loadedUserData.scheduled) await ScheduleStore.loadScheduled(loadedUserData.scheduled);
           if (loadedUserData.tickets) await TicketingStore.loadTickets(loadedUserData.tickets);
           if (loadedUserData.logs) await AccountStore.loadLogs(loadedUserData.logs);
+          if (loadedUserData.automations) await AutomationStore.loadAutomations(loadedUserData.automations);
 
           UIStore.set("adminLoadingComplete", "all", true);
 
