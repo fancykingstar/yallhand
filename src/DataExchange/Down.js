@@ -240,7 +240,6 @@ export const tickets = async accountID => {
     `ticketing/all?filter={"where":{"accountID":"${accountID}"}}`,
     'GET',
   );
-  const result = await apiCall('surveys/find', 'POST', !contentFilter()? {accountID}:{accountID, userID}) .then(r => r.json())
   await SurveyStore.loadSurveys(result.surveys.filter(i=>i.type==="survey"));
   await TaskStore.loadTasks(result.surveys.filter(i=>i.type==="task"));
   return
