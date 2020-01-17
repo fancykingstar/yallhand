@@ -362,3 +362,17 @@ i.icon.wrench {
 .dropdown-skills:focus i.icon.wrench, .dropdown-skills:active i.icon.wrench, .dropdown-skills:focus-within i.icon.wrench, .dropdown-skills:focus-visible i.icon.wrench {
   opacity: 1;
 }
+
+.actions-container, .action-form {
+  min-height: 280px;
+  display: flex !important;
+  flex-direction: column;
+
+  .page_content {
+    flex: 1;
+  }
+
+  .section_title {
+    height: 76px;
+  }
+}

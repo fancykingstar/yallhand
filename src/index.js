@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "mobx-react";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 // import registerServiceWorker from "./registerServiceWorker";
 import { unregister } from './registerServiceWorker';
-import { Provider } from "mobx-react";
-import { BrowserRouter } from "react-router-dom";
 import { ChannelStore } from "./Stores/ChannelStore";
 import { PoliciesStore } from "./Stores/PoliciesStore";
 import { UserStore } from "./Stores/UserStore";
@@ -20,6 +20,7 @@ import { SurveyStore } from "./Stores/SurveyStore";
 import { TaskStore } from "./Stores/TaskStore";
 import { PollStore } from "./Stores/PollStore";
 import { TicketingStore } from "./Stores/TicketingStore";
+import { AutomationStore } from "./Stores/AutomationStore";
 
 const Root = (
   <Provider
@@ -38,6 +39,7 @@ const Root = (
     TaskStore={TaskStore}
     TicketingStore={TicketingStore}
     PollStore={PollStore}
+    AutomationStore={AutomationStore}
   >
     <BrowserRouter>
       <App />

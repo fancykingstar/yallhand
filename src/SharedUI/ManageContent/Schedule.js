@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import {Segment, Button, Header, Form} from "semantic-ui-react"
-import {DateTimeSelect} from "../DateTimeSelect"
+import DateTimeSelect from "../DateTimeSelect"
 import { createSchedule } from "../../DataExchange/Up"
 import { schedule } from "../../DataExchange/PayloadBuilder"
 import "./style.css"

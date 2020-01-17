@@ -10,7 +10,7 @@ import { inject, observer } from "mobx-react";
 
 @inject("UIStore")
 @observer
-export class TeamFrame extends React.Component {
+class TeamFrame extends React.Component {
   componentDidMount(){
     window.scrollTo(0, 0);
   }
@@ -63,3 +63,5 @@ export class TeamFrame extends React.Component {
     );
   }
 }
+
+export default TeamFrame

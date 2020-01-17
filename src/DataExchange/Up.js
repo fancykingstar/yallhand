@@ -582,3 +582,47 @@ export const deleteTicket = (ticketID) => processTemplate(
     'type': 'ticket',
   }
 );
+
+
+/// Automation
+export const createAutomation = (payload) => processTemplate(
+  true,
+  'automation',
+  'POST',
+  payload,
+  'automations',
+  `Your new ${payload.type} has been created 🙌`,
+  true,
+  {
+    'event': 'create',
+    'type': 'automation',
+  }
+);
+
+export const modifyAutomation = (payload) => processTemplate(
+  true,
+  `automation/${payload.automationID}`,
+  'PATCH',
+  payload,
+  'automations',
+  `Your ${payload.type} has been updated 🛠`,
+  true,
+  {
+    'event': 'update',
+    'type': 'automation',
+  }
+);
+
+export const deleteAutomation = (automationID) => processTemplate(
+  false,
+  `automation/${automationID}`,
+  'DELETE',
+  {},
+  'automations',
+  'Selected automations deleted',
+  true,
+  {
+    'event': 'delete',
+    'type': 'automation',
+  }
+);

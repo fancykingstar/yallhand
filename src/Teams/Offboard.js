@@ -8,7 +8,7 @@ import {
   Divider,
   Container
 } from "semantic-ui-react";
-import { DateTimeSelect } from "../SharedUI/DateTimeSelect";
+import DateTimeSelect from "../SharedUI/DateTimeSelect";
 import { offBoardUser, createSchedule, deleteUser } from "../DataExchange/Up";
 import { schedule } from "../DataExchange/PayloadBuilder"
 import { apiCall } from "../DataExchange/Fetch"
