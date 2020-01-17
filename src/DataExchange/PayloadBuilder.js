@@ -476,7 +476,8 @@ export const emailCampaign = (isSendNow, isScheduled) => {
         Mobile: DataEntryStore.userSettings.Mobile,
         "Phone or Extension": DataEntryStore.userSettings["Phone or Extension"],
         Title: DataEntryStore.userSettings.Title,
-        Twitter: DataEntryStore.userSettings.Twitter
+        Twitter: DataEntryStore.userSettings.Twitter,
+        Skills: DataEntryStore.userSettings.Skills
       }
     };
 

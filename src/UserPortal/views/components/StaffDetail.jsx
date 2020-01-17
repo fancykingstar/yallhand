@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Card, CardActionArea, CardContent, CardMedia, Typography, List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
+import { Label } from 'semantic-ui-react';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import CardActions from '@material-ui/core/CardActions';
@@ -17,6 +18,7 @@ import phone_icon from "../../assets/images/telephone-handle-silhouette.svg";
 import cake_icon from "../../assets/images/birthday-cake.png";
 import envelope_icon from "../../assets/images/envelope.svg";
 import superviseduser_icon from "../../assets/images/superviseduser.svg";
+import build_icon from "../../assets/images/wrench.png"
 
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import moment from 'moment'
@@ -154,6 +156,16 @@ class StaffDetail extends React.Component {
                                     <img src={superviseduser_icon} alt="reportto" width="24" />
                                 </ListItemIcon>
                                 <ListItemText secondary={this.props.reportto} style={{ marginTop: '4px' }} />
+                            </ListItem>
+                            <ListItem style={{display: !this.props.skills ? "none" : "flex", marginTop: 10}}>
+                                <ListItemIcon>
+                                    <Image name={build_icon} alt="skills" />
+                                </ListItemIcon>
+                                <div className="flex" style={{ flexWrap: "wrap" }}>
+                                {
+                                    this.props.skills ? this.props.skills.map((skill, i) => <Label size="tiny" key={i} style={{ marginRight: 5, marginBottom: 5 }}><span>{skill}</span></Label>) : null
+                                }
+                                </div>
                             </ListItem>
                         </CardContent>
                     </Collapse>

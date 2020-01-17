@@ -68,6 +68,7 @@ class ActionSlider extends React.Component {
         resources.push(r);
       });
     }
+
     const filesLabel = Object.keys(ticket.activity[0].data).filter(i =>
       isBoolean(ticket.activity[0].data[i]),
     )[0];
