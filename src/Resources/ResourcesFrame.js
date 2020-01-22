@@ -15,12 +15,12 @@ class ResourcesFrame extends React.Component {
     window.scrollTo(0, 0);
   }
   render() {
-  const handleItemClick = (e, { name }) => {
-    UIStore.set("menuItem","resourcesFrame", name);
-  };
-  const isVisable = name => {
-  return name === UIStore.menuItem.resourcesFrame ? "Visable" : "Hidden";
-  };
+    const handleItemClick = (e, { name }) => {
+      UIStore.set("menuItem","resourcesFrame", name);
+    };
+    const isVisable = name => {
+      return name === UIStore.menuItem.resourcesFrame ? "Visable" : "Hidden";
+    };
     const { UIStore } = this.props;
     const menuItems = ["file", "URL"];
     const handleSearch = val => {
@@ -32,11 +32,11 @@ class ResourcesFrame extends React.Component {
     return (
       <div>
         <div style={{float: "right", marginRight: 10, marginTop: 10}}>  
-      <SearchBox value={UIStore.search.searchFiles} output={val => handleSearch(val)} />
-     </div> 
+        </div> 
         <div className="ResourceActionFrame">
-        <div>   <Files/></div>
-      
+          <div>
+            <Files/>
+          </div>
         </div>
       </div>
     );
