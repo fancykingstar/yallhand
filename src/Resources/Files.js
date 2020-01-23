@@ -287,7 +287,7 @@ export class Files extends React.Component {
           display: 'excluded',
           filter: true,
           filterOptions: {
-            names: [...this.state.extensions.filter(i => Object.keys(this.state.filetype).includes(i)), "others"],
+            names: [...this.state.extensions.filter(i => Object.keys(this.state.filetype).includes(i)), "Other"],
             logic: (value, filters) => {
               if(filters[0] == value) return false;
               if (filters[0] == "others" && !Object.keys(this.state.filetype).includes(value)) return false;
@@ -328,10 +328,7 @@ export class Files extends React.Component {
         options: {
           filter: false,
           customBodyRender: (value, tableMeta, updateValue) => {
-            let v = JSON.parse(JSON.stringify(value));
-            let data = [];
-            v.announcements.map(i => data.push(i))
-            v.policies.map(i => data.push(i))
+            let data = value;
             return data.map((item, index) => {
               const content = getContentObj(item);
               const mode = Object.keys(item).includes('policyID')
@@ -352,6 +349,7 @@ export class Files extends React.Component {
                 />
               );
             });
+            association(value);
           }
         },
       },
@@ -362,6 +360,14 @@ export class Files extends React.Component {
         },
       },
     ];
+
+    const chipFromAsso = (value) => {
+      let v = JSON.parse(JSON.stringify(value));
+      let data = [];
+      v.announcements.map(i => data.push(i))
+      v.policies.map(i => data.push(i))
+      return data;
+    }
 
     const options = {
       elevation: 1,
@@ -405,7 +411,7 @@ export class Files extends React.Component {
       file.label,
       UTCtoFriendly(file.updated),
       association(file),
-      file.associations,
+      chipFromAsso(file.associations),
       file.ChanID ? file.ChanID : "All",
     ]);
 
