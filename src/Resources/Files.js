@@ -280,7 +280,7 @@ export class Files extends React.Component {
       {
         name: "FileType",
         options: {
-          display: false,
+          display: 'excluded',
           filter: true,
           filterOptions: {
             names: [...this.state.extensions.filter(i => Object.keys(this.state.filetype).includes(i)), "others"],
@@ -310,6 +310,13 @@ export class Files extends React.Component {
         name: 'Last Updated',
         options: {
           filter: false,
+        },
+      },
+      {
+        name: 'Currently Associated With',
+        options: {
+          filter: false,
+          display: 'excluded'
         },
       },
       {
@@ -377,6 +384,7 @@ export class Files extends React.Component {
       file.url.slice(-3),
       file.label,
       UTCtoFriendly(file.updated),
+      association(file),
       association(file),
       file.ChanID ? file.ChanID : "All",
     ]);
