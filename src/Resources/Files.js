@@ -3,6 +3,9 @@ import {inject, observer} from "mobx-react"
 import {S3Download} from "../DataExchange/S3Download"
 import MUIDataTable from 'mui-datatables';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Chip, Fab } from '@material-ui/core';
+import HelpRoundedIcon from '@material-ui/icons/HelpRounded';
+import Announcements from '../UserPortal/assets/images/announcements1.svg';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
@@ -15,6 +18,7 @@ import { giveMeKey } from "../SharedCalculations/GiveMeKey"
 import { deleteFileresource } from "../DataExchange/Up";
 import styled from 'styled-components';
 import { ChannelStore } from '../Stores/ChannelStore';
+import { getContentObj } from '../SharedCalculations/GetContentObj';
 import "./style.css";
 
 const MenuContainer = styled.div`
@@ -316,13 +320,39 @@ export class Files extends React.Component {
         name: 'Currently Associated With',
         options: {
           filter: false,
-          display: 'excluded'
+          display: "excluded"
         },
       },
       {
         name: 'Currently Associated With',
         options: {
           filter: false,
+          customBodyRender: (value, tableMeta, updateValue) => {
+            let v = JSON.parse(JSON.stringify(value));
+            let data = [];
+            v.announcements.map(i => data.push(i))
+            v.policies.map(i => data.push(i))
+            return data.map((item, index) => {
+              const content = getContentObj(item);
+              const mode = Object.keys(item).includes('policyID')
+                ? 'policy'
+                : 'announcement';
+              return (
+                <Chip
+                  icon={
+                    item.policyID ? <HelpRoundedIcon /> : <img src={Announcements} />
+                  }
+                  key={index}
+                  className="SuggestContentChip"
+                  color="primary"
+                  label={content.label}
+                  size="small"
+                  variant="outlined"
+                  disabled
+                />
+              );
+            });
+          }
         },
       },
       {
@@ -358,24 +388,14 @@ export class Files extends React.Component {
     };
 
     const association = (data) => {
-      const { TeamStore } = this.props;
-      const summary =
-        data.associations.policies.length === 0 &&
-        data.associations.announcements.length === 0 ? (
-          `General Availability: (${data.teamID === "global"
-              ? "Global"
-              : TeamStore._getTeam(data.teamID).label}
-            ${data.tags.length === 0
-              ? ""
-              : TeamStore._getTag(data.tags[0]).label})`
-        ) : (
-          `Content (${data.associations.policies.length > 0 ? "Policies: " + data.associations.policies.length.toString()
-              :
-              ""}
-              ${data.associations.announcements.length > 0 ? "Announcements: " + data.associations.announcements.length.toString()
-              :
-              ""})
-        `);
+      let summary = ""
+      data.associations.policies.map(v => {
+        summary = summary.concat(Object.keys(v).includes("policyID") ? getContentObj(v).label : "")
+      })
+
+      data.associations.announcements.map(v => {
+        summary = summary.concat(Object.keys(v).includes("announcementID") ? getContentObj(v).label : "")
+      })
 
       return summary;
     }
@@ -385,7 +405,7 @@ export class Files extends React.Component {
       file.label,
       UTCtoFriendly(file.updated),
       association(file),
-      association(file),
+      file.associations,
       file.ChanID ? file.ChanID : "All",
     ]);
 
