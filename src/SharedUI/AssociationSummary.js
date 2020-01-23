@@ -25,6 +25,6 @@ export const AssociationSummary = inject("TeamStore")(
             }
         </p>
       );
-    return summary;
+    return <React.Fragment>{summary}</React.Fragment>;
   })
 );

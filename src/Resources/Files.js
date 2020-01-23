@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {inject, observer} from "mobx-react"
 import {S3Download} from "../DataExchange/S3Download"
 import MUIDataTable from 'mui-datatables';
@@ -6,7 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { FileTypeIcons } from "../SharedUI/FileTypeIcons"
 import { AddButton } from "../SharedUI/AddButton"
-import { Icon, Table, Header, Button, Item } from "semantic-ui-react";
+import { Icon, Table, Header, Button, Item, Modal } from "semantic-ui-react";
 import UTCtoFriendly from "../SharedCalculations/UTCtoFriendly"
 import { UploadFile } from "../SharedUI/UploadFile";
 import { AssociationSummary } from "../SharedUI/AssociationSummary"
@@ -28,44 +28,125 @@ const MenuContainer = styled.div`
 `;
 
 const CustomToolbarSelect = (props) => {
+  const [del, setDel] = useState(false);
+
   const handleClick = () => {
     const { handleClick, selectedRows, data } = props;
     const delList = selectedRows.data;
     delList.map((row, i) => {
       handleClick(data[row.dataIndex].resourceID);
     })
+    setDel(false);
+  }
+
+  const cancel = () => {
+    setDel(false);
   }
 
   return (
     <div className={"custom-toolbar-select"}>
       <Tooltip title="Delete">
-        <Icon style={{ cursor: "pointer", marginRight: 10 }} color="grey" name="trash" onClick={() => handleClick()} />
+        <Icon style={{ cursor: "pointer", marginRight: 10 }} color="grey" name="trash" onClick={() => setDel(true)} />
       </Tooltip>
+      { del ? <ConfirmDelete confirm={() => handleClick()} cancel={() => cancel()} /> : null }
     </div>
   );
 }
 
+const ConfirmDelete = (props) => {
+  const [isopen, notOpened] = useState(true);
 
-@inject("ResourcesStore", "UIStore", "DataEntryStore")
+  const toggleOpen = (submit=false) => {
+    props.cancel();
+    notOpened(!isopen)
+  };
+
+  const confirmDelete = () => {
+    props.confirm();
+    notOpened(!isopen)
+  };
+
+  return (
+    <Modal
+        open={isopen}
+        size="small"
+        basic={false}
+      >
+        <Modal.Content>
+          Are you absolutely sure that you want to delete this  <span style={{fontWeight: 800}}>file</span>? This cannot be undone 🗑. 
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            icon="remove circle"
+            negative
+            content="Delete"
+            onClick={confirmDelete}
+           
+          />
+            <Button
+            content="Cancel"
+            onClick={toggleOpen}
+          />
+        </Modal.Actions>
+      </Modal>
+  )
+}
+
+function getUnique(array){
+  var uniqueArray = [];
+  
+  // Loop through array values
+  for(var value of array){
+      if(uniqueArray.indexOf(value) === -1){
+          uniqueArray.push(value);
+      }
+  }
+  return uniqueArray;
+}
+
+
+@inject("ResourcesStore", "UIStore", "DataEntryStore", "TeamStore")
 @observer
 export class Files extends React.Component {
   constructor(props){
     super(props)
     const {UIStore, ResourcesStore} = this.props
     this.loadSearch = () => {
-      UIStore.set("search",
-      "searchFilesData",
-      initSearchObj(
-        ResourcesStore._fileResourcesNoHidden,
-        "resourceID"
-      ) 
-    );
+        UIStore.set("search",
+        "searchFilesData",
+        initSearchObj(
+          ResourcesStore._fileResourcesNoHidden,
+          "resourceID"
+        ) 
+      );
+    }
+
+    this.state = {
+      delete: false,
+      filetype: FileTypeIcons,
+      extensions: []
     }
   }
   componentDidMount() {
-    const { UIStore } = this.props;
+    const { UIStore, ResourcesStore } = this.props;
     if (UIStore.search.searchFilesData.length === 0) {
      this.loadSearch()
+    }
+    let extensions = []
+    ResourcesStore.fileResources.map(i => {
+      extensions.push(i.url.slice(-3));
+    });
+    extensions = getUnique(extensions);
+    this.setState({extensions});
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps && nextProps.ResourcesStore.fileResources !== this.props.ResourcesStore.fileResources ) {
+      let extensions = []
+      ResourcesStore.fileResources.map(i => {
+        extensions.push(i.url.slice(-3));
+      });
+      extensions = getUnique(extensions);
+      this.setState({extensions});
     }
   }
   getMuiTheme = () =>
@@ -197,15 +278,28 @@ export class Files extends React.Component {
 
     const columns = [
       {
+        name: "FileType",
+        options: {
+          display: false,
+          filter: true,
+          filterOptions: {
+            names: [...this.state.extensions.filter(i => Object.keys(this.state.filetype).includes(i)), "others"],
+            logic: (value, filters) => {
+              if(filters[0] == value) return false;
+              if (filters[0] == "others" && !Object.keys(this.state.filetype).includes(value)) return false;
+              return true;
+            }
+          },
+        }
+      },
+      {
         name: "Title",
         options: {
           filter: false,
           customBodyRender: (value, tableMeta, updateValue) => {
-            console.log(tableMeta)
-            let data = filteredDisplay().filter( i => i.label == value )
             return (
               <>
-                <Icon color="blue" name={getIcon(data[0].url.slice(-3))} />
+                <Icon color="blue" name={getIcon(tableMeta.rowData[0])} />
                 <Item style={{cursor: "pointer"}} as="a" onClick={e => downloadFile(data[0].S3Key, value)}>{value}</Item>
               </>
             );
@@ -280,13 +374,12 @@ export class Files extends React.Component {
     }
 
     let data = filteredDisplay().map((file, index) => [
+      file.url.slice(-3),
       file.label,
       UTCtoFriendly(file.updated),
       association(file),
       file.ChanID ? file.ChanID : "All",
     ]);
-
-    console.log(filteredDisplay(), "9999999999999999");
 
     return (
  
@@ -323,21 +416,6 @@ export class Files extends React.Component {
           includeTeamTag={true}
 
         />
-        {/* <Table basic="very">
-          <Table.Header>
-            <Table.Row>
-            <Table.HeaderCell>Label</Table.HeaderCell>
-            <Table.HeaderCell></Table.HeaderCell>
-              <Table.HeaderCell >Last Updated</Table.HeaderCell>
-              <Table.HeaderCell>Currently Associated With</Table.HeaderCell>
-              <Table.HeaderCell/>
-              <Table.HeaderCell/>
-            </Table.Row>
-          </Table.Header>
-    
-
-          <Table.Body>{resfiles}</Table.Body>
-        </Table> */}
         <div
           className="muidatatable-custom"
           style={{ marginTop: 15 }}
