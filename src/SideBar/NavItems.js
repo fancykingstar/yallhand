@@ -215,6 +215,17 @@ class NavItems extends React.Component {
             </ListItemIcon>
             <ListItemText primary="Storage" />
           </ListItem>
+          <ListItem
+            className={!adminLimits ? 'YHShow' : 'YHHidden'}
+            button
+            style={isActive('settings')}
+            onClick={() => handleClick('base-settings')}
+          >
+            <ListItemIcon>
+              <CloudRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
         </List>
       </div>
     );

@@ -12,6 +12,7 @@ import { LazyImg } from './LazyImg';
 import UTCtoFriendly from '../SharedCalculations/UTCtoFriendly';
 import CustomToolbarSelect from './CustomToolbarSelect';
 import { modifyAnnouncement, modifyPolicy } from '../DataExchange/Up';
+import no_image from '../Assets/Graphics/no-photo.png'
 import './style.css';
 
 const MenuContainer = styled.div`
@@ -232,7 +233,7 @@ class ContentListingPage extends React.Component {
               width={120}
               img={img}
               src={
-                img || 'https://yallhandsgeneral.s3.amazonaws.com/no-image-icon.png'
+                img || no_image
               }
             />
           ),
