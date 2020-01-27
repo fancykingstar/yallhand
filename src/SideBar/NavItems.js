@@ -17,6 +17,7 @@ import InboxRoundedIcon from '@material-ui/icons/InboxRounded';
 import Badge from '@material-ui/core/Badge';
 import Announcements from '../UserPortal/assets/images/announcements.svg';
 import { syncAdminNav } from '../SharedCalculations/SyncAdminNav';
+import { Icon } from 'semantic-ui-react';
 
 @inject('UIStore', 'UserStore', 'TicketingStore')
 @observer
@@ -221,8 +222,8 @@ class NavItems extends React.Component {
             style={isActive('settings')}
             onClick={() => handleClick('base-settings')}
           >
-            <ListItemIcon>
-              <CloudRoundedIcon />
+            <ListItemIcon style={{ transform: "translate(3px, -3px)"}}>
+              <Icon name="settings" />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>

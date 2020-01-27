@@ -332,14 +332,14 @@ export class Content extends React.Component {
                 />
 
                 <div>
-                    <Row style={{padding: "10px 0 10px 15px"}}>
+                    <Row style={{padding: "10px 0 10px 15px", position: "relative"}}>
                         <PublishControls 
                         unsavedWarning={isNewVari} 
                         stage={isNewContent? "draft" : isNewVari? "draft" : DataEntryStore.contentmgmt.variData.stage} 
                         onClick={val => this.changeStage(val)} 
                         />
 
-                        <Button onClick={()=>this.updateState({contentPreview: true})}>Preview</Button>
+                        <Button style={{ transform: "translateY(25px)" }} onClick={()=>this.updateState({contentPreview: true})}>Preview</Button>
                         {isNewVari && <Button onClick={()=>this.leave()}>Cancel</Button>}
                     </Row>
                     <br/>
