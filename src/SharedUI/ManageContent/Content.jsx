@@ -339,10 +339,9 @@ export class Content extends React.Component {
                         onClick={val => this.changeStage(val)} 
                         />
 
-                        <Button style={{ transform: "translateY(25px)" }} onClick={()=>this.updateState({contentPreview: true})}>Preview</Button>
-                        {isNewVari && <Button onClick={()=>this.leave()}>Cancel</Button>}
+                        <Button style={{ marginTop: "25px" }} onClick={()=>this.updateState({contentPreview: true})}>Preview</Button>
+                        {isNewVari && <Button style={{ marginTop: "25px"}} onClick={()=>this.leave()}>Cancel</Button>}
                     </Row>
-                    <br/>
                 </div>
                 </div>
             </>

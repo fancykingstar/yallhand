@@ -42,9 +42,9 @@ export class PublishControls extends React.Component {
 
     return (
       <>
-        <div style={{ position: "absolute", transform: "translateX(5px)" }}>{`Now: ${this.props.unsavedWarning? "Unsaved":""}`}<b>{stage}</b></div>
+        <div style={{ position: "absolute", transform: "translateX(5px)" }}>{`Now: ${this.props.unsavedWarning? "Unsaved ":""}`}<b>{stage.toUpperCase()}</b></div>
         <Dropdown 
-        button style={{backgroundColor: "#2185D0", color: "#FFFFFF", transform: "translateY(25px)"}} text="Save Stage As...">
+        button style={{backgroundColor: "#2185D0", color: "#FFFFFF", marginTop: "25px"}} text="Save Stage As...">
         <Dropdown.Menu>
         {actionOptions[stage].map(opt =>
           <Dropdown.Item key={"pubctrl" + giveMeKey()} text={displayText[opt]} icon={iconKey[opt]} name={opt} onClick={this.handleItemClick}  />
