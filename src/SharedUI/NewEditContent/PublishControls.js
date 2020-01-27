@@ -39,10 +39,9 @@ export class PublishControls extends React.Component {
       restore: "Restore"
     };
 
-
     return (
       <>
-        <div style={{ position: "absolute", transform: "translateX(5px)" }}>{`Now: ${this.props.unsavedWarning? "Unsaved ":""}`}<b>{stage.toUpperCase()}</b></div>
+        <div style={{ position: "absolute", transform: "translateX(5px)" }}>{`NOW: ${this.props.unsavedWarning? "UNSAVED ":""}`}<b>{stage.toUpperCase()}</b></div>
         <Dropdown 
         button style={{backgroundColor: "#2185D0", color: "#FFFFFF", marginTop: "25px"}} text="Save Stage As...">
         <Dropdown.Menu>
